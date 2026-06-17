@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Circuit Dash — CompTIA A+ Study Hub</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a1a; overflow: hidden; font-family: 'Courier New', monospace; }
+canvas { display: block; }
+#ui-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 10;
+}
+#ui-overlay > * { pointer-events: auto; }
+.glass {
+    background: rgba(10, 10, 26, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 12px;
+}
+</style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<div id="ui-overlay"></div>
+<script>
+// ========== NEON CIRCUIT DASH ==========
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const uiOverlay = document.getElementById('ui-overlay');
+
+
+// Canvas setup
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ========== GAME STATE ==========
+let gameState = 'start'; // start, playing, quiz, levelTransition, gameOver
+let score = 0;
+let level = 1;
+let health = 3;
+let correctAnswers = 0;
+let totalQuestions = 0;
+let startTime = 0;
+let levelTimer = 0;
+let speedMultiplier = 1.0;
+let spawnRate = 60; // frames between spawns
+let frameCount = 0;
+let highScores = JSON.parse(localStorage.getItem('neonCircuitScores') || '[]');
+let questionsAnsweredThisLevel = 0;
+let orbTimer = 0;
+let paused = false;
+
+
+// ========== LEVEL DATA ==========
+const levels = [
+    { name: "Hardware", color: "#ff8c00", subjects: "CPUs, RAM, Motherboards, Storage" },
+    { name: "Networking", color: "#00f0ff", subjects: "Ports, Protocols, Topologies, Cables" },
+    { name: "Operating Systems", color: "#b300ff", subjects: "Windows, Linux, macOS, Commands" },
+    { name: "Security", color: "#ff0066", subjects: "Threats, Encryption, Authentication" },
+    { name: "Troubleshooting", color: "#00ff88", subjects: "Methodology, Tools, Diagnostics" }
+];
+
+// ========== QUESTIONS DATABASE ==========
+const questions = [
+    // Level 1 - Hardware
+    [
+        { q: "What is the standard ATX motherboard size?", opts: ["305x244mm", "244x244mm", "170x170mm", "150x150mm"], ans: 0 },
+        { q: "Which RAM type requires 1.2V?", opts: ["DDR3", "DDR4", "DDR5", "DDR2"], ans: 1 },
+        { q: "What power connector does a modern motherboard use?", opts: ["20-pin", "24-pin", "8-pin", "4-pin"], ans: 1 },
+        { q: "PCIe x16 slots are primarily used for?", opts: ["Sound cards", "Graphics cards", "Network cards", "USB cards"], ans: 1 },
+        { q: "What does POST stand for?", opts: ["Power-On Self-Test", "Pre-Operation System Test", "Power Output Signal Test", "Post-Operation Status Test"], ans: 0 },
+        { q: "SATA III maximum throughput is?", opts: ["3 Gb/s", "6 Gb/s", "12 Gb/s", "1.5 Gb/s"], ans: 1 },
+        { q: "What battery type maintains BIOS settings?", opts: ["AA", "CR2032", "AAA", "9V"], ans: 1 },
+        { q: "NVMe connects via which bus?", opts: ["SATA", "USB", "PCIe", "IDE"], ans: 2 },
+        { q: "ESD can damage components at what voltage?", opts: ["1000V", "100V", "10000V", "50V"], ans: 1 },
+        { q: "What goes between CPU and heatsink?", opts: ["Thermal paste", "Glue", "Rubber pad", "Nothing"], ans: 0 }
+    ],
+
+    // Level 2 - Networking
+    [
+        { q: "SSH uses which port?", opts: ["21", "22", "23", "25"], ans: 1 },
+        { q: "HTTPS runs on port?", opts: ["80", "8080", "443", "8443"], ans: 2 },
+        { q: "DHCP uses which process?", opts: ["DORA", "SYN-ACK", "HELLO", "INIT"], ans: 0 },
+        { q: "DNS operates on port?", opts: ["43", "53", "63", "73"], ans: 1 },
+        { q: "RDP uses which port?", opts: ["3389", "3306", "5900", "8080"], ans: 0 },
+        { q: "What does NAT do?", opts: ["Encrypts data", "Translates private to public IPs", "Blocks malware", "Speeds up DNS"], ans: 1 },
+        { q: "Cat 6a supports what speed at 100m?", opts: ["1 Gbps", "5 Gbps", "10 Gbps", "25 Gbps"], ans: 2 },
+        { q: "APIPA address range is?", opts: ["192.168.x.x", "10.0.x.x", "169.254.x.x", "172.16.x.x"], ans: 2 },
+        { q: "SMB uses port?", opts: ["139", "445", "443", "389"], ans: 1 },
+        { q: "How many layers in the OSI model?", opts: ["5", "6", "7", "4"], ans: 2 }
+    ],
+    // Level 3 - Operating Systems
+    [
+        { q: "sfc /scannow does what?", opts: ["Formats drive", "Repairs system files", "Clears DNS", "Checks disk"], ans: 1 },
+        { q: "NTFS supports files larger than?", opts: ["2GB", "4GB", "Both", "Neither"], ans: 1 },
+        { q: "What replaces BIOS?", opts: ["CMOS", "UEFI", "POST", "MBR"], ans: 1 },
+        { q: "GPT supports up to how many partitions?", opts: ["4", "16", "64", "128"], ans: 3 },
+        { q: "chkdsk /r does what?", opts: ["Quick format", "Locates bad sectors", "Rebuilds BCD", "Clears cache"], ans: 1 },
+        { q: "Safe Mode loads what?", opts: ["All drivers", "Minimal drivers", "Network only", "No drivers"], ans: 1 },
+        { q: "DISM should run before retrying?", opts: ["chkdsk", "sfc", "bootrec", "diskpart"], ans: 1 },
+        { q: "System Restore affects personal files?", opts: ["Yes", "No", "Only documents", "Only downloads"], ans: 1 },
+        { q: "MBR max disk size?", opts: ["1TB", "2TB", "4TB", "8TB"], ans: 1 },
+        { q: "bootrec is used when?", opts: ["Slow boot", "Windows won't start", "Low disk", "Driver crash"], ans: 1 }
+    ],
+
+    // Level 4 - Security
+    [
+        { q: "WPA3 uses which authentication?", opts: ["PSK", "SAE", "TKIP", "WEP"], ans: 1 },
+        { q: "Phishing is what type of attack?", opts: ["Physical", "Social engineering", "Brute force", "DoS"], ans: 1 },
+        { q: "BitLocker requires?", opts: ["SSD", "TPM", "GPU", "NIC"], ans: 1 },
+        { q: "MFA combines at least how many factors?", opts: ["1", "2", "3", "4"], ans: 1 },
+        { q: "Evil Twin mimics what?", opts: ["MAC address", "Wi-Fi SSID", "IP address", "DNS server"], ans: 1 },
+        { q: "Ransomware response: first step?", opts: ["Pay ransom", "Disconnect", "Reformat", "Call police"], ans: 1 },
+        { q: "Degaussing affects which media?", opts: ["SSDs", "HDDs", "Flash drives", "CDs"], ans: 1 },
+        { q: "Secure Boot prevents?", opts: ["Rootkits", "Spam", "Phishing", "SQL injection"], ans: 0 },
+        { q: "Mantrap is now called?", opts: ["Security gate", "Access Control Vestibule", "Checkpoint", "Barrier"], ans: 1 },
+        { q: "Secure Erase is for which drive type?", opts: ["HDD", "SSD", "Tape", "Optical"], ans: 1 }
+    ],
+    // Level 5 - Troubleshooting
+    [
+        { q: "First troubleshooting step?", opts: ["Test theory", "Identify problem", "Implement fix", "Document"], ans: 1 },
+        { q: "ipconfig /flushdns does what?", opts: ["Renews IP", "Clears DNS cache", "Shows MAC", "Resets adapter"], ans: 1 },
+        { q: "No internet but LAN works suggests?", opts: ["Bad NIC", "Wrong gateway", "DNS failure", "Cable issue"], ans: 1 },
+        { q: "Blue screen indicates?", opts: ["Overheating", "Kernel-level crash", "Low battery", "Virus"], ans: 1 },
+        { q: "ipconfig /all shows?", opts: ["Only IP", "MAC and DHCP server", "Routes", "Firewall rules"], ans: 1 },
+        { q: "Beep codes indicate?", opts: ["Software error", "POST failure", "Network issue", "Disk full"], ans: 1 },
+        { q: "After implementing fix, you should?", opts: ["Close ticket", "Verify solution", "Escalate", "Restart"], ans: 1 },
+        { q: "Clock resets every boot suggests?", opts: ["Bad RAM", "Dead CMOS battery", "Corrupt OS", "Bad CPU"], ans: 1 },
+        { q: "Last troubleshooting step?", opts: ["Escalate", "Test", "Document findings", "Restart"], ans: 2 },
+        { q: "PXE boot requires?", opts: ["USB drive", "DHCP + TFTP", "CD-ROM", "SSD"], ans: 1 }
+    ]
+];
+
+
+// ========== PLAYER ==========
+const player = {
+    x: 0, y: 0, targetX: 0, targetY: 0,
+    width: 30, height: 20, speed: 5,
+    trail: [], invincible: 0
+};
+
+// ========== PARTICLES ==========
+let particles = [];
+let bgParticles = [];
+let obstacles = [];
+let orbs = [];
+
+// Initialize background particles
+function initBgParticles() {
+    bgParticles = [];
+    for (let i = 0; i < 60; i++) {
+        bgParticles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speed: 0.2 + Math.random() * 0.8,
+            text: Math.random() > 0.5 ?
+                '0x' + Math.floor(Math.random() * 65535).toString(16).toUpperCase() :
+                Math.floor(Math.random() * 256).toString(2).padStart(8, '0'),
+            alpha: 0.1 + Math.random() * 0.2,
+            size: 8 + Math.random() * 4
+        });
+    }
+}
+
+// Circuit board background layers
+const circuitLayers = [];
+function initCircuitLayers() {
+    for (let layer = 0; layer < 3; layer++) {
+        const lines = [];
+        for (let i = 0; i < 20; i++) {
+            lines.push({
+                x1: Math.random() * canvas.width,
+                y1: Math.random() * canvas.height,
+                len: 30 + Math.random() * 100,
+                horizontal: Math.random() > 0.5,
+                speed: (layer + 1) * 0.3
+            });
+        }
+        circuitLayers.push(lines);
+    }
+}
+
+
+// ========== INPUT ==========
+const keys = {};
+let mouseX = 0, mouseY = 0, useMouseControl = false;
+
+document.addEventListener('keydown', e => {
+    keys[e.key] = true;
+    if (gameState === 'start' && (e.key === ' ' || e.key === 'Enter')) startGame();
+    if (gameState === 'gameOver' && e.key === 'Enter') showStartScreen();
+});
+document.addEventListener('keyup', e => keys[e.key] = false);
+document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY; useMouseControl = true;
+});
+document.addEventListener('touchmove', e => {
+    e.preventDefault();
+    mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; useMouseControl = true;
+}, { passive: false });
+canvas.addEventListener('click', () => {
+    if (gameState === 'start') startGame();
+});
+
+// ========== AUDIO (Web Audio API) ==========
+let audioCtx = null;
+function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function playTone(freq, duration, type='sine', volume=0.1) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
+}
+function sfxCorrect() { playTone(400, 0.2); setTimeout(() => playTone(600, 0.2), 100); setTimeout(() => playTone(800, 0.3), 200); }
+function sfxWrong() { playTone(300, 0.2, 'sawtooth'); setTimeout(() => playTone(150, 0.3, 'sawtooth'), 150); }
+function sfxCollision() { playTone(80, 0.3, 'sawtooth', 0.15); playTone(60, 0.2, 'square', 0.1); }
+function sfxOrb() { playTone(500, 0.15); setTimeout(() => playTone(700, 0.15), 80); }
+
+
+// ========== SPAWN OBSTACLES ==========
+function spawnObstacle() {
+    const lvl = levels[level - 1];
+    const side = Math.floor(Math.random() * 4);
+    let x, y, vx, vy;
+    const spd = (1 + Math.random() * 2) * speedMultiplier;
+
+    if (side === 0) { x = Math.random() * canvas.width; y = -30; vx = (Math.random() - 0.5) * spd; vy = spd; }
+    else if (side === 1) { x = Math.random() * canvas.width; y = canvas.height + 30; vx = (Math.random() - 0.5) * spd; vy = -spd; }
+    else if (side === 2) { x = -30; y = Math.random() * canvas.height; vx = spd; vy = (Math.random() - 0.5) * spd; }
+    else { x = canvas.width + 30; y = Math.random() * canvas.height; vx = -spd; vy = (Math.random() - 0.5) * spd; }
+
+    const shapes = ['diamond', 'hexagon', 'triangle', 'square', 'cross'];
+    obstacles.push({
+        x, y, vx, vy, radius: 15 + Math.random() * 10,
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+        color: lvl.color, rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.05
+    });
+}
+
+function spawnOrb() {
+    const x = 100 + Math.random() * (canvas.width - 200);
+    const y = 100 + Math.random() * (canvas.height - 200);
+    orbs.push({ x, y, radius: 22, pulse: 0, hue: 0 });
+}
+
+// ========== COLLISION ==========
+function checkCollision(a, b, rA, rB) {
+    const dx = a.x - b.x, dy = a.y - b.y;
+    return Math.sqrt(dx * dx + dy * dy) < rA + rB;
+}
+
+function createExplosion(x, y, count, colors) {
+    for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+        const speed = 2 + Math.random() * 5;
+        particles.push({
+            x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            life: 1, decay: 0.01 + Math.random() * 0.02,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            size: 2 + Math.random() * 4
+        });
+    }
+}
+
+
+// ========== QUIZ SYSTEM ==========
+let currentQuestion = null;
+let quizTimeLeft = 15;
+let quizInterval = null;
+let screenShake = 0;
+
+function showQuiz() {
+    gameState = 'quiz';
+    const levelQs = questions[level - 1];
+    currentQuestion = levelQs[Math.floor(Math.random() * levelQs.length)];
+    quizTimeLeft = 15;
+    totalQuestions++;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'quiz-overlay';
+    overlay.style.cssText = `position:fixed;inset:0;background:rgba(10,10,26,0.88);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.3s;`;
+
+    const card = document.createElement('div');
+    card.style.cssText = `max-width:600px;width:90%;padding:36px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid ${levels[level-1].color};box-shadow:0 0 40px ${levels[level-1].color}44;text-align:center;`;
+
+    const timer = document.createElement('div');
+    timer.id = 'quiz-timer';
+    timer.style.cssText = `font-size:1.2em;color:#00f0ff;margin-bottom:16px;font-weight:bold;`;
+    timer.textContent = `⏱ ${quizTimeLeft}s`;
+
+    const qText = document.createElement('p');
+    qText.style.cssText = `color:#fff;font-size:1.2em;margin-bottom:28px;line-height:1.6;`;
+    qText.textContent = currentQuestion.q;
+
+    card.appendChild(timer);
+    card.appendChild(qText);
+
+    currentQuestion.opts.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.style.cssText = `display:block;width:100%;padding:14px;margin:8px 0;border:1px solid rgba(0,240,255,0.3);border-radius:8px;background:rgba(0,240,255,0.05);color:#fff;font-size:1em;cursor:pointer;transition:all 0.2s;font-family:'Courier New',monospace;`;
+        btn.textContent = opt;
+        btn.onmouseenter = () => btn.style.background = 'rgba(0,240,255,0.2)';
+        btn.onmouseleave = () => btn.style.background = 'rgba(0,240,255,0.05)';
+        btn.onclick = () => answerQuestion(i);
+        card.appendChild(btn);
+    });
+
+    overlay.appendChild(card);
+    uiOverlay.appendChild(overlay);
+
+    quizInterval = setInterval(() => {
+        quizTimeLeft--;
+        const t = document.getElementById('quiz-timer');
+        if (t) t.textContent = `⏱ ${quizTimeLeft}s`;
+        if (quizTimeLeft <= 0) { answerQuestion(-1); }
+    }, 1000);
+}
+
+
+function answerQuestion(idx) {
+    clearInterval(quizInterval);
+    const overlay = document.getElementById('quiz-overlay');
+    if (!overlay) return;
+
+    if (idx === currentQuestion.ans) {
+        score += 100 + quizTimeLeft * 10;
+        correctAnswers++;
+        if (health < 3) health++;
+        sfxCorrect();
+        createExplosion(player.x, player.y, 30, ['#00ff88', '#00f0ff', '#fff']);
+    } else {
+        score = Math.max(0, score - 50);
+        health--;
+        sfxWrong();
+        screenShake = 15;
+        createExplosion(player.x, player.y, 50, ['#ff0066', '#ff4400', '#ff8800']);
+        if (health <= 0) { overlay.remove(); gameOver(); return; }
+    }
+
+    questionsAnsweredThisLevel++;
+    overlay.remove();
+    gameState = 'playing';
+
+    // Check level progression: 3 questions per level
+    if (questionsAnsweredThisLevel >= 3 && level < 5) {
+        levelUp();
+    }
+}
+
+function levelUp() {
+    level++;
+    questionsAnsweredThisLevel = 0;
+    speedMultiplier = 1.0 + (level - 1) * 0.375;
+    spawnRate = Math.max(20, 60 - (level - 1) * 8);
+    obstacles = [];
+    orbs = [];
+    gameState = 'levelTransition';
+
+    setTimeout(() => {
+        if (gameState === 'levelTransition') gameState = 'playing';
+    }, 3000);
+}
+
+
+// ========== GAME FUNCTIONS ==========
+function startGame() {
+    initAudio();
+    gameState = 'playing';
+    score = 0; level = 1; health = 3;
+    correctAnswers = 0; totalQuestions = 0;
+    questionsAnsweredThisLevel = 0;
+    speedMultiplier = 1.0; spawnRate = 60;
+    frameCount = 0; orbTimer = 0; levelTimer = 0;
+    startTime = Date.now();
+    player.x = canvas.width / 2;
+    player.y = canvas.height * 0.75;
+    player.trail = [];
+    particles = []; obstacles = []; orbs = [];
+    initBgParticles();
+    initCircuitLayers();
+    uiOverlay.innerHTML = '';
+}
+
+function gameOver() {
+    gameState = 'gameOver';
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const secs = (elapsed % 60).toString().padStart(2, '0');
+    const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+
+    sfxCollision();
+
+    uiOverlay.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(10,10,26,0.92);display:flex;align-items:center;justify-content:center;z-index:100;">
+        <div style="text-align:center;max-width:500px;width:90%;padding:40px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid #ff0066;box-shadow:0 0 60px #ff006644;">
+            <h1 style="color:#ff0066;font-size:2em;margin-bottom:8px;">GAME OVER</h1>
+            <p style="color:#a8c4df;margin-bottom:24px;">Your circuit has been breached!</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+                <div style="padding:16px;border-radius:8px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);">
+                    <div style="color:#00f0ff;font-size:0.8em;">SCORE</div>
+                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${score}</div>
+                </div>
+                <div style="padding:16px;border-radius:8px;background:rgba(179,0,255,0.05);border:1px solid rgba(179,0,255,0.2);">
+                    <div style="color:#b300ff;font-size:0.8em;">LEVEL</div>
+                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${level} / 5</div>
+                </div>
+                <div style="padding:16px;border-radius:8px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
+                    <div style="color:#00ff88;font-size:0.8em;">ACCURACY</div>
+                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${accuracy}%</div>
+                </div>
+                <div style="padding:16px;border-radius:8px;background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);">
+                    <div style="color:#ff8c00;font-size:0.8em;">TIME</div>
+                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${mins}:${secs}</div>
+                </div>
+            </div>
+            <div style="margin-bottom:20px;">
+                <input id="nameInput" type="text" maxlength="15" placeholder="Enter your name" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(0,240,255,0.3);background:rgba(0,0,0,0.5);color:#fff;font-family:'Courier New',monospace;font-size:1em;text-align:center;">
+            </div>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button onclick="saveScore()" style="padding:12px 24px;border-radius:8px;background:#00f0ff;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;">Save Score</button>
+                <button onclick="startGame()" style="padding:12px 24px;border-radius:8px;background:#00ff88;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;">Play Again</button>
+                <button onclick="showStartScreen()" style="padding:12px 24px;border-radius:8px;background:transparent;color:#a8c4df;border:1px solid #a8c4df;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;">Main Menu</button>
+            </div>
+        </div>
+    </div>`;
+}
+
+
+function saveScore() {
+    const name = document.getElementById('nameInput').value.trim() || 'Anonymous';
+    const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+    highScores.push({ name, score, level, accuracy, date: new Date().toLocaleDateString() });
+    highScores.sort((a, b) => b.score - a.score);
+    highScores = highScores.slice(0, 10);
+    localStorage.setItem('neonCircuitScores', JSON.stringify(highScores));
+    showStartScreen();
+}
+
+function showStartScreen() {
+    gameState = 'start';
+    uiOverlay.innerHTML = '';
+    initBgParticles();
+    initCircuitLayers();
+    player.x = canvas.width / 2;
+    player.y = canvas.height / 2;
+}
+
+// ========== DRAWING ==========
+function drawBackground() {
+    // Dark gradient
+    const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width * 0.7);
+    grad.addColorStop(0, '#0f0f2a');
+    grad.addColorStop(1, '#0a0a1a');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Circuit layers
+    circuitLayers.forEach((layer, li) => {
+        ctx.strokeStyle = `rgba(0, 240, 255, ${0.03 + li * 0.02})`;
+        ctx.lineWidth = 1;
+        layer.forEach(line => {
+            line.y1 += line.speed;
+            if (line.y1 > canvas.height + 100) { line.y1 = -100; line.x1 = Math.random() * canvas.width; }
+            ctx.beginPath();
+            ctx.moveTo(line.x1, line.y1);
+            if (line.horizontal) ctx.lineTo(line.x1 + line.len, line.y1);
+            else ctx.lineTo(line.x1, line.y1 + line.len);
+            ctx.stroke();
+            // Node dots
+            ctx.fillStyle = `rgba(0, 240, 255, ${0.1 + li * 0.05})`;
+            ctx.beginPath();
+            ctx.arc(line.x1, line.y1, 2, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    });
+
+    // Floating data fragments
+    bgParticles.forEach(p => {
+        p.y += p.speed;
+        if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+        ctx.fillStyle = `rgba(0, 240, 255, ${p.alpha})`;
+        ctx.font = `${p.size}px 'Courier New'`;
+        ctx.fillText(p.text, p.x, p.y);
+    });
+
+    // Scanlines
+    ctx.fillStyle = 'rgba(0,0,0,0.03)';
+    for (let y = 0; y < canvas.height; y += 3) {
+        ctx.fillRect(0, y, canvas.width, 1);
+    }
+
+    // Vignette
+    const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width * 0.3, canvas.width/2, canvas.height/2, canvas.width * 0.7);
+    vig.addColorStop(0, 'transparent');
+    vig.addColorStop(1, 'rgba(0,0,0,0.5)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+
+function drawPlayer() {
+    // Trail
+    player.trail.push({ x: player.x, y: player.y, life: 1 });
+    if (player.trail.length > 50) player.trail.shift();
+
+    player.trail.forEach((t, i) => {
+        t.life -= 0.02;
+        if (t.life > 0) {
+            ctx.beginPath();
+            ctx.arc(t.x, t.y + 10, t.life * 4, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 240, 255, ${t.life * 0.4})`;
+            ctx.fill();
+        }
+    });
+    player.trail = player.trail.filter(t => t.life > 0);
+
+    // Ship glow
+    ctx.shadowColor = player.invincible > 0 ? '#fff' : '#00f0ff';
+    ctx.shadowBlur = 15 + Math.sin(frameCount * 0.1) * 5;
+
+    // Ship body (triangle)
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.beginPath();
+    ctx.moveTo(0, -15);
+    ctx.lineTo(-12, 12);
+    ctx.lineTo(12, 12);
+    ctx.closePath();
+    ctx.fillStyle = player.invincible > 0 ? '#fff' : '#00f0ff';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Engine glow
+    ctx.beginPath();
+    ctx.moveTo(-6, 12);
+    ctx.lineTo(0, 12 + 8 + Math.random() * 6);
+    ctx.lineTo(6, 12);
+    ctx.fillStyle = `rgba(0, 240, 255, ${0.5 + Math.random() * 0.5})`;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.shadowBlur = 0;
+}
+
+function drawObstacles() {
+    obstacles.forEach(obs => {
+        ctx.save();
+        ctx.translate(obs.x, obs.y);
+        ctx.rotate(obs.rotation);
+        ctx.shadowColor = obs.color;
+        ctx.shadowBlur = 12;
+        ctx.strokeStyle = obs.color;
+        ctx.lineWidth = 2;
+        ctx.fillStyle = obs.color + '33';
+
+        const r = obs.radius;
+        ctx.beginPath();
+        if (obs.shape === 'diamond') {
+            ctx.moveTo(0, -r); ctx.lineTo(r, 0); ctx.lineTo(0, r); ctx.lineTo(-r, 0);
+        } else if (obs.shape === 'hexagon') {
+            for (let i = 0; i < 6; i++) { const a = (Math.PI * 2 / 6) * i - Math.PI/2; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+        } else if (obs.shape === 'triangle') {
+            for (let i = 0; i < 3; i++) { const a = (Math.PI * 2 / 3) * i - Math.PI/2; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+        } else if (obs.shape === 'cross') {
+            const w = r * 0.3;
+            ctx.moveTo(-w,-r); ctx.lineTo(w,-r); ctx.lineTo(w,-w); ctx.lineTo(r,-w); ctx.lineTo(r,w); ctx.lineTo(w,w); ctx.lineTo(w,r); ctx.lineTo(-w,r); ctx.lineTo(-w,w); ctx.lineTo(-r,w); ctx.lineTo(-r,-w); ctx.lineTo(-w,-w);
+        } else {
+            ctx.rect(-r/2, -r/2, r, r);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+        ctx.shadowBlur = 0;
+    });
+}
+
+
+function drawOrbs() {
+    orbs.forEach(orb => {
+        orb.pulse += 0.05;
+        orb.hue = (orb.hue + 2) % 360;
+        const glow = 20 + Math.sin(orb.pulse) * 8;
+
+        ctx.save();
+        ctx.translate(orb.x, orb.y);
+        ctx.rotate(orb.pulse * 0.5);
+        ctx.shadowColor = `hsl(${orb.hue}, 100%, 60%)`;
+        ctx.shadowBlur = glow;
+
+        // Outer ring
+        ctx.beginPath();
+        for (let i = 0; i < 12; i++) {
+            const a = (Math.PI * 2 / 12) * i;
+            const r = orb.radius + Math.sin(orb.pulse + i) * 3;
+            if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+            else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `hsl(${orb.hue}, 100%, 70%)`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = `hsla(${orb.hue}, 100%, 60%, 0.2)`;
+        ctx.fill();
+
+        // Inner symbol (?)
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 18px Courier New';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('?', 0, 0);
+
+        ctx.restore();
+        ctx.shadowBlur = 0;
+    });
+}
+
+function drawParticles() {
+    particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+        p.vx *= 0.98; p.vy *= 0.98;
+        if (p.life > 0) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + Math.floor(p.life * 255).toString(16).padStart(2, '0');
+            ctx.fill();
+        }
+    });
+    particles = particles.filter(p => p.life > 0);
+}
+
+function drawHUD() {
+    // Score
+    ctx.fillStyle = '#00f0ff';
+    ctx.font = 'bold 20px Courier New';
+    ctx.textAlign = 'left';
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 8;
+    ctx.fillText(`SCORE: ${score}`, 20, 36);
+
+    // Level
+    ctx.fillStyle = levels[level - 1].color;
+    ctx.shadowColor = levels[level - 1].color;
+    ctx.fillText(`LVL ${level}: ${levels[level - 1].name}`, 20, 64);
+
+    // Health shields
+    ctx.textAlign = 'right';
+    for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = i < health ? '#00f0ff' : '#333';
+        ctx.shadowColor = i < health ? '#00f0ff' : 'transparent';
+        ctx.shadowBlur = i < health ? 8 : 0;
+        ctx.font = '22px Courier New';
+        ctx.fillText('⬡', canvas.width - 20 - i * 30, 36);
+    }
+
+    // Progress bar
+    const barW = 200, barH = 6, barX = canvas.width - barW - 20, barY = 52;
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#1a1a3a';
+    ctx.fillRect(barX, barY, barW, barH);
+    const progress = Math.min(1, questionsAnsweredThisLevel / 3);
+    const gradient = ctx.createLinearGradient(barX, 0, barX + barW * progress, 0);
+    gradient.addColorStop(0, '#00f0ff');
+    gradient.addColorStop(1, levels[level - 1].color);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(barX, barY, barW * progress, barH);
+
+    ctx.textAlign = 'left';
+    ctx.shadowBlur = 0;
+}
+
+
+function drawStartScreen() {
+    drawBackground();
+
+    // Title with glow
+    ctx.textAlign = 'center';
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = '#00f0ff';
+    ctx.font = 'bold 52px Courier New';
+    ctx.fillText('NEON CIRCUIT DASH', canvas.width / 2, canvas.height * 0.25);
+
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = '#b300ff';
+    ctx.font = '18px Courier New';
+    ctx.fillText('CompTIA A+ Learning Arcade', canvas.width / 2, canvas.height * 0.25 + 40);
+
+    // Tagline
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#a8c4df';
+    ctx.font = '16px Courier New';
+    ctx.fillText('Navigate cyberspace • Dodge hazards • Answer questions • Level up!', canvas.width / 2, canvas.height * 0.35);
+
+    // Press Start (blinking)
+    if (Math.sin(frameCount * 0.06) > 0) {
+        ctx.shadowColor = '#00ff88';
+        ctx.shadowBlur = 15;
+        ctx.fillStyle = '#00ff88';
+        ctx.font = 'bold 22px Courier New';
+        ctx.fillText('[ PRESS SPACE OR CLICK TO START ]', canvas.width / 2, canvas.height * 0.5);
+    }
+
+    // Controls
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#5c6b80';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Arrow Keys / WASD / Mouse to move', canvas.width / 2, canvas.height * 0.6);
+    ctx.fillText('Collect ❓ orbs to answer CompTIA A+ questions', canvas.width / 2, canvas.height * 0.65);
+
+    // High scores
+    if (highScores.length > 0) {
+        ctx.fillStyle = '#ff8c00';
+        ctx.font = 'bold 16px Courier New';
+        ctx.fillText('═══ HIGH SCORES ═══', canvas.width / 2, canvas.height * 0.73);
+
+        const medals = ['🥇', '🥈', '🥉'];
+        highScores.slice(0, 5).forEach((hs, i) => {
+            const medal = i < 3 ? medals[i] : `#${i+1}`;
+            ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#5c6b80';
+            ctx.font = '14px Courier New';
+            ctx.fillText(`${medal} ${hs.name} — ${hs.score} (Lvl ${hs.level}, ${hs.accuracy}%)`, canvas.width / 2, canvas.height * 0.78 + i * 22);
+        });
+    }
+
+    ctx.textAlign = 'left';
+}
+
+function drawLevelTransition() {
+    drawBackground();
+    const lvl = levels[level - 1];
+    const elapsed = (frameCount % 180) / 180;
+
+    ctx.textAlign = 'center';
+    ctx.shadowColor = lvl.color;
+    ctx.shadowBlur = 30 + Math.sin(frameCount * 0.1) * 10;
+    ctx.fillStyle = lvl.color;
+    ctx.font = 'bold 64px Courier New';
+    ctx.fillText(`LEVEL ${level}`, canvas.width / 2, canvas.height * 0.4);
+
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 28px Courier New';
+    ctx.fillText(lvl.name.toUpperCase(), canvas.width / 2, canvas.height * 0.5);
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#a8c4df';
+    ctx.font = '16px Courier New';
+    ctx.fillText(lvl.subjects, canvas.width / 2, canvas.height * 0.58);
+
+    ctx.fillStyle = `rgba(0, 240, 255, ${Math.sin(frameCount * 0.08) * 0.5 + 0.5})`;
+    ctx.font = '14px Courier New';
+    ctx.fillText('Get ready...', canvas.width / 2, canvas.height * 0.67);
+
+    ctx.textAlign = 'left';
+    drawParticles();
+}
+
+
+// ========== UPDATE ==========
+function update() {
+    if (gameState !== 'playing') return;
+    frameCount++;
+    levelTimer++;
+
+    // Speed ramp every 30s
+    if (levelTimer % 1800 === 0) speedMultiplier += 0.1;
+
+    // Player movement
+    if (useMouseControl) {
+        player.targetX = mouseX; player.targetY = mouseY;
+        player.x += (player.targetX - player.x) * 0.08;
+        player.y += (player.targetY - player.y) * 0.08;
+    } else {
+        if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= player.speed;
+        if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += player.speed;
+        if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= player.speed;
+        if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += player.speed;
+    }
+
+    // Bounds
+    player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
+    player.y = Math.max(20, Math.min(canvas.height - 20, player.y));
+
+    // Invincibility timer
+    if (player.invincible > 0) player.invincible--;
+
+    // Spawn obstacles
+    if (frameCount % spawnRate === 0) spawnObstacle();
+
+    // Spawn orbs
+    orbTimer++;
+    if (orbTimer > 480 + Math.random() * 240 && orbs.length < 3) {
+        spawnOrb();
+        orbTimer = 0;
+    }
+
+    // Update obstacles
+    obstacles.forEach(obs => {
+        obs.x += obs.vx; obs.y += obs.vy;
+        obs.rotation += obs.rotSpeed;
+    });
+    obstacles = obstacles.filter(obs =>
+        obs.x > -60 && obs.x < canvas.width + 60 &&
+        obs.y > -60 && obs.y < canvas.height + 60
+    );
+
+    // Collision with obstacles
+    if (player.invincible <= 0) {
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            if (checkCollision(player, obstacles[i], 14, obstacles[i].radius * 0.7)) {
+                health--;
+                player.invincible = 60;
+                screenShake = 10;
+                sfxCollision();
+                createExplosion(obstacles[i].x, obstacles[i].y, 120, ['#ff0066', '#ff4400', '#ff8800', '#ffcc00']);
+                obstacles.splice(i, 1);
+                if (health <= 0) { gameOver(); return; }
+                break;
+            }
+        }
+    }
+
+    // Collision with orbs
+    for (let i = orbs.length - 1; i >= 0; i--) {
+        if (checkCollision(player, orbs[i], 14, orbs[i].radius)) {
+            sfxOrb();
+            createExplosion(orbs[i].x, orbs[i].y, 40, ['#00f0ff', '#b300ff', '#00ff88', '#fff']);
+            orbs.splice(i, 1);
+            showQuiz();
+            break;
+        }
+    }
+
+    // Score increment over time
+    if (frameCount % 60 === 0) score += level;
+
+    // Screen shake decay
+    if (screenShake > 0) screenShake--;
+}
+
+
+// ========== MAIN LOOP ==========
+function gameLoop() {
+    // Screen shake
+    if (screenShake > 0) {
+        ctx.save();
+        ctx.translate(
+            (Math.random() - 0.5) * screenShake,
+            (Math.random() - 0.5) * screenShake
+        );
+    }
+
+    if (gameState === 'start') {
+        frameCount++;
+        drawStartScreen();
+    } else if (gameState === 'levelTransition') {
+        frameCount++;
+        drawLevelTransition();
+    } else if (gameState === 'playing' || gameState === 'quiz') {
+        update();
+        drawBackground();
+        drawObstacles();
+        drawOrbs();
+        drawPlayer();
+        drawParticles();
+        drawHUD();
+    } else if (gameState === 'gameOver') {
+        drawBackground();
+        drawParticles();
+    }
+
+    if (screenShake > 0) ctx.restore();
+
+    requestAnimationFrame(gameLoop);
+}
+
+// ========== INIT ==========
+initBgParticles();
+initCircuitLayers();
+showStartScreen();
+gameLoop();
+</script>
+</body>
+</html>
