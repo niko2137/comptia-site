@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking PBQ — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* PBQ-specific styles */
+        .pbq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin-bottom: 16px;
+        }
+        .pbq-instructions {
+            background: var(--bg-section);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            font-size: 0.95em;
+            color: var(--text-body);
+        }
+        .pbq-instructions h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-size: 1.1em;
+        }
+        .pbq-instructions ul {
+            margin: 8px 0 0;
+            padding-left: 20px;
+        }
+        .pbq-instructions li {
+            margin-bottom: 4px;
+        }
+
+        /* Question cards */
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .question-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        .question-number {
+            display: inline-block;
+            background: var(--navy);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+        .question-text {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            font-size: 1em;
+            display: inline;
+        }
+        .scenario-tag {
+            display: inline-block;
+            background: var(--blue-pale);
+            color: var(--blue-accent);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.72em;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+        }
+        .options-list li {
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.92em;
+        }
+        .options-list li:hover {
+            border-color: var(--blue-accent);
+            background: var(--bg-section);
+        }
+        .options-list li.selected {
+            border-color: var(--blue-accent);
+            background: var(--blue-pale);
+            font-weight: 600;
+        }
+        .options-list li.correct {
+            border-color: var(--green);
+            background: #d4edda;
+        }
+        .options-list li.incorrect {
+            border-color: var(--red);
+            background: #f8d7da;
+        }
+        .options-list li.show-correct {
+            border-color: var(--green);
+            background: #d4edda;
+            font-weight: 600;
+        }
+        .option-label {
+            display: inline-block;
+            background: var(--bg-section);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.78em;
+            font-weight: 700;
+            margin-right: 10px;
+            color: var(--navy);
+        }
+
+        /* Explanation */
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: var(--bg-section);
+            border-left: 3px solid var(--blue-accent);
+            border-radius: 0 6px 6px 0;
+            font-size: 0.88em;
+            color: var(--text-muted);
+        }
+        .explanation.visible {
+            display: block;
+        }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 32px 0;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn-check {
+            background: var(--green);
+            color: #fff;
+        }
+        .pbq-btn-check:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+        .pbq-btn-reset {
+            background: var(--blue-accent);
+            color: #fff;
+        }
+        .pbq-btn-reset:hover {
+            background: var(--navy);
+            transform: translateY(-1px);
+        }
+
+        /* Score display */
+        .score-display {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px;
+            border-radius: var(--radius);
+            display: none;
+        }
+        .score-display.visible {
+            display: block;
+        }
+        .score-display.pass {
+            background: #d4edda;
+            border: 2px solid var(--green);
+        }
+        .score-display.fail {
+            background: #f8d7da;
+            border: 2px solid var(--red);
+        }
+        .score-display h2 {
+            margin: 0 0 8px;
+        }
+        .score-display p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        /* CTA Bottom */
+        .pbq-cta {
+            text-align: center;
+            padding: 40px 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            margin-top: 40px;
+            border: 1px solid var(--border);
+        }
+        .pbq-cta p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-size: 0.95em;
+        }
+        .pbq-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .pbq-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .pbq-header h1 {
+                font-size: 1.5em;
+            }
+            .question-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="pbq-container">
+        <div class="pbq-header">
+            <h1>🌐 Networking PBQ</h1>
+            <p class="subtitle">Scenario-based networking questions for the CompTIA A+ exam</p>
+        </div>
+
+        <div class="pbq-instructions">
+            <h3>📋 Instructions</h3>
+            <p>Read each scenario carefully and select the best answer. These questions cover ports, protocols, OSI model, and common networking issues.</p>
+            <ul>
+                <li>Click on the answer you believe is correct for each question.</li>
+                <li>When you're ready, click <strong>"Check Answers"</strong> to see your score.</li>
+                <li>You need <strong>80% (8/10)</strong> to pass.</li>
+                <li>After checking, explanations will appear showing why each answer is correct.</li>
+            </ul>
+        </div>
+
+        <div id="questionsContainer">
+            <!-- Generated by JS -->
+        </div>
+
+        <div class="pbq-actions">
+            <button class="pbq-btn pbq-btn-check" onclick="checkAnswers()">✓ Check Answers</button>
+            <button class="pbq-btn pbq-btn-reset" onclick="resetQuiz()">↺ Reset</button>
+        </div>
+
+        <div class="score-display" id="scoreDisplay">
+            <h2 id="scoreText"></h2>
+            <p id="scoreMessage"></p>
+        </div>
+
+        <div class="pbq-cta" id="buy">
+            <p>Want the full study guide with 25+ modules, 500-term glossary, and exam traps?</p>
+            <a href="#">Get the Book →</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                text: "A user needs secure remote CLI access to a Linux server. Which port must be open on the firewall?",
+                scenario: true,
+                options: ["Port 21 (FTP)", "Port 22 (SSH)", "Port 23 (Telnet)", "Port 3389 (RDP)"],
+                correct: 1,
+                explanation: "SSH (Secure Shell) uses port 22 and provides encrypted command-line access. Telnet (port 23) is unencrypted and insecure. FTP is for file transfer, and RDP is for Windows graphical remote access."
+            },
+            {
+                id: 2,
+                text: "A workstation has an IP address of 169.254.47.12. What does this indicate?",
+                scenario: true,
+                options: ["The NIC is disabled", "The DHCP server is unreachable (APIPA assigned)", "The DNS server is down", "The gateway is misconfigured"],
+                correct: 1,
+                explanation: "169.254.x.x is an APIPA (Automatic Private IP Addressing) address. Windows assigns this when it cannot reach a DHCP server. The NIC is working but no DHCP response was received."
+            },
+            {
+                id: 3,
+                text: "Which protocol uses UDP ports 67 (server) and 68 (client)?",
+                scenario: false,
+                options: ["DNS", "DHCP", "SNMP", "TFTP"],
+                correct: 1,
+                explanation: "DHCP (Dynamic Host Configuration Protocol) uses UDP 67 for the server and UDP 68 for the client. The DORA process (Discover, Offer, Request, Acknowledge) uses these ports."
+            },
+            {
+                id: 4,
+                text: "A switch operates at which layer of the OSI model?",
+                scenario: false,
+                options: ["Layer 1 (Physical)", "Layer 2 (Data Link)", "Layer 3 (Network)", "Layer 4 (Transport)"],
+                correct: 1,
+                explanation: "A switch operates at Layer 2 (Data Link) using MAC addresses to forward frames. A hub is Layer 1. A router is Layer 3. A managed switch can also do some Layer 3 functions."
+            },
+            {
+                id: 5,
+                text: "What is the maximum speed of Cat 6a cable at 100 meters?",
+                scenario: false,
+                options: ["1 Gbps", "5 Gbps", "10 Gbps", "25 Gbps"],
+                correct: 2,
+                explanation: "Cat 6a supports 10 Gbps at up to 100 meters. Regular Cat 6 only supports 10 Gbps at 55 meters. Cat 5e maxes out at 1 Gbps."
+            },
+            {
+                id: 6,
+                text: "WPA2-Enterprise uses which protocol/system for authentication?",
+                scenario: false,
+                options: ["WEP key sharing", "Pre-shared key (PSK)", "802.1X with RADIUS server", "MAC address filtering"],
+                correct: 2,
+                explanation: "WPA2-Enterprise uses 802.1X authentication with a RADIUS server. This allows individual user credentials rather than a shared password (PSK), providing better security and accountability."
+            },
+            {
+                id: 7,
+                text: "Which of these is the private IP range for Class A networks?",
+                scenario: false,
+                options: ["172.16.0.0/12", "192.168.0.0/16", "10.0.0.0/8", "169.254.0.0/16"],
+                correct: 2,
+                explanation: "10.0.0.0/8 is the Class A private range (10.0.0.0 – 10.255.255.255). 172.16.0.0/12 is Class B private. 192.168.0.0/16 is Class C private. 169.254.0.0/16 is APIPA (link-local)."
+            },
+            {
+                id: 8,
+                text: "Which network device connects different networks together using IP addresses to route traffic?",
+                scenario: false,
+                options: ["Hub", "Switch", "Router (Layer 3)", "Access Point"],
+                correct: 2,
+                explanation: "A router operates at Layer 3 (Network) and uses IP addresses to route traffic between different networks. Switches use MAC addresses at Layer 2. Hubs are simple Layer 1 repeaters."
+            },
+            {
+                id: 9,
+                text: "A user can ping 127.0.0.1 (localhost) successfully but cannot ping the default gateway. What is the most likely cause?",
+                scenario: true,
+                options: ["DNS server is down", "NIC/cable issue or incorrect gateway configuration", "The user's account is locked", "The DHCP lease expired"],
+                correct: 1,
+                explanation: "If localhost responds but the gateway doesn't, the TCP/IP stack works but there's a physical connectivity issue (bad cable/NIC) or the gateway address is wrong. DNS issues wouldn't affect pinging IPs."
+            },
+            {
+                id: 10,
+                text: "Port 3389 is used for which protocol?",
+                scenario: false,
+                options: ["SSH (Secure Shell)", "VNC (Virtual Network Computing)", "RDP (Remote Desktop Protocol)", "HTTPS (Secure Web)"],
+                correct: 2,
+                explanation: "Port 3389 is used by RDP (Remote Desktop Protocol), which provides graphical remote access to Windows systems. SSH uses 22, VNC uses 5900, and HTTPS uses 443."
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach(q => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-${q.id}`;
+
+                let optionsHTML = '';
+                const labels = ['A', 'B', 'C', 'D'];
+                q.options.forEach((opt, idx) => {
+                    optionsHTML += `
+                        <li onclick="selectAnswer(${q.id}, ${idx})" data-question="${q.id}" data-option="${idx}">
+                            <span class="option-label">${labels[idx]}</span>${opt}
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <span class="question-number">${q.id}</span>
+                        <span class="question-text">${q.text}</span>
+                        ${q.scenario ? '<span class="scenario-tag">Scenario</span>' : ''}
+                    </div>
+                    <ul class="options-list">${optionsHTML}</ul>
+                    <div class="explanation" id="explanation-${q.id}">💡 ${q.explanation}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectAnswer(questionId, optionIdx) {
+            // Don't allow changes after checking
+            if (document.getElementById('scoreDisplay').classList.contains('visible')) return;
+
+            userAnswers[questionId] = optionIdx;
+
+            // Update visual state
+            const options = document.querySelectorAll(`[data-question="${questionId}"]`);
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                if (parseInt(opt.dataset.option) === optionIdx) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const total = questions.length;
+
+            questions.forEach(q => {
+                const options = document.querySelectorAll(`[data-question="${q.id}"]`);
+                const userAnswer = userAnswers[q.id];
+
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected');
+                    opt.style.pointerEvents = 'none';
+
+                    if (idx === q.correct) {
+                        opt.classList.add('show-correct');
+                    }
+                    if (userAnswer === idx && idx !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    if (userAnswer === idx && idx === q.correct) {
+                        opt.classList.remove('show-correct');
+                        opt.classList.add('correct');
+                    }
+                });
+
+                if (userAnswer === q.correct) correct++;
+
+                // Show explanation
+                document.getElementById(`explanation-${q.id}`).classList.add('visible');
+            });
+
+            const percentage = Math.round((correct / total) * 100);
+            const passed = percentage >= 80;
+
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.classList.add('visible');
+            scoreDisplay.classList.remove('pass', 'fail');
+            scoreDisplay.classList.add(passed ? 'pass' : 'fail');
+
+            document.getElementById('scoreText').textContent = `Score: ${correct}/${total} (${percentage}%)`;
+            document.getElementById('scoreMessage').textContent = passed
+                ? '🎉 PASSED! Solid networking fundamentals!'
+                : '❌ Not quite — you need 80% (8/10) to pass. Review the explanations and try again!';
+
+            // Scroll to score
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('scoreDisplay').classList.remove('visible', 'pass', 'fail');
+            renderQuestions();
+        }
+
+        // Initialize
+        renderQuestions();
+    </script>
+</body>
+</html>

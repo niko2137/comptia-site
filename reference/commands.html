@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Troubleshooting Commands — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Reference page specific styles */
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+
+        .print-btn {
+            background: var(--blue-accent);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: background 0.2s;
+        }
+        .print-btn:hover { background: var(--navy); }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 700px;
+        }
+        .ref-table thead {
+            background: var(--navy);
+            color: #fff;
+        }
+        .ref-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ref-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .ref-table tbody tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        .ref-table tbody tr:hover {
+            background: var(--blue-pale);
+        }
+        .ref-table .cmd {
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95em;
+            white-space: nowrap;
+        }
+        .ref-table .switches {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85em;
+            color: var(--blue-accent);
+        }
+
+        .flow-section {
+            margin-top: 40px;
+        }
+        .flow-section h2 {
+            font-size: 1.4em;
+            color: var(--navy);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--blue-pale);
+        }
+
+        .flow-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+        .flow-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+            color: var(--navy);
+        }
+        .flow-card .flow-steps {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.88em;
+            color: var(--blue-accent);
+            background: var(--bg-light);
+            padding: 10px 16px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .flow-card .flow-steps .arrow {
+            color: var(--orange);
+            font-weight: 700;
+            margin: 0 4px;
+        }
+
+        .bottom-cta {
+            margin-top: 48px;
+            padding: 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .bottom-cta p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+        .bottom-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .bottom-cta a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta {
+                display: none !important;
+            }
+            .ref-page { padding: 0; }
+            .table-wrapper { box-shadow: none; }
+            .flow-card { box-shadow: none; border: 1px solid #ccc; }
+            .ref-table { font-size: 0.8em; }
+            body { font-size: 12pt; }
+        }
+
+        @media (max-width: 768px) {
+            .ref-page h1 { font-size: 1.5em; }
+            .ref-table { font-size: 0.8em; }
+            .flow-card .flow-steps { font-size: 0.78em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>Windows Troubleshooting Commands</h1>
+            <p class="subtitle">Essential CLI commands for the CompTIA A+ 220-1200 exam — know what each does and when to use it</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <div class="table-wrapper">
+                <table class="ref-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Purpose</th>
+                            <th>Key Switches</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cmd">ipconfig</td>
+                            <td>IP configuration</td>
+                            <td class="switches">/all, /release, /renew, /flushdns</td>
+                            <td>First step for any network issue</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">ping</td>
+                            <td>Test connectivity</td>
+                            <td class="switches">-t (continuous), -n (count)</td>
+                            <td>Verify host reachable</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">tracert</td>
+                            <td>Trace route to host</td>
+                            <td class="switches">(none common)</td>
+                            <td>Find where packets stop</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">nslookup</td>
+                            <td>Test DNS resolution</td>
+                            <td class="switches">(server name)</td>
+                            <td>DNS issues, wrong IP returned</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">netstat</td>
+                            <td>Active connections</td>
+                            <td class="switches">-a (all), -n (numeric), -b (process)</td>
+                            <td>Find open ports, suspicious connections</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">sfc /scannow</td>
+                            <td>Repair system files</td>
+                            <td class="switches">(none)</td>
+                            <td>Corrupted Windows files</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">DISM /Online /Cleanup-Image /RestoreHealth</td>
+                            <td>Fix component store</td>
+                            <td class="switches">(none)</td>
+                            <td>Run BEFORE retrying failed sfc</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">chkdsk</td>
+                            <td>Disk integrity</td>
+                            <td class="switches">/f (fix errors), /r (bad sectors)</td>
+                            <td>Disk errors, file corruption</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">bootrec</td>
+                            <td>Fix bootloader</td>
+                            <td class="switches">/fixmbr, /fixboot, /rebuildbcd</td>
+                            <td>Windows won't boot</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">msconfig</td>
+                            <td>System configuration</td>
+                            <td class="switches">(GUI)</td>
+                            <td>Isolate startup/service conflicts</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">gpupdate /force</td>
+                            <td>Refresh Group Policy</td>
+                            <td class="switches">(none)</td>
+                            <td>GPO not applying</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">diskpart</td>
+                            <td>Disk management CLI</td>
+                            <td class="switches">list disk, clean, convert gpt</td>
+                            <td>Advanced partition work</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">robocopy</td>
+                            <td>Robust file copy</td>
+                            <td class="switches">/mir, /e, /z (resume)</td>
+                            <td>Large file migrations</td>
+                        </tr>
+                        <tr>
+                            <td class="cmd">shutdown</td>
+                            <td>Remote/scheduled shutdown</td>
+                            <td class="switches">/s, /r, /t (seconds)</td>
+                            <td>Restart remote PCs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flow-section">
+                <h2>Troubleshooting Flows</h2>
+
+                <div class="flow-card">
+                    <h3>🌐 Network Issues</h3>
+                    <div class="flow-steps">
+                        ipconfig <span class="arrow">→</span> ping 127.0.0.1 <span class="arrow">→</span> ping gateway <span class="arrow">→</span> ping external <span class="arrow">→</span> nslookup
+                    </div>
+                </div>
+
+                <div class="flow-card">
+                    <h3>💻 Boot Failures</h3>
+                    <div class="flow-steps">
+                        WinRE <span class="arrow">→</span> Startup Repair <span class="arrow">→</span> bootrec /rebuildbcd <span class="arrow">→</span> sfc <span class="arrow">→</span> DISM
+                    </div>
+                </div>
+
+                <div class="flow-card">
+                    <h3>🔧 System Corruption</h3>
+                    <div class="flow-steps">
+                        sfc /scannow <span class="arrow">→</span> if fails <span class="arrow">→</span> DISM /RestoreHealth <span class="arrow">→</span> retry sfc
+                    </div>
+                </div>
+
+                <div class="flow-card">
+                    <h3>🐢 Slow System</h3>
+                    <div class="flow-steps">
+                        Task Manager <span class="arrow">→</span> Resource Monitor <span class="arrow">→</span> check startup items (msconfig)
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Complete Study Guide. <a href="#">Get the full book →</a></p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

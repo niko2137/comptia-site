@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware & Troubleshooting PBQ — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* PBQ-specific styles */
+        .pbq-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin-bottom: 16px;
+        }
+        .pbq-instructions {
+            background: var(--bg-section);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            font-size: 0.95em;
+            color: var(--text-body);
+        }
+        .pbq-instructions h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-size: 1.1em;
+        }
+        .pbq-instructions ul {
+            margin: 8px 0 0;
+            padding-left: 20px;
+        }
+        .pbq-instructions li {
+            margin-bottom: 4px;
+        }
+
+        /* Drag and Drop Layout */
+        .dnd-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .drop-zone-section h3,
+        .drag-bank-section h3 {
+            color: var(--navy);
+            margin-bottom: 16px;
+            font-size: 1.1em;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--blue-pale);
+        }
+
+        /* Drop zones */
+        .drop-item {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 12px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .drop-item:hover {
+            box-shadow: var(--shadow);
+        }
+        .drop-number {
+            background: var(--navy);
+            color: #fff;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        .drop-description {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 0.88em;
+            color: var(--text-body);
+            border-right: 1px solid var(--border);
+        }
+        .drop-target {
+            min-width: 200px;
+            max-width: 200px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-section);
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-style: italic;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .drop-target.has-item {
+            background: var(--blue-pale);
+            color: var(--navy);
+            font-style: normal;
+            font-weight: 600;
+        }
+        .drop-target.drag-over {
+            background: #d4edda;
+            border: 2px dashed var(--green);
+        }
+        .drop-target.correct {
+            background: #d4edda;
+            border: 2px solid var(--green);
+        }
+        .drop-target.incorrect {
+            background: #f8d7da;
+            border: 2px solid var(--red);
+        }
+
+        /* Drag items bank */
+        .drag-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .drag-item {
+            background: var(--navy);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.82em;
+            font-weight: 600;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .drag-item:hover {
+            background: var(--blue-accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        .drag-item:active {
+            cursor: grabbing;
+            opacity: 0.8;
+        }
+        .drag-item.placed {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 32px 0;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn-check {
+            background: var(--green);
+            color: #fff;
+        }
+        .pbq-btn-check:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+        .pbq-btn-reset {
+            background: var(--blue-accent);
+            color: #fff;
+        }
+        .pbq-btn-reset:hover {
+            background: var(--navy);
+            transform: translateY(-1px);
+        }
+
+        /* Score display */
+        .score-display {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px;
+            border-radius: var(--radius);
+            display: none;
+        }
+        .score-display.visible {
+            display: block;
+        }
+        .score-display.pass {
+            background: #d4edda;
+            border: 2px solid var(--green);
+        }
+        .score-display.fail {
+            background: #f8d7da;
+            border: 2px solid var(--red);
+        }
+        .score-display h2 {
+            margin: 0 0 8px;
+        }
+        .score-display p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        /* CTA Bottom */
+        .pbq-cta {
+            text-align: center;
+            padding: 40px 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            margin-top: 40px;
+            border: 1px solid var(--border);
+        }
+        .pbq-cta p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-size: 0.95em;
+        }
+        .pbq-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .pbq-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .dnd-layout {
+                grid-template-columns: 1fr;
+            }
+            .drop-target {
+                min-width: 140px;
+                max-width: 140px;
+            }
+            .drop-description {
+                font-size: 0.82em;
+                padding: 10px 12px;
+            }
+            .pbq-header h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Touch device support */
+        .touch-select-mode .drag-item {
+            cursor: pointer;
+        }
+        .drag-item.selected {
+            background: var(--green);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="pbq-container">
+        <div class="pbq-header">
+            <h1>🖥️ Hardware & Troubleshooting PBQ</h1>
+            <p class="subtitle">Match motherboard components to their descriptions</p>
+        </div>
+
+        <div class="pbq-instructions">
+            <h3>📋 Instructions</h3>
+            <p>This is a drag-and-drop matching exercise. You need to match each motherboard component to its correct description.</p>
+            <ul>
+                <li><strong>Desktop:</strong> Drag a component name from the bank on the right and drop it onto the correct slot.</li>
+                <li><strong>Mobile/Touch:</strong> Tap a component in the bank to select it (it will turn green), then tap a drop zone to place it.</li>
+                <li>To remove a placed item, click/tap on it in the drop zone.</li>
+                <li>Click <strong>"Check Answers"</strong> when you've placed all items. You need <strong>80% (10/12)</strong> to pass.</li>
+            </ul>
+        </div>
+
+        <div class="dnd-layout">
+            <div class="drop-zone-section">
+                <h3>📌 Descriptions — Drop the correct component here</h3>
+                <div id="dropZones">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+            <div class="drag-bank-section">
+                <h3>🧩 Component Bank — Drag from here</h3>
+                <div class="drag-bank" id="dragBank">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="pbq-actions">
+            <button class="pbq-btn pbq-btn-check" onclick="checkAnswers()">✓ Check Answers</button>
+            <button class="pbq-btn pbq-btn-reset" onclick="resetQuiz()">↺ Reset</button>
+        </div>
+
+        <div class="score-display" id="scoreDisplay">
+            <h2 id="scoreText"></h2>
+            <p id="scoreMessage"></p>
+        </div>
+
+        <div class="pbq-cta" id="buy">
+            <p>Want the full study guide with 25+ modules, 500-term glossary, and exam traps?</p>
+            <a href="#">Get the Book →</a>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const questions = [
+            { id: 1, component: "CPU Socket LGA 1700", description: "Intel 12th–14th gen, pins on motherboard" },
+            { id: 2, component: "DIMM Slots (DDR4)", description: "288 pins, dual-channel requires matched pairs" },
+            { id: 3, component: "24-pin ATX", description: "Main motherboard power, provides 3.3V/5V/12V" },
+            { id: 4, component: "8-pin EPS", description: "Dedicated 12V CPU power, separate from 24-pin" },
+            { id: 5, component: "M.2 Slot", description: "NVMe SSD, up to 7000 MB/s via PCIe" },
+            { id: 6, component: "SATA III Ports", description: "6 Gb/s for HDDs/SSDs/optical drives" },
+            { id: 7, component: "PCIe x16 Slot", description: "Graphics card, longest expansion slot" },
+            { id: 8, component: "CMOS Battery", description: "CR2032, powers BIOS clock/settings when off" },
+            { id: 9, component: "System Panel Header", description: "Power button, reset, HDD LED connections" },
+            { id: 10, component: "USB 3.0 Header", description: "19-pin internal, blue connectors, 5 Gbps" },
+            { id: 11, component: "Fan Headers", description: "CPU_FAN required, 4-pin = PWM speed control" },
+            { id: 12, component: "TPM Chip", description: "Security chip for BitLocker/Windows 11" }
+        ];
+
+        // State
+        let placements = {};
+        let selectedDragItem = null;
+
+        // Shuffle array
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // Initialize
+        function init() {
+            const dropContainer = document.getElementById('dropZones');
+            const bankContainer = document.getElementById('dragBank');
+            dropContainer.innerHTML = '';
+            bankContainer.innerHTML = '';
+            placements = {};
+            selectedDragItem = null;
+            document.getElementById('scoreDisplay').classList.remove('visible', 'pass', 'fail');
+
+            // Create drop zones
+            questions.forEach(q => {
+                const item = document.createElement('div');
+                item.className = 'drop-item';
+                item.innerHTML = `
+                    <div class="drop-number">${q.id}</div>
+                    <div class="drop-description">${q.description}</div>
+                    <div class="drop-target" data-id="${q.id}" onclick="handleDropClick(${q.id})">Drop here</div>
+                `;
+                dropContainer.appendChild(item);
+            });
+
+            // Shuffle and create drag items
+            const shuffled = shuffle(questions);
+            shuffled.forEach(q => {
+                const item = document.createElement('div');
+                item.className = 'drag-item';
+                item.draggable = true;
+                item.dataset.id = q.id;
+                item.textContent = q.component;
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('click', handleDragItemClick);
+                bankContainer.appendChild(item);
+            });
+
+            // Setup drop targets
+            document.querySelectorAll('.drop-target').forEach(target => {
+                target.addEventListener('dragover', handleDragOver);
+                target.addEventListener('dragleave', handleDragLeave);
+                target.addEventListener('drop', handleDrop);
+            });
+        }
+
+        // Drag and Drop handlers
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const dragId = e.dataTransfer.getData('text/plain');
+            const targetId = e.currentTarget.dataset.id;
+            placeItem(dragId, targetId);
+        }
+
+        // Touch/click support
+        function handleDragItemClick(e) {
+            const item = e.currentTarget;
+            if (item.classList.contains('placed')) return;
+
+            if (selectedDragItem) {
+                selectedDragItem.classList.remove('selected');
+            }
+            if (selectedDragItem === item) {
+                selectedDragItem = null;
+                return;
+            }
+            selectedDragItem = item;
+            item.classList.add('selected');
+        }
+
+        function handleDropClick(targetId) {
+            const target = document.querySelector(`.drop-target[data-id="${targetId}"]`);
+
+            // If target already has an item, remove it
+            if (target.classList.contains('has-item')) {
+                const placedId = Object.keys(placements).find(k => placements[k] == targetId);
+                if (placedId) {
+                    delete placements[placedId];
+                    const dragItem = document.querySelector(`.drag-item[data-id="${placedId}"]`);
+                    if (dragItem) dragItem.classList.remove('placed');
+                    target.classList.remove('has-item');
+                    target.textContent = 'Drop here';
+                }
+                return;
+            }
+
+            // If we have a selected item, place it
+            if (selectedDragItem) {
+                placeItem(selectedDragItem.dataset.id, targetId);
+                selectedDragItem.classList.remove('selected');
+                selectedDragItem = null;
+            }
+        }
+
+        function placeItem(dragId, targetId) {
+            // Remove from previous placement if any
+            const prevTarget = placements[dragId];
+            if (prevTarget) {
+                const prevEl = document.querySelector(`.drop-target[data-id="${prevTarget}"]`);
+                if (prevEl) {
+                    prevEl.classList.remove('has-item');
+                    prevEl.textContent = 'Drop here';
+                }
+            }
+
+            // Remove existing item from this target
+            const existingDragId = Object.keys(placements).find(k => placements[k] == targetId);
+            if (existingDragId) {
+                delete placements[existingDragId];
+                const existingEl = document.querySelector(`.drag-item[data-id="${existingDragId}"]`);
+                if (existingEl) existingEl.classList.remove('placed');
+            }
+
+            // Place the item
+            placements[dragId] = targetId;
+            const component = questions.find(q => q.id == dragId).component;
+            const target = document.querySelector(`.drop-target[data-id="${targetId}"]`);
+            target.textContent = component;
+            target.classList.add('has-item');
+
+            const dragItem = document.querySelector(`.drag-item[data-id="${dragId}"]`);
+            if (dragItem) dragItem.classList.add('placed');
+        }
+
+        // Check answers
+        function checkAnswers() {
+            let correct = 0;
+            const total = questions.length;
+
+            document.querySelectorAll('.drop-target').forEach(target => {
+                target.classList.remove('correct', 'incorrect');
+                const targetId = target.dataset.id;
+                const placedDragId = Object.keys(placements).find(k => placements[k] == targetId);
+
+                if (placedDragId && placedDragId == targetId) {
+                    target.classList.add('correct');
+                    correct++;
+                } else {
+                    target.classList.add('incorrect');
+                    if (!placedDragId) {
+                        target.textContent = '✗ Not answered';
+                    }
+                }
+            });
+
+            const percentage = Math.round((correct / total) * 100);
+            const passed = percentage >= 80;
+
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.classList.add('visible');
+            scoreDisplay.classList.remove('pass', 'fail');
+            scoreDisplay.classList.add(passed ? 'pass' : 'fail');
+
+            document.getElementById('scoreText').textContent = `Score: ${correct}/${total} (${percentage}%)`;
+            document.getElementById('scoreMessage').textContent = passed
+                ? '🎉 PASSED! Great job on your hardware knowledge!'
+                : '❌ Not quite — you need 80% (10/12) to pass. Review and try again!';
+        }
+
+        // Reset
+        function resetQuiz() {
+            init();
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

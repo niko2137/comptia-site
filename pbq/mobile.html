@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile & Virtualization PBQ — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* PBQ-specific styles */
+        .pbq-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin-bottom: 16px;
+        }
+        .pbq-instructions {
+            background: var(--bg-section);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            font-size: 0.95em;
+            color: var(--text-body);
+        }
+        .pbq-instructions h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-size: 1.1em;
+        }
+        .pbq-instructions ul {
+            margin: 8px 0 0;
+            padding-left: 20px;
+        }
+        .pbq-instructions li {
+            margin-bottom: 4px;
+        }
+
+        /* Section dividers */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 32px 0 20px;
+        }
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--blue-pale);
+        }
+        .section-divider span {
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        /* Matching section */
+        .match-section {
+            margin-bottom: 32px;
+        }
+        .match-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .match-item:hover {
+            box-shadow: var(--shadow);
+        }
+        .match-number {
+            background: var(--navy);
+            color: #fff;
+            min-width: 36px;
+            height: 100%;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        .match-prompt {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 0.9em;
+            color: var(--text-body);
+            font-weight: 600;
+        }
+        .match-select {
+            padding: 8px 12px;
+            margin: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: var(--text-body);
+            background: var(--bg-section);
+            min-width: 220px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .match-select:focus {
+            border-color: var(--blue-accent);
+            outline: none;
+        }
+        .match-select.correct {
+            border-color: var(--green);
+            background: #d4edda;
+        }
+        .match-select.incorrect {
+            border-color: var(--red);
+            background: #f8d7da;
+        }
+
+        /* Question cards (for MC section) */
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .question-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        .question-number {
+            display: inline-block;
+            background: var(--navy);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+        .question-text {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            font-size: 1em;
+            display: inline;
+        }
+        .type-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.72em;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .tag-cloud {
+            background: #e8f4fd;
+            color: #2980b9;
+        }
+        .tag-mobile {
+            background: #fef3e0;
+            color: #e67e22;
+        }
+        .tag-vm {
+            background: #f3e8fd;
+            color: #8e44ad;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+        }
+        .options-list li {
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.92em;
+        }
+        .options-list li:hover {
+            border-color: var(--blue-accent);
+            background: var(--bg-section);
+        }
+        .options-list li.selected {
+            border-color: var(--blue-accent);
+            background: var(--blue-pale);
+            font-weight: 600;
+        }
+        .options-list li.correct {
+            border-color: var(--green);
+            background: #d4edda;
+        }
+        .options-list li.incorrect {
+            border-color: var(--red);
+            background: #f8d7da;
+        }
+        .options-list li.show-correct {
+            border-color: var(--green);
+            background: #d4edda;
+            font-weight: 600;
+        }
+        .option-label {
+            display: inline-block;
+            background: var(--bg-section);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.78em;
+            font-weight: 700;
+            margin-right: 10px;
+            color: var(--navy);
+        }
+
+        /* Explanation */
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: var(--bg-section);
+            border-left: 3px solid var(--blue-accent);
+            border-radius: 0 6px 6px 0;
+            font-size: 0.88em;
+            color: var(--text-muted);
+        }
+        .explanation.visible {
+            display: block;
+        }
+        .match-explanation {
+            display: none;
+            padding: 8px 16px;
+            margin: 0 0 12px 36px;
+            background: var(--bg-section);
+            border-left: 3px solid var(--blue-accent);
+            border-radius: 0 6px 6px 0;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+        .match-explanation.visible {
+            display: block;
+        }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 32px 0;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn-check {
+            background: var(--green);
+            color: #fff;
+        }
+        .pbq-btn-check:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+        .pbq-btn-reset {
+            background: var(--blue-accent);
+            color: #fff;
+        }
+        .pbq-btn-reset:hover {
+            background: var(--navy);
+            transform: translateY(-1px);
+        }
+
+        /* Score display */
+        .score-display {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px;
+            border-radius: var(--radius);
+            display: none;
+        }
+        .score-display.visible {
+            display: block;
+        }
+        .score-display.pass {
+            background: #d4edda;
+            border: 2px solid var(--green);
+        }
+        .score-display.fail {
+            background: #f8d7da;
+            border: 2px solid var(--red);
+        }
+        .score-display h2 {
+            margin: 0 0 8px;
+        }
+        .score-display p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        /* CTA Bottom */
+        .pbq-cta {
+            text-align: center;
+            padding: 40px 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            margin-top: 40px;
+            border: 1px solid var(--border);
+        }
+        .pbq-cta p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-size: 0.95em;
+        }
+        .pbq-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .pbq-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .pbq-header h1 {
+                font-size: 1.5em;
+            }
+            .match-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .match-number {
+                min-height: auto;
+                padding: 6px;
+            }
+            .match-select {
+                min-width: auto;
+                margin: 0 12px 12px;
+            }
+            .question-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="pbq-container">
+        <div class="pbq-header">
+            <h1>📱 Mobile & Virtualization PBQ</h1>
+            <p class="subtitle">Mixed-format questions covering virtualization, cloud, and mobile device management</p>
+        </div>
+
+        <div class="pbq-instructions">
+            <h3>📋 Instructions</h3>
+            <p>This PBQ uses a mixed format — some questions are dropdown matching, and others are multiple choice. Both test the same exam concepts.</p>
+            <ul>
+                <li><strong>Matching questions:</strong> Select the correct answer from the dropdown for each item.</li>
+                <li><strong>Multiple choice:</strong> Click the best answer for each scenario.</li>
+                <li>Click <strong>"Check Answers"</strong> when ready. You need <strong>80% (8/10)</strong> to pass.</li>
+            </ul>
+        </div>
+
+        <!-- Section 1: Matching -->
+        <div class="section-divider"><span>PART A — Matching (Select from Dropdown)</span></div>
+
+        <div class="match-section" id="matchSection">
+            <!-- Generated by JS -->
+        </div>
+
+        <!-- Section 2: Multiple Choice -->
+        <div class="section-divider"><span>PART B — Multiple Choice</span></div>
+
+        <div id="mcSection">
+            <!-- Generated by JS -->
+        </div>
+
+        <div class="pbq-actions">
+            <button class="pbq-btn pbq-btn-check" onclick="checkAnswers()">✓ Check Answers</button>
+            <button class="pbq-btn pbq-btn-reset" onclick="resetQuiz()">↺ Reset</button>
+        </div>
+
+        <div class="score-display" id="scoreDisplay">
+            <h2 id="scoreText"></h2>
+            <p id="scoreMessage"></p>
+        </div>
+
+        <div class="pbq-cta" id="buy">
+            <p>Want the full study guide with 25+ modules, 500-term glossary, and exam traps?</p>
+            <a href="#">Get the Book →</a>
+        </div>
+    </div>
+
+    <script>
+        // Matching questions (dropdown)
+        const matchQuestions = [
+            {
+                id: 1,
+                prompt: "A Type 1 hypervisor runs on...",
+                correct: "Bare metal (directly on hardware)",
+                options: ["Within an existing OS", "Bare metal (directly on hardware)", "Inside a container", "In the cloud only"],
+                explanation: "Type 1 (bare-metal) hypervisors like ESXi, Hyper-V, and Xen run directly on hardware without a host OS. Type 2 (hosted) hypervisors like VirtualBox run within an existing OS.",
+                tag: "vm"
+            },
+            {
+                id: 2,
+                prompt: "A VM needs its own IP visible on the LAN — use which network mode?",
+                correct: "Bridged mode",
+                options: ["NAT mode", "Bridged mode", "Host-only mode", "Internal network"],
+                explanation: "Bridged mode gives the VM its own IP on the physical LAN, making it visible to other devices. NAT shares the host's IP. Host-only creates a private network between host and VM only.",
+                tag: "vm"
+            },
+            {
+                id: 3,
+                prompt: "A VM snapshot is...",
+                correct: "Point-in-time state capture for rollback (NOT a backup)",
+                options: ["A complete backup solution", "Point-in-time state capture for rollback (NOT a backup)", "A cloned copy of the VM", "An exported VM template"],
+                explanation: "Snapshots capture the VM's state at a moment in time for quick rollback. They are NOT backups — they depend on the base disk and can corrupt if misused. Always use proper backup solutions for production.",
+                tag: "vm"
+            },
+            {
+                id: 4,
+                prompt: "SaaS (Software as a Service) example?",
+                correct: "Microsoft 365 / Gmail",
+                options: ["AWS EC2 instances", "Microsoft 365 / Gmail", "Docker containers", "VMware ESXi"],
+                explanation: "SaaS delivers complete applications over the internet (M365, Gmail, Salesforce). The provider manages everything — infrastructure, platform, and software. Users just access via browser.",
+                tag: "cloud"
+            },
+            {
+                id: 5,
+                prompt: "With IaaS, the customer manages...",
+                correct: "VMs, OS, and applications",
+                options: ["Only the data", "VMs, OS, and applications", "Nothing — provider handles all", "Only the network"],
+                explanation: "IaaS (Infrastructure as a Service) provides raw compute/storage/networking. The customer is responsible for VMs, operating systems, applications, and data. The provider manages physical hardware and virtualization layer.",
+                tag: "cloud"
+            }
+        ];
+
+        // Multiple choice questions
+        const mcQuestions = [
+            {
+                id: 6,
+                text: "What does an IMEI number identify?",
+                options: ["The SIM card / carrier account", "The physical phone hardware (device ID)", "The phone number", "The user's Apple/Google account"],
+                correct: 1,
+                tag: "mobile",
+                explanation: "IMEI (International Mobile Equipment Identity) is a unique 15-digit number identifying the physical device hardware. It's used to block stolen phones. The SIM card has its own identifier (ICCID)."
+            },
+            {
+                id: 7,
+                text: "An organization uses MDM (Mobile Device Management). A company phone is reported stolen. Which action can MDM perform?",
+                options: ["Track the thief's identity", "Remote wipe", "Recover deleted files", "Disable the cellular network"],
+                correct: 1,
+                tag: "mobile",
+                explanation: "MDM solutions can perform remote wipe to erase all data on a stolen/lost device. They can also remote lock, enforce policies, and push configurations. They cannot identify thieves or disable carrier networks."
+            },
+            {
+                id: 8,
+                text: "What is the KEY difference between containers and virtual machines?",
+                options: ["Containers are always faster", "Containers share the host OS kernel; VMs have their own OS", "VMs cannot run on Linux", "Containers require Type 1 hypervisors"],
+                correct: 1,
+                tag: "vm",
+                explanation: "Containers share the host OS kernel making them lightweight and fast to start. VMs include their own full OS, making them more isolated but heavier. Containers use less resources but provide less isolation."
+            },
+            {
+                id: 9,
+                text: "Which cloud characteristic provides virtually unlimited scaling of resources on demand?",
+                options: ["High availability", "Elasticity", "Fault tolerance", "Load balancing"],
+                correct: 1,
+                tag: "cloud",
+                explanation: "Elasticity is the ability to automatically scale resources up or down based on demand. This gives the appearance of unlimited capacity. High availability ensures uptime; fault tolerance handles failures."
+            },
+            {
+                id: 10,
+                text: "A company phone with sensitive data is lost. What should be the FIRST action?",
+                options: ["Report to police immediately", "Remote wipe the device", "Remote lock the device", "Disable the user's account"],
+                correct: 2,
+                tag: "mobile",
+                explanation: "Remote lock should be the FIRST action — it immediately secures the device while preserving data for potential recovery. Remote wipe is more drastic and should be considered next if the phone isn't recovered. Lock first, then assess."
+            }
+        ];
+
+        let matchAnswers = {};
+        let mcAnswers = {};
+
+        function renderMatchQuestions() {
+            const container = document.getElementById('matchSection');
+            container.innerHTML = '';
+
+            matchQuestions.forEach(q => {
+                const item = document.createElement('div');
+                item.innerHTML = `
+                    <div class="match-item">
+                        <div class="match-number">${q.id}</div>
+                        <div class="match-prompt">${q.prompt}</div>
+                        <select class="match-select" id="match-${q.id}" onchange="matchAnswers[${q.id}] = this.value">
+                            <option value="">— Select answer —</option>
+                            ${q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="match-explanation" id="match-exp-${q.id}">💡 ${q.explanation}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderMCQuestions() {
+            const container = document.getElementById('mcSection');
+            container.innerHTML = '';
+
+            mcQuestions.forEach(q => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-${q.id}`;
+
+                let tagClass = '';
+                let tagLabel = '';
+                if (q.tag === 'mobile') { tagClass = 'tag-mobile'; tagLabel = 'Mobile'; }
+                else if (q.tag === 'cloud') { tagClass = 'tag-cloud'; tagLabel = 'Cloud'; }
+                else if (q.tag === 'vm') { tagClass = 'tag-vm'; tagLabel = 'Virtualization'; }
+
+                const labels = ['A', 'B', 'C', 'D'];
+                let optionsHTML = '';
+                q.options.forEach((opt, idx) => {
+                    optionsHTML += `
+                        <li onclick="selectMCAnswer(${q.id}, ${idx})" data-question="${q.id}" data-option="${idx}">
+                            <span class="option-label">${labels[idx]}</span>${opt}
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <span class="question-number">${q.id}</span>
+                        <span class="question-text">${q.text}</span>
+                        <span class="type-tag ${tagClass}">${tagLabel}</span>
+                    </div>
+                    <ul class="options-list">${optionsHTML}</ul>
+                    <div class="explanation" id="explanation-${q.id}">💡 ${q.explanation}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectMCAnswer(questionId, optionIdx) {
+            if (document.getElementById('scoreDisplay').classList.contains('visible')) return;
+
+            mcAnswers[questionId] = optionIdx;
+
+            const options = document.querySelectorAll(`[data-question="${questionId}"]`);
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                if (parseInt(opt.dataset.option) === optionIdx) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const total = matchQuestions.length + mcQuestions.length;
+
+            // Check matching questions
+            matchQuestions.forEach(q => {
+                const select = document.getElementById(`match-${q.id}`);
+                select.disabled = true;
+
+                if (select.value === q.correct) {
+                    select.classList.add('correct');
+                    correct++;
+                } else {
+                    select.classList.add('incorrect');
+                }
+                document.getElementById(`match-exp-${q.id}`).classList.add('visible');
+            });
+
+            // Check MC questions
+            mcQuestions.forEach(q => {
+                const options = document.querySelectorAll(`[data-question="${q.id}"]`);
+                const userAnswer = mcAnswers[q.id];
+
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected');
+                    opt.style.pointerEvents = 'none';
+
+                    if (idx === q.correct) {
+                        opt.classList.add('show-correct');
+                    }
+                    if (userAnswer === idx && idx !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    if (userAnswer === idx && idx === q.correct) {
+                        opt.classList.remove('show-correct');
+                        opt.classList.add('correct');
+                    }
+                });
+
+                if (userAnswer === q.correct) correct++;
+                document.getElementById(`explanation-${q.id}`).classList.add('visible');
+            });
+
+            const percentage = Math.round((correct / total) * 100);
+            const passed = percentage >= 80;
+
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.classList.add('visible');
+            scoreDisplay.classList.remove('pass', 'fail');
+            scoreDisplay.classList.add(passed ? 'pass' : 'fail');
+
+            document.getElementById('scoreText').textContent = `Score: ${correct}/${total} (${percentage}%)`;
+            document.getElementById('scoreMessage').textContent = passed
+                ? '🎉 PASSED! Great grasp of mobile & virtualization concepts!'
+                : '❌ Not quite — you need 80% (8/10) to pass. Review the explanations and try again!';
+
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            matchAnswers = {};
+            mcAnswers = {};
+            document.getElementById('scoreDisplay').classList.remove('visible', 'pass', 'fail');
+            renderMatchQuestions();
+            renderMCQuestions();
+        }
+
+        // Initialize
+        renderMatchQuestions();
+        renderMCQuestions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Ports Quick Reference — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Reference page specific styles */
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+
+        .print-btn {
+            background: var(--blue-accent);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: background 0.2s;
+        }
+        .print-btn:hover { background: var(--navy); }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 600px;
+        }
+        .ref-table thead {
+            background: var(--navy);
+            color: #fff;
+        }
+        .ref-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ref-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .ref-table tbody tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        .ref-table tbody tr:hover {
+            background: var(--blue-pale);
+        }
+        .ref-table .port-num {
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .ref-table .proto {
+            font-weight: 600;
+            color: var(--blue-accent);
+        }
+        .ref-table .tcp-udp {
+            font-size: 0.8em;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .tcp { background: #e8f5e9; color: var(--green); }
+        .udp { background: #fff3e0; color: var(--orange); }
+        .both { background: #e3f2fd; color: var(--blue-accent); }
+
+        .tips-box {
+            background: var(--bg-light);
+            border-left: 4px solid var(--green);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 20px 24px;
+            margin-top: 32px;
+        }
+        .tips-box h3 {
+            color: var(--green);
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        .tips-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .tips-box li {
+            margin-bottom: 8px;
+            color: var(--text-body);
+            line-height: 1.5;
+        }
+
+        .bottom-cta {
+            margin-top: 48px;
+            padding: 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .bottom-cta p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+        .bottom-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .bottom-cta a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta {
+                display: none !important;
+            }
+            .ref-page { padding: 0; }
+            .table-wrapper { box-shadow: none; }
+            .ref-table { font-size: 0.8em; }
+            body { font-size: 12pt; }
+        }
+
+        @media (max-width: 768px) {
+            .ref-page h1 { font-size: 1.5em; }
+            .ref-table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>Network Ports Quick Reference</h1>
+            <p class="subtitle">Essential ports for the CompTIA A+ 220-1200 exam — sorted by port number</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <div class="table-wrapper">
+                <table class="ref-table">
+                    <thead>
+                        <tr>
+                            <th>Port</th>
+                            <th>Protocol</th>
+                            <th>TCP/UDP</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="port-num">20/21</td>
+                            <td class="proto">FTP</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>File transfer (20=data, 21=control)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">22</td>
+                            <td class="proto">SSH/SFTP</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Encrypted remote access / file transfer</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">23</td>
+                            <td class="proto">Telnet</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Unencrypted remote access (insecure, legacy)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">25</td>
+                            <td class="proto">SMTP</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Send email (outbound)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">53</td>
+                            <td class="proto">DNS</td>
+                            <td><span class="tcp-udp both">TCP/UDP</span></td>
+                            <td>Domain name resolution</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">67/68</td>
+                            <td class="proto">DHCP</td>
+                            <td><span class="tcp-udp udp">UDP</span></td>
+                            <td>IP address assignment (67=server, 68=client)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">80</td>
+                            <td class="proto">HTTP</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Unencrypted web browsing</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">110</td>
+                            <td class="proto">POP3</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Receive email (downloads, removes from server)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">143</td>
+                            <td class="proto">IMAP</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Receive email (syncs across devices)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">161/162</td>
+                            <td class="proto">SNMP</td>
+                            <td><span class="tcp-udp udp">UDP</span></td>
+                            <td>Network device monitoring</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">389</td>
+                            <td class="proto">LDAP</td>
+                            <td><span class="tcp-udp both">TCP/UDP</span></td>
+                            <td>Directory services (Active Directory)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">443</td>
+                            <td class="proto">HTTPS</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Encrypted web browsing (TLS/SSL)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">445</td>
+                            <td class="proto">SMB</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Windows file/printer sharing</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">587</td>
+                            <td class="proto">SMTP (submission)</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Email submission with STARTTLS</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">636</td>
+                            <td class="proto">LDAPS</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Encrypted LDAP</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">993</td>
+                            <td class="proto">IMAPS</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Encrypted IMAP</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">995</td>
+                            <td class="proto">POP3S</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Encrypted POP3</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">3389</td>
+                            <td class="proto">RDP</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Windows Remote Desktop</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">5060/5061</td>
+                            <td class="proto">SIP</td>
+                            <td><span class="tcp-udp both">TCP/UDP</span></td>
+                            <td>VoIP call setup (5061=encrypted)</td>
+                        </tr>
+                        <tr>
+                            <td class="port-num">5900</td>
+                            <td class="proto">VNC</td>
+                            <td><span class="tcp-udp tcp">TCP</span></td>
+                            <td>Cross-platform screen sharing</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 Quick Tips</h3>
+                <ul>
+                    <li>Secure versions always have higher port numbers (110→995, 143→993)</li>
+                    <li>SSH does double duty: remote access AND file transfer (SFTP)</li>
+                    <li>DHCP uses UDP because speed matters more than guaranteed delivery for IP assignment</li>
+                    <li>Port 445 (SMB) should NEVER be exposed to the internet</li>
+                </ul>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Complete Study Guide. <a href="#">Get the full book →</a></p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

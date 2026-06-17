@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cable Types & Speeds Quick Reference — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Reference page specific styles */
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+
+        .print-btn {
+            background: var(--blue-accent);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: background 0.2s;
+        }
+        .print-btn:hover { background: var(--navy); }
+
+        .table-section { margin-bottom: 40px; }
+        .table-section h2 {
+            font-size: 1.4em;
+            color: var(--navy);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--blue-pale);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 600px;
+        }
+        .ref-table thead {
+            background: var(--navy);
+            color: #fff;
+        }
+        .ref-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ref-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .ref-table tbody tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        .ref-table tbody tr:hover {
+            background: var(--blue-pale);
+        }
+        .ref-table .highlight {
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .ref-table .speed {
+            font-weight: 600;
+            color: var(--blue-accent);
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .color-swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-right: 6px;
+            border: 1px solid var(--border);
+        }
+        .swatch-black { background: #333; }
+        .swatch-blue { background: #2196f3; }
+        .swatch-red { background: #e74c3c; }
+        .swatch-teal { background: #009688; }
+
+        .notes-box {
+            background: var(--bg-light);
+            border-left: 4px solid var(--orange);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 20px 24px;
+            margin-top: 32px;
+        }
+        .notes-box h3 {
+            color: var(--orange);
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        .notes-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .notes-box li {
+            margin-bottom: 10px;
+            color: var(--text-body);
+            line-height: 1.5;
+        }
+        .notes-box li strong {
+            color: var(--navy);
+        }
+
+        .bottom-cta {
+            margin-top: 48px;
+            padding: 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .bottom-cta p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+        .bottom-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .bottom-cta a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta {
+                display: none !important;
+            }
+            .ref-page { padding: 0; }
+            .table-wrapper { box-shadow: none; }
+            .ref-table { font-size: 0.8em; }
+            .table-section { page-break-inside: avoid; }
+            body { font-size: 12pt; }
+        }
+
+        @media (max-width: 768px) {
+            .ref-page h1 { font-size: 1.5em; }
+            .ref-table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>Cable Types & Speeds Quick Reference</h1>
+            <p class="subtitle">Ethernet, USB, and video connector specifications for the CompTIA A+ 220-1200 exam</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <!-- Ethernet Cables -->
+            <div class="table-section">
+                <h2>Ethernet Cables</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Max Speed</th>
+                                <th>Max Distance</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Cat 5e</td>
+                                <td class="speed">1 Gbps</td>
+                                <td>100m</td>
+                                <td>Minimum for Gigabit. Enhanced crosstalk reduction</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Cat 6</td>
+                                <td class="speed">10 Gbps (55m) / 1 Gbps (100m)</td>
+                                <td>55–100m</td>
+                                <td>Plastic spine separator. Thicker than 5e</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Cat 6a</td>
+                                <td class="speed">10 Gbps</td>
+                                <td>100m</td>
+                                <td>Augmented. Full 10G at full distance. Shielded</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Cat 8</td>
+                                <td class="speed">25–40 Gbps</td>
+                                <td>30m</td>
+                                <td>Data centers only. Shielded</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USB Standards -->
+            <div class="table-section">
+                <h2>USB Standards</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Standard</th>
+                                <th>Speed</th>
+                                <th>Connector Types</th>
+                                <th>Color Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">USB 2.0</td>
+                                <td class="speed">480 Mbps (Hi-Speed)</td>
+                                <td>Type-A, B, Mini, Micro</td>
+                                <td><span class="color-swatch swatch-black"></span>Black</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">USB 3.2 Gen 1</td>
+                                <td class="speed">5 Gbps (SuperSpeed)</td>
+                                <td>Type-A, C</td>
+                                <td><span class="color-swatch swatch-blue"></span>Blue</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">USB 3.2 Gen 2</td>
+                                <td class="speed">10 Gbps (SuperSpeed+)</td>
+                                <td>Type-A, C</td>
+                                <td><span class="color-swatch swatch-red"></span>Red / <span class="color-swatch swatch-teal"></span>Teal</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">USB 4.0</td>
+                                <td class="speed">40 Gbps</td>
+                                <td>Type-C only</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Thunderbolt 3/4</td>
+                                <td class="speed">40 Gbps</td>
+                                <td>Type-C (lightning bolt icon)</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Thunderbolt 5</td>
+                                <td class="speed">80 Gbps</td>
+                                <td>Type-C</td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Video Connectors -->
+            <div class="table-section">
+                <h2>Video Connectors</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>Connector</th>
+                                <th>Max Resolution</th>
+                                <th>Audio?</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">VGA</td>
+                                <td class="speed">1080p (analog)</td>
+                                <td>No</td>
+                                <td>15-pin blue. Legacy. Analog only</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">DVI-D</td>
+                                <td class="speed">1080p–1440p</td>
+                                <td>No</td>
+                                <td>Digital only. White connector</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">DVI-I</td>
+                                <td class="speed">1080p–1440p</td>
+                                <td>No</td>
+                                <td>Digital + analog</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">HDMI</td>
+                                <td class="speed">4K–8K</td>
+                                <td>Yes</td>
+                                <td>19-pin. Most common. No latch</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">DisplayPort</td>
+                                <td class="speed">4K–8K</td>
+                                <td>Yes</td>
+                                <td>20-pin with latch. Daisy-chain support</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="notes-box">
+                <h3>🔥 Cable Type Notes (Building Code)</h3>
+                <ul>
+                    <li><strong>Plenum (CMP):</strong> Fire-retardant for HVAC/ceiling spaces. Required by building code.</li>
+                    <li><strong>Riser (CMR):</strong> Fire-resistant for vertical runs between floors.</li>
+                    <li><strong>PVC:</strong> Standard. Only for open areas, NOT plenum/riser spaces.</li>
+                </ul>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Complete Study Guide. <a href="#">Get the full book →</a></p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

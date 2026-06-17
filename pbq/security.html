@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security & Operations PBQ — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* PBQ-specific styles */
+        .pbq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin-bottom: 16px;
+        }
+        .pbq-instructions {
+            background: var(--bg-section);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            font-size: 0.95em;
+            color: var(--text-body);
+        }
+        .pbq-instructions h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-size: 1.1em;
+        }
+        .pbq-instructions ul {
+            margin: 8px 0 0;
+            padding-left: 20px;
+        }
+        .pbq-instructions li {
+            margin-bottom: 4px;
+        }
+
+        /* Question cards */
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .question-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        .question-number {
+            display: inline-block;
+            background: var(--navy);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+        .question-text {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            font-size: 1em;
+            display: inline;
+        }
+        .scenario-tag {
+            display: inline-block;
+            background: #fde8e8;
+            color: var(--red);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.72em;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+        }
+        .options-list li {
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.92em;
+        }
+        .options-list li:hover {
+            border-color: var(--blue-accent);
+            background: var(--bg-section);
+        }
+        .options-list li.selected {
+            border-color: var(--blue-accent);
+            background: var(--blue-pale);
+            font-weight: 600;
+        }
+        .options-list li.correct {
+            border-color: var(--green);
+            background: #d4edda;
+        }
+        .options-list li.incorrect {
+            border-color: var(--red);
+            background: #f8d7da;
+        }
+        .options-list li.show-correct {
+            border-color: var(--green);
+            background: #d4edda;
+            font-weight: 600;
+        }
+        .option-label {
+            display: inline-block;
+            background: var(--bg-section);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.78em;
+            font-weight: 700;
+            margin-right: 10px;
+            color: var(--navy);
+        }
+
+        /* Explanation */
+        .explanation {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: var(--bg-section);
+            border-left: 3px solid var(--red);
+            border-radius: 0 6px 6px 0;
+            font-size: 0.88em;
+            color: var(--text-muted);
+        }
+        .explanation.visible {
+            display: block;
+        }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 32px 0;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn-check {
+            background: var(--green);
+            color: #fff;
+        }
+        .pbq-btn-check:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+        .pbq-btn-reset {
+            background: var(--blue-accent);
+            color: #fff;
+        }
+        .pbq-btn-reset:hover {
+            background: var(--navy);
+            transform: translateY(-1px);
+        }
+
+        /* Score display */
+        .score-display {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px;
+            border-radius: var(--radius);
+            display: none;
+        }
+        .score-display.visible {
+            display: block;
+        }
+        .score-display.pass {
+            background: #d4edda;
+            border: 2px solid var(--green);
+        }
+        .score-display.fail {
+            background: #f8d7da;
+            border: 2px solid var(--red);
+        }
+        .score-display h2 {
+            margin: 0 0 8px;
+        }
+        .score-display p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        /* CTA Bottom */
+        .pbq-cta {
+            text-align: center;
+            padding: 40px 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            margin-top: 40px;
+            border: 1px solid var(--border);
+        }
+        .pbq-cta p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-size: 0.95em;
+        }
+        .pbq-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .pbq-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .pbq-header h1 {
+                font-size: 1.5em;
+            }
+            .question-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="pbq-container">
+        <div class="pbq-header">
+            <h1>🔒 Security & Operations PBQ</h1>
+            <p class="subtitle">Scenario-based security questions for the CompTIA A+ exam</p>
+        </div>
+
+        <div class="pbq-instructions">
+            <h3>📋 Instructions</h3>
+            <p>Read each real-world security scenario carefully and identify the correct threat, solution, or best practice.</p>
+            <ul>
+                <li>Click on the answer you believe is correct for each question.</li>
+                <li>When you're ready, click <strong>"Check Answers"</strong> to see your score.</li>
+                <li>You need <strong>80% (8/10)</strong> to pass.</li>
+                <li>After checking, explanations will reveal why each answer is correct.</li>
+            </ul>
+        </div>
+
+        <div id="questionsContainer">
+            <!-- Generated by JS -->
+        </div>
+
+        <div class="pbq-actions">
+            <button class="pbq-btn pbq-btn-check" onclick="checkAnswers()">✓ Check Answers</button>
+            <button class="pbq-btn pbq-btn-reset" onclick="resetQuiz()">↺ Reset</button>
+        </div>
+
+        <div class="score-display" id="scoreDisplay">
+            <h2 id="scoreText"></h2>
+            <p id="scoreMessage"></p>
+        </div>
+
+        <div class="pbq-cta" id="buy">
+            <p>Want the full study guide with 25+ modules, 500-term glossary, and exam traps?</p>
+            <a href="#">Get the Book →</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                text: "An employee clicked a link in an email. Now all their files have a strange extension and a text file on the desktop demands Bitcoin payment. What type of malware is this?",
+                scenario: true,
+                options: ["Spyware", "Ransomware", "Trojan horse", "Rootkit"],
+                correct: 1,
+                explanation: "Ransomware encrypts user files and demands payment (usually cryptocurrency) for the decryption key. The file extensions change and a ransom note appears. This is distinct from spyware (steals data) or trojans (disguised malware)."
+            },
+            {
+                id: 2,
+                text: "A company is decommissioning SSDs that contained sensitive data. What is the best method to ensure data cannot be recovered?",
+                scenario: true,
+                options: ["Degaussing", "Secure Erase (ATA command)", "Standard format", "Physical shredding only"],
+                correct: 1,
+                explanation: "Secure Erase (ATA Secure Erase) is the recommended method for SSDs. Degaussing does NOT work on SSDs since they use flash memory, not magnetic storage. Standard formatting leaves data recoverable."
+            },
+            {
+                id: 3,
+                text: "During a routine check, you find a server has the IP address 169.254.12.100. What does this indicate?",
+                scenario: true,
+                options: ["The server has been hacked", "DHCP failure — not a security issue", "DNS poisoning attack", "IP address spoofing"],
+                correct: 1,
+                explanation: "169.254.x.x is an APIPA address assigned when the DHCP server is unreachable. This is a networking configuration issue, not a security concern. Check the DHCP server, network cables, and NIC."
+            },
+            {
+                id: 4,
+                text: "An attacker sets up a wireless access point with the same SSID as a legitimate corporate network to capture credentials. What is this attack called?",
+                scenario: true,
+                options: ["Brute force attack", "SQL injection", "Evil Twin", "Man-in-the-middle (only)"],
+                correct: 2,
+                explanation: "An Evil Twin attack uses a rogue access point with the same SSID as a legitimate network. Users unknowingly connect to it, allowing the attacker to intercept traffic. While it enables MitM attacks, the specific technique is called Evil Twin."
+            },
+            {
+                id: 5,
+                text: "A facility has a two-door entry system where the first door must close and lock before the second door opens, preventing people from following others in. What is this called?",
+                scenario: true,
+                options: ["Bollard system", "Access Control Vestibule (mantrap)", "Turnstile", "Biometric gateway"],
+                correct: 1,
+                explanation: "An Access Control Vestibule (formerly called mantrap) is a small room with two doors. The first must close before the second opens, preventing tailgating/piggybacking. CompTIA now uses 'Access Control Vestibule' terminology."
+            },
+            {
+                id: 6,
+                text: "A technician suggests degaussing to destroy data on old media. On which type of media is degaussing effective?",
+                scenario: false,
+                options: ["SSDs and USB drives", "HDDs and magnetic tape only", "All storage media types", "Optical discs (DVDs/CDs)"],
+                correct: 1,
+                explanation: "Degaussing uses a powerful magnetic field to destroy data on magnetic media (HDDs, tapes). It does NOT work on SSDs (flash-based), USB drives (flash), or optical media. For SSDs, use Secure Erase or physical destruction."
+            },
+            {
+                id: 7,
+                text: "Which Windows feature requires both a TPM chip AND Windows Pro or Enterprise edition?",
+                scenario: false,
+                options: ["Windows Defender", "BitLocker", "Windows Firewall", "User Account Control"],
+                correct: 1,
+                explanation: "BitLocker full-disk encryption requires a TPM chip (1.2 or higher) and Windows Pro/Enterprise/Education. Windows Home does NOT support BitLocker. TPM stores the encryption keys securely."
+            },
+            {
+                id: 8,
+                text: "A sophisticated phishing email is crafted specifically targeting the CEO of a company, referencing their personal schedule and recent meetings. This targeted attack is called...",
+                scenario: true,
+                options: ["Spear phishing", "Whaling", "Vishing", "Pharming"],
+                correct: 1,
+                explanation: "Whaling is a phishing attack specifically targeting high-level executives (the 'big fish'). Spear phishing targets specific individuals but not necessarily executives. Vishing is phone-based phishing. Pharming redirects website traffic."
+            },
+            {
+                id: 9,
+                text: "A server room needs a fire suppression system. Which class of fire extinguisher is appropriate for electrical and IT equipment fires?",
+                scenario: true,
+                options: ["Class A (ordinary combustibles)", "Class B (flammable liquids)", "Class C (electrical fires)", "Class D (combustible metals)"],
+                correct: 2,
+                explanation: "Class C extinguishers are rated for electrical fires. In server rooms, clean agent suppression systems (like FM-200) are preferred as they don't damage equipment. Never use water (Class A) on electrical fires."
+            },
+            {
+                id: 10,
+                text: "For authentication to qualify as multi-factor (MFA), it must use at least...",
+                scenario: false,
+                options: ["Two passwords from different systems", "Two different factor categories (something you know/have/are)", "Three separate credentials", "Biometric and password only"],
+                correct: 1,
+                explanation: "MFA requires at least two DIFFERENT categories: something you know (password/PIN), something you have (token/phone), or something you are (biometrics). Two passwords = single factor (both 'something you know')."
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach(q => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-${q.id}`;
+
+                let optionsHTML = '';
+                const labels = ['A', 'B', 'C', 'D'];
+                q.options.forEach((opt, idx) => {
+                    optionsHTML += `
+                        <li onclick="selectAnswer(${q.id}, ${idx})" data-question="${q.id}" data-option="${idx}">
+                            <span class="option-label">${labels[idx]}</span>${opt}
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <span class="question-number">${q.id}</span>
+                        <span class="question-text">${q.text}</span>
+                        ${q.scenario ? '<span class="scenario-tag">Scenario</span>' : ''}
+                    </div>
+                    <ul class="options-list">${optionsHTML}</ul>
+                    <div class="explanation" id="explanation-${q.id}">🔐 ${q.explanation}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectAnswer(questionId, optionIdx) {
+            if (document.getElementById('scoreDisplay').classList.contains('visible')) return;
+
+            userAnswers[questionId] = optionIdx;
+
+            const options = document.querySelectorAll(`[data-question="${questionId}"]`);
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                if (parseInt(opt.dataset.option) === optionIdx) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const total = questions.length;
+
+            questions.forEach(q => {
+                const options = document.querySelectorAll(`[data-question="${q.id}"]`);
+                const userAnswer = userAnswers[q.id];
+
+                options.forEach((opt, idx) => {
+                    opt.classList.remove('selected');
+                    opt.style.pointerEvents = 'none';
+
+                    if (idx === q.correct) {
+                        opt.classList.add('show-correct');
+                    }
+                    if (userAnswer === idx && idx !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    if (userAnswer === idx && idx === q.correct) {
+                        opt.classList.remove('show-correct');
+                        opt.classList.add('correct');
+                    }
+                });
+
+                if (userAnswer === q.correct) correct++;
+
+                document.getElementById(`explanation-${q.id}`).classList.add('visible');
+            });
+
+            const percentage = Math.round((correct / total) * 100);
+            const passed = percentage >= 80;
+
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.classList.add('visible');
+            scoreDisplay.classList.remove('pass', 'fail');
+            scoreDisplay.classList.add(passed ? 'pass' : 'fail');
+
+            document.getElementById('scoreText').textContent = `Score: ${correct}/${total} (${percentage}%)`;
+            document.getElementById('scoreMessage').textContent = passed
+                ? '🎉 PASSED! Your security knowledge is solid!'
+                : '❌ Not quite — you need 80% (8/10) to pass. Review the explanations and try again!';
+
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('scoreDisplay').classList.remove('visible', 'pass', 'fail');
+            renderQuestions();
+        }
+
+        // Initialize
+        renderQuestions();
+    </script>
+</body>
+</html>

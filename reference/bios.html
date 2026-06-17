@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIOS/UEFI Settings Quick Reference — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Reference page specific styles */
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+
+        .print-btn {
+            background: var(--blue-accent);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: background 0.2s;
+        }
+        .print-btn:hover { background: var(--navy); }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 700px;
+        }
+        .ref-table thead {
+            background: var(--navy);
+            color: #fff;
+        }
+        .ref-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ref-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .ref-table tbody tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+        .ref-table tbody tr:hover {
+            background: var(--blue-pale);
+        }
+        .ref-table .setting {
+            font-weight: 700;
+            color: var(--navy);
+            white-space: nowrap;
+        }
+        .ref-table .relevance {
+            font-size: 0.88em;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .tips-box {
+            background: var(--bg-light);
+            border-left: 4px solid var(--red);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 20px 24px;
+            margin-top: 32px;
+        }
+        .tips-box h3 {
+            color: var(--red);
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        .tips-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .tips-box li {
+            margin-bottom: 10px;
+            color: var(--text-body);
+            line-height: 1.5;
+        }
+        .tips-box li strong {
+            color: var(--navy);
+        }
+
+        .bottom-cta {
+            margin-top: 48px;
+            padding: 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .bottom-cta p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+        .bottom-cta a {
+            color: var(--red);
+            font-weight: 600;
+        }
+        .bottom-cta a:hover {
+            text-decoration: underline;
+        }
+
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta {
+                display: none !important;
+            }
+            .ref-page { padding: 0; }
+            .table-wrapper { box-shadow: none; }
+            .ref-table { font-size: 0.8em; }
+            body { font-size: 12pt; }
+        }
+
+        @media (max-width: 768px) {
+            .ref-page h1 { font-size: 1.5em; }
+            .ref-table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>BIOS/UEFI Settings Quick Reference</h1>
+            <p class="subtitle">Key firmware settings for the CompTIA A+ 220-1200 exam — know what each does and when to change it</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <div class="table-wrapper">
+                <table class="ref-table">
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Purpose</th>
+                            <th>Exam Relevance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="setting">Boot Order</td>
+                            <td>Determines which device boots first (HDD, USB, Network/PXE)</td>
+                            <td class="relevance">Change when installing OS or troubleshooting boot issues</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">Secure Boot</td>
+                            <td>Only allows OS with trusted certificates to boot</td>
+                            <td class="relevance">Required for Windows 11. Prevents rootkits. Must disable for some Linux</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">TPM</td>
+                            <td>Trusted Platform Module activation</td>
+                            <td class="relevance">Required for BitLocker and Windows 11. Stores encryption keys</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">Virtualization (VT-x/AMD-V)</td>
+                            <td>Enables hardware virtualization support</td>
+                            <td class="relevance">Must be ON for Hyper-V, VirtualBox, VMware. Off by default on some systems</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">CSM (Compatibility Support Module)</td>
+                            <td>Legacy BIOS compatibility mode</td>
+                            <td class="relevance">Disable for Secure Boot/GPT. Enable only for legacy OS installs</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">XMP/DOCP</td>
+                            <td>Enables RAM beyond stock speed (overclocking profiles)</td>
+                            <td class="relevance">Not exam-tested but common troubleshooting for instability</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">Fan Control</td>
+                            <td>Set fan curves and temperature thresholds</td>
+                            <td class="relevance">Overheating issues. CPU_FAN header must be populated</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">Wake-on-LAN</td>
+                            <td>Allow network packet to power on system</td>
+                            <td class="relevance">Used for remote management, PXE boot, enterprise deployment</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">POST Diagnostics</td>
+                            <td>Beep codes and LED indicators for failed components</td>
+                            <td class="relevance">No beep = dead PSU/mobo. Repeating beeps = RAM. Check vendor manual</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">Password (Supervisor/User)</td>
+                            <td>Lock BIOS settings or require password to boot</td>
+                            <td class="relevance">Supervisor = change settings. User = boot only. Clear via CMOS reset</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">UEFI vs Legacy Mode</td>
+                            <td>Modern (UEFI+GPT) vs Legacy (BIOS+MBR) boot</td>
+                            <td class="relevance">Windows 11 requires UEFI. Drives &gt;2TB require GPT/UEFI</td>
+                        </tr>
+                        <tr>
+                            <td class="setting">Date/Time</td>
+                            <td>System clock</td>
+                            <td class="relevance">Wrong time = SSL cert errors, failed updates. Dead CMOS battery if resets</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tips-box">
+                <h3>🎯 Exam Tips</h3>
+                <ul>
+                    <li><strong>Can't install Windows 11?</strong> Check: UEFI mode ON, Secure Boot ON, TPM 2.0 enabled</li>
+                    <li><strong>System won't boot from USB?</strong> Check boot order AND CSM/Legacy settings</li>
+                    <li><strong>BIOS clock resets every boot</strong> = dead CMOS battery (CR2032)</li>
+                    <li><strong>Hyper-V won't start?</strong> Enable Virtualization (VT-x) in BIOS first</li>
+                    <li><strong>NEVER set a BIOS password you might forget</strong> — CMOS reset is the only recovery</li>
+                </ul>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Complete Study Guide. <a href="#">Get the full book →</a></p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

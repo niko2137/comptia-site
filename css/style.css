@@ -1,0 +1,320 @@
+/* =============================================================
+   CompTIA A+ Resource Guide — Main Stylesheet
+   Color scheme matches book: Navy, Blue accents, Clean whites
+   ============================================================= */
+
+:root {
+    --navy: #1F497D;
+    --navy-dark: #152d4f;
+    --blue-accent: #366092;
+    --blue-light: #5b9bd5;
+    --blue-pale: #d6e4f0;
+    --red: #e74c3c;
+    --orange: #f39c12;
+    --green: #27ae60;
+    --text-dark: #1a2744;
+    --text-body: #333;
+    --text-muted: #666;
+    --bg-white: #ffffff;
+    --bg-light: #f8fafe;
+    --bg-section: #f0f4f8;
+    --border: #e2e8f0;
+    --shadow: 0 2px 12px rgba(31, 73, 125, 0.08);
+    --shadow-hover: 0 4px 20px rgba(31, 73, 125, 0.15);
+    --radius: 8px;
+    --max-width: 1100px;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-body);
+    line-height: 1.6;
+    background: var(--bg-white);
+}
+a { color: var(--blue-accent); text-decoration: none; }
+a:hover { color: var(--navy); text-decoration: underline; }
+img { max-width: 100%; height: auto; }
+
+/* Layout */
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+section { padding: 60px 0; }
+section:nth-child(even) { background: var(--bg-section); }
+
+/* Typography */
+h1, h2, h3, h4 { color: var(--text-dark); line-height: 1.3; }
+h1 { font-size: 2.4em; margin-bottom: 16px; }
+h2 { font-size: 1.8em; margin-bottom: 12px; }
+h3 { font-size: 1.3em; margin-bottom: 8px; }
+.section-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05em;
+    margin-bottom: 32px;
+    max-width: 700px;
+}
+
+/* =============================================================
+   NAVIGATION
+   ============================================================= */
+nav {
+    background: var(--navy-dark);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.nav-brand {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1em;
+    letter-spacing: -0.5px;
+}
+.nav-brand span { color: var(--blue-light); }
+.nav-links { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
+.nav-links a {
+    color: #cdd8e5;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.nav-links a:hover { color: #fff; text-decoration: none; }
+.nav-cta {
+    background: var(--red);
+    color: #fff !important;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.nav-cta:hover { background: #c0392b; color: #fff !important; }
+
+/* Mobile nav toggle */
+.nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5em; cursor: pointer; }
+
+/* =============================================================
+   HERO SECTION
+   ============================================================= */
+.hero {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, var(--blue-accent) 100%);
+    color: #fff;
+    padding: 80px 0 70px;
+    text-align: center;
+}
+.hero h1 { color: #fff; font-size: 2.6em; margin-bottom: 12px; }
+.hero .tagline {
+    font-size: 1.2em;
+    color: var(--blue-pale);
+    margin-bottom: 24px;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.hero .intro {
+    font-size: 1em;
+    color: #a8c4df;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+}
+.hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1em;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:hover { background: #c0392b; color: #fff; text-decoration: none; transform: translateY(-1px); }
+.btn-secondary { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.btn-secondary:hover { background: rgba(255,255,255,0.25); color: #fff; text-decoration: none; }
+
+/* =============================================================
+   FEATURE CARDS (PBQ, Reference, etc.)
+   ============================================================= */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+.card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+}
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.card-icon {
+    font-size: 2em;
+    margin-bottom: 12px;
+    display: block;
+}
+.card h3 { margin-top: 0; }
+.card p { color: var(--text-muted); font-size: 0.9em; margin-bottom: 16px; }
+.card .btn { font-size: 0.85em; padding: 8px 18px; }
+
+/* Priority badge */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge-high { background: #fde8e8; color: var(--red); }
+.badge-medium { background: #fef3e0; color: var(--orange); }
+.badge-free { background: #e8f5e9; color: var(--green); }
+
+/* =============================================================
+   PURCHASE / CTA SECTION
+   ============================================================= */
+.purchase-section {
+    background: linear-gradient(135deg, #f8fafe 0%, #edf2f7 100%);
+    border-top: 3px solid var(--navy);
+}
+.purchase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 32px;
+}
+.purchase-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    border: 2px solid var(--border);
+    transition: all 0.2s;
+}
+.purchase-card:hover { border-color: var(--blue-accent); box-shadow: var(--shadow-hover); }
+.purchase-card h3 { color: var(--navy); }
+.purchase-card .price {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 12px 0;
+}
+.purchase-card ul {
+    text-align: left;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 24px;
+}
+.purchase-card ul li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+.purchase-card ul li::before {
+    content: "✓ ";
+    color: var(--green);
+    font-weight: 700;
+}
+
+/* =============================================================
+   WHAT'S IN THE BOOK (curiosity builder)
+   ============================================================= */
+.book-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+.book-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+.book-feature .icon { font-size: 1.4em; flex-shrink: 0; }
+.book-feature .text { font-size: 0.88em; color: var(--text-muted); }
+.book-feature .text strong { color: var(--text-dark); display: block; margin-bottom: 2px; }
+
+/* =============================================================
+   AD PLACEMENT ZONES
+   ============================================================= */
+.ad-zone {
+    background: var(--bg-section);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    margin: 32px 0;
+    color: var(--text-muted);
+    font-size: 0.8em;
+}
+
+/* =============================================================
+   FOOTER
+   ============================================================= */
+footer {
+    background: var(--navy-dark);
+    color: #8fa8c8;
+    padding: 40px 0 24px;
+    font-size: 0.85em;
+}
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+.footer-brand { max-width: 320px; }
+.footer-brand h4 { color: #fff; margin-bottom: 8px; }
+.footer-links h4 { color: #fff; margin-bottom: 12px; font-size: 0.95em; }
+.footer-links ul { list-style: none; padding: 0; margin: 0; }
+.footer-links li { margin-bottom: 6px; }
+.footer-links a { color: #8fa8c8; }
+.footer-links a:hover { color: #fff; }
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 32px;
+    padding-top: 16px;
+    text-align: center;
+    color: #5a7a9a;
+    font-size: 0.85em;
+}
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 1.8em; }
+    .hero { padding: 50px 0 40px; }
+    section { padding: 40px 0; }
+    .purchase-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--navy-dark);
+        padding: 16px 24px;
+        gap: 12px;
+    }
+    footer .container { flex-direction: column; }
+}
