@@ -322,7 +322,7 @@
         <!-- Header -->
         <div class="flashcard-header">
             <h1>&#x1F0CF; Flash Card Preview</h1>
-            <p class="subtitle">Try 5 free cards &mdash; the full 500-term deck is included with the book</p>
+            <p class="subtitle">Preview 50 terms &mdash; the full 500-term deck with shuffle and filtering is in the Members section</p>
         </div>
 
         <!-- Card Scene -->
@@ -356,7 +356,7 @@
     <div class="upsell-overlay" id="upsellOverlay">
         <div class="upsell-card">
             <span class="lock-icon">&#x1F512;</span>
-            <h2>Want the full 500-term flash card deck?</h2>
+            <h2>Want all 500 terms with shuffle &amp; priority filtering?</h2>
             <p class="upsell-text">Purchase any format of the CompTIA A+ Complete Study Guide and get FREE access to the Members-Only section with:</p>
             <ul>
                 <li>500 flash cards</li>
@@ -378,26 +378,56 @@
     <script>
         // Flash Card Data (5 Preview Cards)
         const cards = [
-            {
-                term: "SSH",
-                definition: "Port 22 (TCP). Encrypted remote command-line access. Replaces Telnet. Used by Linux/Mac admins and SFTP."
-            },
-            {
-                term: "APIPA",
-                definition: "169.254.x.x address auto-assigned when device cannot reach DHCP server. Always indicates DHCP failure."
-            },
-            {
-                term: "BitLocker",
-                definition: "Windows full-disk encryption (Pro/Enterprise). Requires TPM chip. Recovery key stored in AD or Microsoft account."
-            },
-            {
-                term: "RAID 5",
-                definition: "Striping + distributed parity. Minimum 3 drives. Survives one drive failure. Most popular configuration for NAS devices."
-            },
-            {
-                term: "Mantrap",
-                definition: "Two-door entry system (now called Access Control Vestibule by CompTIA). Only one door opens at a time. Prevents tailgating."
-            }
+            { term: "SSH", definition: "Port 22 (TCP). Encrypted remote command-line access. Replaces Telnet. Used by Linux/Mac admins and SFTP." },
+            { term: "APIPA", definition: "169.254.x.x address auto-assigned when device cannot reach DHCP server. Always indicates DHCP failure." },
+            { term: "BitLocker", definition: "Windows full-disk encryption (Pro/Enterprise). Requires TPM chip. Recovery key stored in AD or Microsoft account." },
+            { term: "RAID 5", definition: "Striping + distributed parity. Minimum 3 drives. Survives one drive failure. Most popular NAS configuration." },
+            { term: "Mantrap", definition: "Two-door entry system (now called Access Control Vestibule). Only one door opens at a time. Prevents tailgating." },
+            { term: "TCP", definition: "Connection-oriented transport protocol guaranteeing delivery, order, and error checking. Used for web, email, file transfers." },
+            { term: "UDP", definition: "Connectionless transport protocol. No delivery guarantee. Faster than TCP. Used for streaming, VoIP, gaming, DNS." },
+            { term: "DHCP", definition: "Automatically assigns IP addresses. UDP ports 67 (server) / 68 (client). Process: DORA (Discover, Offer, Request, Acknowledge)." },
+            { term: "DNS", definition: "Translates domain names to IP addresses. Port 53 (TCP/UDP). Query types: A (IPv4), AAAA (IPv6), MX (mail), CNAME (alias)." },
+            { term: "HTTPS", definition: "Port 443 (TCP). Encrypted web browsing using TLS/SSL. Padlock icon in browser. Required for e-commerce and logins." },
+            { term: "RDP", definition: "Port 3389 (TCP). Windows remote desktop. Never expose directly to internet without VPN. Requires Pro/Enterprise to host." },
+            { term: "SMB", definition: "Port 445 (TCP). Windows file and printer sharing. Also used for mapped network drives. Block on firewall from WAN." },
+            { term: "NAT", definition: "Allows multiple private IPs to share one public IP. Performed by router. PAT uses port numbers to track connections." },
+            { term: "VLAN", definition: "Logically segments physical network into separate broadcast domains. Requires Layer 3 device for inter-VLAN routing." },
+            { term: "TPM", definition: "Trusted Platform Module. Security chip storing encryption keys. Required by BitLocker and Windows 11." },
+            { term: "UEFI", definition: "Modern firmware replacing BIOS. Supports >2TB drives, GPT partitions, Secure Boot, and faster startup." },
+            { term: "GPT", definition: "GUID Partition Table. Modern format supporting >2TB, up to 128 partitions. Requires UEFI boot. Has backup table." },
+            { term: "MBR", definition: "Master Boot Record. Legacy format. 2TB max, 4 partitions max. Requires BIOS boot. No redundancy." },
+            { term: "NTFS", definition: "Required for Windows. Supports permissions (ACLs), encryption (EFS), compression, journaling, files >4GB." },
+            { term: "POST", definition: "Power-On Self-Test. BIOS/UEFI checks CPU, RAM, hardware on boot. Failures indicated by beep codes or LED patterns." },
+            { term: "ESD", definition: "Electrostatic Discharge. As little as 100V can damage components (humans feel 3000V). Always ground yourself first." },
+            { term: "Ransomware", definition: "Encrypts victim's data and demands cryptocurrency payment. Response: disconnect, don't pay, restore from clean backup." },
+            { term: "MFA", definition: "Multi-Factor Authentication. Combines two or more: something you know, have, are, or somewhere you are." },
+            { term: "Evil Twin", definition: "Rogue Wi-Fi AP mimicking legitimate network (same SSID). Users connect unknowingly. Mitigated by VPN on public Wi-Fi." },
+            { term: "WPA3", definition: "Latest wireless security. Uses SAE (Simultaneous Authentication of Equals). Strongest Wi-Fi protection available." },
+            { term: "Phishing", definition: "Fraudulent emails/messages impersonating trusted entities to trick users into revealing credentials. #1 attack vector." },
+            { term: "Secure Erase", definition: "SSD firmware-level command resetting all memory cells. The correct method for sanitizing SSDs. Not multi-pass overwrite." },
+            { term: "Degaussing", definition: "Powerful magnetic field destroys data on HDDs and tape. Has NO effect on SSDs, flash drives, or optical discs." },
+            { term: "sfc /scannow", definition: "System File Checker. Scans and repairs corrupted Windows system files from cached copies. Run elevated CMD." },
+            { term: "DISM", definition: "Deployment Image Servicing and Management. /RestoreHealth repairs component store. Run BEFORE retrying failed sfc." },
+            { term: "ipconfig", definition: "Shows IP config. /release + /renew for DHCP refresh. /flushdns clears DNS cache. /all shows MAC and DHCP server." },
+            { term: "chkdsk", definition: "Check Disk utility. /f = fixes file system errors. /r = locates bad sectors and recovers data. Run elevated." },
+            { term: "bootrec", definition: "WinRE command repairing Windows boot. /fixmbr, /fixboot, /rebuildbcd. Used when Windows won't start." },
+            { term: "ATX", definition: "Standard motherboard (305x244mm). 7 expansion slots. Most common desktop form factor. Uses 24-pin + 8-pin EPS power." },
+            { term: "DDR4 vs DDR5", definition: "Different notch positions — NOT interchangeable. DDR4: 1.2V, 2133-3200MHz. DDR5: 1.1V, 4800-7200MHz." },
+            { term: "PCIe x16", definition: "Longest expansion slot. Used for graphics cards. Backward compatible with smaller cards (x1, x4, x8)." },
+            { term: "SATA III", definition: "Storage interface at 6 Gb/s (~550 MB/s real-world). Same cable for HDD and SSD. Being replaced by NVMe." },
+            { term: "NVMe", definition: "Non-Volatile Memory Express. Flash storage over PCIe bus. 3,500-7,000+ MB/s. Much faster than SATA." },
+            { term: "Cat 6a", definition: "10 Gbps at full 100m distance. 'a' = augmented. Thicker shielding eliminates alien crosstalk at longer runs." },
+            { term: "PoE", definition: "Power over Ethernet. Supplies power to devices (cameras, WAPs, phones) through network cables. No separate power needed." },
+            { term: "OSI Model", definition: "7-layer framework. Mnemonic: All People Seem To Need Data Processing (Application → Physical, layers 7 to 1)." },
+            { term: "Subnet Mask", definition: "Defines network vs. host portion of IP. Common: 255.255.255.0 (/24) = 254 usable hosts per subnet." },
+            { term: "Default Gateway", definition: "IP of the local router. Devices send external traffic here. If wrong: LAN works but no internet access." },
+            { term: "PXE Boot", definition: "Preboot Execution Environment. Network boot via DHCP+TFTP. Used for enterprise OS deployment across multiple machines." },
+            { term: "Secure Boot", definition: "UEFI feature allowing only OS with trusted certificates to boot. Prevents rootkits. Required by Windows 11." },
+            { term: "Safe Mode", definition: "Windows boots with minimal drivers/services. Isolates third-party conflicts. Access via msconfig or WinRE." },
+            { term: "System Restore", definition: "Returns system files/registry to a previous point. Does NOT affect personal documents. Removes recent programs/drivers." },
+            { term: "Thermal Paste", definition: "Applied between CPU and heatsink for heat transfer. Must clean old paste and reapply fresh when reseating cooler." },
+            { term: "CMOS Battery", definition: "CR2032 coin cell powering BIOS clock/settings when PC is off. Dead battery = clock resets every boot, settings lost." },
+            { term: "Class C Fire", definition: "Fire extinguisher for electrical/IT fires. Use CO2 or dry chemical, NEVER water. Most important type for server rooms." }
         ];
 
         let currentIndex = 0;
