@@ -301,6 +301,7 @@
         </div>
     </div>
 
+    <script src="../js/sounds.js"></script>
     <script>
         const questions = [
             {
@@ -434,6 +435,7 @@
         }
 
         function checkAnswers() {
+            GameSounds.click();
             let correct = 0;
             const total = questions.length;
 
@@ -465,6 +467,8 @@
             const percentage = Math.round((correct / total) * 100);
             const passed = percentage >= 80;
 
+            if (passed) { GameSounds.complete(); } else { GameSounds.wrong(); }
+
             const scoreDisplay = document.getElementById('scoreDisplay');
             scoreDisplay.classList.add('visible');
             scoreDisplay.classList.remove('pass', 'fail');
@@ -479,6 +483,7 @@
         }
 
         function resetQuiz() {
+            GameSounds.click();
             userAnswers = {};
             document.getElementById('scoreDisplay').classList.remove('visible', 'pass', 'fail');
             renderQuestions();
@@ -486,6 +491,12 @@
 
         // Initialize
         renderQuestions();
+
+        // Sound controls
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.insertAdjacentHTML('beforeend', GameSounds.createControlsUI());
+            GameSounds.initControls();
+        });
     </script>
 </body>
 </html>

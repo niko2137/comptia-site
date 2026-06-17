@@ -427,6 +427,7 @@
         </div>
     </div>
 
+    <script src="../js/sounds.js"></script>
     <script>
         // Matching questions (dropdown)
         const matchQuestions = [
@@ -593,6 +594,7 @@
         }
 
         function checkAnswers() {
+            GameSounds.click();
             let correct = 0;
             const total = matchQuestions.length + mcQuestions.length;
 
@@ -638,6 +640,8 @@
             const percentage = Math.round((correct / total) * 100);
             const passed = percentage >= 80;
 
+            if (passed) { GameSounds.complete(); } else { GameSounds.wrong(); }
+
             const scoreDisplay = document.getElementById('scoreDisplay');
             scoreDisplay.classList.add('visible');
             scoreDisplay.classList.remove('pass', 'fail');
@@ -652,6 +656,7 @@
         }
 
         function resetQuiz() {
+            GameSounds.click();
             matchAnswers = {};
             mcAnswers = {};
             document.getElementById('scoreDisplay').classList.remove('visible', 'pass', 'fail');
@@ -662,6 +667,12 @@
         // Initialize
         renderMatchQuestions();
         renderMCQuestions();
+
+        // Sound controls
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.insertAdjacentHTML('beforeend', GameSounds.createControlsUI());
+            GameSounds.initControls();
+        });
     </script>
 </body>
 </html>

@@ -441,6 +441,7 @@
         </div>
     </div>
 
+    <script src="../js/sounds.js"></script>
     <script>
         // === GAME DATA ===
         const PORT_DATA = [
@@ -487,6 +488,7 @@
 
         // === COUNTDOWN ===
         function startCountdown() {
+            GameSounds.click();
             document.getElementById('introScreen').style.display = 'none';
             const countdownScreen = document.getElementById('countdownScreen');
             countdownScreen.style.display = 'flex';
@@ -597,6 +599,7 @@
 
             if (selected === currentAnswer) {
                 // Correct!
+                GameSounds.correct();
                 streak++;
                 if (streak > bestStreak) bestStreak = streak;
                 const bonus = streak > 1 ? 5 : 0;
@@ -613,6 +616,7 @@
                 }, 400);
             } else {
                 // Wrong!
+                GameSounds.wrong();
                 streak = 0;
                 score -= 5;
                 if (score < 0) score = 0;
@@ -647,6 +651,7 @@
 
         // === END GAME ===
         function endGame() {
+            GameSounds.complete();
             document.getElementById('gameScreen').style.display = 'none';
             document.getElementById('gameOverScreen').style.display = 'flex';
 
@@ -682,6 +687,7 @@
 
         // === RESET GAME ===
         function resetGame() {
+            GameSounds.click();
             document.getElementById('gameOverScreen').style.display = 'none';
             document.getElementById('introScreen').style.display = 'flex';
             // Remove any lingering confetti
@@ -720,6 +726,12 @@
             }
             return arr;
         }
+
+        // Sound controls
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.insertAdjacentHTML('beforeend', GameSounds.createControlsUI());
+            GameSounds.initControls();
+        });
     </script>
 </body>
 </html>

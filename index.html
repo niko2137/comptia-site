@@ -9,14 +9,15 @@
 </head>
 <body>
     <!-- NAVIGATION -->
-    <nav>
+    <nav role="navigation" aria-label="Main navigation">
         <div class="container">
             <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
+            <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" onclick="document.querySelector('.nav-links').classList.toggle('active'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true')">&#9776;</button>
             <ul class="nav-links">
                 <li><a href="#pbq">Practice PBQs</a></li>
+                <li><a href="#games">Games</a></li>
                 <li><a href="#reference">Quick Reference</a></li>
-                <li><a href="#members">Members</a></li>
+                <li><a href="members.html">🔒 Members</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#buy" class="nav-cta">Get the Book</a></li>
             </ul>
@@ -104,6 +105,64 @@
             <div class="ad-zone">
                 <!-- Ad placement: leaderboard 728x90 or responsive -->
                 <p>Advertisement</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRACTICE GAMES SECTION -->
+    <section id="games" style="background: linear-gradient(135deg, #0a0e1a 0%, #1a2744 100%);">
+        <div class="container">
+            <h2 style="color: #fff;">🎮 Practice Games</h2>
+            <p class="section-subtitle" style="color: #a8c4df;">Learn while you play — these arcade-style games make memorizing ports, protocols, and concepts actually fun.</p>
+
+            <div class="card-grid">
+                <div class="card" style="background: #141c30; border-color: #2a3a55;">
+                    <span class="card-icon">🚀</span>
+                    <span class="badge badge-free">Free</span>
+                    <h3 style="color: #00e5ff;">Port Blaster</h3>
+                    <p style="color: #7a8a9e;">60-second speed challenge! Match ports to protocols before time runs out. Streak bonuses and high scores.</p>
+                    <a href="pbq/game.html" class="btn btn-primary">Play Now</a>
+                </div>
+
+                <div class="card" style="background: #141c30; border-color: #2a3a55;">
+                    <span class="card-icon">🔌</span>
+                    <span class="badge badge-free">Free</span>
+                    <h3 style="color: #00e5ff;">Port Match</h3>
+                    <p style="color: #7a8a9e;">Wordwall-style matching — draw lines connecting ports to protocols. Easy, Medium, and Hard modes.</p>
+                    <a href="pbq/port-match.html" class="btn btn-primary">Play Now</a>
+                </div>
+
+                <div class="card" style="background: #141c30; border-color: #2a3a55;">
+                    <span class="card-icon">🎮</span>
+                    <span class="badge badge-medium">Members</span>
+                    <h3 style="color: #00e5ff;">Cable Match</h3>
+                    <p style="color: #7a8a9e;">Sort falling cables into speed categories. Test your knowledge of Cat 5e through Cat 8 and USB standards.</p>
+                    <a href="members.html" class="btn btn-secondary" style="border-color: #2a3a55; color: #7a8a9e;">🔒 Members Only</a>
+                </div>
+
+                <div class="card" style="background: #141c30; border-color: #2a3a55;">
+                    <span class="card-icon">🏗️</span>
+                    <span class="badge badge-medium">Members</span>
+                    <h3 style="color: #00e5ff;">Troubleshooting Tower</h3>
+                    <p style="color: #7a8a9e;">Stack the CompTIA troubleshooting steps in the correct order before the tower falls!</p>
+                    <a href="members.html" class="btn btn-secondary" style="border-color: #2a3a55; color: #7a8a9e;">🔒 Members Only</a>
+                </div>
+
+                <div class="card" style="background: #141c30; border-color: #2a3a55;">
+                    <span class="card-icon">📶</span>
+                    <span class="badge badge-medium">Members</span>
+                    <h3 style="color: #00e5ff;">OSI Layer Climb</h3>
+                    <p style="color: #7a8a9e;">Identify which OSI layer each protocol belongs to as you climb from Physical to Application!</p>
+                    <a href="members.html" class="btn btn-secondary" style="border-color: #2a3a55; color: #7a8a9e;">🔒 Members Only</a>
+                </div>
+
+                <div class="card" style="background: #141c30; border-color: #2a3a55;">
+                    <span class="card-icon">🃏</span>
+                    <span class="badge badge-medium">Members</span>
+                    <h3 style="color: #00e5ff;">Flash Cards</h3>
+                    <p style="color: #7a8a9e;">500-term flip card system with shuffle, progress tracking, and priority filtering. Study smarter.</p>
+                    <a href="members.html" class="btn btn-secondary" style="border-color: #2a3a55; color: #7a8a9e;">🔒 Members Only</a>
+                </div>
             </div>
         </div>
     </section>
@@ -203,6 +262,11 @@
             <p class="section-subtitle" style="text-align:center; margin-left:auto; margin-right:auto;">Everything on this site is a supplement. The book is where the real preparation happens.</p>
 
             <div class="purchase-grid">
+                <!-- Free member access callout -->
+                <div style="grid-column: 1 / -1; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #27ae60; border-radius: 12px; padding: 20px 24px; text-align: center; margin-bottom: 8px;">
+                    <p style="margin: 0; font-size: 1.05em; color: #1b5e20; font-weight: 600;">📘 Free Access to Member-Only Section Included!</p>
+                    <p style="margin: 8px 0 0; font-size: 0.9em; color: #2e7d32;">Get instant access to exclusive study guides, practice games, searchable glossary, and flash cards when you purchase any format of the book.</p>
+                </div>
                 <div class="purchase-card">
                     <h3>Physical Book</h3>
                     <div class="price">$XX.XX</div>
@@ -271,6 +335,15 @@
             <h2>About the Author</h2>
             <p style="max-width: 720px; line-height: 1.8;"><strong>Niko Williams</strong> is a CompTIA A+ certified IT professional, entrepreneur, and technical writer with a singular mission: making complex technology accessible to everyone.</p>
             <p style="max-width: 720px; line-height: 1.8; color: var(--text-muted);">Niko's journey into tech began in the late 1990s — an era of dial-up and CRT monitors. Since then, Niko has built a diverse career spanning IT support, hardware repair, web and graphic design, consulting, and technical documentation. This guide is the product of that decades-long journey — built for people who need to pass without wasting time on content that won't be tested.</p>
+        </div>
+    </section>
+
+    <!-- MEMBER CALLOUT BANNER -->
+    <section style="background: linear-gradient(135deg, #1F497D, #366092); padding: 40px 0;">
+        <div class="container" style="text-align: center;">
+            <h3 style="color: #fff; margin-bottom: 8px; font-size: 1.4em;">🔒 Member Only Content</h3>
+            <p style="color: #a8c4df; max-width: 600px; margin: 0 auto 20px; font-size: 1em;">Exclusive study tools, arcade games, searchable glossary, flash cards, and curated resources — free with any book purchase.</p>
+            <a href="members.html" class="btn btn-primary" style="padding: 12px 32px; font-size: 1em;">Enter Members Area</a>
         </div>
     </section>
 

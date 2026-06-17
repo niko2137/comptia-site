@@ -486,6 +486,7 @@
         </div>
     </div>
 
+    <script src="../js/sounds.js"></script>
     <script>
     // ===== GAME DATA =====
     const portData = {
@@ -548,6 +549,7 @@
 
     // ===== DIFFICULTY =====
     function setDifficulty(level) {
+        GameSounds.click();
         currentDifficulty = level;
         document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
@@ -676,6 +678,7 @@
 
     // ===== MATCH HANDLING =====
     function handleCorrectMatch(leftCard, rightCard) {
+        GameSounds.correct();
         // Draw green line
         drawLine(leftCard, rightCard, 'line-correct');
 
@@ -700,6 +703,7 @@
     }
 
     function handleWrongMatch(leftCard, rightCard) {
+        GameSounds.wrong();
         // Draw red line (will fade)
         drawLine(leftCard, rightCard, 'line-wrong');
 
@@ -763,6 +767,7 @@
     // ===== COMPLETION =====
     function showCompletion() {
         stopTimer();
+        GameSounds.complete();
         spawnConfetti();
 
         // Star rating
@@ -787,6 +792,7 @@
     }
 
     function playAgain() {
+        GameSounds.click();
         document.getElementById('completion-overlay').classList.remove('show');
         // Remove any leftover confetti
         document.querySelectorAll('.confetti-piece').forEach(c => c.remove());
@@ -834,6 +840,12 @@
 
     // ===== START GAME =====
     initGame();
+
+    // Sound controls
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.insertAdjacentHTML('beforeend', GameSounds.createControlsUI());
+        GameSounds.initControls();
+    });
     </script>
 </body>
 </html>
