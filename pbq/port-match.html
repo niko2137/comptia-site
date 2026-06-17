@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port Match — Connect the Pairs | CompTIA A+ Study Hub</title>
+    <meta name="description" content="Match port numbers to their protocols in this interactive Wordwall-style matching game. Practice for the CompTIA A+ exam.">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ===== PORT MATCH GAME STYLES ===== */
+        .game-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .game-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .game-header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+        .game-header p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Difficulty buttons */
+        .difficulty-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .diff-btn {
+            padding: 8px 24px;
+            border: 2px solid var(--navy);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .diff-btn:hover {
+            background: var(--navy);
+            color: #fff;
+        }
+        .diff-btn.active {
+            background: var(--navy);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(31, 73, 125, 0.3);
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 24px;
+            padding: 12px 24px;
+            background: var(--bg-section);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+        .stat-label {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-size: 1.4em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Game area */
+        .game-area {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            padding: 20px;
+            min-height: 400px;
+        }
+        .game-area svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3;
+        }
+        .column-left { align-items: flex-end; }
+        .column-right { align-items: flex-start; }
+
+        /* Cards */
+        .match-card {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            position: relative;
+            min-width: 120px;
+            text-align: center;
+        }
+        .card-left {
+            background: var(--navy);
+            color: #fff;
+            border: 2px solid var(--navy);
+            font-size: 1.2em;
+        }
+        .card-left:hover:not(.matched):not(.selected) {
+            background: var(--navy-dark);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(31, 73, 125, 0.3);
+        }
+        .card-right {
+            background: #fff;
+            color: var(--navy);
+            border: 2px solid var(--navy);
+        }
+        .card-right:hover:not(.matched):not(.selected) {
+            background: var(--bg-section);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(31, 73, 125, 0.3);
+        }
+
+        /* Selected state */
+        .card-left.selected {
+            box-shadow: 0 0 0 3px #00e5ff, 0 0 20px rgba(0, 229, 255, 0.4);
+            animation: pulse-left 1s infinite;
+        }
+        .card-right.selected {
+            box-shadow: 0 0 0 3px #ff9800, 0 0 20px rgba(255, 152, 0, 0.4);
+            animation: pulse-right 1s infinite;
+        }
+        @keyframes pulse-left {
+            0%, 100% { box-shadow: 0 0 0 3px #00e5ff, 0 0 20px rgba(0, 229, 255, 0.4); }
+            50% { box-shadow: 0 0 0 5px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6); }
+        }
+        @keyframes pulse-right {
+            0%, 100% { box-shadow: 0 0 0 3px #ff9800, 0 0 20px rgba(255, 152, 0, 0.4); }
+            50% { box-shadow: 0 0 0 5px #ff9800, 0 0 30px rgba(255, 152, 0, 0.6); }
+        }
+
+        /* Matched state */
+        .match-card.matched {
+            opacity: 0.7;
+            cursor: default;
+            transform: scale(0.95);
+        }
+        .match-card.matched::after {
+            content: '✓';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--green);
+            color: #fff;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: 700;
+        }
+        /* Wrong flash */
+        .match-card.wrong {
+            animation: wrong-flash 0.5s;
+        }
+        @keyframes wrong-flash {
+            0%, 100% { background: inherit; }
+            25%, 75% { background: #ff4444; border-color: #ff4444; color: #fff; }
+        }
+        /* Correct pulse */
+        .match-card.correct-pulse {
+            animation: correct-pop 0.4s;
+        }
+        @keyframes correct-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(0.95); }
+        }
+
+        /* SVG lines */
+        .connection-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+        .line-correct {
+            stroke: var(--green);
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: draw-line 0.5s forwards;
+        }
+        .line-wrong {
+            stroke: #ff4444;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: draw-line 0.3s forwards, fade-out 0.3s 0.4s forwards;
+        }
+        @keyframes draw-line {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes fade-out {
+            to { opacity: 0; }
+        }
+
+        /* Completion overlay */
+        .completion-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .completion-overlay.show {
+            display: flex;
+            animation: fade-in 0.3s;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .completion-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes pop-in {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .completion-card h2 {
+            color: var(--navy);
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .stars {
+            font-size: 3em;
+            margin: 16px 0;
+            letter-spacing: 8px;
+        }
+        .stars .star-on { color: #f39c12; }
+        .stars .star-off { color: #ddd; }
+        .completion-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin: 24px 0;
+        }
+        .completion-stat {
+            text-align: center;
+        }
+        .completion-stat .val {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .completion-stat .lbl {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .play-again-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+        .play-again-btn:hover {
+            background: var(--navy-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(31,73,125,0.3);
+        }
+
+        /* Confetti */
+        .confetti-piece {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            z-index: 1001;
+            animation: confetti-fall 3s linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Background grid pattern */
+        .game-bg {
+            background-image:
+                linear-gradient(rgba(31, 73, 125, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(31, 73, 125, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            min-height: calc(100vh - 60px);
+            padding-top: 30px;
+            padding-bottom: 60px;
+        }
+
+        /* Bottom CTA */
+        .bottom-cta {
+            text-align: center;
+            margin-top: 48px;
+            padding: 24px;
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+            border-radius: 12px;
+            color: #fff;
+        }
+        .bottom-cta p {
+            color: #a8c4df;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+        .bottom-cta a {
+            color: #00e5ff;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+        .bottom-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 700px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .game-area svg { display: none; }
+            .column-left, .column-right {
+                align-items: stretch;
+            }
+            .match-card { min-width: auto; }
+            .stats-bar {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+            .difficulty-bar { flex-wrap: wrap; }
+            .game-header h1 { font-size: 1.5em; }
+            .completion-card { padding: 32px 24px; }
+            .mobile-indicator {
+                display: block;
+                text-align: center;
+                padding: 8px;
+                background: #fff3cd;
+                border-radius: 6px;
+                font-size: 0.85em;
+                color: #856404;
+                margin-bottom: 16px;
+            }
+        }
+        @media (min-width: 701px) {
+            .mobile-indicator { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="../index.html#pbq">All PBQs</a></li>
+                <li><a href="../index.html#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- GAME CONTENT -->
+    <div class="game-bg">
+        <div class="game-wrapper">
+            <div class="game-header">
+                <h1>🔌 Port Match — Connect the Pairs</h1>
+                <p>Click a port number on the left, then click its matching protocol on the right to draw a connection.</p>
+            </div>
+
+            <!-- Difficulty buttons -->
+            <div class="difficulty-bar">
+                <button class="diff-btn active" onclick="setDifficulty('easy')">Easy (10)</button>
+                <button class="diff-btn" onclick="setDifficulty('medium')">Medium (15)</button>
+                <button class="diff-btn" onclick="setDifficulty('hard')">Hard (20)</button>
+            </div>
+
+            <!-- Stats bar -->
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Time</span>
+                    <span class="stat-value" id="timer">0:00</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span class="stat-value" id="score">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Matched</span>
+                    <span class="stat-value" id="matched-count">0/10</span>
+                </div>
+            </div>
+
+            <!-- Mobile indicator -->
+            <div class="mobile-indicator">
+                📱 Tap a port, then tap its matching protocol. Lines are hidden on mobile.
+            </div>
+
+            <!-- Game area -->
+            <div class="game-area" id="game-area">
+                <svg id="svg-overlay" xmlns="http://www.w3.org/2000/svg"></svg>
+                <div class="column column-left" id="left-column"></div>
+                <div class="column column-right" id="right-column"></div>
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="bottom-cta">
+                <p>Master all 20+ ports in the complete study guide — with mnemonics, groupings, and exam tricks.</p>
+                <a href="../index.html#buy">Get the Book →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Overlay -->
+    <div class="completion-overlay" id="completion-overlay">
+        <div class="completion-card">
+            <h2>🎉 All Matched!</h2>
+            <div class="stars" id="stars"></div>
+            <div class="completion-stats">
+                <div class="completion-stat">
+                    <div class="val" id="final-score">0</div>
+                    <div class="lbl">Points</div>
+                </div>
+                <div class="completion-stat">
+                    <div class="val" id="final-time">0:00</div>
+                    <div class="lbl">Time</div>
+                </div>
+                <div class="completion-stat">
+                    <div class="val" id="final-wrong">0</div>
+                    <div class="lbl">Mistakes</div>
+                </div>
+            </div>
+            <button class="play-again-btn" onclick="playAgain()">Play Again 🔄</button>
+        </div>
+    </div>
+
+    <script>
+    // ===== GAME DATA =====
+    const portData = {
+        easy: [
+            { port: '22', protocol: 'SSH' },
+            { port: '80', protocol: 'HTTP' },
+            { port: '443', protocol: 'HTTPS' },
+            { port: '3389', protocol: 'RDP' },
+            { port: '53', protocol: 'DNS' },
+            { port: '25', protocol: 'SMTP' },
+            { port: '445', protocol: 'SMB' },
+            { port: '110', protocol: 'POP3' },
+            { port: '143', protocol: 'IMAP' },
+            { port: '21', protocol: 'FTP' }
+        ],
+        medium: [
+            { port: '67/68', protocol: 'DHCP' },
+            { port: '23', protocol: 'Telnet' },
+            { port: '161', protocol: 'SNMP' },
+            { port: '389', protocol: 'LDAP' },
+            { port: '5900', protocol: 'VNC' }
+        ],
+        hard: [
+            { port: '587', protocol: 'SMTP (Secure)' },
+            { port: '636', protocol: 'LDAPS' },
+            { port: '993', protocol: 'IMAPS' },
+            { port: '995', protocol: 'POP3S' },
+            { port: '5060', protocol: 'SIP' }
+        ]
+    };
+
+    // ===== GAME STATE =====
+    let currentDifficulty = 'easy';
+    let activePairs = [];
+    let selectedLeft = null;
+    let score = 0;
+    let matchedCount = 0;
+    let wrongCount = 0;
+    let totalPairs = 10;
+    let timerInterval = null;
+    let seconds = 0;
+    let gameStarted = false;
+    let matchedPairs = new Set();
+
+    // ===== UTILITY FUNCTIONS =====
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return m + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
+    // ===== DIFFICULTY =====
+    function setDifficulty(level) {
+        currentDifficulty = level;
+        document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        initGame();
+    }
+
+    function getPairs() {
+        let pairs = [...portData.easy];
+        if (currentDifficulty === 'medium' || currentDifficulty === 'hard') {
+            pairs = pairs.concat(portData.medium);
+        }
+        if (currentDifficulty === 'hard') {
+            pairs = pairs.concat(portData.hard);
+        }
+        return pairs;
+    }
+
+    // ===== TIMER =====
+    function startTimer() {
+        if (gameStarted) return;
+        gameStarted = true;
+        timerInterval = setInterval(() => {
+            seconds++;
+            document.getElementById('timer').textContent = formatTime(seconds);
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    function resetTimer() {
+        stopTimer();
+        seconds = 0;
+        gameStarted = false;
+        document.getElementById('timer').textContent = '0:00';
+    }
+
+    // ===== INIT GAME =====
+    function initGame() {
+        resetTimer();
+        score = 0;
+        matchedCount = 0;
+        wrongCount = 0;
+        selectedLeft = null;
+        matchedPairs = new Set();
+
+        activePairs = getPairs();
+        totalPairs = activePairs.length;
+
+        document.getElementById('score').textContent = '0';
+        document.getElementById('matched-count').textContent = '0/' + totalPairs;
+        document.getElementById('completion-overlay').classList.remove('show');
+
+        // Clear SVG
+        const svg = document.getElementById('svg-overlay');
+        svg.innerHTML = '';
+
+        // Build left column (ports shuffled)
+        const leftCol = document.getElementById('left-column');
+        const rightCol = document.getElementById('right-column');
+        leftCol.innerHTML = '';
+        rightCol.innerHTML = '';
+
+        const shuffledPorts = shuffle(activePairs);
+        const shuffledProtocols = shuffle(activePairs);
+
+        shuffledPorts.forEach((pair, i) => {
+            const card = document.createElement('div');
+            card.className = 'match-card card-left';
+            card.textContent = pair.port;
+            card.dataset.port = pair.port;
+            card.dataset.index = i;
+            card.addEventListener('click', () => selectLeft(card));
+            leftCol.appendChild(card);
+        });
+
+        shuffledProtocols.forEach((pair, i) => {
+            const card = document.createElement('div');
+            card.className = 'match-card card-right';
+            card.textContent = pair.protocol;
+            card.dataset.protocol = pair.protocol;
+            card.dataset.port = pair.port;
+            card.dataset.index = i;
+            card.addEventListener('click', () => selectRight(card));
+            rightCol.appendChild(card);
+        });
+    }
+
+    // ===== SELECTION LOGIC =====
+    function selectLeft(card) {
+        if (card.classList.contains('matched')) return;
+        startTimer();
+
+        // Deselect if clicking same card
+        if (selectedLeft === card) {
+            card.classList.remove('selected');
+            selectedLeft = null;
+            return;
+        }
+
+        // Deselect previous
+        if (selectedLeft) {
+            selectedLeft.classList.remove('selected');
+        }
+
+        selectedLeft = card;
+        card.classList.add('selected');
+    }
+
+    function selectRight(card) {
+        if (card.classList.contains('matched')) return;
+        if (!selectedLeft) return;
+        startTimer();
+
+        const selectedPort = selectedLeft.dataset.port;
+        const correctPort = card.dataset.port;
+
+        if (selectedPort === correctPort) {
+            handleCorrectMatch(selectedLeft, card);
+        } else {
+            handleWrongMatch(selectedLeft, card);
+        }
+    }
+
+    // ===== MATCH HANDLING =====
+    function handleCorrectMatch(leftCard, rightCard) {
+        // Draw green line
+        drawLine(leftCard, rightCard, 'line-correct');
+
+        // Animate cards
+        leftCard.classList.remove('selected');
+        leftCard.classList.add('matched', 'correct-pulse');
+        rightCard.classList.add('matched', 'correct-pulse');
+
+        // Update state
+        selectedLeft = null;
+        score += 10;
+        matchedCount++;
+        matchedPairs.add(leftCard.dataset.port);
+
+        document.getElementById('score').textContent = score;
+        document.getElementById('matched-count').textContent = matchedCount + '/' + totalPairs;
+
+        // Check completion
+        if (matchedCount === totalPairs) {
+            setTimeout(showCompletion, 600);
+        }
+    }
+
+    function handleWrongMatch(leftCard, rightCard) {
+        // Draw red line (will fade)
+        drawLine(leftCard, rightCard, 'line-wrong');
+
+        // Flash both cards
+        leftCard.classList.add('wrong');
+        rightCard.classList.add('wrong');
+
+        // Update score
+        score = Math.max(0, score - 5);
+        wrongCount++;
+        document.getElementById('score').textContent = score;
+
+        // Reset after flash
+        setTimeout(() => {
+            leftCard.classList.remove('selected', 'wrong');
+            rightCard.classList.remove('wrong');
+            selectedLeft = null;
+        }, 500);
+    }
+
+    // ===== SVG LINE DRAWING =====
+    function drawLine(leftCard, rightCard, className) {
+        const svg = document.getElementById('svg-overlay');
+        const gameArea = document.getElementById('game-area');
+        const gameRect = gameArea.getBoundingClientRect();
+
+        const leftRect = leftCard.getBoundingClientRect();
+        const rightRect = rightCard.getBoundingClientRect();
+
+        // Calculate positions relative to game area
+        const x1 = leftRect.right - gameRect.left;
+        const y1 = leftRect.top + leftRect.height / 2 - gameRect.top;
+        const x2 = rightRect.left - gameRect.left;
+        const y2 = rightRect.top + rightRect.height / 2 - gameRect.top;
+
+        // Quadratic bezier control point (curve in the middle)
+        const cx = (x1 + x2) / 2;
+        const cy = (y1 + y2) / 2 - 20;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'connection-line ' + className);
+
+        // Calculate approximate path length for dash animation
+        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)) * 1.2;
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        path.style.animation = className === 'line-correct'
+            ? 'draw-line 0.5s forwards'
+            : 'draw-line 0.3s forwards, fade-out 0.3s 0.4s forwards';
+
+        svg.appendChild(path);
+
+        // Remove wrong lines after animation
+        if (className === 'line-wrong') {
+            setTimeout(() => path.remove(), 800);
+        }
+    }
+
+    // ===== COMPLETION =====
+    function showCompletion() {
+        stopTimer();
+        spawnConfetti();
+
+        // Star rating
+        let starCount = 3;
+        if (wrongCount >= 1 && wrongCount <= 3) starCount = 2;
+        if (wrongCount >= 4) starCount = 1;
+
+        const starsEl = document.getElementById('stars');
+        starsEl.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            const span = document.createElement('span');
+            span.textContent = '★';
+            span.className = i < starCount ? 'star-on' : 'star-off';
+            starsEl.appendChild(span);
+        }
+
+        document.getElementById('final-score').textContent = score;
+        document.getElementById('final-time').textContent = formatTime(seconds);
+        document.getElementById('final-wrong').textContent = wrongCount;
+
+        document.getElementById('completion-overlay').classList.add('show');
+    }
+
+    function playAgain() {
+        document.getElementById('completion-overlay').classList.remove('show');
+        // Remove any leftover confetti
+        document.querySelectorAll('.confetti-piece').forEach(c => c.remove());
+        initGame();
+    }
+
+    // ===== CONFETTI =====
+    function spawnConfetti() {
+        const colors = ['#e74c3c', '#f39c12', '#27ae60', '#3498db', '#9b59b6', '#00e5ff', '#1F497D'];
+        for (let i = 0; i < 80; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + 'vw';
+            piece.style.top = '-20px';
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.width = (Math.random() * 8 + 6) + 'px';
+            piece.style.height = (Math.random() * 8 + 6) + 'px';
+            piece.style.animationDelay = Math.random() * 2 + 's';
+            piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(piece);
+            setTimeout(() => piece.remove(), 5000);
+        }
+    }
+
+    // ===== WINDOW RESIZE HANDLER =====
+    // Redraw lines on resize to keep them aligned
+    window.addEventListener('resize', () => {
+        // Clear all lines and redraw matched ones
+        const svg = document.getElementById('svg-overlay');
+        svg.innerHTML = '';
+
+        // Re-draw lines for matched pairs
+        const leftCards = document.querySelectorAll('.card-left.matched');
+        const rightCards = document.querySelectorAll('.card-right.matched');
+
+        leftCards.forEach(leftCard => {
+            const port = leftCard.dataset.port;
+            rightCards.forEach(rightCard => {
+                if (rightCard.dataset.port === port) {
+                    drawLine(leftCard, rightCard, 'line-correct');
+                }
+            });
+        });
+    });
+
+    // ===== START GAME =====
+    initGame();
+    </script>
+</body>
+</html>
