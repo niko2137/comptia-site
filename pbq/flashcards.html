@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Card Preview — CompTIA A+ Study Hub</title>
+    <meta name="description" content="Preview 5 free flash cards from the 500-term CompTIA A+ study deck. Flip cards to reveal definitions for key exam terms.">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        .flashcard-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            text-align: center;
+        }
+
+        .flashcard-header {
+            margin-bottom: 40px;
+        }
+        .flashcard-header h1 {
+            font-size: 2.2em;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .flashcard-header .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin-bottom: 0;
+        }
+
+        /* Card Scene — 3D perspective */
+        .card-scene {
+            perspective: 1000px;
+            width: 500px;
+            height: 280px;
+            margin: 0 auto 24px;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            border-radius: 16px;
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(31, 73, 125, 0.15);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--blue-accent) 100%);
+            color: #fff;
+        }
+        .flashcard-front .term {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .flashcard-front .hint {
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+        }
+
+        .flashcard-back {
+            background: #fff;
+            color: var(--navy-dark);
+            transform: rotateY(180deg);
+            border: 2px solid var(--border);
+        }
+        .flashcard-back .definition {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: var(--text-body);
+            max-width: 420px;
+        }
+
+        /* Navigation */
+        .card-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-nav button {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+        .card-nav button:hover:not(:disabled) {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-hover);
+        }
+        .card-nav button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .card-counter {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--navy);
+            min-width: 60px;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 500px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+            width: 20%;
+        }
+
+        /* Upsell Overlay */
+        .upsell-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 30, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: fadeIn 0.4s ease;
+        }
+        .upsell-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .upsell-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .upsell-card .lock-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .upsell-card h2 {
+            color: var(--navy);
+            font-size: 1.5em;
+            margin-bottom: 12px;
+        }
+        .upsell-card .upsell-text {
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .upsell-card ul {
+            text-align: left;
+            list-style: none;
+            padding: 0;
+            margin: 0 auto 32px;
+            max-width: 320px;
+        }
+        .upsell-card ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9em;
+            color: var(--text-body);
+        }
+        .upsell-card ul li::before {
+            content: "\2713 ";
+            color: var(--green);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .upsell-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .upsell-btn-primary {
+            background: var(--red);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1em;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .upsell-btn-primary:hover {
+            background: #c0392b;
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+        .upsell-btn-outline {
+            background: transparent;
+            color: var(--navy);
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 2px solid var(--navy);
+            cursor: pointer;
+        }
+        .upsell-btn-outline:hover {
+            background: var(--navy);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .card-scene {
+                width: 100%;
+                height: 240px;
+            }
+            .flashcard-front .term {
+                font-size: 1.5em;
+            }
+            .flashcard-back .definition {
+                font-size: 0.95em;
+            }
+            .flashcard-header h1 {
+                font-size: 1.6em;
+            }
+            .card-nav {
+                gap: 12px;
+            }
+            .card-nav button {
+                padding: 8px 14px;
+                font-size: 0.9em;
+            }
+            .upsell-card {
+                padding: 32px 24px;
+            }
+            .upsell-card h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">&larr; Back to Home</a></li>
+                <li><a href="../index.html#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
+        </div>
+    </nav>
+
+    <!-- Flash Card UI -->
+    <div class="flashcard-container">
+
+        <!-- Header -->
+        <div class="flashcard-header">
+            <h1>&#x1F0CF; Flash Card Preview</h1>
+            <p class="subtitle">Try 5 free cards &mdash; the full 500-term deck is included with the book</p>
+        </div>
+
+        <!-- Card Scene -->
+        <div class="card-scene" id="cardScene" onclick="flipCard()">
+            <div class="flashcard" id="flashcard">
+                <div class="flashcard-face flashcard-front">
+                    <span class="term" id="termText">SSH</span>
+                    <span class="hint">Click to reveal</span>
+                </div>
+                <div class="flashcard-face flashcard-back">
+                    <p class="definition" id="defText">Port 22 (TCP). Encrypted remote command-line access. Replaces Telnet. Used by Linux/Mac admins and SFTP.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="card-nav">
+            <button id="prevBtn" onclick="prevCard()" disabled>&larr; Previous</button>
+            <span class="card-counter" id="cardCounter">1 / 5</span>
+            <button id="nextBtn" onclick="nextCard()">Next &rarr;</button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+
+    </div>
+
+    <!-- Upsell Overlay -->
+    <div class="upsell-overlay" id="upsellOverlay">
+        <div class="upsell-card">
+            <span class="lock-icon">&#x1F512;</span>
+            <h2>Want the full 500-term flash card deck?</h2>
+            <p class="upsell-text">Purchase any format of the CompTIA A+ Complete Study Guide and get FREE access to the Members-Only section with:</p>
+            <ul>
+                <li>500 flash cards</li>
+                <li>Searchable glossary</li>
+                <li>Arcade games</li>
+                <li>Study schedule</li>
+                <li>Resource center</li>
+            </ul>
+            <div class="upsell-buttons">
+                <a href="../index.html#buy" class="upsell-btn-primary">Get the Book</a>
+                <a href="../members.html" class="upsell-btn-outline">Enter Members Area</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound Integration -->
+    <script src="../js/sounds.js"></script>
+
+    <script>
+        // Flash Card Data (5 Preview Cards)
+        const cards = [
+            {
+                term: "SSH",
+                definition: "Port 22 (TCP). Encrypted remote command-line access. Replaces Telnet. Used by Linux/Mac admins and SFTP."
+            },
+            {
+                term: "APIPA",
+                definition: "169.254.x.x address auto-assigned when device cannot reach DHCP server. Always indicates DHCP failure."
+            },
+            {
+                term: "BitLocker",
+                definition: "Windows full-disk encryption (Pro/Enterprise). Requires TPM chip. Recovery key stored in AD or Microsoft account."
+            },
+            {
+                term: "RAID 5",
+                definition: "Striping + distributed parity. Minimum 3 drives. Survives one drive failure. Most popular configuration for NAS devices."
+            },
+            {
+                term: "Mantrap",
+                definition: "Two-door entry system (now called Access Control Vestibule by CompTIA). Only one door opens at a time. Prevents tailgating."
+            }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        const flashcard = document.getElementById('flashcard');
+        const termText = document.getElementById('termText');
+        const defText = document.getElementById('defText');
+        const cardCounter = document.getElementById('cardCounter');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const upsellOverlay = document.getElementById('upsellOverlay');
+
+        function updateCard() {
+            // Reset flip
+            isFlipped = false;
+            flashcard.classList.remove('is-flipped');
+
+            // Update content
+            termText.textContent = cards[currentIndex].term;
+            defText.textContent = cards[currentIndex].definition;
+
+            // Update counter
+            cardCounter.textContent = (currentIndex + 1) + ' / ' + cards.length;
+
+            // Update progress bar
+            progressBar.style.width = ((currentIndex + 1) / cards.length * 100) + '%';
+
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.textContent = currentIndex === cards.length - 1 ? 'Finish →' : 'Next →';
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            flashcard.classList.toggle('is-flipped');
+            GameSounds.click();
+        }
+
+        function nextCard() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                updateCard();
+                GameSounds.correct();
+            } else {
+                // Show upsell after last card
+                showUpsell();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+                GameSounds.click();
+            }
+        }
+
+        function showUpsell() {
+            upsellOverlay.classList.add('active');
+            GameSounds.complete();
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (upsellOverlay.classList.contains('active')) return;
+
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (e.key === ' ') {
+                    flipCard();
+                } else {
+                    nextCard();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                prevCard();
+            }
+        });
+
+        // Close overlay on background click
+        upsellOverlay.addEventListener('click', function(e) {
+            if (e.target === upsellOverlay) {
+                upsellOverlay.classList.remove('active');
+            }
+        });
+
+        // Initialize
+        updateCard();
+    </script>
+
+</body>
+</html>
