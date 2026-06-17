@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Port Blaster — CompTIA A+ Study Hub</title>
+    <meta name="description" content="Port Blaster: An arcade-style speed game to memorize network ports and protocols for the CompTIA A+ exam.">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            background: #0a0e1a;
+            color: #e0e6f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        nav { background: #0d1225 !important; border-bottom: 1px solid #1a2444; }
+        .nav-brand { color: #fff !important; }
+        .nav-brand span { color: #00e5ff !important; }
+        .nav-links a { color: #b0bec5 !important; }
+        .nav-links a:hover { color: #00e5ff !important; text-decoration: none !important; }
+        .nav-cta { background: #e74c3c !important; color: #fff !important; border-radius: 6px; padding: 8px 16px !important; }
+
+        .game-wrapper {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px 60px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 2.2em;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #00e5ff, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+        .game-subtitle {
+            color: #7a8a9e;
+            font-size: 1em;
+            margin-bottom: 24px;
+        }
+
+        /* Timer bar */
+        .timer-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #1a2444;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            border-radius: 4px;
+            background: #00e676;
+            transition: width 0.3s linear, background 0.5s;
+        }
+        .timer-bar.warning { background: #ffeb3b; }
+        .timer-bar.danger { background: #ff1744; }
+
+        /* Score area */
+        .game-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 0 4px;
+        }
+        .hud-item {
+            font-size: 0.95em;
+            color: #7a8a9e;
+        }
+        .hud-item span {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.2em;
+        }
+        .hud-streak {
+            color: #ffab00;
+        }
+        .hud-highscore {
+            color: #7c4dff;
+        }
+
+        /* Port display */
+        .port-display {
+            margin: 30px 0 40px;
+        }
+        .port-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #5c6b80;
+            margin-bottom: 8px;
+        }
+        .port-number {
+            font-size: 5em;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.5), 0 0 60px rgba(0, 229, 255, 0.2);
+            line-height: 1;
+            animation: portPulse 2s ease-in-out infinite;
+        }
+        @keyframes portPulse {
+            0%, 100% { text-shadow: 0 0 30px rgba(0, 229, 255, 0.5), 0 0 60px rgba(0, 229, 255, 0.2); }
+            50% { text-shadow: 0 0 40px rgba(0, 229, 255, 0.8), 0 0 80px rgba(0, 229, 255, 0.4); }
+        }
+
+        /* Answer buttons */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .answer-btn {
+            background: #141c30;
+            border: 2px solid #2a3a55;
+            color: #e0e6f0;
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 18px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .answer-btn:hover {
+            border-color: #00e5ff;
+            background: #1a2844;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .answer-btn:active {
+            transform: translateY(0);
+        }
+        .answer-btn.correct {
+            border-color: #00e676;
+            background: rgba(0, 230, 118, 0.15);
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.3);
+        }
+        .answer-btn.wrong {
+            border-color: #ff1744;
+            background: rgba(255, 23, 68, 0.15);
+            box-shadow: 0 0 25px rgba(255, 23, 68, 0.3);
+        }
+        .answer-btn.reveal-correct {
+            border-color: #00e676;
+            background: rgba(0, 230, 118, 0.2);
+        }
+        .answer-btn.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Flash overlays */
+        .flash-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .flash-overlay.green {
+            background: radial-gradient(ellipse at center, rgba(0, 230, 118, 0.15) 0%, transparent 70%);
+            opacity: 1;
+        }
+        .flash-overlay.red {
+            background: radial-gradient(ellipse at center, rgba(255, 23, 68, 0.15) 0%, transparent 70%);
+            opacity: 1;
+        }
+
+        /* Shake animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.4s ease; }
+
+        /* Intro countdown */
+        .intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+        .intro-screen h2 {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .intro-screen p {
+            color: #7a8a9e;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #00e5ff, #7c4dff);
+            border: none;
+            color: #fff;
+            font-size: 1.3em;
+            font-weight: 700;
+            padding: 16px 48px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 25px rgba(0, 229, 255, 0.3);
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 35px rgba(0, 229, 255, 0.5);
+        }
+
+        .countdown-number {
+            font-size: 8em;
+            font-weight: 900;
+            color: #00e5ff;
+            text-shadow: 0 0 40px rgba(0, 229, 255, 0.6);
+            animation: countPop 0.8s ease;
+            line-height: 1;
+        }
+        .countdown-go {
+            font-size: 5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00e676, #00e5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: countPop 0.5s ease;
+        }
+        @keyframes countPop {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Game Over screen */
+        .gameover-screen {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .gameover-screen h2 {
+            font-size: 2.2em;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .final-score {
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00e5ff, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 10px 0;
+        }
+        .grade-message {
+            font-size: 1.3em;
+            color: #ffab00;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 16px 0 30px;
+            color: #7a8a9e;
+        }
+        .stats-row div span {
+            display: block;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #fff;
+        }
+        .play-again-btn {
+            background: linear-gradient(135deg, #00e5ff, #7c4dff);
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: 700;
+            padding: 14px 42px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 25px rgba(0, 229, 255, 0.3);
+            margin-bottom: 20px;
+        }
+        .play-again-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 35px rgba(0, 229, 255, 0.5);
+        }
+        .new-highscore {
+            color: #ffab00;
+            font-weight: 700;
+            font-size: 1.1em;
+            animation: countPop 0.5s ease;
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall 3s ease-in forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* CTA section */
+        .bottom-cta {
+            margin-top: 50px;
+            padding: 30px;
+            background: #111827;
+            border: 1px solid #1f2d44;
+            border-radius: 12px;
+        }
+        .bottom-cta p {
+            color: #7a8a9e;
+            margin-bottom: 14px;
+            font-size: 1em;
+        }
+        .bottom-cta a {
+            color: #00e5ff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .bottom-cta a:hover { text-decoration: underline; }
+
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .game-title { font-size: 1.6em; }
+            .port-number { font-size: 3.5em; }
+            .answers-grid { grid-template-columns: 1fr; gap: 10px; }
+            .answer-btn { padding: 14px 12px; font-size: 1em; }
+            .game-hud { flex-wrap: wrap; gap: 8px; }
+            .countdown-number { font-size: 5em; }
+            .final-score { font-size: 3em; }
+            .stats-row { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">&#8592; Back to Home</a></li>
+                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash overlay -->
+    <div class="flash-overlay" id="flashOverlay"></div>
+
+    <div class="game-wrapper">
+        <h1 class="game-title">&#x1F680; Port Blaster</h1>
+        <p class="game-subtitle">Match the port to its protocol — how fast can you go?</p>
+
+        <!-- INTRO SCREEN -->
+        <div id="introScreen" class="intro-screen">
+            <h2>Ready to blast some ports?</h2>
+            <p>You have <strong>60 seconds</strong> to match as many ports to their protocols as possible.<br>
+            +10 for correct, +5 streak bonus, -5 for wrong. Beat your high score!</p>
+            <button class="start-btn" onclick="startCountdown()">Start Game</button>
+        </div>
+
+        <!-- COUNTDOWN SCREEN -->
+        <div id="countdownScreen" style="display:none; min-height:400px; display:none; align-items:center; justify-content:center;">
+            <div id="countdownDisplay"></div>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="gameScreen" style="display:none;">
+            <div class="timer-bar-container">
+                <div class="timer-bar" id="timerBar"></div>
+            </div>
+            <div class="game-hud">
+                <div class="hud-item">Time: <span id="timeLeft">60</span>s</div>
+                <div class="hud-item hud-streak">Streak: <span id="streakDisplay">0</span>&#x1F525;</div>
+                <div class="hud-item">Score: <span id="scoreDisplay">0</span></div>
+                <div class="hud-item hud-highscore">Best: <span id="highScoreDisplay">0</span></div>
+            </div>
+            <div class="port-display">
+                <div class="port-label">What protocol uses port</div>
+                <div class="port-number" id="portNumber">443</div>
+            </div>
+            <div class="answers-grid" id="answersGrid">
+                <button class="answer-btn" onclick="checkAnswer(this)">HTTPS</button>
+                <button class="answer-btn" onclick="checkAnswer(this)">HTTP</button>
+                <button class="answer-btn" onclick="checkAnswer(this)">SSH</button>
+                <button class="answer-btn" onclick="checkAnswer(this)">FTP</button>
+            </div>
+        </div>
+
+        <!-- GAME OVER SCREEN -->
+        <div id="gameOverScreen" class="gameover-screen" style="display:none;">
+            <h2>Time's Up!</h2>
+            <div class="final-score" id="finalScore">0</div>
+            <div class="grade-message" id="gradeMessage"></div>
+            <div id="newHighScoreMsg"></div>
+            <div class="stats-row">
+                <div>Correct<span id="statCorrect">0</span></div>
+                <div>Wrong<span id="statWrong">0</span></div>
+                <div>Best Streak<span id="statStreak">0</span></div>
+            </div>
+            <button class="play-again-btn" onclick="resetGame()">Play Again</button>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="bottom-cta">
+            <p>Master all 20+ ports and 500+ terms in the complete study guide.</p>
+            <a href="#buy">Get the Book &rarr;</a>
+        </div>
+    </div>
+
+    <script>
+        // === GAME DATA ===
+        const PORT_DATA = [
+            { port: "20", protocol: "FTP" },
+            { port: "21", protocol: "FTP" },
+            { port: "22", protocol: "SSH" },
+            { port: "23", protocol: "Telnet" },
+            { port: "25", protocol: "SMTP" },
+            { port: "53", protocol: "DNS" },
+            { port: "67", protocol: "DHCP" },
+            { port: "68", protocol: "DHCP" },
+            { port: "80", protocol: "HTTP" },
+            { port: "110", protocol: "POP3" },
+            { port: "143", protocol: "IMAP" },
+            { port: "161", protocol: "SNMP" },
+            { port: "389", protocol: "LDAP" },
+            { port: "443", protocol: "HTTPS" },
+            { port: "445", protocol: "SMB" },
+            { port: "587", protocol: "SMTP (Secure)" },
+            { port: "636", protocol: "LDAPS" },
+            { port: "993", protocol: "IMAPS" },
+            { port: "995", protocol: "POP3S" },
+            { port: "3389", protocol: "RDP" },
+            { port: "5060", protocol: "SIP" },
+            { port: "5900", protocol: "VNC" }
+        ];
+
+        const ALL_PROTOCOLS = [...new Set(PORT_DATA.map(d => d.protocol))];
+
+        // === GAME STATE ===
+        let score = 0;
+        let streak = 0;
+        let bestStreak = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let timeRemaining = 60;
+        let timerInterval = null;
+        let currentAnswer = "";
+        let isAnswering = false;
+        let highScore = parseInt(localStorage.getItem('portBlasterHighScore')) || 0;
+
+        // === INIT ===
+        document.getElementById('highScoreDisplay').textContent = highScore;
+
+        // === COUNTDOWN ===
+        function startCountdown() {
+            document.getElementById('introScreen').style.display = 'none';
+            const countdownScreen = document.getElementById('countdownScreen');
+            countdownScreen.style.display = 'flex';
+            countdownScreen.style.alignItems = 'center';
+            countdownScreen.style.justifyContent = 'center';
+            countdownScreen.style.minHeight = '400px';
+
+            let count = 3;
+            const display = document.getElementById('countdownDisplay');
+            display.innerHTML = '<div class="countdown-number">' + count + '</div>';
+
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    display.innerHTML = '<div class="countdown-number">' + count + '</div>';
+                } else if (count === 0) {
+                    display.innerHTML = '<div class="countdown-go">GO!</div>';
+                } else {
+                    clearInterval(countInterval);
+                    countdownScreen.style.display = 'none';
+                    startGame();
+                }
+            }, 800);
+        }
+
+        // === START GAME ===
+        function startGame() {
+            score = 0;
+            streak = 0;
+            bestStreak = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            timeRemaining = 60;
+            isAnswering = false;
+
+            updateHUD();
+            document.getElementById('gameScreen').style.display = 'block';
+            document.getElementById('timerBar').style.width = '100%';
+            document.getElementById('timerBar').className = 'timer-bar';
+
+            nextQuestion();
+            startTimer();
+        }
+
+        // === TIMER ===
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                document.getElementById('timeLeft').textContent = timeRemaining;
+
+                const pct = (timeRemaining / 60) * 100;
+                const bar = document.getElementById('timerBar');
+                bar.style.width = pct + '%';
+
+                if (pct <= 20) {
+                    bar.className = 'timer-bar danger';
+                } else if (pct <= 50) {
+                    bar.className = 'timer-bar warning';
+                } else {
+                    bar.className = 'timer-bar';
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // === NEXT QUESTION ===
+        function nextQuestion() {
+            const item = PORT_DATA[Math.floor(Math.random() * PORT_DATA.length)];
+            currentAnswer = item.protocol;
+
+            document.getElementById('portNumber').textContent = item.port;
+
+            // Generate wrong answers
+            let wrongOptions = ALL_PROTOCOLS.filter(p => p !== item.protocol);
+            shuffleArray(wrongOptions);
+            wrongOptions = wrongOptions.slice(0, 3);
+
+            // Combine and shuffle
+            const options = [item.protocol, ...wrongOptions];
+            shuffleArray(options);
+
+            // Render buttons
+            const grid = document.getElementById('answersGrid');
+            grid.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = opt;
+                btn.onclick = function() { checkAnswer(this); };
+                grid.appendChild(btn);
+            });
+
+            isAnswering = false;
+        }
+
+        // === CHECK ANSWER ===
+        function checkAnswer(btn) {
+            if (isAnswering) return;
+            isAnswering = true;
+
+            const selected = btn.textContent;
+            const buttons = document.querySelectorAll('.answer-btn');
+            const flash = document.getElementById('flashOverlay');
+
+            if (selected === currentAnswer) {
+                // Correct!
+                streak++;
+                if (streak > bestStreak) bestStreak = streak;
+                const bonus = streak > 1 ? 5 : 0;
+                score += 10 + bonus;
+                correctCount++;
+
+                btn.classList.add('correct');
+                flash.className = 'flash-overlay green';
+
+                setTimeout(() => {
+                    flash.className = 'flash-overlay';
+                    updateHUD();
+                    nextQuestion();
+                }, 400);
+            } else {
+                // Wrong!
+                streak = 0;
+                score -= 5;
+                if (score < 0) score = 0;
+                wrongCount++;
+
+                btn.classList.add('wrong');
+                flash.className = 'flash-overlay red';
+                document.querySelector('.port-display').classList.add('shake');
+
+                // Reveal correct answer
+                buttons.forEach(b => {
+                    b.classList.add('disabled');
+                    if (b.textContent === currentAnswer) {
+                        b.classList.add('reveal-correct');
+                    }
+                });
+
+                setTimeout(() => {
+                    flash.className = 'flash-overlay';
+                    document.querySelector('.port-display').classList.remove('shake');
+                    updateHUD();
+                    nextQuestion();
+                }, 1000);
+            }
+        }
+
+        // === UPDATE HUD ===
+        function updateHUD() {
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('streakDisplay').textContent = streak;
+        }
+
+        // === END GAME ===
+        function endGame() {
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('gameOverScreen').style.display = 'flex';
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('statCorrect').textContent = correctCount;
+            document.getElementById('statWrong').textContent = wrongCount;
+            document.getElementById('statStreak').textContent = bestStreak;
+
+            // Grade
+            let grade = "";
+            if (score >= 200) grade = "A+ Certified Material!";
+            else if (score >= 150) grade = "Almost there — keep studying!";
+            else if (score >= 100) grade = "Getting warmer...";
+            else grade = "Time to hit the books!";
+            document.getElementById('gradeMessage').textContent = grade;
+
+            // High score
+            const hsMsg = document.getElementById('newHighScoreMsg');
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('portBlasterHighScore', highScore);
+                document.getElementById('highScoreDisplay').textContent = highScore;
+                hsMsg.innerHTML = '<div class="new-highscore">&#127942; New High Score!</div>';
+            } else {
+                hsMsg.innerHTML = '';
+            }
+
+            // Confetti if 200+
+            if (score >= 200) {
+                launchConfetti();
+            }
+        }
+
+        // === RESET GAME ===
+        function resetGame() {
+            document.getElementById('gameOverScreen').style.display = 'none';
+            document.getElementById('introScreen').style.display = 'flex';
+            // Remove any lingering confetti
+            const confetti = document.querySelector('.confetti-container');
+            if (confetti) confetti.remove();
+        }
+
+        // === CONFETTI ===
+        function launchConfetti() {
+            const container = document.createElement('div');
+            container.className = 'confetti-container';
+            document.body.appendChild(container);
+
+            const colors = ['#00e5ff', '#7c4dff', '#ffab00', '#00e676', '#ff1744', '#fff'];
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = (Math.random() * 2) + 's';
+                piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+                piece.style.width = (6 + Math.random() * 8) + 'px';
+                piece.style.height = (6 + Math.random() * 8) + 'px';
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                container.appendChild(piece);
+            }
+
+            setTimeout(() => { container.remove(); }, 4000);
+        }
+
+        // === UTILITY ===
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+    </script>
+</body>
+</html>
