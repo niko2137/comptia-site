@@ -19,6 +19,9 @@ canvas { display: block; }
     border: 1px solid rgba(0, 240, 255, 0.3);
     border-radius: 12px;
 }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-60px); } }
+@keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
 </style>
 </head>
 <body>
@@ -30,7 +33,6 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const uiOverlay = document.getElementById('ui-overlay');
 
-
 // Canvas setup
 function resize() {
     canvas.width = window.innerWidth;
@@ -39,23 +41,27 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
+
 // ========== GAME STATE ==========
 let gameState = 'start'; // start, playing, quiz, levelTransition, gameOver
 let score = 0;
 let level = 1;
-let health = 3;
+let health = 5;
+const MAX_HEALTH = 5;
 let correctAnswers = 0;
 let totalQuestions = 0;
 let startTime = 0;
 let levelTimer = 0;
 let speedMultiplier = 1.0;
-let spawnRate = 60; // frames between spawns
+let maxSpeedReached = 1.0;
+let spawnRate = 60;
 let frameCount = 0;
 let highScores = JSON.parse(localStorage.getItem('neonCircuitScores') || '[]');
 let questionsAnsweredThisLevel = 0;
 let orbTimer = 0;
 let paused = false;
-
+let floatingTexts = [];
+let lastSpeedIncreaseTime = 0;
 
 // ========== LEVEL DATA ==========
 const levels = [
@@ -63,12 +69,15 @@ const levels = [
     { name: "Networking", color: "#00f0ff", subjects: "Ports, Protocols, Topologies, Cables" },
     { name: "Operating Systems", color: "#b300ff", subjects: "Windows, Linux, macOS, Commands" },
     { name: "Security", color: "#ff0066", subjects: "Threats, Encryption, Authentication" },
-    { name: "Troubleshooting", color: "#00ff88", subjects: "Methodology, Tools, Diagnostics" }
+    { name: "Troubleshooting", color: "#00ff88", subjects: "Methodology, Tools, Diagnostics" },
+    { name: "Cloud & Virtualization", color: "#00aaff", subjects: "VMs, Cloud Models, Containers, Deployment" },
+    { name: "Mobile & Operations", color: "#ffaa00", subjects: "MDM, Tickets, Procedures, Backups" }
 ];
+
 
 // ========== QUESTIONS DATABASE ==========
 const questions = [
-    // Level 1 - Hardware
+    // Level 1 - Hardware (15 questions)
     [
         { q: "What is the standard ATX motherboard size?", opts: ["305x244mm", "244x244mm", "170x170mm", "150x150mm"], ans: 0 },
         { q: "Which RAM type requires 1.2V?", opts: ["DDR3", "DDR4", "DDR5", "DDR2"], ans: 1 },
@@ -79,10 +88,16 @@ const questions = [
         { q: "What battery type maintains BIOS settings?", opts: ["AA", "CR2032", "AAA", "9V"], ans: 1 },
         { q: "NVMe connects via which bus?", opts: ["SATA", "USB", "PCIe", "IDE"], ans: 2 },
         { q: "ESD can damage components at what voltage?", opts: ["1000V", "100V", "10000V", "50V"], ans: 1 },
-        { q: "What goes between CPU and heatsink?", opts: ["Thermal paste", "Glue", "Rubber pad", "Nothing"], ans: 0 }
+        { q: "What goes between CPU and heatsink?", opts: ["Thermal paste", "Glue", "Rubber pad", "Nothing"], ans: 0 },
+        { q: "DDR4 uses how many pins (desktop)?", opts: ["240", "288", "204", "260"], ans: 1 },
+        { q: "What does the 8-pin EPS connector power?", opts: ["GPU", "CPU", "Fans", "SATA drives"], ans: 1 },
+        { q: "Which form factor is smallest?", opts: ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"], ans: 2 },
+        { q: "TDP measures what?", opts: ["Clock speed", "Maximum heat output in watts", "Memory bandwidth", "Core count"], ans: 1 },
+        { q: "PCIe 4.0 speed per lane?", opts: ["~1 GB/s", "~2 GB/s", "~4 GB/s", "~500 MB/s"], ans: 1 }
     ],
 
-    // Level 2 - Networking
+
+    // Level 2 - Networking (15 questions)
     [
         { q: "SSH uses which port?", opts: ["21", "22", "23", "25"], ans: 1 },
         { q: "HTTPS runs on port?", opts: ["80", "8080", "443", "8443"], ans: 2 },
@@ -93,9 +108,16 @@ const questions = [
         { q: "Cat 6a supports what speed at 100m?", opts: ["1 Gbps", "5 Gbps", "10 Gbps", "25 Gbps"], ans: 2 },
         { q: "APIPA address range is?", opts: ["192.168.x.x", "10.0.x.x", "169.254.x.x", "172.16.x.x"], ans: 2 },
         { q: "SMB uses port?", opts: ["139", "445", "443", "389"], ans: 1 },
-        { q: "How many layers in the OSI model?", opts: ["5", "6", "7", "4"], ans: 2 }
+        { q: "How many layers in the OSI model?", opts: ["5", "6", "7", "4"], ans: 2 },
+        { q: "SMTP uses which port?", opts: ["22", "25", "53", "110"], ans: 1 },
+        { q: "What does VLAN do?", opts: ["Encrypts traffic", "Segments broadcast domains", "Boosts speed", "Blocks ports"], ans: 1 },
+        { q: "PoE stands for?", opts: ["Point of Entry", "Power over Ethernet", "Protocol of Exchange", "Port of Egress"], ans: 1 },
+        { q: "Default gateway is?", opts: ["DNS server", "Router IP for external traffic", "DHCP server", "Firewall IP"], ans: 1 },
+        { q: "SNMP uses port?", opts: ["143", "161", "389", "636"], ans: 1 }
     ],
-    // Level 3 - Operating Systems
+
+
+    // Level 3 - Operating Systems (15 questions)
     [
         { q: "sfc /scannow does what?", opts: ["Formats drive", "Repairs system files", "Clears DNS", "Checks disk"], ans: 1 },
         { q: "NTFS supports files larger than?", opts: ["2GB", "4GB", "Both", "Neither"], ans: 1 },
@@ -106,10 +128,16 @@ const questions = [
         { q: "DISM should run before retrying?", opts: ["chkdsk", "sfc", "bootrec", "diskpart"], ans: 1 },
         { q: "System Restore affects personal files?", opts: ["Yes", "No", "Only documents", "Only downloads"], ans: 1 },
         { q: "MBR max disk size?", opts: ["1TB", "2TB", "4TB", "8TB"], ans: 1 },
-        { q: "bootrec is used when?", opts: ["Slow boot", "Windows won't start", "Low disk", "Driver crash"], ans: 1 }
+        { q: "bootrec is used when?", opts: ["Slow boot", "Windows won't start", "Low disk", "Driver crash"], ans: 1 },
+        { q: "ipconfig /release does what?", opts: ["Releases DHCP lease", "Clears DNS", "Shows MAC", "Resets adapter"], ans: 0 },
+        { q: "Which command forces Group Policy refresh?", opts: ["gpresult", "gpupdate /force", "gpedit.msc", "secedit"], ans: 1 },
+        { q: "FAT32 max file size?", opts: ["2 GB", "4 GB", "8 GB", "16 GB"], ans: 1 },
+        { q: "Windows Recovery Environment acronym?", opts: ["WinRE", "WDE", "WinBoot", "WREC"], ans: 0 },
+        { q: "Task Manager shortcut?", opts: ["Ctrl+Alt+Del", "Ctrl+Shift+Esc", "Alt+F4", "Win+R"], ans: 1 }
     ],
 
-    // Level 4 - Security
+
+    // Level 4 - Security (15 questions)
     [
         { q: "WPA3 uses which authentication?", opts: ["PSK", "SAE", "TKIP", "WEP"], ans: 1 },
         { q: "Phishing is what type of attack?", opts: ["Physical", "Social engineering", "Brute force", "DoS"], ans: 1 },
@@ -120,9 +148,16 @@ const questions = [
         { q: "Degaussing affects which media?", opts: ["SSDs", "HDDs", "Flash drives", "CDs"], ans: 1 },
         { q: "Secure Boot prevents?", opts: ["Rootkits", "Spam", "Phishing", "SQL injection"], ans: 0 },
         { q: "Mantrap is now called?", opts: ["Security gate", "Access Control Vestibule", "Checkpoint", "Barrier"], ans: 1 },
-        { q: "Secure Erase is for which drive type?", opts: ["HDD", "SSD", "Tape", "Optical"], ans: 1 }
+        { q: "Secure Erase is for which drive type?", opts: ["HDD", "SSD", "Tape", "Optical"], ans: 1 },
+        { q: "Whaling targets who?", opts: ["New employees", "Senior executives", "IT staff", "Vendors"], ans: 1 },
+        { q: "What is shoulder surfing?", opts: ["Hacking Wi-Fi", "Observing someone's screen", "Tailgating", "Dumpster diving"], ans: 1 },
+        { q: "Zero-day means?", opts: ["No patch available yet", "Old vulnerability", "First day of attack", "Zero risk"], ans: 0 },
+        { q: "Class C fire extinguisher is for?", opts: ["Paper fires", "Electrical fires", "Grease fires", "Chemical fires"], ans: 1 },
+        { q: "Chain of custody is required for?", opts: ["Backups", "Legal proceedings", "Audits", "Ticketing"], ans: 1 }
     ],
-    // Level 5 - Troubleshooting
+
+
+    // Level 5 - Troubleshooting (15 questions)
     [
         { q: "First troubleshooting step?", opts: ["Test theory", "Identify problem", "Implement fix", "Document"], ans: 1 },
         { q: "ipconfig /flushdns does what?", opts: ["Renews IP", "Clears DNS cache", "Shows MAC", "Resets adapter"], ans: 1 },
@@ -133,7 +168,52 @@ const questions = [
         { q: "After implementing fix, you should?", opts: ["Close ticket", "Verify solution", "Escalate", "Restart"], ans: 1 },
         { q: "Clock resets every boot suggests?", opts: ["Bad RAM", "Dead CMOS battery", "Corrupt OS", "Bad CPU"], ans: 1 },
         { q: "Last troubleshooting step?", opts: ["Escalate", "Test", "Document findings", "Restart"], ans: 2 },
-        { q: "PXE boot requires?", opts: ["USB drive", "DHCP + TFTP", "CD-ROM", "SSD"], ans: 1 }
+        { q: "PXE boot requires?", opts: ["USB drive", "DHCP + TFTP", "CD-ROM", "SSD"], ans: 1 },
+        { q: "tracert does what?", opts: ["Tests port", "Shows each hop to destination", "Clears ARP", "Renews IP"], ans: 1 },
+        { q: "netstat -an shows?", opts: ["DNS records", "All connections, numeric format", "Routing table", "Wi-Fi networks"], ans: 1 },
+        { q: "Event Viewer is for?", opts: ["Task scheduling", "System/application/security logs", "Disk cleanup", "Driver updates"], ans: 1 },
+        { q: "System Restore removes?", opts: ["Personal files", "Recently installed programs", "User accounts", "Saved passwords"], ans: 1 },
+        { q: "BSOD caused by?", opts: ["Low disk", "Kernel-level critical error", "Slow internet", "Bad mouse"], ans: 1 }
+    ],
+
+
+    // Level 6 - Cloud & Virtualization (15 questions)
+    [
+        { q: "Type 1 hypervisor runs on?", opts: ["Guest OS", "Bare metal", "Container", "Browser"], ans: 1 },
+        { q: "Type 2 hypervisor example?", opts: ["ESXi", "VirtualBox", "Hyper-V Server", "KVM"], ans: 1 },
+        { q: "SaaS example?", opts: ["AWS EC2", "Microsoft 365", "Docker", "Azure VM"], ans: 1 },
+        { q: "IaaS means customer manages?", opts: ["Nothing", "VMs, OS, and apps", "Only data", "Hardware"], ans: 1 },
+        { q: "VM Snapshot is?", opts: ["Backup copy", "Point-in-time state capture", "Clone", "Template"], ans: 1 },
+        { q: "NAT mode VM uses?", opts: ["Own public IP", "Host's IP address", "No network", "Bridge IP"], ans: 1 },
+        { q: "Bridged mode gives VM?", opts: ["No network", "Own IP on LAN", "Host IP only", "VPN tunnel"], ans: 1 },
+        { q: "Elasticity means?", opts: ["Fixed resources", "Auto-scaling resources", "Manual upgrades", "Static IPs"], ans: 1 },
+        { q: "Container shares?", opts: ["Own kernel", "Host OS kernel", "Guest OS", "Hypervisor"], ans: 1 },
+        { q: "Private cloud is?", opts: ["Free tier AWS", "Organization-owned", "Public internet", "Shared hosting"], ans: 1 },
+        { q: "Hybrid cloud combines?", opts: ["Two public clouds", "Public and private", "On-prem only", "Edge and fog"], ans: 1 },
+        { q: "PaaS example?", opts: ["Gmail", "Azure App Service", "AWS S3", "Dropbox"], ans: 1 },
+        { q: "Thin client connects to?", opts: ["Local disk", "Server for desktop", "USB drive", "Cloud storage"], ans: 1 },
+        { q: "Host-only mode means?", opts: ["Full internet", "VM talks only to host", "No network", "DMZ access"], ans: 1 },
+        { q: "DaaS stands for?", opts: ["Data as a Service", "Desktop as a Service", "Device as a Service", "Domain as a Service"], ans: 1 }
+    ],
+
+
+    // Level 7 - Mobile & Operations (15 questions)
+    [
+        { q: "MDM can do what to stolen phone?", opts: ["Upgrade OS", "Remote wipe", "Install apps", "Change carrier"], ans: 1 },
+        { q: "IMEI identifies?", opts: ["SIM card", "Physical phone hardware", "Phone number", "Carrier"], ans: 1 },
+        { q: "First action for lost phone?", opts: ["Report stolen", "Remote lock", "Call carrier", "Buy new phone"], ans: 1 },
+        { q: "BYOD means?", opts: ["Buy Your Own Desktop", "Bring Your Own Device", "Build Your Own Data", "Back Your Own Drive"], ans: 1 },
+        { q: "Ticket escalation means?", opts: ["Closing ticket", "Transfer to higher support", "Deleting ticket", "Auto-resolve"], ans: 1 },
+        { q: "SLA defines?", opts: ["Hardware specs", "Response times and uptime", "Software versions", "User permissions"], ans: 1 },
+        { q: "6-step troubleshooting starts with?", opts: ["Document", "Identify the problem", "Test theory", "Implement fix"], ans: 1 },
+        { q: "Change management requires?", opts: ["Approval before changes", "Immediate action", "No documentation", "User consent"], ans: 0 },
+        { q: "P1 Critical means?", opts: ["Minor issue", "Complete outage", "Cosmetic bug", "Feature request"], ans: 1 },
+        { q: "Documentation should happen?", opts: ["Never", "After every resolution", "Only for critical", "Monthly"], ans: 1 },
+        { q: "RTO stands for?", opts: ["Real-Time Output", "Recovery Time Objective", "Remote Transfer Object", "Restore To Original"], ans: 1 },
+        { q: "3-2-1 backup rule?", opts: ["3 copies, 2 media, 1 offsite", "3 days, 2 hours, 1 minute", "3 servers, 2 sites, 1 cloud", "3 users, 2 admins, 1 root"], ans: 0 },
+        { q: "COPE means?", opts: ["Company-Only Private Equipment", "Corporate-Owned Personally Enabled", "Cloud-Operated Personal Environment", "Central Office Phone Exchange"], ans: 1 },
+        { q: "Geofencing does?", opts: ["Blocks hackers", "Triggers actions at location boundaries", "Encrypts data", "Tracks bandwidth"], ans: 1 },
+        { q: "Configuration profile delivers?", opts: ["Hardware upgrades", "Wi-Fi, VPN, email settings", "Physical keys", "SIM cards"], ans: 1 }
     ]
 ];
 
@@ -171,6 +251,7 @@ function initBgParticles() {
 // Circuit board background layers
 const circuitLayers = [];
 function initCircuitLayers() {
+    circuitLayers.length = 0;
     for (let layer = 0; layer < 3; layer++) {
         const lines = [];
         for (let i = 0; i < 20; i++) {
@@ -228,6 +309,7 @@ function sfxCorrect() { playTone(400, 0.2); setTimeout(() => playTone(600, 0.2),
 function sfxWrong() { playTone(300, 0.2, 'sawtooth'); setTimeout(() => playTone(150, 0.3, 'sawtooth'), 150); }
 function sfxCollision() { playTone(80, 0.3, 'sawtooth', 0.15); playTone(60, 0.2, 'square', 0.1); }
 function sfxOrb() { playTone(500, 0.15); setTimeout(() => playTone(700, 0.15), 80); }
+function sfxBonus() { playTone(600, 0.15); setTimeout(() => playTone(800, 0.15), 80); setTimeout(() => playTone(1000, 0.2), 160); setTimeout(() => playTone(1200, 0.3), 240); }
 
 
 // ========== SPAWN OBSTACLES ==========
@@ -274,6 +356,11 @@ function createExplosion(x, y, count, colors) {
             size: 2 + Math.random() * 4
         });
     }
+}
+
+// ========== FLOATING TEXT ==========
+function addFloatingText(text, x, y, color) {
+    floatingTexts.push({ text, x, y, life: 1, color });
 }
 
 
@@ -337,14 +424,34 @@ function answerQuestion(idx) {
     if (!overlay) return;
 
     if (idx === currentQuestion.ans) {
+        // CORRECT ANSWER
         score += 100 + quizTimeLeft * 10;
         correctAnswers++;
-        if (health < 3) health++;
-        sfxCorrect();
-        createExplosion(player.x, player.y, 30, ['#00ff88', '#00f0ff', '#fff']);
+        
+        // Speed increase for correct: +0.05
+        speedMultiplier += 0.05;
+        if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
+        
+        if (health >= MAX_HEALTH) {
+            // MAX LIVES BONUS
+            score += 200;
+            sfxBonus();
+            addFloatingText('MAX LIVES BONUS +200', player.x, player.y - 40, '#ffdd00');
+            createExplosion(player.x, player.y, 40, ['#ffdd00', '#ffaa00', '#fff', '#00f0ff']);
+        } else {
+            health++;
+            sfxCorrect();
+            createExplosion(player.x, player.y, 30, ['#00ff88', '#00f0ff', '#fff']);
+        }
     } else {
+        // WRONG ANSWER
         score = Math.max(0, score - 50);
         health--;
+        
+        // Speed increase for wrong: +0.15
+        speedMultiplier += 0.15;
+        if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
+        
         sfxWrong();
         screenShake = 15;
         createExplosion(player.x, player.y, 50, ['#ff0066', '#ff4400', '#ff8800']);
@@ -355,8 +462,8 @@ function answerQuestion(idx) {
     overlay.remove();
     gameState = 'playing';
 
-    // Check level progression: 3 questions per level
-    if (questionsAnsweredThisLevel >= 3 && level < 5) {
+    // Check level progression: 4 questions per level to advance
+    if (questionsAnsweredThisLevel >= 4 && level < 7) {
         levelUp();
     }
 }
@@ -364,11 +471,11 @@ function answerQuestion(idx) {
 function levelUp() {
     level++;
     questionsAnsweredThisLevel = 0;
-    speedMultiplier = 1.0 + (level - 1) * 0.375;
-    spawnRate = Math.max(20, 60 - (level - 1) * 8);
+    spawnRate = Math.max(20, 60 - (level - 1) * 6);
     obstacles = [];
     orbs = [];
     gameState = 'levelTransition';
+    lastSpeedIncreaseTime = Date.now();
 
     setTimeout(() => {
         if (gameState === 'levelTransition') gameState = 'playing';
@@ -380,16 +487,20 @@ function levelUp() {
 function startGame() {
     initAudio();
     gameState = 'playing';
-    score = 0; level = 1; health = 3;
+    score = 0; level = 1; health = MAX_HEALTH;
     correctAnswers = 0; totalQuestions = 0;
     questionsAnsweredThisLevel = 0;
-    speedMultiplier = 1.0; spawnRate = 60;
+    speedMultiplier = 1.0; maxSpeedReached = 1.0;
+    spawnRate = 60;
     frameCount = 0; orbTimer = 0; levelTimer = 0;
     startTime = Date.now();
+    lastSpeedIncreaseTime = Date.now();
     player.x = canvas.width / 2;
     player.y = canvas.height * 0.75;
     player.trail = [];
+    player.invincible = 0;
     particles = []; obstacles = []; orbs = [];
+    floatingTexts = [];
     initBgParticles();
     initCircuitLayers();
     uiOverlay.innerHTML = '';
@@ -401,32 +512,38 @@ function gameOver() {
     const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
     const secs = (elapsed % 60).toString().padStart(2, '0');
     const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+    const qualifies = highScores.length < 10 || score > (highScores[highScores.length - 1]?.score || 0);
 
     sfxCollision();
 
     uiOverlay.innerHTML = `
-    <div style="position:fixed;inset:0;background:rgba(10,10,26,0.92);display:flex;align-items:center;justify-content:center;z-index:100;">
-        <div style="text-align:center;max-width:500px;width:90%;padding:40px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid #ff0066;box-shadow:0 0 60px #ff006644;">
+    <div style="position:fixed;inset:0;background:rgba(10,10,26,0.92);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.5s;">
+        <div style="text-align:center;max-width:550px;width:90%;padding:40px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid #ff0066;box-shadow:0 0 60px #ff006644;">
             <h1 style="color:#ff0066;font-size:2em;margin-bottom:8px;">GAME OVER</h1>
             <p style="color:#a8c4df;margin-bottom:24px;">Your circuit has been breached!</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
-                <div style="padding:16px;border-radius:8px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);">
-                    <div style="color:#00f0ff;font-size:0.8em;">SCORE</div>
-                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${score}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+                <div style="padding:14px;border-radius:8px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);">
+                    <div style="color:#00f0ff;font-size:0.75em;">SCORE</div>
+                    <div id="score-counter" style="color:#fff;font-size:1.6em;font-weight:bold;">0</div>
                 </div>
-                <div style="padding:16px;border-radius:8px;background:rgba(179,0,255,0.05);border:1px solid rgba(179,0,255,0.2);">
-                    <div style="color:#b300ff;font-size:0.8em;">LEVEL</div>
-                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${level} / 5</div>
+                <div style="padding:14px;border-radius:8px;background:rgba(179,0,255,0.05);border:1px solid rgba(179,0,255,0.2);">
+                    <div style="color:#b300ff;font-size:0.75em;">LEVEL</div>
+                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${level} / 7</div>
                 </div>
-                <div style="padding:16px;border-radius:8px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
-                    <div style="color:#00ff88;font-size:0.8em;">ACCURACY</div>
-                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${accuracy}%</div>
+                <div style="padding:14px;border-radius:8px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
+                    <div style="color:#00ff88;font-size:0.75em;">ACCURACY</div>
+                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${accuracy}%</div>
                 </div>
-                <div style="padding:16px;border-radius:8px;background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);">
-                    <div style="color:#ff8c00;font-size:0.8em;">TIME</div>
-                    <div style="color:#fff;font-size:1.8em;font-weight:bold;">${mins}:${secs}</div>
+                <div style="padding:14px;border-radius:8px;background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);">
+                    <div style="color:#ff8c00;font-size:0.75em;">TIME</div>
+                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${mins}:${secs}</div>
+                </div>
+                <div style="padding:14px;border-radius:8px;background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.2);grid-column:span 2;">
+                    <div style="color:#ffaa00;font-size:0.75em;">MAX SPEED REACHED</div>
+                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${maxSpeedReached.toFixed(2)}x</div>
                 </div>
             </div>
+            ${qualifies ? '<p style="color:#ffdd00;margin-bottom:16px;font-size:0.9em;text-shadow:0 0 8px #ffdd0066;">⭐ Get on the high scoreboard! ⭐</p>' : ''}
             <div style="margin-bottom:20px;">
                 <input id="nameInput" type="text" maxlength="15" placeholder="Enter your name" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(0,240,255,0.3);background:rgba(0,0,0,0.5);color:#fff;font-family:'Courier New',monospace;font-size:1em;text-align:center;">
             </div>
@@ -437,6 +554,18 @@ function gameOver() {
             </div>
         </div>
     </div>`;
+
+    // Score counting animation
+    const counterEl = document.getElementById('score-counter');
+    if (counterEl && score > 0) {
+        let current = 0;
+        const step = Math.max(1, Math.floor(score / 60));
+        const countInterval = setInterval(() => {
+            current += step;
+            if (current >= score) { current = score; clearInterval(countInterval); }
+            counterEl.textContent = current;
+        }, 30);
+    }
 }
 
 
@@ -646,6 +775,26 @@ function drawParticles() {
     particles = particles.filter(p => p.life > 0);
 }
 
+function drawFloatingTexts() {
+    floatingTexts.forEach(ft => {
+        ft.life -= 0.015;
+        ft.y -= 1;
+        if (ft.life > 0) {
+            ctx.save();
+            ctx.globalAlpha = ft.life;
+            ctx.fillStyle = ft.color;
+            ctx.shadowColor = ft.color;
+            ctx.shadowBlur = 10;
+            ctx.font = 'bold 18px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText(ft.text, ft.x, ft.y);
+            ctx.restore();
+        }
+    });
+    floatingTexts = floatingTexts.filter(ft => ft.life > 0);
+}
+
+
 function drawHUD() {
     // Score
     ctx.fillStyle = '#00f0ff';
@@ -660,27 +809,38 @@ function drawHUD() {
     ctx.shadowColor = levels[level - 1].color;
     ctx.fillText(`LVL ${level}: ${levels[level - 1].name}`, 20, 64);
 
-    // Health shields
+    // Speed multiplier
+    ctx.fillStyle = speedMultiplier > 2.0 ? '#ff4444' : speedMultiplier > 1.5 ? '#ffaa00' : '#00ff88';
+    ctx.shadowColor = ctx.fillStyle;
+    ctx.fillText(`SPEED: ${speedMultiplier.toFixed(2)}x`, 20, 92);
+
+    // Health shields (5 hexagons)
     ctx.textAlign = 'right';
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < MAX_HEALTH; i++) {
         ctx.fillStyle = i < health ? '#00f0ff' : '#333';
         ctx.shadowColor = i < health ? '#00f0ff' : 'transparent';
         ctx.shadowBlur = i < health ? 8 : 0;
         ctx.font = '22px Courier New';
-        ctx.fillText('⬡', canvas.width - 20 - i * 30, 36);
+        ctx.fillText('\u2B21', canvas.width - 20 - i * 30, 36);
     }
 
-    // Progress bar
+    // Progress bar for level advancement
     const barW = 200, barH = 6, barX = canvas.width - barW - 20, barY = 52;
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#1a1a3a';
     ctx.fillRect(barX, barY, barW, barH);
-    const progress = Math.min(1, questionsAnsweredThisLevel / 3);
+    const progress = Math.min(1, questionsAnsweredThisLevel / 4);
     const gradient = ctx.createLinearGradient(barX, 0, barX + barW * progress, 0);
     gradient.addColorStop(0, '#00f0ff');
     gradient.addColorStop(1, levels[level - 1].color);
     ctx.fillStyle = gradient;
     ctx.fillRect(barX, barY, barW * progress, barH);
+
+    // Progress label
+    ctx.fillStyle = '#a8c4df';
+    ctx.font = '11px Courier New';
+    ctx.textAlign = 'right';
+    ctx.fillText(`${questionsAnsweredThisLevel}/4 to next level`, canvas.width - 20, barY + 18);
 
     ctx.textAlign = 'left';
     ctx.shadowBlur = 0;
@@ -695,109 +855,131 @@ function drawStartScreen() {
     ctx.shadowColor = '#00f0ff';
     ctx.shadowBlur = 30;
     ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 52px Courier New';
-    ctx.fillText('NEON CIRCUIT DASH', canvas.width / 2, canvas.height * 0.25);
+    ctx.font = 'bold 48px Courier New';
+    ctx.fillText('NEON CIRCUIT DASH', canvas.width / 2, canvas.height * 0.15);
 
     ctx.shadowBlur = 15;
     ctx.fillStyle = '#b300ff';
-    ctx.font = '18px Courier New';
-    ctx.fillText('CompTIA A+ Learning Arcade', canvas.width / 2, canvas.height * 0.25 + 40);
-
-    // Tagline
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#a8c4df';
     ctx.font = '16px Courier New';
-    ctx.fillText('Navigate cyberspace • Dodge hazards • Answer questions • Level up!', canvas.width / 2, canvas.height * 0.35);
+    ctx.fillText('CompTIA A+ Learning Arcade', canvas.width / 2, canvas.height * 0.15 + 36);
+
+    // Instructions section
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#ffdd00';
+    ctx.font = 'bold 16px Courier New';
+    ctx.fillText('\u{1F579}\uFE0F HOW TO PLAY:', canvas.width / 2, canvas.height * 0.28);
+
+    ctx.fillStyle = '#a8c4df';
+    ctx.font = '14px Courier New';
+    const instructions = [
+        '\u2022 Move your ship with Arrow Keys, WASD, or Mouse',
+        '\u2022 AVOID obstacles flying across the screen',
+        '\u2022 GRAB the spinning \u2753 orbs to trigger quiz questions',
+        '\u2022 Correct answer = +1 Life (or +200 Bonus if max lives!)',
+        '\u2022 Wrong answer = -1 Life + Speed Increase',
+        '\u2022 Survive 7 levels and top the leaderboard!'
+    ];
+    instructions.forEach((line, i) => {
+        ctx.fillText(line, canvas.width / 2, canvas.height * 0.34 + i * 24);
+    });
+
+    ctx.fillStyle = '#ff8c00';
+    ctx.font = 'bold 14px Courier New';
+    ctx.fillText('\u26A1 Speed increases with every answer \u2014 stay sharp!', canvas.width / 2, canvas.height * 0.34 + instructions.length * 24 + 16);
+
+    // High scores
+    if (highScores.length > 0) {
+        const hsY = canvas.height * 0.62;
+        ctx.fillStyle = '#ffdd00';
+        ctx.font = 'bold 14px Courier New';
+        ctx.fillText('\u{1F3C6} HIGH SCORES', canvas.width / 2, hsY);
+        ctx.font = '12px Courier New';
+        highScores.slice(0, 5).forEach((hs, i) => {
+            const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}', ' ', ' '];
+            ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#a8c4df';
+            ctx.fillText(`${medals[i]} ${hs.name} - ${hs.score} (Lvl ${hs.level}, ${hs.accuracy}%)`, canvas.width / 2, hsY + 22 + i * 20);
+        });
+    }
 
     // Press Start (blinking)
     if (Math.sin(frameCount * 0.06) > 0) {
         ctx.shadowColor = '#00ff88';
         ctx.shadowBlur = 15;
         ctx.fillStyle = '#00ff88';
-        ctx.font = 'bold 22px Courier New';
-        ctx.fillText('[ PRESS SPACE OR CLICK TO START ]', canvas.width / 2, canvas.height * 0.5);
+        ctx.font = 'bold 20px Courier New';
+        ctx.fillText('[ PRESS SPACE OR CLICK TO START ]', canvas.width / 2, canvas.height * 0.9);
     }
 
-    // Controls
     ctx.shadowBlur = 0;
-    ctx.fillStyle = '#5c6b80';
-    ctx.font = '14px Courier New';
-    ctx.fillText('Arrow Keys / WASD / Mouse to move', canvas.width / 2, canvas.height * 0.6);
-    ctx.fillText('Collect ❓ orbs to answer CompTIA A+ questions', canvas.width / 2, canvas.height * 0.65);
-
-    // High scores
-    if (highScores.length > 0) {
-        ctx.fillStyle = '#ff8c00';
-        ctx.font = 'bold 16px Courier New';
-        ctx.fillText('═══ HIGH SCORES ═══', canvas.width / 2, canvas.height * 0.73);
-
-        const medals = ['🥇', '🥈', '🥉'];
-        highScores.slice(0, 5).forEach((hs, i) => {
-            const medal = i < 3 ? medals[i] : `#${i+1}`;
-            ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#5c6b80';
-            ctx.font = '14px Courier New';
-            ctx.fillText(`${medal} ${hs.name} — ${hs.score} (Lvl ${hs.level}, ${hs.accuracy}%)`, canvas.width / 2, canvas.height * 0.78 + i * 22);
-        });
-    }
-
     ctx.textAlign = 'left';
 }
+
 
 function drawLevelTransition() {
     drawBackground();
+
     const lvl = levels[level - 1];
-    const elapsed = (frameCount % 180) / 180;
-
     ctx.textAlign = 'center';
+
+    // Level number
     ctx.shadowColor = lvl.color;
-    ctx.shadowBlur = 30 + Math.sin(frameCount * 0.1) * 10;
+    ctx.shadowBlur = 30;
     ctx.fillStyle = lvl.color;
-    ctx.font = 'bold 64px Courier New';
-    ctx.fillText(`LEVEL ${level}`, canvas.width / 2, canvas.height * 0.4);
+    ctx.font = 'bold 60px Courier New';
+    ctx.fillText(`LEVEL ${level}`, canvas.width / 2, canvas.height * 0.35);
 
+    // Level name
     ctx.shadowBlur = 15;
-    ctx.fillStyle = '#fff';
     ctx.font = 'bold 28px Courier New';
-    ctx.fillText(lvl.name.toUpperCase(), canvas.width / 2, canvas.height * 0.5);
+    ctx.fillText(lvl.name, canvas.width / 2, canvas.height * 0.45);
 
+    // Subjects
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#a8c4df';
     ctx.font = '16px Courier New';
-    ctx.fillText(lvl.subjects, canvas.width / 2, canvas.height * 0.58);
+    ctx.fillText(lvl.subjects, canvas.width / 2, canvas.height * 0.53);
 
-    ctx.fillStyle = `rgba(0, 240, 255, ${Math.sin(frameCount * 0.08) * 0.5 + 0.5})`;
+    // Speed warning
+    ctx.fillStyle = '#ffaa00';
     ctx.font = '14px Courier New';
-    ctx.fillText('Get ready...', canvas.width / 2, canvas.height * 0.67);
+    ctx.fillText(`Current Speed: ${speedMultiplier.toFixed(2)}x`, canvas.width / 2, canvas.height * 0.6);
 
     ctx.textAlign = 'left';
-    drawParticles();
+    ctx.shadowBlur = 0;
 }
 
-
-// ========== UPDATE ==========
+// ========== MAIN GAME LOOP ==========
 function update() {
     if (gameState !== 'playing') return;
-    frameCount++;
-    levelTimer++;
 
-    // Speed ramp every 30s
-    if (levelTimer % 1800 === 0) speedMultiplier += 0.1;
+    frameCount++;
+
+    // Speed increase every 30 seconds within a level
+    const now = Date.now();
+    if (now - lastSpeedIncreaseTime >= 30000) {
+        speedMultiplier += 0.05;
+        if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
+        lastSpeedIncreaseTime = now;
+    }
 
     // Player movement
     if (useMouseControl) {
-        player.targetX = mouseX; player.targetY = mouseY;
-        player.x += (player.targetX - player.x) * 0.08;
-        player.y += (player.targetY - player.y) * 0.08;
-    } else {
-        if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= player.speed;
-        if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += player.speed;
-        if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= player.speed;
-        if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += player.speed;
+        const dx = mouseX - player.x;
+        const dy = mouseY - player.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 2) {
+            player.x += (dx / dist) * Math.min(player.speed, dist);
+            player.y += (dy / dist) * Math.min(player.speed, dist);
+        }
     }
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= player.speed;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += player.speed;
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= player.speed;
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += player.speed;
 
-    // Bounds
-    player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
-    player.y = Math.max(20, Math.min(canvas.height - 20, player.y));
+    // Clamp player
+    player.x = Math.max(15, Math.min(canvas.width - 15, player.x));
+    player.y = Math.max(15, Math.min(canvas.height - 15, player.y));
 
     // Invincibility timer
     if (player.invincible > 0) player.invincible--;
@@ -807,30 +989,32 @@ function update() {
 
     // Spawn orbs
     orbTimer++;
-    if (orbTimer > 480 + Math.random() * 240 && orbs.length < 3) {
-        spawnOrb();
+    if (orbTimer > 300 + Math.random() * 200) {
+        if (orbs.length < 3) spawnOrb();
         orbTimer = 0;
     }
 
     // Update obstacles
     obstacles.forEach(obs => {
-        obs.x += obs.vx; obs.y += obs.vy;
+        obs.x += obs.vx;
+        obs.y += obs.vy;
         obs.rotation += obs.rotSpeed;
     });
+    // Remove off-screen obstacles
     obstacles = obstacles.filter(obs =>
-        obs.x > -60 && obs.x < canvas.width + 60 &&
-        obs.y > -60 && obs.y < canvas.height + 60
+        obs.x > -80 && obs.x < canvas.width + 80 &&
+        obs.y > -80 && obs.y < canvas.height + 80
     );
 
     // Collision with obstacles
     if (player.invincible <= 0) {
         for (let i = obstacles.length - 1; i >= 0; i--) {
-            if (checkCollision(player, obstacles[i], 14, obstacles[i].radius * 0.7)) {
+            if (checkCollision(player, obstacles[i], 12, obstacles[i].radius)) {
                 health--;
                 player.invincible = 60;
-                screenShake = 10;
                 sfxCollision();
-                createExplosion(obstacles[i].x, obstacles[i].y, 120, ['#ff0066', '#ff4400', '#ff8800', '#ffcc00']);
+                screenShake = 10;
+                createExplosion(player.x, player.y, 40, ['#ff0066', '#ff4400', '#00f0ff']);
                 obstacles.splice(i, 1);
                 if (health <= 0) { gameOver(); return; }
                 break;
@@ -840,25 +1024,21 @@ function update() {
 
     // Collision with orbs
     for (let i = orbs.length - 1; i >= 0; i--) {
-        if (checkCollision(player, orbs[i], 14, orbs[i].radius)) {
+        if (checkCollision(player, orbs[i], 12, orbs[i].radius)) {
             sfxOrb();
-            createExplosion(orbs[i].x, orbs[i].y, 40, ['#00f0ff', '#b300ff', '#00ff88', '#fff']);
+            createExplosion(orbs[i].x, orbs[i].y, 20, ['#fff', '#00f0ff', '#b300ff']);
             orbs.splice(i, 1);
             showQuiz();
-            break;
+            return;
         }
     }
 
-    // Score increment over time
-    if (frameCount % 60 === 0) score += level;
-
-    // Screen shake decay
-    if (screenShake > 0) screenShake--;
+    // Score ticks
+    if (frameCount % 60 === 0) score += 5;
 }
 
 
-// ========== MAIN LOOP ==========
-function gameLoop() {
+function render() {
     // Screen shake
     if (screenShake > 0) {
         ctx.save();
@@ -866,36 +1046,43 @@ function gameLoop() {
             (Math.random() - 0.5) * screenShake,
             (Math.random() - 0.5) * screenShake
         );
+        screenShake--;
     }
 
     if (gameState === 'start') {
-        frameCount++;
         drawStartScreen();
     } else if (gameState === 'levelTransition') {
-        frameCount++;
         drawLevelTransition();
     } else if (gameState === 'playing' || gameState === 'quiz') {
-        update();
         drawBackground();
         drawObstacles();
         drawOrbs();
         drawPlayer();
         drawParticles();
+        drawFloatingTexts();
         drawHUD();
     } else if (gameState === 'gameOver') {
         drawBackground();
         drawParticles();
     }
 
-    if (screenShake > 0) ctx.restore();
+    if (screenShake > 0) {
+        ctx.restore();
+    }
+}
 
+function gameLoop() {
+    update();
+    render();
+    frameCount++;
     requestAnimationFrame(gameLoop);
 }
 
 // ========== INIT ==========
 initBgParticles();
 initCircuitLayers();
-showStartScreen();
+player.x = canvas.width / 2;
+player.y = canvas.height / 2;
 gameLoop();
 </script>
 </body>
