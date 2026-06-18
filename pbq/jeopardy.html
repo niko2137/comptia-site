@@ -6,310 +6,854 @@
 <title>CompTIA A+ Jeopardy</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--cyan:#00f0ff;--magenta:#ff00e6;--navy:#0a0e1a;--charcoal:#1a1a2e;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);--green:#00ff88;--red:#ff3366;--gold:#ffd700}
+:root{--cyan:#00f0ff;--magenta:#ff00e6;--navy:#0a0e1a;--charcoal:#1a1a2e;--glass:rgba(255,255,255,0.05);--glass-border:rgba(255,255,255,0.12);--green:#00ff88;--red:#ff3366;--gold:#ffd700;--orange:#ff8800;--p1:#00f0ff;--p2:#ff00e6;--p3:#00ff88;--p4:#ff8800}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(135deg,var(--navy) 0%,var(--charcoal) 50%,#12001f 100%);min-height:100vh;color:#fff;overflow-x:hidden;letter-spacing:0.3px}
-.container{max-width:1100px;margin:0 auto;padding:20px 16px}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.score-display{font-size:1.6rem;font-weight:700;text-shadow:0 0 20px var(--cyan),0 0 40px var(--cyan);letter-spacing:1px;transition:transform 0.3s}
-.score-display.pulse{transform:scale(1.15)}
-.header-controls{display:flex;gap:10px}
+.container{max-width:1200px;margin:0 auto;padding:20px 16px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.players-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;justify-content:center}
+.player-card{background:var(--glass);border:2px solid var(--glass-border);border-radius:14px;padding:12px 20px;text-align:center;backdrop-filter:blur(10px);transition:all 0.4s ease-out;min-width:140px}
+.player-card.active{box-shadow:0 0 25px var(--glow-color),0 0 50px var(--glow-color);border-color:var(--glow-color);transform:scale(1.05)}
+.player-card .p-name{font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.player-card .p-score{font-size:1.8rem;font-weight:800;transition:all 0.3s}
+.player-card .p-score.pulse{animation:scorePulse 0.4s ease-out}
+@keyframes scorePulse{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+.header-controls{display:flex;gap:10px;align-items:center}
 .btn{background:var(--glass);border:1.5px solid var(--cyan);color:var(--cyan);padding:10px 18px;border-radius:10px;cursor:pointer;font-size:0.95rem;font-weight:600;backdrop-filter:blur(10px);transition:all 0.3s ease-out;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
 .btn:hover{background:rgba(0,240,255,0.12);box-shadow:0 0 20px rgba(0,240,255,0.4);transform:translateY(-2px)}
-.btn:active{transform:translateY(0)}
-.title-bar{text-align:center;flex:1}
-.title-bar h1{font-size:1.4rem;background:linear-gradient(90deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;letter-spacing:3px}
+.btn:active{transform:translateY(0) scale(0.95)}
+.title-bar{text-align:center}
+.title-bar h1{font-size:1.4rem;background:linear-gradient(90deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;letter-spacing:3px;animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(15deg)}100%{filter:hue-rotate(0deg)}}
+.turn-indicator{text-align:center;margin-bottom:12px;font-size:0.9rem;color:rgba(255,255,255,0.7);letter-spacing:1px}
+.turn-indicator span{font-weight:700;text-shadow:0 0 10px currentColor}
 .board{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;perspective:1200px}
-.cat-header{background:linear-gradient(135deg,rgba(0,240,255,0.1),rgba(255,0,230,0.08));border:1px solid var(--glass-border);border-radius:14px;padding:14px 8px;text-align:center;font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan);backdrop-filter:blur(10px);text-shadow:0 0 10px rgba(0,240,255,0.4)}
+.cat-header{background:linear-gradient(135deg,rgba(0,240,255,0.1),rgba(255,0,230,0.08));border:1px solid var(--glass-border);border-radius:14px;padding:14px 8px;text-align:center;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan);backdrop-filter:blur(10px);text-shadow:0 0 10px rgba(0,240,255,0.4);animation:catShimmer 4s ease-in-out infinite alternate}
+@keyframes catShimmer{0%{text-shadow:0 0 10px rgba(0,240,255,0.4)}100%{text-shadow:0 0 20px rgba(0,240,255,0.7),0 0 30px rgba(255,0,230,0.3)}}
 .cell{position:relative;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:20px 10px;text-align:center;cursor:pointer;font-size:1.3rem;font-weight:800;color:var(--gold);backdrop-filter:blur(10px);transition:all 0.3s ease-out;transform-style:preserve-3d;min-height:70px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.3)}
 .cell:hover:not(.used){transform:translateY(-6px) rotateX(4deg);box-shadow:0 12px 30px rgba(0,240,255,0.2),0 0 15px rgba(0,240,255,0.1);border-color:var(--cyan)}
-.cell:active:not(.used){transform:translateY(-2px)}
+.cell:active:not(.used){transform:translateY(-2px) scale(0.96)}
 .cell.used{background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.05);color:rgba(255,255,255,0.15);cursor:default;transform:none;box-shadow:none}
-.cell.correct-flash{animation:correctPulse 0.6s ease-out;border-color:var(--green);box-shadow:0 0 30px rgba(0,255,136,0.4)}
-.cell.wrong-flash{animation:wrongShake 0.5s ease-out;border-color:var(--red);box-shadow:0 0 30px rgba(255,51,102,0.4)}
-@keyframes correctPulse{0%{transform:scale(1)}50%{transform:scale(1.08);background:rgba(0,255,136,0.15)}100%{transform:scale(1)}}
-@keyframes wrongShake{0%,100%{transform:translateX(0)}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+.cell.daily-double{border-color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,0.3);animation:ddGlow 2s ease-in-out infinite alternate}
+.cell.daily-double::after{content:'';position:absolute;inset:0;border-radius:14px;background:linear-gradient(135deg,rgba(255,215,0,0.05),transparent);pointer-events:none}
+@keyframes ddGlow{0%{box-shadow:0 0 15px rgba(255,215,0,0.2)}100%{box-shadow:0 0 30px rgba(255,215,0,0.5)}}
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(5,5,20,0.88);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;opacity:0;transition:opacity 0.3s ease-out}
 .modal-overlay.active{display:flex;opacity:1}
-.modal-card{background:linear-gradient(135deg,rgba(20,20,50,0.95),rgba(10,14,26,0.98));border:1.5px solid var(--glass-border);border-radius:20px;padding:40px 32px;max-width:600px;width:100%;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 30px rgba(0,240,255,0.08);transform:scale(0.9) translateY(20px);transition:transform 0.4s ease-out;position:relative;overflow:hidden}
+.modal-card{background:linear-gradient(135deg,rgba(20,20,50,0.95),rgba(10,14,26,0.98));border:1.5px solid var(--glass-border);border-radius:20px;padding:40px 32px;max-width:650px;width:100%;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 30px rgba(0,240,255,0.08);transform:scale(0.9) translateY(20px);transition:transform 0.4s ease-out;position:relative;overflow:hidden}
 .modal-overlay.active .modal-card{transform:scale(1) translateY(0)}
 .modal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--magenta),transparent)}
-.q-category{font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;color:var(--magenta);margin-bottom:6px}
-.q-value{font-size:0.9rem;color:var(--gold);margin-bottom:16px}
-.q-text{font-size:1.15rem;line-height:1.6;margin-bottom:28px;font-weight:500}
+.q-badge{display:inline-flex;gap:10px;align-items:center;margin-bottom:16px}
+.q-category{font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--magenta);background:rgba(255,0,230,0.1);padding:4px 12px;border-radius:6px;border:1px solid rgba(255,0,230,0.3)}
+.q-value{font-size:0.85rem;color:var(--gold);background:rgba(255,215,0,0.1);padding:4px 12px;border-radius:6px;border:1px solid rgba(255,215,0,0.3)}
+.q-dd{font-size:0.75rem;color:var(--gold);background:rgba(255,215,0,0.2);padding:4px 12px;border-radius:6px;border:1px solid var(--gold);font-weight:700;animation:ddGlow 1s ease-in-out infinite alternate}
+.q-text{font-size:1.15rem;line-height:1.6;margin-bottom:24px;font-weight:500}
+.q-player{font-size:0.8rem;margin-bottom:12px;opacity:0.7}
+.timer-bar{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:20px;overflow:hidden}
+.timer-fill{height:100%;background:var(--green);border-radius:3px;transition:width 0.1s linear,background-color 0.5s}
 .answers{display:grid;gap:12px}
-.answer-btn{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 18px;color:#fff;font-size:0.95rem;cursor:pointer;text-align:left;transition:all 0.3s ease-out;min-height:44px}
+.answer-btn{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 18px;color:#fff;font-size:0.95rem;cursor:pointer;text-align:left;transition:all 0.3s ease-out;min-height:48px}
 .answer-btn:hover{background:rgba(0,240,255,0.08);border-color:var(--cyan);transform:translateX(4px);box-shadow:0 0 12px rgba(0,240,255,0.15)}
 .answer-btn.correct{background:rgba(0,255,136,0.15);border-color:var(--green);color:var(--green);box-shadow:0 0 20px rgba(0,255,136,0.2)}
 .answer-btn.wrong{background:rgba(255,51,102,0.15);border-color:var(--red);color:var(--red);box-shadow:0 0 20px rgba(255,51,102,0.2)}
 .answer-btn:disabled{cursor:default;transform:none}
+.start-screen{text-align:center;max-width:700px;width:100%}
+.start-screen h1{font-size:2.8rem;margin-bottom:8px;background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;text-transform:uppercase;letter-spacing:4px}
+.start-screen .subtitle{font-size:1rem;color:rgba(255,255,255,0.6);margin-bottom:30px;letter-spacing:1px}
+.mode-select{display:flex;gap:16px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.mode-btn{background:var(--glass);border:2px solid var(--glass-border);padding:20px 32px;border-radius:16px;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(10px);min-width:180px}
+.mode-btn:hover{border-color:var(--cyan);box-shadow:0 0 25px rgba(0,240,255,0.3);transform:translateY(-4px)}
+.mode-btn.selected{border-color:var(--cyan);box-shadow:0 0 30px rgba(0,240,255,0.4)}
+.mode-btn h3{color:var(--cyan);margin-bottom:6px;font-size:1.1rem}
+.mode-btn p{color:rgba(255,255,255,0.6);font-size:0.8rem}
+.player-setup{margin:20px 0;display:none}
+.player-setup.visible{display:block}
+.player-inputs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.player-input{background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:8px;padding:10px 14px;color:#fff;font-size:0.9rem;width:150px;text-align:center;transition:border-color 0.3s}
+.player-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 10px rgba(0,240,255,0.2)}
+.player-count{display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:12px}
+.player-count button{background:var(--glass);border:1px solid var(--cyan);color:var(--cyan);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+.player-count button:hover{background:rgba(0,240,255,0.1)}
+.player-count span{font-size:1.2rem;min-width:30px;text-align:center}
+.start-btn{background:linear-gradient(135deg,var(--cyan),var(--magenta));border:none;color:#fff;padding:16px 48px;border-radius:14px;font-size:1.2rem;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:24px;text-transform:uppercase;letter-spacing:2px}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,240,255,0.4)}
+.start-btn:active{transform:translateY(0) scale(0.97)}
+.high-scores{margin-top:30px;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:20px;backdrop-filter:blur(10px);text-align:left}
+.high-scores h3{text-align:center;color:var(--gold);margin-bottom:12px;font-size:1rem;text-transform:uppercase;letter-spacing:2px}
+.hs-entry{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:0.85rem;align-items:center}
+.hs-entry:last-child{border-bottom:none}
+.hs-rank{width:30px;font-weight:700}
+.hs-name{flex:1;color:rgba(255,255,255,0.8)}
+.hs-score{color:var(--gold);font-weight:700;margin-right:12px}
+.hs-mode{font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase}
 .game-over-card{text-align:center}
-.game-over-card h2{font-size:2.2rem;margin-bottom:8px;background:linear-gradient(90deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none}
-.game-over-card .final-score{font-size:3rem;font-weight:800;color:var(--gold);margin:16px 0;text-shadow:0 0 20px rgba(255,215,0,0.5)}
-.game-over-card .stats{margin:20px 0;font-size:1rem;color:rgba(255,255,255,0.75);line-height:2}
-.game-over-card .stars{font-size:2.5rem;margin:16px 0}
-.play-again-btn{background:linear-gradient(135deg,var(--cyan),var(--magenta));border:none;color:#fff;padding:14px 36px;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:16px}
+.game-over-card h2{font-size:2.4rem;margin-bottom:12px;background:linear-gradient(90deg,var(--cyan),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.winner-section{margin:20px 0}
+.winner-name{font-size:1.6rem;font-weight:800;margin-bottom:4px}
+.winner-score{font-size:3rem;font-weight:800;color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.5)}
+.all-scores{margin:20px 0;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.final-player{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:16px 24px;min-width:120px;backdrop-filter:blur(10px)}
+.final-player .fp-name{font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.final-player .fp-score{font-size:1.6rem;font-weight:800}
+.final-player .fp-acc{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:4px}
+.stars{font-size:2.5rem;margin:12px 0}
+.play-again-btn{background:linear-gradient(135deg,var(--cyan),var(--magenta));border:none;color:#fff;padding:14px 36px;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;margin:8px}
 .play-again-btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,240,255,0.4)}
+.new-players-btn{background:var(--glass);border:1.5px solid var(--magenta);color:var(--magenta);padding:14px 36px;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.3s;margin:8px}
+.new-players-btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,0,230,0.3)}
 .float-text{position:fixed;pointer-events:none;font-size:1.5rem;font-weight:800;z-index:2000;animation:floatUp 1.2s ease-out forwards;text-shadow:0 0 10px currentColor}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(1.3)}}
 .confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;overflow:hidden}
 .confetti-piece{position:absolute;width:10px;height:10px;top:-10px;animation:confettiFall linear forwards}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(100vh) rotate(720deg) scale(0.5);opacity:0}}
-@media(max-width:768px){.container{padding:12px 8px}.header{flex-direction:column;gap:8px}.board{gap:6px}.cell{padding:14px 6px;font-size:1rem;min-height:56px;border-radius:10px}.cat-header{padding:10px 4px;font-size:0.7rem}.modal-card{padding:24px 18px}.q-text{font-size:1rem}}
-@media(max-width:600px){.board{grid-template-columns:repeat(3,1fr)}.cat-header.hide-mobile{display:none}.cell.hide-mobile{display:none}}
+.screen-flash{position:fixed;inset:0;pointer-events:none;z-index:1500;opacity:0;transition:opacity 0.15s}
+.screen-flash.green{background:radial-gradient(ellipse at center,rgba(0,255,136,0.2),transparent 70%);opacity:1}
+.screen-flash.red{background:rgba(255,51,102,0.15);opacity:1}
+@keyframes screenShake{0%,100%{transform:translateX(0)}10%{transform:translateX(-5px)}20%{transform:translateX(5px)}30%{transform:translateX(-4px)}40%{transform:translateX(4px)}50%{transform:translateX(-3px)}60%{transform:translateX(3px)}70%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+.shake{animation:screenShake 0.5s ease-out}
+.admin-panel{position:fixed;bottom:20px;right:20px;background:rgba(10,14,26,0.95);border:1px solid var(--magenta);border-radius:14px;padding:20px;z-index:5000;backdrop-filter:blur(20px);max-width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.admin-panel.hidden{display:none}
+.admin-panel h3{color:var(--magenta);font-size:0.9rem;margin-bottom:12px;text-transform:uppercase;letter-spacing:2px}
+.admin-panel .admin-row{display:flex;gap:8px;margin-bottom:8px;align-items:center;flex-wrap:wrap}
+.admin-panel input,.admin-panel select{background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:6px;padding:6px 10px;color:#fff;font-size:0.8rem}
+.admin-panel button{background:rgba(255,0,230,0.15);border:1px solid var(--magenta);color:var(--magenta);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.75rem;transition:all 0.2s}
+.admin-panel button:hover{background:rgba(255,0,230,0.3)}
+.admin-close{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--red);font-size:1.2rem;cursor:pointer}
+@media(max-width:900px){.board{gap:6px}.cell{padding:14px 6px;font-size:1rem;min-height:56px;border-radius:10px}.cat-header{padding:10px 4px;font-size:0.68rem}.player-card{min-width:100px;padding:8px 12px}.player-card .p-score{font-size:1.4rem}}
+@media(max-width:600px){.board{grid-template-columns:repeat(3,1fr)}.cat-header.hide-mobile,.cell.hide-mobile{display:none}.start-screen h1{font-size:1.8rem}.modal-card{padding:24px 18px}.mode-btn{padding:14px 20px;min-width:140px}.player-card{min-width:80px;padding:6px 10px}.player-card .p-score{font-size:1.2rem}}
+@media(max-width:400px){.board{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-<div class="container">
-<header class="header">
-<div class="score-display" id="scoreDisplay">SCORE: 0</div>
-<div class="title-bar"><h1>CompTIA A+ Jeopardy</h1></div>
-<div class="header-controls">
-<button class="btn" id="soundBtn" title="Toggle Sound">&#x1f50a;</button>
-<button class="btn" id="newGameBtn" title="New Game">&#x27f3; New Game</button>
-</div>
-</header>
-<div id="boardContainer"></div>
-</div>
+<div class="container" id="app"></div>
 <div class="modal-overlay" id="questionModal"></div>
 <div class="modal-overlay" id="gameOverModal"></div>
+<div class="modal-overlay active" id="startScreen"></div>
 <div id="floatingText"></div>
 <div class="confetti-container" id="confetti"></div>
+<div id="screenFlash" class="screen-flash"></div>
+<div id="adminPanel" class="admin-panel hidden"></div>
 <script>
 "use strict";
+// ===== QUESTION BANK =====
 const ALL_CATEGORIES={
 Hardware:[
-{q:"What does RAM stand for?",a:["Random Access Memory","Read Access Mode","Rapid Application Memory","Remote Access Module"],c:0,v:100},
-{q:"What type of storage has no moving parts?",a:["SSD","HDD","Tape Drive","Floppy Disk"],c:0,v:100},
-{q:"What does POST stand for?",a:["Power-On Self-Test","Pre-Operating System Test","Primary Output System Task","Power Output Signal Test"],c:0,v:200},
-{q:"What battery type maintains BIOS settings?",a:["CR2032","AA Lithium","9V Alkaline","AAA NiMH"],c:0,v:200},
-{q:"What is the max speed of SATA III?",a:["6 Gb/s","3 Gb/s","12 Gb/s","1.5 Gb/s"],c:0,v:300},
-{q:"DDR4 desktop RAM uses how many pins?",a:["288","240","204","260"],c:0,v:300},
-{q:"What does the 8-pin EPS connector power?",a:["CPU","GPU","Motherboard","SATA drives"],c:0,v:400},
-{q:"Which form factor is the smallest?",a:["Mini-ITX","Micro-ATX","ATX","E-ATX"],c:0,v:400},
-{q:"A system beeps 3 times during POST. This typically indicates?",a:["RAM failure","CPU overheat","GPU not detected","Hard drive error"],c:0,v:500},
-{q:"After applying thermal paste, the CPU reaches 95\u00b0C under load. Most likely cause?",a:["Heatsink not properly seated","Too much thermal paste","Bad CPU","Faulty temperature sensor"],c:0,v:500}
+{q:"What does RAM stand for?",a:["Random Access Memory","Read Access Mode","Rapid Application Memory","Remote Access Module"],c:0,v:200},
+{q:"What type of storage has no moving parts?",a:["SSD","HDD","Tape Drive","Floppy Disk"],c:0,v:200},
+{q:"What connector provides main power to the motherboard?",a:["24-pin ATX","8-pin EPS","6-pin PCIe","4-pin Molex"],c:0,v:200},
+{q:"What does POST stand for?",a:["Power-On Self-Test","Pre-Operating System Test","Primary Output System Task","Power Output Signal Test"],c:0,v:400},
+{q:"What battery type maintains BIOS settings?",a:["CR2032","AA Lithium","9V Alkaline","AAA NiMH"],c:0,v:400},
+{q:"PCIe 4.0 provides what speed per lane?",a:["~2 GB/s","~1 GB/s","~4 GB/s","~500 MB/s"],c:0,v:400},
+{q:"What is the max speed of SATA III?",a:["6 Gb/s","3 Gb/s","12 Gb/s","1.5 Gb/s"],c:0,v:600},
+{q:"DDR4 desktop RAM uses how many pins?",a:["288","240","204","260"],c:0,v:600},
+{q:"What does TDP measure?",a:["Maximum heat output in watts","Transfer data processing","Total drive performance","Thermal display pixels"],c:0,v:600},
+{q:"What does the 8-pin EPS connector power?",a:["CPU","GPU","Motherboard","SATA drives"],c:0,v:800},
+{q:"Which form factor is the smallest?",a:["Mini-ITX","Micro-ATX","ATX","E-ATX"],c:0,v:800},
+{q:"ECC RAM is primarily used in?",a:["Servers and workstations","Gaming PCs","Tablets","Smartphones"],c:0,v:800},
+{q:"A system beeps 3 times during POST. This typically indicates?",a:["RAM failure","CPU overheat","GPU not detected","Hard drive error"],c:0,v:1000},
+{q:"After applying thermal paste, CPU reaches 95°C under load. Most likely cause?",a:["Heatsink not properly seated","Too much thermal paste","Bad CPU","Faulty temperature sensor"],c:0,v:1000},
+{q:"A system shows no video, one long beep and two short. Issue?",a:["GPU/video card failure","RAM failure","CPU overheat","PSU failure"],c:0,v:1000}
 ],
 Networking:[
-{q:"What port does HTTP use?",a:["80","443","8080","21"],c:0,v:100},
-{q:"What port does HTTPS use?",a:["443","80","8443","993"],c:0,v:100},
-{q:"What does DHCP do?",a:["Automatically assigns IP addresses","Encrypts network traffic","Routes packets between networks","Resolves domain names"],c:0,v:200},
-{q:"169.254.x.x indicates what?",a:["DHCP failure (APIPA)","Loopback address","Private Class A","Multicast address"],c:0,v:200},
-{q:"What port does RDP use?",a:["3389","22","5900","3306"],c:0,v:300},
-{q:"Cat 6a supports what speed at 100m?",a:["10 Gbps","1 Gbps","40 Gbps","5 Gbps"],c:0,v:300},
-{q:"What does NAT do?",a:["Translates private IPs to public","Assigns IP addresses","Encrypts data packets","Filters malicious traffic"],c:0,v:400},
-{q:"WPA3 uses which authentication method?",a:["SAE","PSK","TKIP","WEP"],c:0,v:400},
-{q:"A user can ping the gateway but not external sites. DNS resolves locally. What's the issue?",a:["ISP/routing problem beyond gateway","Firewall blocking outbound","DNS server down","NIC driver failure"],c:0,v:500},
-{q:"You need 500 hosts per subnet. What's the minimum CIDR?",a:["/23","/24","/22","/25"],c:0,v:500}
+{q:"What port does HTTP use?",a:["80","443","8080","21"],c:0,v:200},
+{q:"What port does HTTPS use?",a:["443","80","8443","993"],c:0,v:200},
+{q:"What does DNS do?",a:["Translates domain names to IP addresses","Assigns IP addresses","Encrypts traffic","Routes packets"],c:0,v:200},
+{q:"What does DHCP do?",a:["Automatically assigns IP addresses","Encrypts network traffic","Routes packets between networks","Resolves domain names"],c:0,v:400},
+{q:"169.254.x.x indicates what?",a:["DHCP failure (APIPA)","Loopback address","Private Class A","Multicast address"],c:0,v:400},
+{q:"SMTP uses which port for secure submission?",a:["587","25","465","993"],c:0,v:400},
+{q:"What port does RDP use?",a:["3389","22","5900","3306"],c:0,v:600},
+{q:"Cat 6a supports what speed at 100m?",a:["10 Gbps","1 Gbps","40 Gbps","5 Gbps"],c:0,v:600},
+{q:"What's the private IP range for Class B?",a:["172.16.0.0/12","10.0.0.0/8","192.168.0.0/16","169.254.0.0/16"],c:0,v:600},
+{q:"What does NAT do?",a:["Translates private IPs to public","Assigns IP addresses","Encrypts data packets","Filters malicious traffic"],c:0,v:800},
+{q:"WPA3 uses which authentication method?",a:["SAE","PSK","TKIP","WEP"],c:0,v:800},
+{q:"802.1X is used for?",a:["Port-based network access control","Wireless encryption","VLAN tagging","Link aggregation"],c:0,v:800},
+{q:"A user can ping the gateway but not external sites. DNS resolves locally. Issue?",a:["ISP/routing problem beyond gateway","Firewall blocking outbound","DNS server down","NIC driver failure"],c:0,v:1000},
+{q:"You need 500 hosts per subnet. What's the minimum CIDR?",a:["/23","/24","/22","/25"],c:0,v:1000},
+{q:"A user on VLAN 10 cannot reach VLAN 20. What's needed?",a:["Layer 3 switch or router for inter-VLAN routing","New cable","DHCP server","Firewall rule"],c:0,v:1000}
 ],
 Security:[
-{q:"What does MFA stand for?",a:["Multi-Factor Authentication","Multiple File Access","Main Firewall Application","Managed Folder Authentication"],c:0,v:100},
-{q:"What type of attack uses a fake Wi-Fi with the same SSID?",a:["Evil Twin","Man-in-the-Middle","Phishing","Brute Force"],c:0,v:200},
-{q:"BitLocker requires what hardware chip?",a:["TPM","GPU","NIC","RAID controller"],c:0,v:300},
-{q:"What's the CompTIA term for a mantrap?",a:["Access Control Vestibule","Security Airlock","Entry Checkpoint","Containment Chamber"],c:0,v:400},
-{q:"An employee receives an email appearing to be from the CEO requesting a wire transfer. This is?",a:["Whaling","Spear Phishing","Vishing","Smishing"],c:0,v:500}
+{q:"What does MFA stand for?",a:["Multi-Factor Authentication","Multiple File Access","Main Firewall Application","Managed Folder Authentication"],c:0,v:200},
+{q:"What does a firewall do?",a:["Controls network traffic based on rules","Encrypts files","Assigns IP addresses","Scans for viruses"],c:0,v:200},
+{q:"What type of attack uses a fake Wi-Fi with the same SSID?",a:["Evil Twin","Man-in-the-Middle","Phishing","Brute Force"],c:0,v:400},
+{q:"What type of malware encrypts your files?",a:["Ransomware","Trojan","Worm","Spyware"],c:0,v:400},
+{q:"BitLocker requires what hardware chip?",a:["TPM","GPU","NIC","RAID controller"],c:0,v:600},
+{q:"Zero-day means?",a:["Vulnerability with no available patch","First day of infection","Virus that activates at midnight","Attack that takes zero seconds"],c:0,v:600},
+{q:"What's the CompTIA term for a mantrap?",a:["Access Control Vestibule","Security Airlock","Entry Checkpoint","Containment Chamber"],c:0,v:800},
+{q:"RADIUS is used for?",a:["Centralized network authentication","Disk encryption","Email filtering","Web content filtering"],c:0,v:800},
+{q:"An employee receives an email appearing to be from the CEO requesting a wire transfer. This is?",a:["Whaling","Spear Phishing","Vishing","Smishing"],c:0,v:1000},
+{q:"An employee uses their work credentials on a phishing site. First response?",a:["Force password reset and check for unauthorized access","Fire the employee","Shut down the network","Ignore it"],c:0,v:1000}
 ],
 Troubleshooting:[
-{q:"What command repairs Windows system files?",a:["sfc /scannow","chkdsk /f","diskpart","gpupdate /force"],c:0,v:100},
-{q:"What does ipconfig /flushdns do?",a:["Clears DNS cache","Releases IP address","Shows all adapters","Resets TCP/IP stack"],c:0,v:200},
-{q:"DISM should be run before retrying which command?",a:["sfc /scannow","chkdsk","diskpart","bootrec"],c:0,v:300},
-{q:"A PC clock resets every boot. Cause?",a:["Dead CMOS battery","Faulty RAM","Corrupted OS","Bad power supply"],c:0,v:400},
-{q:"Blue screen immediately after driver update. Best first step?",a:["Boot to Safe Mode and roll back driver","Reinstall Windows","Replace the hardware","Run System Restore from desktop"],c:0,v:500}
+{q:"What command repairs Windows system files?",a:["sfc /scannow","chkdsk /f","diskpart","gpupdate /force"],c:0,v:200},
+{q:"What does ipconfig /flushdns do?",a:["Clears DNS cache","Releases IP address","Shows all adapters","Resets TCP/IP stack"],c:0,v:400},
+{q:"DISM should be run before retrying which command?",a:["sfc /scannow","chkdsk","diskpart","bootrec"],c:0,v:600},
+{q:"A PC clock resets every boot. Cause?",a:["Dead CMOS battery","Faulty RAM","Corrupted OS","Bad power supply"],c:0,v:800},
+{q:"Blue screen immediately after driver update. Best first step?",a:["Boot to Safe Mode and roll back driver","Reinstall Windows","Replace the hardware","Run System Restore from desktop"],c:0,v:1000}
 ],
-Software:[
-{q:"What is the Windows command to check disk errors?",a:["chkdsk","diskpart","format","defrag"],c:0,v:100},
-{q:"Which Windows tool manages startup programs?",a:["Task Manager","Device Manager","Services.msc","Registry Editor"],c:0,v:200},
-{q:"What file system supports files over 4GB?",a:["NTFS","FAT32","FAT16","exFAT"],c:0,v:300},
-{q:"Group Policy is edited with which command?",a:["gpedit.msc","gpupdate","secpol.msc","regedit"],c:0,v:400},
-{q:"A user's profile loads a temporary profile each boot. Most likely fix?",a:["Delete corrupted profile in registry and recreate","Reinstall Windows","Replace hard drive","Update Windows"],c:0,v:500}
+"Operating Systems":[
+{q:"What key opens Task Manager directly?",a:["Ctrl+Shift+Esc","Ctrl+Alt+Del","Alt+F4","Win+X"],c:0,v:200},
+{q:"What is the Windows command to check disk errors?",a:["chkdsk","diskpart","format","defrag"],c:0,v:200},
+{q:"Which Windows tool manages startup programs?",a:["Task Manager","Device Manager","Services.msc","Registry Editor"],c:0,v:400},
+{q:"What does gpupdate /force do?",a:["Refreshes Group Policy immediately","Updates GPU drivers","Forces Windows Update","Resets permissions"],c:0,v:400},
+{q:"What file system supports files over 4GB?",a:["NTFS","FAT32","FAT16","exFAT"],c:0,v:600},
+{q:"Windows Sandbox requires?",a:["Pro or Enterprise edition","Home edition","Any edition","Server only"],c:0,v:600},
+{q:"Group Policy is edited with which command?",a:["gpedit.msc","gpupdate","secpol.msc","regedit"],c:0,v:800},
+{q:"Secure Boot is part of?",a:["UEFI firmware","BIOS only","Windows Defender","TPM chip"],c:0,v:800},
+{q:"A user's profile loads a temporary profile each boot. Most likely fix?",a:["Delete corrupted profile in registry and recreate","Reinstall Windows","Replace hard drive","Update Windows"],c:0,v:1000},
+{q:"A user gets 'bootmgr is missing'. Drive was recently cloned. Issue?",a:["BCD not properly rebuilt for new drive","Drive is dead","RAM failure","BIOS corrupted"],c:0,v:1000}
 ],
 Storage:[
-{q:"What does SSD stand for?",a:["Solid State Drive","System Storage Device","Serial Signal Drive","Secure Storage Disk"],c:0,v:100},
-{q:"MBR supports a maximum disk size of?",a:["2 TB","4 TB","1 TB","8 TB"],c:0,v:200},
-{q:"RAID 5 requires a minimum of how many drives?",a:["3","2","4","5"],c:0,v:300},
-{q:"What is the correct method to wipe an SSD?",a:["Secure Erase (ATA command)","Degaussing","Multiple overwrite passes","Physical shredding only"],c:0,v:400},
-{q:"A RAID 5 array with 4x2TB drives has how much usable space?",a:["6 TB","8 TB","4 TB","2 TB"],c:0,v:500}
+{q:"What does SSD stand for?",a:["Solid State Drive","System Storage Device","Serial Signal Drive","Secure Storage Disk"],c:0,v:200},
+{q:"MBR supports a maximum disk size of?",a:["2 TB","4 TB","1 TB","8 TB"],c:0,v:400},
+{q:"RAID 5 requires a minimum of how many drives?",a:["3","2","4","5"],c:0,v:600},
+{q:"What is the correct method to wipe an SSD?",a:["Secure Erase (ATA command)","Degaussing","Multiple overwrite passes","Physical shredding only"],c:0,v:800},
+{q:"A RAID 5 array with 4x2TB drives has how much usable space?",a:["6 TB","8 TB","4 TB","2 TB"],c:0,v:1000}
 ],
 Printers:[
-{q:"What are the 6 steps of laser printing in order?",a:["Processing, Charging, Exposing, Developing, Transferring, Fusing","Charging, Processing, Exposing, Transferring, Developing, Fusing","Exposing, Charging, Processing, Developing, Fusing, Transferring","Processing, Exposing, Charging, Developing, Transferring, Fusing"],c:0,v:100},
-{q:"Worn pickup rollers cause what symptom?",a:["Paper won't feed","Paper jams mid-path","Toner smears","Blank pages"],c:0,v:200},
-{q:"Toner smearing off the page indicates?",a:["Fuser failure","Empty toner","Bad drum","Dirty corona wire"],c:0,v:300},
-{q:"Vertical lines on every page suggest?",a:["Scratched imaging drum","Low toner","Dirty fuser","Worn transfer roller"],c:0,v:400},
-{q:"A laser printer produces blank pages. The toner is full. Most likely cause?",a:["Transfer roller failure","Fuser overheating","Paper too thick","Firmware bug"],c:0,v:500}
+{q:"What are the 6 steps of laser printing in order?",a:["Processing, Charging, Exposing, Developing, Transferring, Fusing","Charging, Processing, Exposing, Transferring, Developing, Fusing","Exposing, Charging, Processing, Developing, Fusing, Transferring","Processing, Exposing, Charging, Developing, Transferring, Fusing"],c:0,v:200},
+{q:"Worn pickup rollers cause what symptom?",a:["Paper won't feed","Paper jams mid-path","Toner smears","Blank pages"],c:0,v:400},
+{q:"Toner smearing off the page indicates?",a:["Fuser failure","Empty toner","Bad drum","Dirty corona wire"],c:0,v:600},
+{q:"Vertical lines on every page suggest?",a:["Scratched imaging drum","Low toner","Dirty fuser","Worn transfer roller"],c:0,v:800},
+{q:"A laser printer produces blank pages. Toner is full. Most likely cause?",a:["Transfer roller failure","Fuser overheating","Paper too thick","Firmware bug"],c:0,v:1000}
 ],
 "Mobile Devices":[
-{q:"IMEI identifies what?",a:["Physical phone hardware","SIM card","Carrier network","Phone number"],c:0,v:100},
-{q:"First action for a lost company phone?",a:["Remote lock","Remote wipe","Call the police","Disable Wi-Fi"],c:0,v:200},
-{q:"MDM stands for?",a:["Mobile Device Management","Mobile Data Monitoring","Managed Desktop Mode","Multi-Device Mirroring"],c:0,v:300},
-{q:"BYOD means?",a:["Bring Your Own Device","Build Your Own Desktop","Backup Your Online Data","Beyond Your Office Domain"],c:0,v:400},
-{q:"A company phone has an APIPA address on Wi-Fi. The issue is?",a:["DHCP server unreachable on that network","Wrong Wi-Fi password","Airplane mode enabled","SIM card failure"],c:0,v:500}
+{q:"IMEI identifies what?",a:["Physical phone hardware","SIM card","Carrier network","Phone number"],c:0,v:200},
+{q:"First action for a lost company phone?",a:["Remote lock","Remote wipe","Call the police","Disable Wi-Fi"],c:0,v:400},
+{q:"MDM stands for?",a:["Mobile Device Management","Mobile Data Monitoring","Managed Desktop Mode","Multi-Device Mirroring"],c:0,v:600},
+{q:"BYOD means?",a:["Bring Your Own Device","Build Your Own Desktop","Backup Your Online Data","Beyond Your Office Domain"],c:0,v:800},
+{q:"A company phone has an APIPA address on Wi-Fi. The issue is?",a:["DHCP server unreachable on that network","Wrong Wi-Fi password","Airplane mode enabled","SIM card failure"],c:0,v:1000}
 ]
 };
 
-let state={score:0,answered:0,correct:0,cells:[],categories:[],soundOn:true,gameActive:false};
-let audioCtx=null;
+// ===== GAME STATE =====
+const PLAYER_COLORS=['var(--p1)','var(--p2)','var(--p3)','var(--p4)'];
+const COLOR_HEX=['#00f0ff','#ff00e6','#00ff88','#ff8800'];
 
+let state={
+  mode:'single', // 'single' or 'multi'
+  playerCount:1,
+  players:[],
+  currentPlayer:0,
+  cells:[],
+  categories:[],
+  dailyDoubles:[],
+  soundOn:true,
+  gameActive:false,
+  totalCells:25,
+  answeredCount:0,
+  timerInterval:null,
+  timerRemaining:15
+};
+
+let audioCtx=null;
+let adminOpen=false;
+let adminBuffer='';
+
+// ===== AUDIO =====
 function initAudio(){
-if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-if(audioCtx.state==='suspended')audioCtx.resume();
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended')audioCtx.resume();
 }
 
 function playTone(freq,type,dur,vol){
-if(!state.soundOn||!audioCtx)return;
-vol=vol||0.12;
-const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-o.type=type;o.frequency.setValueAtTime(freq,audioCtx.currentTime);
-g.gain.setValueAtTime(vol,audioCtx.currentTime);
-g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
-o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);
+  if(!state.soundOn||!audioCtx)return;
+  vol=vol||0.1;
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,audioCtx.currentTime);
+  g.gain.setValueAtTime(vol,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);
 }
 
 function playCorrect(){
-playTone(523,'sine',0.15);setTimeout(()=>playTone(659,'sine',0.15),100);setTimeout(()=>playTone(784,'sine',0.25),200);
+  playTone(523,'sine',0.15,0.12);setTimeout(()=>playTone(659,'sine',0.15,0.12),100);setTimeout(()=>playTone(784,'sine',0.25,0.12),200);
 }
 function playWrong(){
-playTone(220,'sawtooth',0.2,0.07);setTimeout(()=>playTone(165,'sawtooth',0.3,0.07),150);
+  playTone(220,'sawtooth',0.2,0.06);setTimeout(()=>playTone(165,'sawtooth',0.3,0.06),150);
 }
 function playFanfare(){
-[523,587,659,784,1047].forEach((n,i)=>setTimeout(()=>playTone(n,'sine',0.3,0.1),i*120));
+  [523,587,659,784,1047].forEach((n,i)=>setTimeout(()=>playTone(n,'sine',0.3,0.1),i*120));
+}
+function playDailyDouble(){
+  [220,330,440,550,660,880].forEach((n,i)=>setTimeout(()=>playTone(n,'sine',0.12,0.1),i*60));
+}
+function playTurnChange(){
+  playTone(880,'sine',0.05,0.04);
 }
 
 let droneOsc=null,droneGain=null;
 function startDrone(){
-if(!audioCtx||droneOsc)return;
-droneOsc=audioCtx.createOscillator();droneGain=audioCtx.createGain();
-droneOsc.type='sine';droneOsc.frequency.setValueAtTime(55,audioCtx.currentTime);
-droneGain.gain.setValueAtTime(0.015,audioCtx.currentTime);
-droneOsc.connect(droneGain);droneGain.connect(audioCtx.destination);droneOsc.start();
+  if(!audioCtx||droneOsc)return;
+  droneOsc=audioCtx.createOscillator();droneGain=audioCtx.createGain();
+  droneOsc.type='sine';droneOsc.frequency.setValueAtTime(55,audioCtx.currentTime);
+  droneGain.gain.setValueAtTime(0.012,audioCtx.currentTime);
+  droneOsc.connect(droneGain);droneGain.connect(audioCtx.destination);droneOsc.start();
 }
 function stopDrone(){if(droneOsc){droneOsc.stop();droneOsc=null;droneGain=null;}}
 
+// ===== UTILITIES =====
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-function pickCategories(){return shuffle(Object.keys(ALL_CATEGORIES)).slice(0,5);}
+function getHighScores(){
+  try{return JSON.parse(localStorage.getItem('jeopardyHighScores'))||[];}catch(e){return[];}
+}
+function saveHighScore(entry){
+  let scores=getHighScores();
+  scores.push(entry);
+  scores.sort((a,b)=>b.score-a.score);
+  scores=scores.slice(0,10);
+  localStorage.setItem('jeopardyHighScores',JSON.stringify(scores));
+}
+
+// ===== START SCREEN =====
+function showStartScreen(){
+  const modal=document.getElementById('startScreen');
+  const scores=getHighScores();
+  let hsHtml='';
+  if(scores.length>0){
+    hsHtml='<div class="high-scores"><h3>🏆 High Scores</h3>';
+    scores.forEach((s,i)=>{
+      const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+      hsHtml+=`<div class="hs-entry"><span class="hs-rank">${medal}</span><span class="hs-name">${s.name}</span><span class="hs-score">$${s.score}</span><span class="hs-mode">${s.mode||'single'}</span></div>`;
+    });
+    hsHtml+='</div>';
+  }
+
+  modal.innerHTML=`<div class="modal-card start-screen">
+    <h1>JEOPARDY!</h1>
+    <p class="subtitle">CompTIA A+ Edition</p>
+    <div class="mode-select">
+      <div class="mode-btn selected" id="modeSingle" onclick="selectMode('single')"><h3>👤 Single Player</h3><p>Classic solo game</p></div>
+      <div class="mode-btn" id="modeMulti" onclick="selectMode('multi')"><h3>👥 Multiplayer</h3><p>2-4 players take turns</p></div>
+    </div>
+    <div class="player-setup" id="playerSetup">
+      <div class="player-count">
+        <button onclick="changePlayerCount(-1)">−</button>
+        <span id="playerCountDisplay">2</span>
+        <button onclick="changePlayerCount(1)">+</button>
+      </div>
+      <div class="player-inputs" id="playerInputs"></div>
+    </div>
+    <button class="start-btn" onclick="startGame()">START GAME</button>
+    ${hsHtml}
+  </div>`;
+  modal.classList.add('active');
+  updatePlayerInputs();
+}
+
+function selectMode(mode){
+  state.mode=mode;
+  document.getElementById('modeSingle').classList.toggle('selected',mode==='single');
+  document.getElementById('modeMulti').classList.toggle('selected',mode==='multi');
+  document.getElementById('playerSetup').classList.toggle('visible',mode==='multi');
+  if(mode==='single'){state.playerCount=1;}else{state.playerCount=2;}
+  updatePlayerInputs();
+}
+
+function changePlayerCount(d){
+  state.playerCount=Math.max(2,Math.min(4,state.playerCount+d));
+  document.getElementById('playerCountDisplay').textContent=state.playerCount;
+  updatePlayerInputs();
+}
+
+function updatePlayerInputs(){
+  const container=document.getElementById('playerInputs');
+  if(!container)return;
+  let html='';
+  for(let i=0;i<state.playerCount;i++){
+    html+=`<input class="player-input" id="pname${i}" placeholder="Player ${i+1}" maxlength="12" style="border-color:${COLOR_HEX[i]}">`;
+  }
+  container.innerHTML=html;
+}
+
+// ===== GAME INIT =====
+function startGame(){
+  initAudio();
+  // Set up players
+  state.players=[];
+  if(state.mode==='single'){
+    state.players=[{name:'Player 1',score:0,correct:0,answered:0}];
+  }else{
+    for(let i=0;i<state.playerCount;i++){
+      const el=document.getElementById('pname'+i);
+      const name=(el&&el.value.trim())||('Player '+(i+1));
+      state.players.push({name,score:0,correct:0,answered:0});
+    }
+  }
+  state.currentPlayer=0;
+  state.answeredCount=0;
+  state.gameActive=true;
+
+  document.getElementById('startScreen').classList.remove('active');
+  buildBoard();
+  if(state.soundOn)startDrone();
+}
 
 function buildBoard(){
-const container=document.getElementById('boardContainer');
-state.categories=pickCategories();
-state.cells=[];state.score=0;state.answered=0;state.correct=0;state.gameActive=true;
-updateScore();
-let html='<div class="board">';
-state.categories.forEach((cat,ci)=>{html+=`<div class="cat-header${ci>=3?' hide-mobile':''}">${cat}</div>`;});
-[100,200,300,400,500].forEach((val,ri)=>{
-state.categories.forEach((cat,ci)=>{
-const qs=ALL_CATEGORIES[cat].filter(q=>q.v===val);
-const question=qs.length>0?qs[Math.floor(Math.random()*qs.length)]:ALL_CATEGORIES[cat][ri];
-const idx=state.cells.length;
-state.cells.push({cat,val,question,answered:false});
-html+=`<div class="cell${ci>=3?' hide-mobile':''}" data-idx="${idx}" id="cell-${idx}">$${val}</div>`;
-});
-});
-html+='</div>';
-container.innerHTML=html;
-container.style.opacity='0';
-requestAnimationFrame(()=>{container.style.transition='opacity 0.5s ease-out';container.style.opacity='1';});
-document.querySelectorAll('.cell').forEach(c=>{c.addEventListener('click',()=>handleCellClick(+c.dataset.idx));});
+  const app=document.getElementById('app');
+  const catKeys=Object.keys(ALL_CATEGORIES);
+  state.categories=shuffle([...catKeys]).slice(0,5);
+  state.cells=[];
+  state.dailyDoubles=[];
+
+  // Pick 2 random daily doubles
+  const ddIndices=new Set();
+  while(ddIndices.size<2){ddIndices.add(Math.floor(Math.random()*25));}
+  state.dailyDoubles=[...ddIndices];
+
+  // Build header
+  let headerHtml=`<header class="header">
+    <div class="title-bar"><h1>CompTIA A+ Jeopardy</h1></div>
+    <div class="header-controls">
+      <button class="btn" id="soundBtn" title="Toggle Sound" onclick="toggleSound()">🔊</button>
+      <button class="btn" id="newGameBtn" title="New Game" onclick="newGame()">↻</button>
+    </div>
+  </header>`;
+
+  // Players bar
+  let playersHtml='<div class="players-bar" id="playersBar">';
+  state.players.forEach((p,i)=>{
+    const isActive=i===state.currentPlayer;
+    playersHtml+=`<div class="player-card${isActive?' active':''}" id="pcard${i}" style="--glow-color:${COLOR_HEX[i]}">
+      <div class="p-name" style="color:${COLOR_HEX[i]}">${p.name}</div>
+      <div class="p-score" id="pscore${i}" style="color:${COLOR_HEX[i]}">$${p.score}</div>
+    </div>`;
+  });
+  playersHtml+='</div>';
+
+  // Turn indicator
+  let turnHtml='';
+  if(state.mode==='multi'){
+    turnHtml=`<div class="turn-indicator" id="turnIndicator">Current turn: <span style="color:${COLOR_HEX[state.currentPlayer]}">${state.players[state.currentPlayer].name}</span></div>`;
+  }
+
+  // Board
+  let boardHtml='<div class="board" id="gameBoard">';
+  state.categories.forEach((cat,ci)=>{
+    boardHtml+=`<div class="cat-header${ci>=3?' hide-mobile':''}">${cat}</div>`;
+  });
+  const values=[200,400,600,800,1000];
+  values.forEach((val,ri)=>{
+    state.categories.forEach((cat,ci)=>{
+      const qs=ALL_CATEGORIES[cat].filter(q=>q.v===val);
+      const question=qs.length>0?qs[Math.floor(Math.random()*qs.length)]:ALL_CATEGORIES[cat][Math.min(ri,ALL_CATEGORIES[cat].length-1)];
+      const idx=state.cells.length;
+      const isDD=state.dailyDoubles.includes(idx);
+      state.cells.push({cat,val,question,answered:false,isDD});
+      boardHtml+=`<div class="cell${ci>=3?' hide-mobile':''}${isDD?' daily-double':''}" data-idx="${idx}" id="cell-${idx}">$${val}</div>`;
+    });
+  });
+  boardHtml+='</div>';
+
+  app.innerHTML=headerHtml+playersHtml+turnHtml+boardHtml;
+
+  // Attach cell listeners
+  document.querySelectorAll('.cell').forEach(c=>{
+    c.addEventListener('click',()=>handleCellClick(+c.dataset.idx));
+  });
+
+  // Fade in
+  app.style.opacity='0';
+  requestAnimationFrame(()=>{app.style.transition='opacity 0.5s';app.style.opacity='1';});
 }
 
+// ===== CELL CLICK =====
 function handleCellClick(idx){
-if(!state.gameActive)return;
-const cell=state.cells[idx];if(cell.answered)return;
-initAudio();if(!droneOsc&&state.soundOn)startDrone();
-showQuestion(idx);
+  if(!state.gameActive)return;
+  const cell=state.cells[idx];
+  if(cell.answered)return;
+  initAudio();
+  if(cell.isDD){
+    playDailyDouble();
+  }
+  showQuestion(idx);
 }
 
+// ===== QUESTION MODAL =====
 function showQuestion(idx){
-const cell=state.cells[idx],q=cell.question;
-const modal=document.getElementById('questionModal');
-const shuffled=shuffle(q.a.map((t,i)=>({t,i})));
-let html=`<div class="modal-card"><div class="q-category">${cell.cat}</div><div class="q-value">$${cell.val}</div><div class="q-text">${q.q}</div><div class="answers">`;
-shuffled.forEach(a=>{html+=`<button class="answer-btn" data-ai="${a.i}">${a.t}</button>`;});
-html+='</div></div>';
-modal.innerHTML=html;modal.classList.add('active');
-modal.querySelectorAll('.answer-btn').forEach(b=>{b.addEventListener('click',()=>handleAnswer(idx,+b.dataset.ai,b,modal));});
+  const cell=state.cells[idx],q=cell.question;
+  const modal=document.getElementById('questionModal');
+  const multiplier=cell.isDD?2:1;
+  const displayVal=cell.val*multiplier;
+  const shuffled=shuffle(q.a.map((t,i)=>({t,i})));
+
+  let playerInfo='';
+  if(state.mode==='multi'){
+    playerInfo=`<div class="q-player" style="color:${COLOR_HEX[state.currentPlayer]}">▶ ${state.players[state.currentPlayer].name}'s turn</div>`;
+  }
+
+  let html=`<div class="modal-card">
+    <div class="q-badge">
+      <span class="q-category">${cell.cat}</span>
+      <span class="q-value">$${displayVal}</span>
+      ${cell.isDD?'<span class="q-dd">⭐ DAILY DOUBLE!</span>':''}
+    </div>
+    ${playerInfo}
+    <div class="q-text">${q.q}</div>
+    <div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+    <div class="answers">`;
+  shuffled.forEach(a=>{
+    html+=`<button class="answer-btn" data-ai="${a.i}">${a.t}</button>`;
+  });
+  html+='</div></div>';
+  modal.innerHTML=html;
+  modal.classList.add('active');
+
+  // Start timer
+  startTimer(idx);
+
+  modal.querySelectorAll('.answer-btn').forEach(b=>{
+    b.addEventListener('click',()=>handleAnswer(idx,+b.dataset.ai,b,modal));
+  });
 }
 
+function startTimer(idx){
+  state.timerRemaining=15;
+  const fill=document.getElementById('timerFill');
+  if(!fill)return;
+  clearInterval(state.timerInterval);
+  state.timerInterval=setInterval(()=>{
+    state.timerRemaining-=0.1;
+    if(state.timerRemaining<=0){
+      clearInterval(state.timerInterval);
+      state.timerRemaining=0;
+      timeUp(idx);
+    }
+    const pct=(state.timerRemaining/15)*100;
+    fill.style.width=pct+'%';
+    if(pct>50)fill.style.backgroundColor='var(--green)';
+    else if(pct>25)fill.style.backgroundColor='#ffcc00';
+    else fill.style.backgroundColor='var(--red)';
+  },100);
+}
+
+function timeUp(idx){
+  const modal=document.getElementById('questionModal');
+  const cell=state.cells[idx],q=cell.question;
+  const multiplier=cell.isDD?2:1;
+  const pen=Math.floor(cell.val*multiplier/2);
+  
+  modal.querySelectorAll('.answer-btn').forEach(b=>{b.disabled=true;});
+  modal.querySelector(`[data-ai="${q.c}"]`).classList.add('correct');
+
+  state.players[state.currentPlayer].score-=pen;
+  state.players[state.currentPlayer].answered++;
+  showFloat(`-$${pen}`,document.getElementById(`cell-${idx}`),'#ff3366');
+  playWrong();
+  screenEffect('red');
+  
+  cell.answered=true;
+  state.answeredCount++;
+  updatePlayersUI();
+
+  setTimeout(()=>{
+    modal.classList.remove('active');
+    const cellEl=document.getElementById(`cell-${idx}`);
+    cellEl.classList.add('used');cellEl.textContent='✓';
+    nextTurn();
+    if(state.answeredCount>=25)endGame();
+  },1500);
+}
+
+// ===== HANDLE ANSWER =====
 function handleAnswer(cellIdx,ai,btn,modal){
-const cell=state.cells[cellIdx],q=cell.question,isCorrect=ai===q.c;
-const cellEl=document.getElementById(`cell-${cellIdx}`);
-modal.querySelectorAll('.answer-btn').forEach(b=>{b.disabled=true;});
-modal.querySelector(`[data-ai="${q.c}"]`).classList.add('correct');
-if(isCorrect){
-state.score+=cell.val;state.correct++;
-btn.classList.add('correct');cellEl.classList.add('correct-flash');
-showFloat(`+${cell.val}`,cellEl,'#00ff88');playCorrect();
-}else{
-const pen=Math.floor(cell.val/2);state.score-=pen;
-btn.classList.add('wrong');cellEl.classList.add('wrong-flash');
-showFloat(`-${pen}`,cellEl,'#ff3366');playWrong();
-}
-cell.answered=true;state.answered++;updateScore();
-setTimeout(()=>{
-modal.classList.remove('active');
-cellEl.classList.remove('correct-flash','wrong-flash');
-cellEl.classList.add('used');cellEl.textContent='\u2713';
-if(state.answered>=25)endGame();
-},1200);
+  clearInterval(state.timerInterval);
+  const cell=state.cells[cellIdx],q=cell.question;
+  const multiplier=cell.isDD?2:1;
+  const isCorrect=ai===q.c;
+  const cellEl=document.getElementById(`cell-${cellIdx}`);
+  const player=state.players[state.currentPlayer];
+
+  modal.querySelectorAll('.answer-btn').forEach(b=>{b.disabled=true;});
+  modal.querySelector(`[data-ai="${q.c}"]`).classList.add('correct');
+
+  if(isCorrect){
+    const pts=cell.val*multiplier;
+    player.score+=pts;player.correct++;
+    btn.classList.add('correct');
+    showFloat(`+$${pts}`,cellEl,'#00ff88');
+    playCorrect();
+    screenEffect('green');
+    launchConfetti(8);
+  }else{
+    const pen=Math.floor(cell.val*multiplier/2);
+    player.score-=pen;
+    btn.classList.add('wrong');
+    showFloat(`-$${pen}`,cellEl,'#ff3366');
+    playWrong();
+    screenEffect('red');
+    document.querySelector('.container').classList.add('shake');
+    setTimeout(()=>document.querySelector('.container').classList.remove('shake'),500);
+  }
+
+  player.answered++;
+  cell.answered=true;
+  state.answeredCount++;
+  updatePlayersUI();
+
+  setTimeout(()=>{
+    modal.classList.remove('active');
+    cellEl.classList.add('used');cellEl.textContent='✓';
+    nextTurn();
+    if(state.answeredCount>=25)endGame();
+  },1400);
 }
 
+function nextTurn(){
+  if(state.mode==='multi'&&state.gameActive){
+    state.currentPlayer=(state.currentPlayer+1)%state.playerCount;
+    updatePlayersUI();
+    playTurnChange();
+  }
+}
+
+function updatePlayersUI(){
+  state.players.forEach((p,i)=>{
+    const card=document.getElementById('pcard'+i);
+    const score=document.getElementById('pscore'+i);
+    if(card){
+      card.classList.toggle('active',i===state.currentPlayer);
+    }
+    if(score){
+      score.textContent='$'+p.score;
+      score.classList.add('pulse');
+      setTimeout(()=>score.classList.remove('pulse'),400);
+    }
+  });
+  const turnEl=document.getElementById('turnIndicator');
+  if(turnEl&&state.mode==='multi'){
+    turnEl.innerHTML=`Current turn: <span style="color:${COLOR_HEX[state.currentPlayer]}">${state.players[state.currentPlayer].name}</span>`;
+  }
+}
+
+// ===== EFFECTS =====
 function showFloat(text,ref,color){
-const r=ref.getBoundingClientRect(),el=document.createElement('div');
-el.className='float-text';el.textContent=text;el.style.color=color;
-el.style.left=(r.left+r.width/2-20)+'px';el.style.top=r.top+'px';
-document.getElementById('floatingText').appendChild(el);
-setTimeout(()=>el.remove(),1300);
+  const r=ref.getBoundingClientRect(),el=document.createElement('div');
+  el.className='float-text';el.textContent=text;el.style.color=color;
+  el.style.left=(r.left+r.width/2-30)+'px';el.style.top=r.top+'px';
+  document.getElementById('floatingText').appendChild(el);
+  setTimeout(()=>el.remove(),1300);
 }
 
-function updateScore(){
-const d=document.getElementById('scoreDisplay');d.textContent='SCORE: '+state.score;
-d.classList.add('pulse');setTimeout(()=>d.classList.remove('pulse'),300);
+function screenEffect(type){
+  const el=document.getElementById('screenFlash');
+  el.className='screen-flash '+type;
+  setTimeout(()=>{el.className='screen-flash';},300);
 }
 
+function launchConfetti(count){
+  const c=document.getElementById('confetti');
+  const cols=['#00f0ff','#ff00e6','#00ff88','#ffd700','#ff3366','#b300ff'];
+  count=count||30;
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.left=Math.random()*100+'%';
+    p.style.backgroundColor=cols[Math.floor(Math.random()*cols.length)];
+    p.style.width=(6+Math.random()*8)+'px';p.style.height=(6+Math.random()*8)+'px';
+    p.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    p.style.animationDuration=(2+Math.random()*2)+'s';
+    p.style.animationDelay=(Math.random()*1.5)+'s';
+    c.appendChild(p);
+    setTimeout(()=>p.remove(),5000);
+  }
+}
+
+// ===== GAME OVER =====
 function endGame(){
-state.gameActive=false;stopDrone();playFanfare();
-const acc=state.answered>0?Math.round((state.correct/state.answered)*100):0;
-const stars=acc>=80?'\u2b50\u2b50\u2b50':acc>=50?'\u2b50\u2b50':'\u2b50';
-const modal=document.getElementById('gameOverModal');
-modal.innerHTML=`<div class="modal-card game-over-card"><h2>GAME OVER!</h2><div class="final-score" id="finalScoreAnim">0</div><div class="stats">Correct: ${state.correct} / ${state.answered}<br>Accuracy: ${acc}%</div><div class="stars">${stars}</div><button class="play-again-btn" id="playAgainBtn">Play Again</button></div>`;
-modal.classList.add('active');
-animateCount(state.score);launchConfetti();
-document.getElementById('playAgainBtn').addEventListener('click',()=>{modal.classList.remove('active');document.getElementById('confetti').innerHTML='';buildBoard();});
+  state.gameActive=false;
+  stopDrone();
+  clearInterval(state.timerInterval);
+  playFanfare();
+  launchConfetti(60);
+
+  // Determine winner
+  let winner=state.players[0];
+  let winnerIdx=0;
+  state.players.forEach((p,i)=>{if(p.score>winner.score){winner=p;winnerIdx=i;}});
+
+  const modal=document.getElementById('gameOverModal');
+  let scoresHtml='<div class="all-scores">';
+  state.players.forEach((p,i)=>{
+    const acc=p.answered>0?Math.round((p.correct/p.answered)*100):0;
+    scoresHtml+=`<div class="final-player" style="border-color:${COLOR_HEX[i]}">
+      <div class="fp-name" style="color:${COLOR_HEX[i]}">${i===winnerIdx&&state.mode==='multi'?'👑 ':''}${p.name}</div>
+      <div class="fp-score" style="color:${COLOR_HEX[i]}">$<span class="count-up" data-target="${p.score}">0</span></div>
+      <div class="fp-acc">${acc}% accuracy</div>
+    </div>`;
+  });
+  scoresHtml+='</div>';
+
+  const bestPlayer=winner;
+  const bestAcc=bestPlayer.answered>0?Math.round((bestPlayer.correct/bestPlayer.answered)*100):0;
+  const stars=bestAcc>=80?'⭐⭐⭐':bestAcc>=60?'⭐⭐':'⭐';
+
+  let winnerText='';
+  if(state.mode==='multi'){
+    winnerText=`<div class="winner-section"><div class="winner-name" style="color:${COLOR_HEX[winnerIdx]}">👑 ${winner.name} Wins!</div></div>`;
+  }
+
+  modal.innerHTML=`<div class="modal-card game-over-card">
+    <h2>GAME OVER!</h2>
+    ${winnerText}
+    ${scoresHtml}
+    <div class="stars">${stars}</div>
+    <div>
+      <button class="play-again-btn" onclick="playAgain()">Play Again</button>
+      <button class="new-players-btn" onclick="newPlayers()">New Players</button>
+    </div>
+  </div>`;
+  modal.classList.add('active');
+
+  // Animate counting
+  setTimeout(()=>{
+    document.querySelectorAll('.count-up').forEach(el=>{
+      animateCount(el,+el.dataset.target);
+    });
+  },300);
+
+  // Save high scores
+  state.players.forEach(p=>{
+    const acc=p.answered>0?Math.round((p.correct/p.answered)*100):0;
+    saveHighScore({name:p.name,score:p.score,accuracy:acc,date:new Date().toLocaleDateString(),mode:state.mode});
+  });
 }
 
-function animateCount(target){
-const el=document.getElementById('finalScoreAnim');
-let cur=0;const step=Math.max(1,Math.floor(Math.abs(target)/40));const dir=target>=0?1:-1;
-const iv=setInterval(()=>{cur+=step*dir;if((dir>0&&cur>=target)||(dir<0&&cur<=target)){cur=target;clearInterval(iv);}el.textContent=cur;},30);
+function animateCount(el,target){
+  let cur=0;const step=Math.max(1,Math.floor(Math.abs(target)/40));const dir=target>=0?1:-1;
+  const iv=setInterval(()=>{
+    cur+=step*dir;
+    if((dir>0&&cur>=target)||(dir<0&&cur<=target)){cur=target;clearInterval(iv);}
+    el.textContent=cur;
+  },30);
 }
 
-function launchConfetti(){
-const c=document.getElementById('confetti'),cols=['#00f0ff','#ff00e6','#00ff88','#ffd700','#ff3366','#b300ff'];
-for(let i=0;i<30;i++){
-const p=document.createElement('div');p.className='confetti-piece';
-p.style.left=Math.random()*100+'%';
-p.style.backgroundColor=cols[Math.floor(Math.random()*cols.length)];
-p.style.width=(6+Math.random()*8)+'px';p.style.height=(6+Math.random()*8)+'px';
-p.style.borderRadius=Math.random()>0.5?'50%':'2px';
-p.style.animationDuration=(2+Math.random()*2)+'s';
-p.style.animationDelay=(Math.random()*1.5)+'s';
-c.appendChild(p);
-}
+function playAgain(){
+  document.getElementById('gameOverModal').classList.remove('active');
+  document.getElementById('confetti').innerHTML='';
+  state.players.forEach(p=>{p.score=0;p.correct=0;p.answered=0;});
+  state.currentPlayer=0;
+  state.answeredCount=0;
+  state.gameActive=true;
+  buildBoard();
+  if(state.soundOn)startDrone();
 }
 
-document.getElementById('soundBtn').addEventListener('click',()=>{
-state.soundOn=!state.soundOn;
-document.getElementById('soundBtn').innerHTML=state.soundOn?'&#x1f50a;':'&#x1f507;';
-if(state.soundOn){initAudio();if(state.gameActive)startDrone();}else stopDrone();
+function newPlayers(){
+  document.getElementById('gameOverModal').classList.remove('active');
+  document.getElementById('confetti').innerHTML='';
+  stopDrone();
+  showStartScreen();
+}
+
+function newGame(){
+  document.getElementById('questionModal').classList.remove('active');
+  document.getElementById('gameOverModal').classList.remove('active');
+  document.getElementById('confetti').innerHTML='';
+  clearInterval(state.timerInterval);
+  stopDrone();
+  showStartScreen();
+}
+
+function toggleSound(){
+  state.soundOn=!state.soundOn;
+  const btn=document.getElementById('soundBtn');
+  if(btn)btn.textContent=state.soundOn?'🔊':'🔇';
+  if(state.soundOn){initAudio();if(state.gameActive)startDrone();}else stopDrone();
+}
+
+// ===== ADMIN CONSOLE =====
+document.addEventListener('keydown',(e)=>{
+  adminBuffer+=e.key.toUpperCase();
+  if(adminBuffer.length>5)adminBuffer=adminBuffer.slice(-5);
+  if(adminBuffer.includes('ADMIN')){
+    adminBuffer='';
+    toggleAdmin();
+  }
 });
 
-document.getElementById('newGameBtn').addEventListener('click',()=>{
-document.getElementById('questionModal').classList.remove('active');
-document.getElementById('gameOverModal').classList.remove('active');
-document.getElementById('confetti').innerHTML='';
-stopDrone();buildBoard();
-if(state.soundOn){initAudio();startDrone();}
-});
+function toggleAdmin(){
+  adminOpen=!adminOpen;
+  const panel=document.getElementById('adminPanel');
+  if(adminOpen){
+    renderAdmin();
+    panel.classList.remove('hidden');
+  }else{
+    panel.classList.add('hidden');
+  }
+}
 
-buildBoard();
+function renderAdmin(){
+  const panel=document.getElementById('adminPanel');
+  let playersOpts='';
+  state.players.forEach((p,i)=>{playersOpts+=`<option value="${i}">${p.name}</option>`;});
+
+  panel.innerHTML=`<button class="admin-close" onclick="toggleAdmin()">✕</button>
+    <h3>🛠 Admin Console</h3>
+    <div class="admin-row">
+      <select id="adminPlayer">${playersOpts}</select>
+      <input id="adminScore" type="number" placeholder="Score" style="width:80px">
+      <button onclick="adminSetScore()">Set</button>
+    </div>
+    <div class="admin-row">
+      <button onclick="adminSkipToEnd()">Skip to End</button>
+      <button onclick="adminRevealAll()">Reveal All</button>
+    </div>
+    <div class="admin-row">
+      <button onclick="adminAddPlayer()">Add Player</button>
+      <button onclick="adminRemovePlayer()">Remove Last</button>
+    </div>`;
+}
+
+function adminSetScore(){
+  const pi=+document.getElementById('adminPlayer').value;
+  const sc=+document.getElementById('adminScore').value;
+  if(state.players[pi]!==undefined){
+    state.players[pi].score=sc;
+    updatePlayersUI();
+  }
+}
+
+function adminSkipToEnd(){
+  state.cells.forEach((c,i)=>{
+    if(!c.answered){
+      c.answered=true;
+      state.answeredCount++;
+      const el=document.getElementById('cell-'+i);
+      if(el){el.classList.add('used');el.textContent='✓';}
+    }
+  });
+  endGame();
+}
+
+function adminRevealAll(){
+  state.cells.forEach((c,i)=>{
+    const el=document.getElementById('cell-'+i);
+    if(el&&!c.answered){
+      el.title=c.question.q+' → '+c.question.a[c.question.c];
+    }
+  });
+}
+
+function adminAddPlayer(){
+  if(state.players.length>=4)return;
+  const idx=state.players.length;
+  state.players.push({name:'Player '+(idx+1),score:0,correct:0,answered:0});
+  state.playerCount=state.players.length;
+  state.mode='multi';
+  buildBoard();
+  renderAdmin();
+}
+
+function adminRemovePlayer(){
+  if(state.players.length<=1)return;
+  state.players.pop();
+  state.playerCount=state.players.length;
+  if(state.currentPlayer>=state.playerCount)state.currentPlayer=0;
+  if(state.playerCount===1)state.mode='single';
+  buildBoard();
+  renderAdmin();
+}
+
+// ===== INIT =====
+showStartScreen();
 </script>
 </body>
 </html>
