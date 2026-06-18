@@ -16,7 +16,7 @@
         --text-muted: #718096;
         --border: #e2e8f0;
         --red: #e53e3e;
-        --orange: #dd6b20;
+        --orange: #c8a800;
         --green: #38a169;
         --bg-section: #f7fafc;
         --shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -285,11 +285,9 @@
             <a href="index.html" class="nav-brand">CompTIA A+ Study Hub</a>
             <button class="hamburger" id="hamburgerBtn" aria-label="Menu">&#9776;</button>
             <div class="nav-items" id="navItems">
+                <a href="#study-tools">Study & PBQs</a>
+                <a href="#resources-row">Resources</a>
                 <a href="#games">Games</a>
-                <a href="pbq/glossary.html">Glossary</a>
-                <a href="#flashcards">Flash Cards</a>
-                <a href="#study-tools">Study Tools</a>
-                <a href="#resources">Resources</a>
                 <a href="#quick-links">Quick Links</a>
                 <a href="#" class="logout-nav-btn" id="logoutBtn">Logout</a>
             </div>
@@ -304,7 +302,71 @@
 
         <div class="container" style="padding-top:40px; padding-bottom:60px;">
 
-            <!-- SECTION 1: Arcade Games -->
+            <!-- ROW 1: Study Tools + PBQs -->
+            <div class="section" id="study-tools">
+                <h3>&#128736; Study Tools & Practice</h3>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h4>&#9989; Exam Day Checklist</h4>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Bring two forms of ID</label></li>
+                            <li><label><input type="checkbox"> Arrive 15 minutes early</label></li>
+                            <li><label><input type="checkbox"> Know your Pearson VUE login</label></li>
+                            <li><label><input type="checkbox"> Review port numbers one last time</label></li>
+                            <li><label><input type="checkbox"> Flag difficult questions and come back</label></li>
+                            <li><label><input type="checkbox"> Read EVERY answer before selecting</label></li>
+                            <li><label><input type="checkbox"> Eliminate obviously wrong answers first</label></li>
+                            <li><label><input type="checkbox"> Check for "BEST" or "FIRST" in the question stem</label></li>
+                        </ul>
+                    </div>
+                    <div class="tool-card">
+                        <h4>&#128197; 6-Week Study Schedule</h4>
+                        <div class="schedule-week"><strong>Week 1-2:</strong> Hardware + Networking (Core 1 heaviest domains)</div>
+                        <div class="schedule-week"><strong>Week 3:</strong> OS + Troubleshooting commands</div>
+                        <div class="schedule-week"><strong>Week 4:</strong> Security + Cloud + Mobile</div>
+                        <div class="schedule-week"><strong>Week 5:</strong> Practice PBQs + Review weak areas</div>
+                        <div class="schedule-week"><strong>Week 6:</strong> Full practice exams + final glossary review</div>
+                    </div>
+                    <div class="tool-card">
+                        <h4>&#128203; Performance-Based Questions</h4>
+                        <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:12px;">Exam-style interactive questions across all domains:</p>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                            <a href="pbq/hardware.html" class="game-link">Hardware</a>
+                            <a href="pbq/networking.html" class="game-link">Networking</a>
+                            <a href="pbq/os.html" class="game-link">OS</a>
+                            <a href="pbq/security.html" class="game-link">Security</a>
+                            <a href="pbq/mobile.html" class="game-link">Mobile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: Glossary, Flash Cards, Resource Center (same row) -->
+            <div class="section" id="resources-row">
+                <h3>&#128218; Study Resources</h3>
+                <div class="games-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                    <div class="game-card">
+                        <div class="game-icon">&#128214;</div>
+                        <h4>Searchable Glossary</h4>
+                        <p>Full 500-term glossary with search, priority filtering, and color-coded cards.</p>
+                        <a href="pbq/glossary.html" class="game-link">Open Glossary</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#127183;</div>
+                        <h4>Flash Cards (500 terms)</h4>
+                        <p>Complete deck with shuffle, progress tracking, and priority filtering.</p>
+                        <a href="pbq/flashcards.html" class="game-link">Launch Flash Cards</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#128230;</div>
+                        <h4>Resource Center</h4>
+                        <p>48+ free tools, video training, learning platforms, and utilities for IT pros.</p>
+                        <a href="reference/resources.html" class="game-link">Browse Resources</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Arcade Games (show all) -->
             <div class="section" id="games">
                 <h3>&#127918; Arcade Games</h3>
                 <p class="section-desc">Learn while you play — CompTIA A+ concepts in game form.</p>
@@ -333,81 +395,34 @@
                         <p>Climb the mountain with OSI knowledge</p>
                         <a href="pbq/osi-climb.html" class="game-link">Play Now</a>
                     </div>
-                </div>
-            </div>
-
-
-            <!-- SECTION 2: Flash Cards -->
-            <div class="section" id="flashcards">
-                <h3>&#127183; Flash Cards</h3>
-                <p class="section-desc">Complete 500-term deck with shuffle, priority filtering, and progress tracking.</p>
-                <a href="pbq/flashcards.html" class="flashcard-launch">Launch Full Flash Cards (500 terms)</a>
-            </div>
-
-            <!-- SECTION 3: Study Tools -->
-            <div class="section" id="study-tools">
-                <h3>&#128736; Study Tools</h3>
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <h4>&#9989; Exam Day Checklist</h4>
-                        <ul class="checklist">
-                            <li><label><input type="checkbox"> Bring two forms of ID</label></li>
-                            <li><label><input type="checkbox"> Arrive 15 minutes early</label></li>
-                            <li><label><input type="checkbox"> Know your Pearson VUE login</label></li>
-                            <li><label><input type="checkbox"> Review port numbers one last time</label></li>
-                            <li><label><input type="checkbox"> Flag difficult questions and come back</label></li>
-                            <li><label><input type="checkbox"> Read EVERY answer before selecting</label></li>
-                            <li><label><input type="checkbox"> Eliminate obviously wrong answers first</label></li>
-                            <li><label><input type="checkbox"> Check for "BEST" or "FIRST" in the question stem</label></li>
-                        </ul>
+                    <div class="game-card">
+                        <div class="game-icon">&#128126;</div>
+                        <h4>Maze Runner</h4>
+                        <p>Pac-Man style maze with IT threats and questions</p>
+                        <a href="pbq/maze-runner.html" class="game-link">Play Now</a>
                     </div>
-                    <div class="tool-card">
-                        <h4>&#128197; 6-Week Study Schedule</h4>
-                        <div class="schedule-week"><strong>Week 1-2:</strong> Hardware + Networking (Core 1 heaviest domains)</div>
-                        <div class="schedule-week"><strong>Week 3:</strong> OS + Troubleshooting commands</div>
-                        <div class="schedule-week"><strong>Week 4:</strong> Security + Cloud + Mobile</div>
-                        <div class="schedule-week"><strong>Week 5:</strong> Practice PBQs + Review weak areas</div>
-                        <div class="schedule-week"><strong>Week 6:</strong> Full practice exams + final glossary review</div>
+                    <div class="game-card">
+                        <div class="game-icon">&#128163;</div>
+                        <h4>Port Blaster</h4>
+                        <p>Speed-match ports to protocols in 60 seconds</p>
+                        <a href="pbq/game.html" class="game-link">Play Now</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#127183;</div>
+                        <h4>Port Match</h4>
+                        <p>Draw lines connecting ports to protocols</p>
+                        <a href="pbq/port-match.html" class="game-link">Play Now</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#127942;</div>
+                        <h4>CompTIA Jeopardy</h4>
+                        <p>Multiplayer quiz with Daily Doubles</p>
+                        <a href="pbq/jeopardy.html" class="game-link">Play Now</a>
                     </div>
                 </div>
             </div>
 
-
-            <!-- SECTION 4: Glossary (link to separate page) -->
-            <div class="section" id="glossary">
-                <h3>&#128214; Searchable Glossary</h3>
-                <p class="section-desc">Full 500-term glossary with real-time search, priority filtering, and color-coded cards.</p>
-                <a href="pbq/glossary.html" class="flashcard-launch">Open Full Glossary (500 terms)</a>
-            </div>
-
-            <!-- SECTION 5: Resource Center -->
-            <div class="section" id="resources">
-                <h3>&#128230; Resource Center</h3>
-                <p class="section-desc">48+ free tools, learning links, and utilities for IT professionals.</p>
-                <a href="reference/resources.html" class="flashcard-launch" style="margin-bottom:24px;display:inline-block;">Browse Full Resource Library</a>
-                <h4 style="margin:24px 0 12px;color:var(--navy);">Quick Links</h4>
-                <div class="resource-links">
-                    <a href="https://www.professormesser.com" target="_blank" rel="noopener" class="resource-link">
-                        <span>&#127891;</span>
-                        <strong>Professor Messer — Free video training for CompTIA exams</strong>
-                    </a>
-                    <a href="https://www.comptia.org/training/resources/exam-objectives" target="_blank" rel="noopener" class="resource-link">
-                        <span>&#128203;</span>
-                        <strong>CompTIA Exam Objectives — Official exam blueprint</strong>
-                    </a>
-                    <a href="https://learn.microsoft.com/en-us/sysinternals/" target="_blank" rel="noopener" class="resource-link">
-                        <span>&#128295;</span>
-                        <strong>Sysinternals — Advanced Windows diagnostic utilities</strong>
-                    </a>
-                    <a href="https://www.wireshark.org/" target="_blank" rel="noopener" class="resource-link">
-                        <span>&#129416;</span>
-                        <strong>Wireshark — Network protocol analyzer</strong>
-                    </a>
-                </div>
-            </div>
-
-
-            <!-- SECTION 6: Quick Links -->
+            <!-- ROW 4: Quick Links -->
             <div class="section" id="quick-links">
                 <h3>&#128279; Quick Links</h3>
                 <p class="section-desc">Jump to any page on the site.</p>
@@ -417,15 +432,8 @@
                     <a href="pbq/os.html" class="link-card"><span>&#128421;</span> OS PBQ</a>
                     <a href="pbq/security.html" class="link-card"><span>&#128274;</span> Security PBQ</a>
                     <a href="pbq/mobile.html" class="link-card"><span>&#128241;</span> Mobile PBQ</a>
-                    <a href="pbq/cable-match.html" class="link-card"><span>&#128268;</span> Cable Match</a>
-                    <a href="pbq/troubleshoot-tower.html" class="link-card"><span>&#127959;</span> Troubleshoot Tower</a>
-                    <a href="pbq/neon-circuit-dash.html" class="link-card"><span>&#128640;</span> Neon Circuit Dash</a>
-                    <a href="pbq/osi-climb.html" class="link-card"><span>&#9968;</span> OSI Layer Climb</a>
-                    <a href="pbq/game.html" class="link-card"><span>&#128163;</span> Port Blaster</a>
-                    <a href="pbq/port-match.html" class="link-card"><span>&#127183;</span> Port Match</a>
-                    <a href="pbq/jeopardy.html" class="link-card"><span>&#127942;</span> Jeopardy</a>
-                    <a href="pbq/flashcards.html" class="link-card"><span>&#128209;</span> Flash Cards</a>
                     <a href="pbq/glossary.html" class="link-card"><span>&#128214;</span> Glossary</a>
+                    <a href="pbq/flashcards.html" class="link-card"><span>&#128209;</span> Flash Cards</a>
                     <a href="reference/ports.html" class="link-card"><span>&#128233;</span> Port Reference</a>
                     <a href="reference/cables.html" class="link-card"><span>&#128268;</span> Cable Reference</a>
                     <a href="reference/commands.html" class="link-card"><span>&#128187;</span> Commands</a>
