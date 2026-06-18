@@ -428,6 +428,29 @@ function updateLasers() {
                 }
             }
         });
+        
+        // Laser hits obstacles (destroys them too)
+        lasers.forEach(laser => {
+            if (laser.phase !== 'active') return;
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                let hit = false;
+                if (laser.diagonal) {
+                    const cx = canvas.width / 2, cy = canvas.height / 2;
+                    const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
+                    const dist = Math.abs((obstacles[i].x - cx) * dy - (obstacles[i].y - cy) * dx);
+                    hit = dist < obstacles[i].radius;
+                } else if (laser.horizontal) {
+                    hit = Math.abs(obstacles[i].y - laser.y) < obstacles[i].radius;
+                } else {
+                    hit = Math.abs(obstacles[i].x - laser.x) < obstacles[i].radius;
+                }
+                if (hit) {
+                    createExplosion(obstacles[i].x, obstacles[i].y, 20, ['#ff0066', '#ff4400', '#ffaa00']);
+                    obstacles.splice(i, 1);
+                    score += 5; // Small bonus for laser destroying obstacles
+                }
+            }
+        });
     }
 }
 
@@ -1159,11 +1182,13 @@ function drawStartScreen() {
 
     ctx.fillStyle = '#ff8c00';
     ctx.font = 'bold 14px Courier New';
-    ctx.fillText('\u26A1 Speed increases with every answer \u2014 stay sharp!', canvas.width / 2, canvas.height * 0.34 + instructions.length * 24 + 16);
+    const speedTextY = canvas.height * 0.34 + instructions.length * 24 + 16;
+    ctx.fillText('\u26A1 Speed increases with every answer \u2014 stay sharp!', canvas.width / 2, speedTextY);
 
-    // High scores
+    // High scores - positioned with proper spacing below speed text
+    const hsStartY = speedTextY + 50;
     if (highScores.length > 0) {
-        const hsY = canvas.height * 0.58;
+        const hsY = hsStartY;
         
         // Glowing border box for high scores
         const boxW = 420, boxH = highScores.slice(0, 5).length * 24 + 60;
@@ -1190,10 +1215,9 @@ function drawStartScreen() {
         });
         ctx.shadowBlur = 0;
     } else {
-        const hsY = canvas.height * 0.62;
         ctx.fillStyle = '#5c6b80';
         ctx.font = '14px Courier New';
-        ctx.fillText('No high scores yet \u2014 be the first!', canvas.width / 2, hsY);
+        ctx.fillText('No high scores yet \u2014 be the first!', canvas.width / 2, hsStartY + 10);
     }
 
     // Press Start (blinking)
@@ -1247,8 +1271,8 @@ function drawLevelTransition() {
 function update() {
     if (paused) return;
     
-    // Always move obstacles and spawn new ones (even during quiz)
-    if (gameState === 'playing' || gameState === 'quiz') {
+    // Always move obstacles and spawn new ones (even during quiz and level transitions)
+    if (gameState === 'playing' || gameState === 'quiz' || gameState === 'levelTransition') {
         frameCount++;
         obstacles.forEach(obs => {
             obs.x += obs.vx; obs.y += obs.vy;
@@ -1354,19 +1378,8 @@ function render() {
         drawStartScreen();
     } else if (gameState === 'levelTransition') {
         drawBackground();
-        // Keep obstacles flying during transition
-        obstacles.forEach(obs => {
-            obs.x += obs.vx; obs.y += obs.vy;
-            obs.rotation += obs.rotSpeed;
-        });
-        obstacles = obstacles.filter(obs =>
-            obs.x > -60 && obs.x < canvas.width + 60 &&
-            obs.y > -60 && obs.y < canvas.height + 60
-        );
-        // Spawn during transition too
-        frameCount++;
-        if (frameCount % (spawnRate + 10) === 0) spawnObstacle();
         drawObstacles();
+        drawLasers();
         drawParticles();
         drawLevelTransition();
     } else if (gameState === 'playing' || gameState === 'quiz' || gameState === 'paused') {
