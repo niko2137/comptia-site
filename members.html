@@ -5,8 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Members Only — CompTIA A+ Study Hub</title>
     <meta name="description" content="Exclusive members-only content for CompTIA A+ Complete Study Guide book owners.">
-    <link rel="stylesheet" href="css/style.css">
     <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --navy: #1a365d;
+        --navy-dark: #0f2440;
+        --blue-accent: #3182ce;
+        --blue-pale: #ebf4ff;
+        --text-body: #2d3748;
+        --text-muted: #718096;
+        --border: #e2e8f0;
+        --red: #e53e3e;
+        --orange: #dd6b20;
+        --green: #38a169;
+        --bg-section: #f7fafc;
+        --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--text-body);
+        line-height: 1.6;
+        background: #fff;
+    }
+    a { color: var(--blue-accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+
     /* PASSWORD GATE */
     .gate-wrapper {
         min-height: 100vh;
@@ -30,18 +55,25 @@
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .gate-icon { font-size: 3.5em; margin-bottom: 16px; display: block; }
     .gate-card h2 { margin-bottom: 8px; color: var(--navy-dark); font-size: 1.5em; }
-    .gate-card .gate-subtitle {
+    .gate-subtitle {
         color: var(--text-muted); font-size: 0.9em; margin-bottom: 28px; line-height: 1.5;
     }
+
     .password-field {
         position: relative; margin-bottom: 16px;
     }
     .password-field input {
         width: 100%; padding: 14px 48px 14px 16px; border: 2px solid var(--border);
         border-radius: 8px; font-size: 1em; transition: border-color 0.2s;
-        outline: none;
+        outline: none; font-family: inherit;
     }
     .password-field input:focus { border-color: var(--blue-accent); }
     .password-toggle {
@@ -56,112 +88,88 @@
         color: var(--red); font-size: 0.85em; margin-bottom: 16px;
         display: none; animation: shake 0.4s ease;
     }
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-8px); }
-        75% { transform: translateX(8px); }
-    }
     .gate-error.visible { display: block; }
     .unlock-btn {
         width: 100%; padding: 14px; background: var(--navy); color: #fff;
         border: none; border-radius: 8px; font-size: 1em; font-weight: 600;
-        cursor: pointer; transition: all 0.2s;
+        cursor: pointer; transition: all 0.2s; font-family: inherit;
     }
     .unlock-btn:hover { background: var(--blue-accent); transform: translateY(-1px); }
 
+
     /* PROTECTED CONTENT */
     #protectedContent { display: none; animation: fadeIn 0.8s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .logout-bar {
-        background: var(--bg-section); border-bottom: 1px solid var(--border);
-        padding: 12px 24px; display: flex; align-items: center; justify-content: flex-end;
-    }
-    .logout-btn {
-        background: var(--red); color: #fff; border: none; padding: 8px 20px;
-        border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer;
-    }
-    .logout-btn:hover { background: #c0392b; }
-</style>
-</head>
-<body>
-    <!-- NAV -->
-    <nav>
-        <div class="container">
-            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
-            <ul class="nav-links">
-                <li><a href="index.html">Back to Home</a></li>
-                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
-            </ul>
-        </div>
-    </nav>
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
-
-    <!-- PASSWORD GATE -->
-    <div id="passwordGate" class="gate-wrapper">
-        <div class="gate-card">
-            <span class="gate-icon">&#128274;</span>
-            <h2>Members Only</h2>
-            <p class="gate-subtitle">Enter Your Access Code<br><small>Find your code on the inside back cover of the <em>CompTIA A+ Complete Study Guide</em></small></p>
-            <div class="password-field">
-                <input type="password" id="passwordInput" placeholder="Enter access code..." autocomplete="off">
-                <button class="password-toggle" id="togglePassword" type="button">&#128065;</button>
-            </div>
-            <div class="remember-row">
-                <input type="checkbox" id="rememberMe" checked>
-                <label for="rememberMe">Remember me on this device</label>
-            </div>
-            <p class="gate-error" id="gateError">Incorrect code. Check your book's back cover.</p>
-            <button class="unlock-btn" id="unlockBtn">Unlock Content</button>
-        </div>
-    </div>
-
-    <!-- PROTECTED AREA -->
-    <div id="protectedContent">
-        <div class="logout-bar">
-            <button class="logout-btn" id="logoutBtn">&#128275; Log Out</button>
-        </div>
-        <div id="memberArea" class="container" style="padding-top:32px; padding-bottom:60px;"></div>
-    </div>
-
-
-    <style>
-    /* MEMBERS CONTENT STYLES */
-    .members-welcome { max-width: 1100px; margin: 0 auto; }
+    /* WELCOME BANNER */
     .welcome-banner {
         background: linear-gradient(135deg, var(--navy) 0%, var(--blue-accent) 100%);
-        color: #fff; padding: 40px 32px; border-radius: 12px; text-align: center;
-        margin-bottom: 48px;
+        color: #fff; padding: 40px 32px; text-align: center;
+        position: relative;
     }
     .welcome-banner h2 { color: #fff; margin-bottom: 8px; font-size: 1.8em; }
-    .welcome-banner p { color: var(--blue-pale); font-size: 1.05em; }
-    .section-desc { color: var(--text-muted); margin-bottom: 24px; }
+    .welcome-banner p { color: #b3d4fc; font-size: 1.05em; }
+    .logout-btn {
+        position: absolute; top: 16px; right: 24px;
+        background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3);
+        padding: 8px 20px; border-radius: 6px; font-size: 0.85em; font-weight: 600;
+        cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* SECTIONS */
+    .section { margin-bottom: 56px; }
+    .section h3 {
+        font-size: 1.4em; margin-bottom: 16px; padding-bottom: 12px;
+        border-bottom: 2px solid var(--border); color: var(--navy);
+    }
+    .section-desc { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95em; }
+
+
+    /* FLASH CARDS SECTION */
+    .flashcard-launch {
+        display: inline-block; padding: 14px 32px; background: var(--navy); color: #fff;
+        border-radius: 8px; font-weight: 600; font-size: 1em; transition: all 0.2s;
+    }
+    .flashcard-launch:hover { background: var(--blue-accent); text-decoration: none; transform: translateY(-1px); }
+
+    /* GAMES GRID */
+    .games-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;
+    }
+    .game-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 12px;
+        padding: 24px; text-align: center; box-shadow: var(--shadow); transition: all 0.2s;
+    }
+    .game-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .game-icon { font-size: 2.5em; margin-bottom: 12px; }
+    .game-card h4 { margin: 0 0 8px; color: var(--navy); }
+    .game-card p { font-size: 0.85em; color: var(--text-muted); margin-bottom: 16px; }
+    .game-link {
+        display: inline-block; padding: 8px 20px; background: var(--blue-pale);
+        color: var(--navy); border-radius: 6px; font-size: 0.85em; font-weight: 600;
+        transition: all 0.2s;
+    }
+    .game-link:hover { background: var(--navy); color: #fff; text-decoration: none; }
+
 
     /* GLOSSARY */
-    .glossary-section, .flashcard-section, .games-section, .bonus-section,
-    .resource-section, .quick-links-section { margin-bottom: 56px; }
-    .glossary-section h3, .flashcard-section h3, .games-section h3, .bonus-section h3,
-    .resource-section h3, .quick-links-section h3 {
-        font-size: 1.4em; margin-bottom: 16px; padding-bottom: 12px;
-        border-bottom: 2px solid var(--border);
-    }
     .glossary-controls { margin-bottom: 20px; }
-    .search-wrapper {
-        position: relative; margin-bottom: 12px;
-    }
+    .search-wrapper { position: relative; margin-bottom: 12px; }
     .search-wrapper .search-icon {
         position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.1em;
     }
     .glossary-search {
         width: 100%; padding: 12px 16px 12px 42px; border: 2px solid var(--border);
         border-radius: 24px; font-size: 0.95em; outline: none; transition: border-color 0.2s;
+        font-family: inherit;
     }
     .glossary-search:focus { border-color: var(--blue-accent); }
     .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
     .filter-btn {
         padding: 6px 16px; border: 1px solid var(--border); border-radius: 20px;
         background: #fff; cursor: pointer; font-size: 0.8em; font-weight: 600;
-        transition: all 0.2s;
+        transition: all 0.2s; font-family: inherit;
     }
     .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
     .filter-btn:hover { border-color: var(--navy); }
@@ -176,196 +184,259 @@
     .glossary-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
     .glossary-card.priority-med { border-left-color: var(--orange); }
     .glossary-card.priority-low { border-left-color: var(--green); }
-    .glossary-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .glossary-card-header h4 { margin: 0; font-size: 1em; color: var(--navy); }
-    .priority-badge {
-        padding: 2px 8px; border-radius: 10px; font-size: 0.65em; font-weight: 700; text-transform: uppercase;
+    .glossary-card h4 { margin: 0 0 6px; font-size: 1em; color: var(--navy); }
+    .glossary-card .badge {
+        display: inline-block; padding: 2px 8px; border-radius: 10px;
+        font-size: 0.65em; font-weight: 700; text-transform: uppercase;
+        background: #fde8e8; color: var(--red); margin-bottom: 6px;
     }
-    .priority-badge.badge-high { background: #fde8e8; color: var(--red); }
-    .priority-badge.badge-med { background: #fef3e0; color: var(--orange); }
-    .priority-badge.badge-low { background: #e8f5e9; color: var(--green); }
     .glossary-card p { margin: 0; font-size: 0.85em; color: var(--text-muted); line-height: 1.5; }
     .glossary-card.hidden { display: none; }
-</style>
 
 
-    <style>
-    /* FLASH CARDS */
-    .flashcard-controls {
-        display: flex; align-items: center; justify-content: center; gap: 16px;
-        margin-bottom: 24px; flex-wrap: wrap;
-    }
-    .fc-btn {
-        padding: 8px 20px; border: 1px solid var(--border); border-radius: 6px;
-        background: #fff; cursor: pointer; font-size: 0.85em; font-weight: 600;
-        transition: all 0.2s;
-    }
-    .fc-btn:hover { background: var(--navy); color: #fff; }
-    .fc-shuffle { background: var(--blue-pale); }
-    .fc-counter { font-weight: 600; color: var(--navy); }
-    .flashcard-container {
-        display: flex; justify-content: center; margin-bottom: 20px; perspective: 1000px;
-    }
-    .flashcard {
-        width: 100%; max-width: 500px; height: 260px; cursor: pointer;
-        position: relative; transform-style: preserve-3d; transition: transform 0.6s;
-    }
-    .flashcard.flipped { transform: rotateY(180deg); }
-    .flashcard-front, .flashcard-back {
-        position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-        border-radius: 12px; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; padding: 32px;
-    }
-    .flashcard-front {
-        background: linear-gradient(135deg, var(--navy) 0%, var(--blue-accent) 100%);
-        color: #fff; box-shadow: 0 8px 32px rgba(31,73,125,0.2);
-    }
-    .flashcard-front h3 { font-size: 2em; color: #fff; margin: 0 0 8px; }
-    .flashcard-front .fc-hint { color: var(--blue-pale); font-size: 0.85em; }
-    .flashcard-back {
-        background: #fff; border: 2px solid var(--blue-accent);
-        transform: rotateY(180deg); box-shadow: 0 8px 32px rgba(31,73,125,0.15);
-    }
-    .flashcard-back p { font-size: 1.1em; color: var(--text-body); text-align: center; line-height: 1.6; margin: 0; }
-    .fc-progress {
-        height: 6px; background: var(--bg-section); border-radius: 3px; overflow: hidden;
-        max-width: 500px; margin: 0 auto;
-    }
-    .fc-progress-bar { height: 100%; background: var(--green); transition: width 0.3s; width: 5%; }
-
-    /* ARCADE GAMES */
-    .games-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
-    }
-    .game-card {
-        background: #fff; border: 1px solid var(--border); border-radius: 12px;
-        padding: 24px; text-align: center; box-shadow: var(--shadow); transition: all 0.2s;
-    }
-    .game-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-    .game-icon { font-size: 2.5em; margin-bottom: 12px; }
-    .game-card h4 { margin: 0 0 8px; color: var(--navy); }
-    .game-card p { font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px; }
-    .game-tags { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
-    .game-tags span {
-        background: var(--blue-pale); color: var(--navy); padding: 2px 10px;
-        border-radius: 10px; font-size: 0.7em; font-weight: 600;
-    }
-    .game-launch { font-size: 0.85em; padding: 8px 20px; }
-
-    /* BONUS / STUDY TOOLS */
-    .bonus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-    .bonus-card {
+    /* STUDY TOOLS */
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .tool-card {
         background: #fff; border: 1px solid var(--border); border-radius: 10px;
         padding: 24px; box-shadow: var(--shadow);
     }
-    .bonus-card h4 { margin: 0 0 16px; color: var(--navy); font-size: 1.1em; }
+    .tool-card h4 { margin: 0 0 16px; color: var(--navy); font-size: 1.1em; }
     .checklist { list-style: none; padding: 0; margin: 0; }
     .checklist li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9em; }
     .checklist li:last-child { border-bottom: none; }
     .checklist label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .checklist input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--green); }
     .schedule-week {
         padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9em; color: var(--text-muted);
     }
     .schedule-week:last-child { border-bottom: none; }
     .schedule-week strong { color: var(--navy); }
-</style>
 
-
-    <style>
     /* RESOURCE CENTER */
-    .resource-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
+    .resource-links { display: flex; flex-direction: column; gap: 12px; }
+    .resource-link {
+        display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+        background: var(--bg-section); border-radius: 8px; transition: all 0.2s;
     }
-    .resource-card {
-        background: #fff; border: 1px solid var(--border); border-radius: 10px;
-        padding: 24px; box-shadow: var(--shadow); transition: all 0.2s;
-    }
-    .resource-card:hover { box-shadow: var(--shadow-hover); }
-    .resource-icon { font-size: 2em; margin-bottom: 8px; display: block; }
-    .resource-card h4 { margin: 0 0 12px; color: var(--navy); font-size: 1em; }
-    .resource-card ul { list-style: none; padding: 0; margin: 0; }
-    .resource-card li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.85em; }
-    .resource-card li:last-child { border-bottom: none; }
-    .resource-card a { color: var(--blue-accent); }
-    .resource-card a:hover { color: var(--navy); text-decoration: underline; }
+    .resource-link:hover { background: var(--blue-pale); text-decoration: none; }
+    .resource-link span { font-size: 1.3em; }
+    .resource-link strong { color: var(--navy); font-size: 0.9em; }
+
 
     /* QUICK LINKS */
     .links-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
     }
     .link-card {
         display: flex; align-items: center; gap: 8px; padding: 14px 16px;
         background: #fff; border: 1px solid var(--border); border-radius: 8px;
-        font-size: 0.9em; font-weight: 600; color: var(--navy); transition: all 0.2s;
+        font-size: 0.85em; font-weight: 600; color: var(--navy); transition: all 0.2s;
     }
     .link-card:hover {
         background: var(--blue-pale); border-color: var(--blue-accent);
         text-decoration: none; transform: translateY(-1px);
     }
     .link-card span { font-size: 1.2em; }
-    .coming-soon {
-        margin-top: 24px; padding: 20px; background: var(--bg-section);
-        border-radius: 8px; text-align: center; color: var(--text-muted); font-size: 0.9em;
-    }
-
-    /* GAME MODAL */
-    .game-modal {
-        display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
-        padding: 24px;
-    }
-    .game-modal.active { display: flex; }
-    .game-modal-content {
-        background: #fff; border-radius: 16px; padding: 32px; max-width: 700px;
-        width: 100%; max-height: 90vh; overflow-y: auto; position: relative;
-    }
-    .game-close {
-        position: absolute; top: 12px; right: 16px; background: none;
-        border: none; font-size: 1.5em; cursor: pointer; color: var(--text-muted);
-    }
-    .game-close:hover { color: var(--red); }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .gate-card { padding: 32px 24px; }
-        .flashcard { height: 220px; }
-        .flashcard-front h3 { font-size: 1.5em; }
-        .games-grid, .bonus-grid { grid-template-columns: 1fr; }
+        .games-grid { grid-template-columns: 1fr; }
+        .tools-grid { grid-template-columns: 1fr; }
         .links-grid { grid-template-columns: repeat(2, 1fr); }
+        .welcome-banner { padding: 32px 16px; }
+        .welcome-banner h2 { font-size: 1.4em; }
+        .logout-btn { position: static; margin-top: 12px; }
     }
     </style>
+</head>
+<body>
+
+
+    <!-- PASSWORD GATE -->
+    <div id="passwordGate" class="gate-wrapper">
+        <div class="gate-card">
+            <span class="gate-icon">&#128274;</span>
+            <h2>Members Only</h2>
+            <p class="gate-subtitle">Enter your access code<br><small>Find your code on the inside back cover of the <em>CompTIA A+ Complete Study Guide</em></small></p>
+            <div class="password-field">
+                <input type="password" id="passwordInput" placeholder="Enter access code..." autocomplete="off">
+                <button class="password-toggle" id="togglePassword" type="button">&#128065;</button>
+            </div>
+            <div class="remember-row">
+                <input type="checkbox" id="rememberMe" checked>
+                <label for="rememberMe">Remember me on this device</label>
+            </div>
+            <p class="gate-error" id="gateError">Incorrect code. Check your book's back cover.</p>
+            <button class="unlock-btn" id="unlockBtn">Unlock Content</button>
+        </div>
+    </div>
+
+
+    <!-- PROTECTED CONTENT -->
+    <div id="protectedContent">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h2>Welcome back!</h2>
+            <p>Here's your exclusive content.</p>
+            <button class="logout-btn" id="logoutBtn">&#128275; Log Out</button>
+        </div>
+
+        <div class="container" style="padding-top:40px; padding-bottom:60px;">
+
+            <!-- SECTION 1: Flash Cards -->
+            <div class="section">
+                <h3>&#127183; Flash Cards</h3>
+                <p class="section-desc">Complete 500-term deck with shuffle, priority filtering, and progress tracking.</p>
+                <a href="pbq/flashcards.html" class="flashcard-launch">Launch Full Flash Cards (500 terms)</a>
+            </div>
+
+
+            <!-- SECTION 2: Arcade Games -->
+            <div class="section">
+                <h3>&#127918; Arcade Games</h3>
+                <p class="section-desc">Learn while you play — CompTIA A+ concepts in game form.</p>
+                <div class="games-grid">
+                    <div class="game-card">
+                        <div class="game-icon">&#128268;</div>
+                        <h4>Cable Match</h4>
+                        <p>Sort falling cables into speed categories</p>
+                        <a href="pbq/cable-match.html" class="game-link">Play Now</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#127959;</div>
+                        <h4>Troubleshooting Tower</h4>
+                        <p>Stack steps in correct order</p>
+                        <a href="pbq/troubleshoot-tower.html" class="game-link">Play Now</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#128640;</div>
+                        <h4>Neon Circuit Dash</h4>
+                        <p>Dodge obstacles, answer questions, survive 8 levels</p>
+                        <a href="pbq/neon-circuit-dash.html" class="game-link">Play Now</a>
+                    </div>
+                    <div class="game-card">
+                        <div class="game-icon">&#9968;</div>
+                        <h4>OSI Layer Climb</h4>
+                        <p>Climb the mountain with OSI knowledge</p>
+                        <a href="pbq/osi-climb.html" class="game-link">Play Now</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- SECTION 3: Searchable Glossary -->
+            <div class="section">
+                <h3>&#128218; Searchable Glossary</h3>
+                <p class="section-desc">20 high-priority terms you must know for exam day.</p>
+                <div class="glossary-controls">
+                    <div class="search-wrapper">
+                        <span class="search-icon">&#128269;</span>
+                        <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search terms...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="high">HIGH</button>
+                        <button class="filter-btn" data-filter="medium">MEDIUM</button>
+                        <button class="filter-btn" data-filter="low">LOW</button>
+                    </div>
+                </div>
+                <div class="glossary-grid" id="glossaryGrid">
+                </div>
+            </div>
+
+
+            <!-- SECTION 4: Study Tools -->
+            <div class="section">
+                <h3>&#128736; Study Tools</h3>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h4>&#9989; Exam Day Checklist</h4>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Bring two forms of ID</label></li>
+                            <li><label><input type="checkbox"> Arrive 15 minutes early</label></li>
+                            <li><label><input type="checkbox"> Know your Pearson VUE login</label></li>
+                            <li><label><input type="checkbox"> Review port numbers one last time</label></li>
+                            <li><label><input type="checkbox"> Flag difficult questions and come back</label></li>
+                            <li><label><input type="checkbox"> Read EVERY answer before selecting</label></li>
+                            <li><label><input type="checkbox"> Eliminate obviously wrong answers first</label></li>
+                            <li><label><input type="checkbox"> Check for "BEST" or "FIRST" in the question stem</label></li>
+                        </ul>
+                    </div>
+                    <div class="tool-card">
+                        <h4>&#128197; 6-Week Study Schedule</h4>
+                        <div class="schedule-week"><strong>Week 1-2:</strong> Hardware + Networking (Core 1 heaviest domains)</div>
+                        <div class="schedule-week"><strong>Week 3:</strong> OS + Troubleshooting commands</div>
+                        <div class="schedule-week"><strong>Week 4:</strong> Security + Cloud + Mobile</div>
+                        <div class="schedule-week"><strong>Week 5:</strong> Practice PBQs + Review weak areas</div>
+                        <div class="schedule-week"><strong>Week 6:</strong> Full practice exams + final glossary review</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- SECTION 5: Resource Center -->
+            <div class="section">
+                <h3>&#128230; Resource Center</h3>
+                <p class="section-desc">48+ free tools, learning links, and utilities for IT professionals.</p>
+                <a href="reference/resources.html" class="flashcard-launch" style="margin-bottom:24px;display:inline-block;">Browse Full Resource Library</a>
+                <h4 style="margin:24px 0 12px;color:var(--navy);">Quick Links</h4>
+                <div class="resource-links">
+                    <a href="https://www.professormesser.com" target="_blank" rel="noopener" class="resource-link">
+                        <span>&#127891;</span>
+                        <strong>Professor Messer — Free video training for CompTIA exams</strong>
+                    </a>
+                    <a href="https://www.comptia.org/training/resources/exam-objectives" target="_blank" rel="noopener" class="resource-link">
+                        <span>&#128203;</span>
+                        <strong>CompTIA Exam Objectives — Official exam blueprint</strong>
+                    </a>
+                    <a href="https://learn.microsoft.com/en-us/sysinternals/" target="_blank" rel="noopener" class="resource-link">
+                        <span>&#128295;</span>
+                        <strong>Sysinternals — Advanced Windows diagnostic utilities</strong>
+                    </a>
+                    <a href="https://www.wireshark.org/" target="_blank" rel="noopener" class="resource-link">
+                        <span>&#129416;</span>
+                        <strong>Wireshark — Network protocol analyzer</strong>
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- SECTION 6: Quick Links -->
+            <div class="section">
+                <h3>&#128279; Quick Links</h3>
+                <p class="section-desc">Jump to any page on the site.</p>
+                <div class="links-grid">
+                    <a href="pbq/hardware.html" class="link-card"><span>&#128187;</span> Hardware PBQ</a>
+                    <a href="pbq/networking.html" class="link-card"><span>&#127760;</span> Networking PBQ</a>
+                    <a href="pbq/os.html" class="link-card"><span>&#128421;</span> OS PBQ</a>
+                    <a href="pbq/security.html" class="link-card"><span>&#128274;</span> Security PBQ</a>
+                    <a href="pbq/mobile.html" class="link-card"><span>&#128241;</span> Mobile PBQ</a>
+                    <a href="pbq/cable-match.html" class="link-card"><span>&#128268;</span> Cable Match</a>
+                    <a href="pbq/troubleshoot-tower.html" class="link-card"><span>&#127959;</span> Troubleshoot Tower</a>
+                    <a href="pbq/neon-circuit-dash.html" class="link-card"><span>&#128640;</span> Neon Circuit Dash</a>
+                    <a href="pbq/osi-climb.html" class="link-card"><span>&#9968;</span> OSI Layer Climb</a>
+                    <a href="pbq/game.html" class="link-card"><span>&#128163;</span> Port Blaster</a>
+                    <a href="pbq/port-match.html" class="link-card"><span>&#127183;</span> Port Match</a>
+                    <a href="pbq/jeopardy.html" class="link-card"><span>&#127942;</span> Jeopardy</a>
+                    <a href="pbq/flashcards.html" class="link-card"><span>&#128209;</span> Flash Cards</a>
+                    <a href="reference/ports.html" class="link-card"><span>&#128233;</span> Port Reference</a>
+                    <a href="reference/cables.html" class="link-card"><span>&#128268;</span> Cable Reference</a>
+                    <a href="reference/commands.html" class="link-card"><span>&#128187;</span> Commands</a>
+                    <a href="reference/bios.html" class="link-card"><span>&#9881;</span> BIOS/UEFI</a>
+                    <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resources</a>
+                </div>
+            </div>
+
+        </div><!-- /.container -->
+    </div><!-- /#protectedContent -->
 
 
     <script>
-    /*
-     * ENCRYPTION NOTE:
-     * The protected content is XOR-encoded with the password and stored as Base64.
-     * To re-encrypt updated content, edit encrypt-content.js and run:
-     *   node encrypt-content.js
-     * Then paste the new blob below.
-     */
-
+    // SHA-256 hash of the password "A+CompTIA#1200"
     const PASSWORD_HASH = 'd7304929659ba8a412c555dcee4c999b4945e59fb2b22b87ecf9377d5423315a';
-    const MARKER = '<!--VERIFIED-->';
-    const ENCRYPTED_BLOB = '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';
 
-
-    // XOR decode + Base64 decode
-    function xorDecode(base64Str, password) {
-        const binaryStr = atob(base64Str);
-        const bytes = new Uint8Array(binaryStr.length);
-        for (let i = 0; i < binaryStr.length; i++) {
-            bytes[i] = binaryStr.charCodeAt(i);
-        }
-        const passBytes = new TextEncoder().encode(password);
-        const decoded = new Uint8Array(bytes.length);
-        for (let i = 0; i < bytes.length; i++) {
-            decoded[i] = bytes[i] ^ passBytes[i % passBytes.length];
-        }
-        return new TextDecoder().decode(decoded);
-    }
-
-    // SHA-256 hash
+    // SHA-256 helper
     async function sha256(str) {
         const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
         return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -374,7 +445,6 @@
     // DOM references
     const gate = document.getElementById('passwordGate');
     const protectedContent = document.getElementById('protectedContent');
-    const memberArea = document.getElementById('memberArea');
     const passwordInput = document.getElementById('passwordInput');
     const unlockBtn = document.getElementById('unlockBtn');
     const gateError = document.getElementById('gateError');
@@ -389,25 +459,16 @@
         togglePassword.textContent = type === 'password' ? '\u{1F441}' : '\u{1F512}';
     });
 
+
     // Attempt unlock
     async function attemptUnlock(password) {
         const hash = await sha256(password);
         if (hash !== PASSWORD_HASH) return false;
 
-        const decoded = xorDecode(ENCRYPTED_BLOB, password);
-        if (!decoded.startsWith(MARKER)) return false;
-
-        // Success! Show content
-        const html = decoded.substring(MARKER.length);
-        memberArea.innerHTML = html;
+        // Password matches — show protected content
         gate.style.display = 'none';
         protectedContent.style.display = 'block';
-
-        // Initialize interactive features
         initGlossary();
-        initFlashcards();
-        initGames();
-
         return true;
     }
 
@@ -415,11 +476,11 @@
     unlockBtn.addEventListener('click', async () => {
         const pw = passwordInput.value.trim();
         if (!pw) { passwordInput.focus(); return; }
-        
+
         const success = await attemptUnlock(pw);
         if (success) {
             if (rememberMe.checked) {
-                localStorage.setItem('comptia_member_hash', PASSWORD_HASH);
+                localStorage.setItem('comptia_member_auth', 'true');
                 localStorage.setItem('comptia_member_pw', btoa(pw));
             }
         } else {
@@ -439,28 +500,28 @@
 
     // Logout
     logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('comptia_member_hash');
+        localStorage.removeItem('comptia_member_auth');
         localStorage.removeItem('comptia_member_pw');
         protectedContent.style.display = 'none';
         gate.style.display = 'flex';
-        memberArea.innerHTML = '';
         passwordInput.value = '';
     });
 
+
     // Auto-login check
     (async () => {
-        const savedHash = localStorage.getItem('comptia_member_hash');
+        const saved = localStorage.getItem('comptia_member_auth');
         const savedPw = localStorage.getItem('comptia_member_pw');
-        if (savedHash === PASSWORD_HASH && savedPw) {
+        if (saved === 'true' && savedPw) {
             try {
                 const pw = atob(savedPw);
                 const success = await attemptUnlock(pw);
                 if (!success) {
-                    localStorage.removeItem('comptia_member_hash');
+                    localStorage.removeItem('comptia_member_auth');
                     localStorage.removeItem('comptia_member_pw');
                 }
             } catch(e) {
-                localStorage.removeItem('comptia_member_hash');
+                localStorage.removeItem('comptia_member_auth');
                 localStorage.removeItem('comptia_member_pw');
             }
         }
@@ -469,14 +530,46 @@
 
     // ============ GLOSSARY ============
     function initGlossary() {
-        const searchInput = document.getElementById('glossarySearch');
-        const grid = document.getElementById('glossaryGrid');
-        if (!searchInput || !grid) return;
+        const glossaryData = [
+            { term: 'TCP', priority: 'high', def: 'Connection-oriented, guarantees delivery.' },
+            { term: 'UDP', priority: 'high', def: 'Connectionless, no guarantee. Streaming, VoIP, gaming.' },
+            { term: 'DHCP', priority: 'high', def: 'Auto-assigns IPs. Ports 67/68. DORA process.' },
+            { term: 'DNS', priority: 'high', def: 'Names to IPs. Port 53.' },
+            { term: 'SSH', priority: 'high', def: 'Port 22. Encrypted CLI access.' },
+            { term: 'HTTPS', priority: 'high', def: 'Port 443. Encrypted web.' },
+            { term: 'RDP', priority: 'high', def: 'Port 3389. Windows remote desktop.' },
+            { term: 'SMB', priority: 'high', def: 'Port 445. Windows file sharing.' },
+            { term: 'VLAN', priority: 'high', def: 'Logical network segments. Needs L3 for inter-VLAN routing.' },
+            { term: 'NAT', priority: 'high', def: 'Private IPs share one public IP via router.' },
+            { term: 'BitLocker', priority: 'high', def: 'Full-disk encryption. Needs TPM + Pro/Enterprise.' },
+            { term: 'APIPA', priority: 'high', def: '169.254.x.x = DHCP failure.' },
+            { term: 'TPM', priority: 'high', def: 'Security chip. Required for BitLocker and Windows 11.' },
+            { term: 'RAID 5', priority: 'high', def: 'Striping + parity. Min 3 drives. Survives 1 failure.' },
+            { term: 'Secure Erase', priority: 'high', def: 'SSD firmware wipe. Correct method for SSDs.' },
+            { term: 'Ransomware', priority: 'high', def: 'Encrypts data, demands payment. Disconnect, don\'t pay.' },
+            { term: 'MFA', priority: 'high', def: 'Two or more factors: know/have/are.' },
+            { term: 'Evil Twin', priority: 'high', def: 'Fake Wi-Fi AP with same SSID.' },
+            { term: 'PXE Boot', priority: 'high', def: 'Network boot via DHCP+TFTP.' },
+            { term: 'sfc /scannow', priority: 'high', def: 'Repairs corrupted Windows system files.' }
+        ];
 
-        const cards = grid.querySelectorAll('.glossary-card');
+
+        const grid = document.getElementById('glossaryGrid');
+        grid.innerHTML = '';
+
+        glossaryData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'glossary-card' + (item.priority === 'medium' ? ' priority-med' : '') + (item.priority === 'low' ? ' priority-low' : '');
+            card.dataset.term = item.term.toLowerCase();
+            card.dataset.priority = item.priority;
+            card.innerHTML = `<span class="badge">${item.priority.toUpperCase()}</span><h4>${item.term}</h4><p>${item.def}</p>`;
+            grid.appendChild(card);
+        });
+
+        const searchInput = document.getElementById('glossarySearch');
         const filterBtns = document.querySelectorAll('.filter-btn');
 
-        searchInput.addEventListener('input', () => filterCards());
+        searchInput.addEventListener('input', filterCards);
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.classList.remove('active'));
@@ -488,392 +581,17 @@
         function filterCards() {
             const query = searchInput.value.toLowerCase();
             const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            const cards = grid.querySelectorAll('.glossary-card');
 
             cards.forEach(card => {
                 const term = card.dataset.term || '';
                 const text = card.textContent.toLowerCase();
                 const priority = card.dataset.priority || '';
-
                 const matchesSearch = !query || term.includes(query) || text.includes(query);
                 const matchesFilter = activeFilter === 'all' || priority === activeFilter;
-
                 card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
             });
         }
-    }
-
-    // ============ FLASH CARDS ============
-    function initFlashcards() {
-        const fcData = [
-            { term: 'TCP', def: 'Connection-oriented, guarantees delivery. Web, email, file transfers.' },
-            { term: 'UDP', def: 'Connectionless, no guarantee. Streaming, VoIP, gaming, DNS.' },
-            { term: 'DHCP', def: 'Auto-assigns IPs. Ports 67/68. DORA process.' },
-            { term: 'DNS', def: 'Names to IPs. Port 53. A, AAAA, MX, CNAME records.' },
-            { term: 'SSH', def: 'Port 22. Encrypted CLI access. Replaces Telnet.' },
-            { term: 'HTTPS', def: 'Port 443. Encrypted web. TLS/SSL.' },
-            { term: 'RDP', def: 'Port 3389. Windows remote desktop. Never expose without VPN.' },
-            { term: 'SMB', def: 'Port 445. Windows file sharing. Block from WAN.' },
-            { term: 'VLAN', def: 'Logical network segments. Needs L3 for inter-VLAN routing.' },
-            { term: 'NAT', def: 'Private IPs share one public IP via router.' },
-            { term: 'BitLocker', def: 'Full-disk encryption. Needs TPM + Pro/Enterprise.' },
-            { term: 'APIPA', def: '169.254.x.x = DHCP failure. Always.' },
-            { term: 'TPM', def: 'Security chip. Required for BitLocker and Windows 11.' },
-            { term: 'RAID 5', def: 'Striping + parity. Min 3 drives. Survives 1 failure.' },
-            { term: 'Secure Erase', def: 'SSD firmware wipe. Correct method for SSDs.' },
-            { term: 'Ransomware', def: 'Encrypts data, demands payment. Disconnect, don\'t pay, restore backup.' },
-            { term: 'MFA', def: 'Two or more factors: know/have/are.' },
-            { term: 'Evil Twin', def: 'Fake Wi-Fi AP with same SSID. Use VPN on public Wi-Fi.' },
-            { term: 'PXE Boot', def: 'Network boot via DHCP+TFTP. Enterprise OS deployment.' },
-            { term: 'sfc /scannow', def: 'Repairs corrupted Windows system files.' }
-        ];
-
-        let currentIndex = 0;
-        const flashcard = document.getElementById('flashcard');
-        const fcFront = document.getElementById('fcFront');
-        const fcBack = document.getElementById('fcBack');
-        const fcCounter = document.getElementById('fcCounter');
-        const fcProgress = document.getElementById('fcProgress');
-        const fcPrev = document.getElementById('fcPrev');
-        const fcNext = document.getElementById('fcNext');
-        const fcShuffle = document.getElementById('fcShuffle');
-
-        if (!flashcard) return;
-
-        function showCard() {
-            flashcard.classList.remove('flipped');
-            setTimeout(() => {
-                fcFront.textContent = fcData[currentIndex].term;
-                fcBack.textContent = fcData[currentIndex].def;
-            }, 100);
-            fcCounter.textContent = `${currentIndex + 1} / ${fcData.length}`;
-            fcProgress.style.width = `${((currentIndex + 1) / fcData.length) * 100}%`;
-        }
-
-        fcPrev.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + fcData.length) % fcData.length;
-            showCard();
-        });
-        fcNext.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % fcData.length;
-            showCard();
-        });
-        fcShuffle.addEventListener('click', () => {
-            for (let i = fcData.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [fcData[i], fcData[j]] = [fcData[j], fcData[i]];
-            }
-            currentIndex = 0;
-            showCard();
-        });
-
-        showCard();
-    }
-
-
-    // ============ ARCADE GAMES ============
-    function initGames() {
-        const gameBtns = document.querySelectorAll('.game-launch');
-        gameBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const game = btn.dataset.game;
-                launchGame(game);
-            });
-        });
-    }
-
-    function launchGame(gameId) {
-        // Remove existing modal
-        const existing = document.querySelector('.game-modal');
-        if (existing) existing.remove();
-
-        const modal = document.createElement('div');
-        modal.className = 'game-modal active';
-
-        let gameContent = '';
-        switch(gameId) {
-            case 'cable-match':
-                gameContent = createCableMatchGame();
-                break;
-            case 'troubleshoot-tower':
-                gameContent = createTroubleshootTowerGame();
-                break;
-            case 'osi-climb':
-                gameContent = createOSIClimbGame();
-                break;
-        }
-
-        modal.innerHTML = `<div class="game-modal-content">
-            <button class="game-close">&times;</button>
-            ${gameContent}
-        </div>`;
-
-        document.body.appendChild(modal);
-        modal.querySelector('.game-close').addEventListener('click', () => modal.remove());
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-
-        // Initialize the game logic
-        if (gameId === 'cable-match') initCableMatch();
-        if (gameId === 'troubleshoot-tower') initTroubleshootTower();
-        if (gameId === 'osi-climb') initOSIClimb();
-    }
-
-    // CABLE MATCH GAME
-    function createCableMatchGame() {
-        return `<h3 style="text-align:center;color:var(--navy);">Cable Match</h3>
-        <p style="text-align:center;color:var(--text-muted);font-size:0.9em;">Drag each cable to the correct speed category!</p>
-        <div id="cableGameArea" style="min-height:300px;">
-            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;" id="cableBin"></div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="cableCategories">
-                <div class="cable-cat" data-speed="slow" style="border:2px dashed var(--border);border-radius:8px;padding:16px;min-height:120px;text-align:center;">
-                    <strong style="color:var(--orange);">Up to 1 Gbps</strong><div class="cable-drop" data-speed="slow"></div>
-                </div>
-                <div class="cable-cat" data-speed="medium" style="border:2px dashed var(--border);border-radius:8px;padding:16px;min-height:120px;text-align:center;">
-                    <strong style="color:var(--blue-accent);">1-10 Gbps</strong><div class="cable-drop" data-speed="medium"></div>
-                </div>
-                <div class="cable-cat" data-speed="fast" style="border:2px dashed var(--border);border-radius:8px;padding:16px;min-height:120px;text-align:center;">
-                    <strong style="color:var(--green);">10+ Gbps</strong><div class="cable-drop" data-speed="fast"></div>
-                </div>
-            </div>
-            <div id="cableScore" style="text-align:center;margin-top:16px;font-weight:600;color:var(--navy);"></div>
-        </div>`;
-    }
-
-    function initCableMatch() {
-        const cables = [
-            { name: 'Cat 5e', speed: 'slow' }, { name: 'Cat 6', speed: 'medium' },
-            { name: 'Cat 6a', speed: 'medium' }, { name: 'Cat 7', speed: 'medium' },
-            { name: 'Cat 8', speed: 'fast' }, { name: 'USB 2.0', speed: 'slow' },
-            { name: 'USB 3.0', speed: 'medium' }, { name: 'Fiber OM3', speed: 'fast' },
-            { name: 'Fiber OS2', speed: 'fast' }, { name: 'Coaxial', speed: 'slow' }
-        ];
-        const bin = document.getElementById('cableBin');
-        const scoreEl = document.getElementById('cableScore');
-        let score = 0, total = cables.length;
-
-        // Shuffle
-        for (let i = cables.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [cables[i], cables[j]] = [cables[j], cables[i]];
-        }
-
-        cables.forEach((cable, idx) => {
-            const el = document.createElement('div');
-            el.style.cssText = 'padding:8px 16px;background:var(--blue-pale);border-radius:6px;cursor:grab;font-size:0.85em;font-weight:600;';
-            el.textContent = cable.name;
-            el.draggable = true;
-            el.dataset.speed = cable.speed;
-            el.dataset.idx = idx;
-            el.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text', idx); });
-            bin.appendChild(el);
-        });
-
-        document.querySelectorAll('.cable-cat').forEach(cat => {
-            cat.addEventListener('dragover', (e) => e.preventDefault());
-            cat.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const idx = e.dataTransfer.getData('text');
-                const cableEl = bin.querySelector(`[data-idx="${idx}"]`);
-                if (!cableEl) return;
-                const correct = cables[idx].speed === cat.dataset.speed;
-                if (correct) {
-                    score++;
-                    cableEl.style.background = '#e8f5e9';
-                    cableEl.style.cursor = 'default';
-                    cableEl.draggable = false;
-                    cat.appendChild(cableEl);
-                } else {
-                    cableEl.style.background = '#fde8e8';
-                    setTimeout(() => { cableEl.style.background = 'var(--blue-pale)'; }, 800);
-                }
-                scoreEl.textContent = `Score: ${score} / ${total}`;
-                if (score === total) scoreEl.textContent += ' \u{1F389} Perfect!';
-            });
-        });
-    }
-
-
-    // TROUBLESHOOTING TOWER GAME
-    function createTroubleshootTowerGame() {
-        return `<h3 style="text-align:center;color:var(--navy);">Troubleshooting Tower</h3>
-        <p style="text-align:center;color:var(--text-muted);font-size:0.9em;">Drag the steps into the correct CompTIA troubleshooting methodology order!</p>
-        <div id="towerArea" style="max-width:400px;margin:0 auto;">
-            <div id="towerSlots" style="display:flex;flex-direction:column;gap:8px;"></div>
-            <div id="towerResult" style="text-align:center;margin-top:16px;font-weight:600;"></div>
-            <button id="towerCheck" style="display:block;margin:16px auto 0;padding:10px 24px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Check Order</button>
-        </div>`;
-    }
-
-    function initTroubleshootTower() {
-        const correctOrder = [
-            '1. Identify the problem',
-            '2. Establish a theory of probable cause',
-            '3. Test the theory to determine the cause',
-            '4. Establish a plan of action',
-            '5. Implement the solution',
-            '6. Verify full system functionality',
-            '7. Document findings, actions, and outcomes'
-        ];
-
-        const shuffled = [...correctOrder];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-
-        const container = document.getElementById('towerSlots');
-        let draggedEl = null;
-
-        shuffled.forEach((step, idx) => {
-            const el = document.createElement('div');
-            el.style.cssText = 'padding:12px 16px;background:#fff;border:2px solid var(--border);border-radius:8px;cursor:grab;font-size:0.9em;transition:all 0.2s;';
-            el.textContent = step;
-            el.draggable = true;
-            el.dataset.step = step;
-            el.addEventListener('dragstart', (e) => { draggedEl = el; el.style.opacity = '0.5'; });
-            el.addEventListener('dragend', () => { el.style.opacity = '1'; });
-            el.addEventListener('dragover', (e) => { e.preventDefault(); el.style.borderColor = 'var(--blue-accent)'; });
-            el.addEventListener('dragleave', () => { el.style.borderColor = 'var(--border)'; });
-            el.addEventListener('drop', (e) => {
-                e.preventDefault();
-                el.style.borderColor = 'var(--border)';
-                if (draggedEl && draggedEl !== el) {
-                    const allEls = [...container.children];
-                    const dragIdx = allEls.indexOf(draggedEl);
-                    const dropIdx = allEls.indexOf(el);
-                    if (dragIdx < dropIdx) el.after(draggedEl);
-                    else el.before(draggedEl);
-                }
-            });
-            container.appendChild(el);
-        });
-
-        document.getElementById('towerCheck').addEventListener('click', () => {
-            const items = [...container.children];
-            let correct = 0;
-            items.forEach((item, idx) => {
-                if (item.dataset.step === correctOrder[idx]) {
-                    item.style.borderColor = 'var(--green)';
-                    item.style.background = '#e8f5e9';
-                    correct++;
-                } else {
-                    item.style.borderColor = 'var(--red)';
-                    item.style.background = '#fde8e8';
-                }
-            });
-            const result = document.getElementById('towerResult');
-            if (correct === correctOrder.length) {
-                result.textContent = '\u{1F389} Perfect! All steps in correct order!';
-                result.style.color = 'var(--green)';
-            } else {
-                result.textContent = `${correct}/${correctOrder.length} correct. Try again!`;
-                result.style.color = 'var(--orange)';
-            }
-        });
-    }
-
-    // OSI LAYER CLIMB GAME
-    function createOSIClimbGame() {
-        return `<h3 style="text-align:center;color:var(--navy);">OSI Layer Climb</h3>
-        <p style="text-align:center;color:var(--text-muted);font-size:0.9em;">Select the correct OSI layer for each protocol/concept. Climb from Layer 1 to Layer 7!</p>
-        <div id="osiArea" style="max-width:500px;margin:0 auto;text-align:center;">
-            <div id="osiQuestion" style="font-size:1.3em;font-weight:700;color:var(--navy);margin:24px 0 16px;"></div>
-            <div id="osiButtons" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;"></div>
-            <div id="osiFeedback" style="font-size:0.9em;min-height:24px;margin-bottom:12px;"></div>
-            <div id="osiScore" style="font-weight:600;color:var(--navy);"></div>
-            <div id="osiProgress" style="height:6px;background:var(--bg-section);border-radius:3px;overflow:hidden;margin-top:12px;">
-                <div id="osiBar" style="height:100%;background:var(--green);width:0%;transition:width 0.3s;"></div>
-            </div>
-        </div>`;
-    }
-
-    function initOSIClimb() {
-        const questions = [
-            { protocol: 'Ethernet', layer: 2 },
-            { protocol: 'IP', layer: 3 },
-            { protocol: 'TCP', layer: 4 },
-            { protocol: 'HTTP', layer: 7 },
-            { protocol: 'Fiber Optic Cable', layer: 1 },
-            { protocol: 'SSL/TLS', layer: 6 },
-            { protocol: 'NetBIOS', layer: 5 },
-            { protocol: 'Switch', layer: 2 },
-            { protocol: 'Router', layer: 3 },
-            { protocol: 'UDP', layer: 4 },
-            { protocol: 'FTP', layer: 7 },
-            { protocol: 'Wi-Fi (802.11)', layer: 2 },
-            { protocol: 'ICMP (Ping)', layer: 3 },
-            { protocol: 'RJ-45 Cable', layer: 1 },
-            { protocol: 'DNS', layer: 7 }
-        ];
-
-        // Shuffle
-        for (let i = questions.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [questions[i], questions[j]] = [questions[j], questions[i]];
-        }
-
-        let current = 0, score = 0;
-        const layers = ['1 - Physical', '2 - Data Link', '3 - Network', '4 - Transport', '5 - Session', '6 - Presentation', '7 - Application'];
-
-        function showQuestion() {
-            const q = questions[current];
-            document.getElementById('osiQuestion').textContent = q.protocol;
-            const btns = document.getElementById('osiButtons');
-            btns.innerHTML = '';
-            layers.forEach((layer, idx) => {
-                const btn = document.createElement('button');
-                btn.textContent = `L${idx + 1}`;
-                btn.title = layer;
-                btn.style.cssText = 'padding:10px;border:2px solid var(--border);border-radius:6px;cursor:pointer;font-weight:600;background:#fff;transition:all 0.2s;';
-                btn.addEventListener('click', () => checkAnswer(idx + 1, btn));
-                btns.appendChild(btn);
-            });
-            document.getElementById('osiFeedback').textContent = '';
-            document.getElementById('osiScore').textContent = `Score: ${score}/${questions.length} | Question ${current + 1}/${questions.length}`;
-            document.getElementById('osiBar').style.width = `${(current / questions.length) * 100}%`;
-        }
-
-        function checkAnswer(selected, btn) {
-            const correct = questions[current].layer;
-            const feedback = document.getElementById('osiFeedback');
-            const btns = document.getElementById('osiButtons').children;
-            
-            // Disable all buttons
-            Array.from(btns).forEach(b => { b.style.pointerEvents = 'none'; });
-            
-            if (selected === correct) {
-                btn.style.background = '#e8f5e9';
-                btn.style.borderColor = 'var(--green)';
-                feedback.textContent = '\u2705 Correct!';
-                feedback.style.color = 'var(--green)';
-                score++;
-            } else {
-                btn.style.background = '#fde8e8';
-                btn.style.borderColor = 'var(--red)';
-                Array.from(btns)[correct - 1].style.background = '#e8f5e9';
-                Array.from(btns)[correct - 1].style.borderColor = 'var(--green)';
-                feedback.textContent = `\u274C It's Layer ${correct} (${layers[correct - 1]})`;
-                feedback.style.color = 'var(--red)';
-            }
-
-            setTimeout(() => {
-                current++;
-                if (current < questions.length) {
-                    showQuestion();
-                } else {
-                    document.getElementById('osiQuestion').textContent = 'Game Over!';
-                    document.getElementById('osiButtons').innerHTML = '';
-                    document.getElementById('osiFeedback').textContent = '';
-                    document.getElementById('osiScore').textContent = `Final Score: ${score}/${questions.length}`;
-                    document.getElementById('osiBar').style.width = '100%';
-                    if (score === questions.length) {
-                        document.getElementById('osiScore').textContent += ' \u{1F389} Perfect!';
-                    }
-                }
-            }, 1500);
-        }
-
-        showQuestion();
     }
     </script>
 </body>
