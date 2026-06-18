@@ -555,6 +555,14 @@ function startGame() {
     initBgParticles();
     initCircuitLayers();
     uiOverlay.innerHTML = '';
+    
+    // Add on-screen pause button for mobile
+    const pauseBtn = document.createElement('button');
+    pauseBtn.id = 'mobile-pause-btn';
+    pauseBtn.textContent = '⏸';
+    pauseBtn.style.cssText = 'position:fixed;top:12px;right:12px;width:44px;height:44px;border-radius:50%;background:rgba(0,240,255,0.15);border:1px solid rgba(0,240,255,0.4);color:#00f0ff;font-size:20px;cursor:pointer;z-index:50;backdrop-filter:blur(4px);';
+    pauseBtn.onclick = function(e) { e.stopPropagation(); togglePause(); };
+    uiOverlay.appendChild(pauseBtn);
 }
 
 function gameOver() {
