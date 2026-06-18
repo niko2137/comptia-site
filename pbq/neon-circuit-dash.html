@@ -41,7 +41,7 @@ window.addEventListener('resize', resize);
 // ========== CONSTANTS ==========
 const MAX_HEALTH = 5;
 const QUESTIONS_PER_LEVEL = 5;
-const MAX_LEVELS = 7;
+const MAX_LEVELS = 8;
 const LEVEL_CONFIGS = [
     { speedBase: 1.0, spawnRate: 40, lasers: false, movingLasers: false, diagonalLasers: false },
     { speedBase: 1.2, spawnRate: 35, lasers: true, movingLasers: false, diagonalLasers: false },
@@ -49,7 +49,8 @@ const LEVEL_CONFIGS = [
     { speedBase: 1.6, spawnRate: 27, lasers: true, movingLasers: true, diagonalLasers: false },
     { speedBase: 1.8, spawnRate: 24, lasers: true, movingLasers: true, diagonalLasers: false },
     { speedBase: 2.0, spawnRate: 22, lasers: true, movingLasers: true, diagonalLasers: true },
-    { speedBase: 2.2, spawnRate: 20, lasers: true, movingLasers: true, diagonalLasers: true }
+    { speedBase: 2.2, spawnRate: 20, lasers: true, movingLasers: true, diagonalLasers: true },
+    { speedBase: 2.8, spawnRate: 14, lasers: true, movingLasers: true, diagonalLasers: true }  // BOSS LEVEL
 ];
 
 // ========== GAME STATE ==========
@@ -92,7 +93,8 @@ const levels = [
     { name: "Security", color: "#ff0066", subjects: "Threats, Encryption, Authentication" },
     { name: "Troubleshooting", color: "#00ff88", subjects: "Methodology, Tools, Diagnostics" },
     { name: "Cloud & Virtualization", color: "#00aaff", subjects: "VMs, Cloud Models, Containers" },
-    { name: "Mobile & Operations", color: "#ffaa00", subjects: "MDM, Tickets, Procedures, Backups" }
+    { name: "Mobile & Operations", color: "#ffaa00", subjects: "MDM, Tickets, Procedures, Backups" },
+    { name: "BOSS LEVEL", color: "#ff00ff", subjects: "ALL DOMAINS — Maximum Difficulty!" }
 ];
 
 // ========== QUESTIONS DATABASE (140 total - 20 per level) ==========
@@ -563,7 +565,13 @@ function addFloatingText(text, x, y, color) {
 // ========== QUIZ SYSTEM ==========
 function showQuiz() {
     gameState = 'quiz';
-    const levelQs = questions[level - 1];
+    // Level 8 (BOSS) pulls from ALL question pools
+    let levelQs;
+    if (level >= 8) {
+        levelQs = questions.flat(); // All 140 questions from every domain
+    } else {
+        levelQs = questions[level - 1];
+    }
     currentQuestion = levelQs[Math.floor(Math.random() * levelQs.length)];
     quizTimeLeft = 15;
     totalQuestions++;
@@ -672,6 +680,12 @@ function answerQuestion(idx) {
 
     if (questionsAnsweredThisLevel >= QUESTIONS_PER_LEVEL && level < MAX_LEVELS) {
         levelUp();
+    } else if (questionsAnsweredThisLevel >= QUESTIONS_PER_LEVEL && level >= MAX_LEVELS) {
+        // Beat the BOSS LEVEL — Victory!
+        score += 500; // Completion bonus
+        addFloatingText('BOSS DEFEATED! +500', player.x, player.y - 60, '#ff00ff');
+        createExplosion(player.x, player.y, 100, ['#ff00ff', '#00f0ff', '#ffdd00', '#00ff88', '#fff']);
+        setTimeout(() => gameOver(), 2000);
     }
 }
 
@@ -809,7 +823,7 @@ function gameOver() {
                 </div>
                 <div style="padding:12px;border-radius:10px;background:rgba(179,0,255,0.05);border:1px solid rgba(179,0,255,0.2);">
                     <div style="color:#b300ff;font-size:0.7em;margin-bottom:4px;">LEVEL</div>
-                    <div style="color:#fff;font-size:1.5em;font-weight:bold;">${level} / ${MAX_LEVELS}</div>
+                    <div style="color:#fff;font-size:1.5em;font-weight:bold;">${level >= MAX_LEVELS ? "BOSS CLEARED!" : level + " / " + MAX_LEVELS}</div>
                 </div>
                 <div style="padding:12px;border-radius:10px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
                     <div style="color:#00ff88;font-size:0.7em;margin-bottom:4px;">ACCURACY</div>
@@ -1300,7 +1314,7 @@ function drawStartScreen() {
         '\u2705  Correct = +Life + YOUR ship speeds up',
         '\u274C  Wrong = Obstacles speed up (no life lost!)',
         '\u{1F4A5}  Only collisions/lasers cost lives',
-        '\u{1F3C6}  Survive 7 levels to top the leaderboard',
+        '\u{1F3C6}  Survive 7 levels + BOSS to top the leaderboard',
         '\u23F8\uFE0F  Pause: ESC / P / On-screen button'
     ];
     const lineH = Math.floor(22 * fontSize);
