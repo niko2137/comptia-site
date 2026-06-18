@@ -1574,6 +1574,128 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+// ========== CHEAT CODE SYSTEM ==========
+// Type "NIKO" on start screen to open dev panel
+let cheatBuffer = '';
+const CHEAT_CODE = 'NIKO';
+document.addEventListener('keydown', e => {
+    if (gameState === 'start' || gameState === 'playing' || gameState === 'paused') {
+        cheatBuffer += e.key.toUpperCase();
+        if (cheatBuffer.length > 10) cheatBuffer = cheatBuffer.slice(-10);
+        if (cheatBuffer.includes(CHEAT_CODE)) {
+            cheatBuffer = '';
+            showDevPanel();
+        }
+    }
+});
+
+function showDevPanel() {
+    // Remove existing panel if open
+    const existing = document.getElementById('dev-panel');
+    if (existing) { existing.remove(); return; }
+    
+    const panel = document.createElement('div');
+    panel.id = 'dev-panel';
+    panel.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,30,0.97);border:2px solid #ff00ff;border-radius:16px;padding:28px;z-index:9999;min-width:340px;max-width:90vw;box-shadow:0 0 40px #ff00ff66;font-family:Courier New,monospace;color:#fff;';
+    
+    panel.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h3 style="margin:0;color:#ff00ff;font-size:1.1em;">🔧 DEV MODE</h3>
+            <button onclick="document.getElementById('dev-panel').remove()" style="background:none;border:none;color:#ff0066;font-size:1.4em;cursor:pointer;">&times;</button>
+        </div>
+        
+        <div style="display:grid;gap:10px;">
+            <label style="font-size:0.8em;color:#a8c4df;">Level (1-${MAX_LEVELS}):
+                <input type="number" id="dev-level" min="1" max="${MAX_LEVELS}" value="${level}" style="width:60px;padding:4px 8px;background:#1a1a3a;border:1px solid #ff00ff55;border-radius:4px;color:#fff;margin-left:8px;">
+            </label>
+            
+            <label style="font-size:0.8em;color:#a8c4df;">Health (1-${MAX_HEALTH}):
+                <input type="number" id="dev-health" min="1" max="${MAX_HEALTH}" value="${health}" style="width:60px;padding:4px 8px;background:#1a1a3a;border:1px solid #ff00ff55;border-radius:4px;color:#fff;margin-left:8px;">
+            </label>
+            
+            <label style="font-size:0.8em;color:#a8c4df;">Score:
+                <input type="number" id="dev-score" value="${score}" step="100" style="width:80px;padding:4px 8px;background:#1a1a3a;border:1px solid #ff00ff55;border-radius:4px;color:#fff;margin-left:8px;">
+            </label>
+            
+            <label style="font-size:0.8em;color:#a8c4df;">Ship Speed Multiplier:
+                <input type="number" id="dev-pspeed" value="${playerSpeedMultiplier.toFixed(1)}" step="0.5" min="0.5" max="5" style="width:60px;padding:4px 8px;background:#1a1a3a;border:1px solid #ff00ff55;border-radius:4px;color:#fff;margin-left:8px;">
+            </label>
+            
+            <label style="font-size:0.8em;color:#a8c4df;">Obstacle Speed Multiplier:
+                <input type="number" id="dev-ospeed" value="${obstacleSpeedMultiplier.toFixed(1)}" step="0.5" min="0.5" max="5" style="width:60px;padding:4px 8px;background:#1a1a3a;border:1px solid #ff00ff55;border-radius:4px;color:#fff;margin-left:8px;">
+            </label>
+            
+            <label style="font-size:0.8em;color:#a8c4df;">
+                <input type="checkbox" id="dev-invincible" ${player.invincible > 9000 ? 'checked' : ''}> God Mode (invincible)
+            </label>
+        </div>
+        
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+            <button onclick="devApply()" style="padding:8px 16px;background:#ff00ff;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.85em;">Apply</button>
+            <button onclick="devSkipLevel()" style="padding:8px 16px;background:#00f0ff;color:#0a0a1a;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.85em;">Skip Level →</button>
+            <button onclick="devSpawnOrb()" style="padding:8px 16px;background:#b300ff;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.85em;">Spawn Orb</button>
+            <button onclick="devClearObs()" style="padding:8px 16px;background:#ff8c00;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.85em;">Clear Screen</button>
+            <button onclick="devMaxStats()" style="padding:8px 16px;background:#00ff88;color:#0a0a1a;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.85em;">Max Stats</button>
+        </div>
+        
+        <p style="margin-top:12px;font-size:0.7em;color:#5c6b80;">Cheat code: type NIKO to toggle this panel</p>
+    `;
+    
+    document.body.appendChild(panel);
+}
+
+function devApply() {
+    const newLevel = parseInt(document.getElementById('dev-level').value);
+    const newHealth = parseInt(document.getElementById('dev-health').value);
+    const newScore = parseInt(document.getElementById('dev-score').value);
+    const newPSpeed = parseFloat(document.getElementById('dev-pspeed').value);
+    const newOSpeed = parseFloat(document.getElementById('dev-ospeed').value);
+    const godMode = document.getElementById('dev-invincible').checked;
+    
+    if (newLevel >= 1 && newLevel <= MAX_LEVELS) { level = newLevel; questionsAnsweredThisLevel = 0; }
+    if (newHealth >= 0 && newHealth <= MAX_HEALTH) health = newHealth;
+    if (!isNaN(newScore)) score = newScore;
+    if (!isNaN(newPSpeed)) playerSpeedMultiplier = newPSpeed;
+    if (!isNaN(newOSpeed)) { obstacleSpeedMultiplier = newOSpeed; maxSpeedReached = Math.max(maxSpeedReached, newOSpeed); }
+    if (godMode) player.invincible = 99999;
+    else if (player.invincible > 9000) player.invincible = 0;
+    
+    // If on start screen, auto-start the game
+    if (gameState === 'start') startGame();
+    if (gameState === 'paused') resumeGame();
+}
+
+function devSkipLevel() {
+    if (level < MAX_LEVELS) {
+        levelUp();
+    } else {
+        addFloatingText('ALREADY AT MAX LEVEL!', player.x, player.y - 50, '#ff00ff');
+    }
+    // If on start screen, start first
+    if (gameState === 'start') { startGame(); setTimeout(() => levelUp(), 500); }
+}
+
+function devSpawnOrb() {
+    if (gameState === 'start') startGame();
+    spawnOrb();
+    addFloatingText('ORB SPAWNED', player.x, player.y - 40, '#b300ff');
+}
+
+function devClearObs() {
+    obstacles = [];
+    lasers = [];
+    addFloatingText('CLEARED!', player.x, player.y - 40, '#ff8c00');
+}
+
+function devMaxStats() {
+    health = MAX_HEALTH;
+    score += 1000;
+    playerSpeedMultiplier = 2.5;
+    player.invincible = 99999;
+    addFloatingText('GOD MODE + 1000pts', player.x, player.y - 40, '#00ff88');
+    if (gameState === 'start') startGame();
+}
+
 // ========== INIT ==========
 initBgParticles();
 initCircuitLayers();
