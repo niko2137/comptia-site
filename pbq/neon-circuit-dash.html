@@ -463,6 +463,9 @@ function answerQuestion(idx) {
     questionsAnsweredThisLevel++;
     overlay.remove();
     gameState = 'playing';
+    
+    // Brief invincibility after answering (prevents instant collision from queued obstacles)
+    player.invincible = 90;
 
     // Check level progression: 4 questions per level to advance
     if (questionsAnsweredThisLevel >= 4 && level < 7) {
