@@ -449,9 +449,8 @@ function answerQuestion(idx) {
     } else {
         // WRONG ANSWER
         score = Math.max(0, score - 50);
-        health--;
         
-        // Wrong = increase OBSTACLE/GAME speed (harder to dodge)
+        // Wrong = ONLY increase obstacle speed (no life loss)
         speedMultiplier += 0.2;
         if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
         
@@ -459,7 +458,6 @@ function answerQuestion(idx) {
         screenShake = 15;
         addFloatingText('OBJECTS FASTER!', player.x, player.y - 40, '#ff0066');
         createExplosion(player.x, player.y, 50, ['#ff0066', '#ff4400', '#ff8800']);
-        if (health <= 0) { overlay.remove(); gameOver(); return; }
     }
 
     questionsAnsweredThisLevel++;
@@ -941,7 +939,8 @@ function drawStartScreen() {
         '\u2022 AVOID obstacles flying across the screen',
         '\u2022 GRAB the spinning \u2753 orbs to trigger quiz questions',
         '\u2022 Correct = +1 Life (or +200 Bonus at max!) + YOUR ship gets faster',
-        '\u2022 Wrong = -1 Life + OBSTACLES fly faster (harder to dodge!)',
+        '\u2022 Wrong = OBSTACLES fly faster (no life lost, but harder to dodge!)',
+        '\u2022 Only collisions with obstacles cost you a life',
         '\u2022 Survive 7 levels and get on the high scoreboard!',
         '',
         '\u2022 Press ESC or P to Pause/Resume at any time'
