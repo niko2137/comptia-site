@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resource Center — CompTIA A+ Study Hub</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1a2332;--navy-light:#2a3a4f;--white:#ffffff;--red:#e63946;--red-hover:#c0313d;--gray-light:#f4f6f8;--gray-border:#e0e4e8;--text:#333;--text-muted:#6b7280;--green:#10b981;--shadow:0 2px 8px rgba(0,0,0,0.08);--shadow-hover:0 4px 16px rgba(0,0,0,0.12);--radius:10px}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--white);color:var(--text);line-height:1.6}
+.nav{position:sticky;top:0;z-index:100;background:var(--navy);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.nav-brand{color:var(--white);font-weight:700;font-size:1.15rem;letter-spacing:-.5px}
+.nav-links{display:flex;align-items:center;gap:1rem}
+.nav-links a{color:rgba(255,255,255,.9);text-decoration:none;font-size:.9rem;padding:.4rem .75rem;border-radius:6px;transition:all .2s}
+.nav-links a:hover{background:rgba(255,255,255,.1);color:var(--white)}
+.nav-links .btn-book{background:var(--red);color:var(--white);font-weight:600;padding:.45rem 1rem}
+.nav-links .btn-book:hover{background:var(--red-hover)}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:var(--white);padding:3rem 1.5rem;text-align:center}
+.hero h1{font-size:2.2rem;margin-bottom:.5rem;font-weight:800}
+.hero p{opacity:.85;font-size:1.1rem;max-width:600px;margin:0 auto}
+.hero .badge-members{display:inline-block;background:var(--red);color:var(--white);font-size:.75rem;font-weight:700;padding:.25rem .75rem;border-radius:20px;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.5px}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+.category{margin-bottom:3rem}
+.category-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:2px solid var(--gray-border)}
+.category-header h2{font-size:1.35rem;color:var(--navy);font-weight:700}
+.category-num{background:var(--navy);color:var(--white);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.card{background:var(--white);border:1px solid var(--gray-border);border-radius:var(--radius);padding:1.25rem;transition:all .2s;position:relative}
+.card:hover{box-shadow:var(--shadow-hover);border-color:var(--navy);transform:translateY(-2px)}
+.card-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+.card-title a{color:var(--navy);font-weight:600;font-size:.95rem;text-decoration:none;transition:color .2s}
+.card-title a:hover{color:var(--red)}
+.badge-free{background:#ecfdf5;color:var(--green);font-size:.7rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
+.card-desc{color:var(--text-muted);font-size:.85rem;line-height:1.5}
+.notes{background:var(--gray-light);border-radius:var(--radius);padding:1.5rem 2rem;margin-top:2rem}
+.notes p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
+.notes p:last-child{margin-bottom:0}
+.footer{text-align:center;padding:2rem;color:var(--text-muted);font-size:.85rem;border-top:1px solid var(--gray-border);margin-top:2rem}
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.hero h1{font-size:1.6rem}.nav{flex-wrap:wrap;gap:.5rem}.nav-links{gap:.5rem}}
+@media print{.nav{display:none}.hero{padding:1.5rem;background:none;color:var(--navy)}.card{break-inside:avoid;border:1px solid #ccc}.badge-free{border:1px solid var(--green)}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<div class="nav-brand">CompTIA A+ Study Hub</div>
+<div class="nav-links">
+<a href="../index.html">&larr; Back to Home</a>
+<a href="../members.html">Members Area</a>
+<a href="https://www.amazon.com" class="btn-book">Get the Book</a>
+</div>
+</nav>
+
+<header class="hero">
+<span class="badge-members">Members Only</span>
+<h1>Resource Center</h1>
+<p>40+ verified free tools, learning platforms, and utilities curated for CompTIA A+ students and IT professionals.</p>
+</header>
+
+<main class="container">
+
+<!-- Category 1 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">1</span>
+<h2>CompTIA Official &amp; Exam Resources</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.comptia.org/certifications/a" target="_blank" rel="noopener">CompTIA A+ Certification Page</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Official certification overview, exam details, and registration information.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.comptia.org/training/resources/exam-objectives" target="_blank" rel="noopener">Official Exam Objectives (PDF)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Download the complete list of exam objectives for both Core 1 and Core 2.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.comptia.org/certifications" target="_blank" rel="noopener">CompTIA Career Pathway</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Explore all CompTIA certifications and plan your IT career path.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://home.pearsonvue.com/comptia" target="_blank" rel="noopener">Pearson VUE (Schedule Exam)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Official exam scheduling portal for all CompTIA certifications.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 2 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">2</span>
+<h2>Video Learning (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.professormesser.com" target="_blank" rel="noopener">Professor Messer</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Comprehensive free video series covering all A+ objectives.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.youtube.com/@PowerCertAnimatedVideos" target="_blank" rel="noopener">PowerCert Animated Videos</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Visual explanations of networking and IT concepts.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.youtube.com/@NetworkChuck" target="_blank" rel="noopener">NetworkChuck</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Engaging tech tutorials for beginners.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.youtube.com/@professormesser" target="_blank" rel="noopener">Mike Meyers (Free Content)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Select free CompTIA content.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.youtube.com/@freecodecamp" target="_blank" rel="noopener">freeCodeCamp</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free tech education including networking basics.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 3 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">3</span>
+<h2>Practice Exams &amp; Quizzes (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.examcompass.com/comptia-a-plus-certification-exam-free-practice-test" target="_blank" rel="noopener">ExamCompass</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Multiple free A+ practice tests.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://crucialexams.com/exams/comptia/a-plus/" target="_blank" rel="noopener">CrucialExams</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free practice questions.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.professormesser.com/category/free-resources/" target="_blank" rel="noopener">Professor Messer Practice Exams</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free study resources.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 4 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">4</span>
+<h2>Windows Utilities &amp; Power Tools (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://learn.microsoft.com/en-us/windows/powertoys/" target="_blank" rel="noopener">Microsoft PowerToys</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Collection of productivity utilities for Windows — FancyZones, PowerRename, Image Resizer, Color Picker, and more.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://learn.microsoft.com/en-us/sysinternals/" target="_blank" rel="noopener">Sysinternals Suite</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Advanced system utilities by Mark Russinovich. Process Explorer, Autoruns, TCPView — indispensable for troubleshooting.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701" target="_blank" rel="noopener">Windows Terminal</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Modern terminal with tabs, panes, and Unicode support. Replaces cmd.exe for daily use.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.jam-software.com/treesize_free" target="_blank" rel="noopener">TreeSize Free</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Visualize disk space usage. Shows what's eating your storage in a tree view.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://wiztreefree.com/" target="_blank" rel="noopener">WizTree</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Ultra-fast disk space analyzer. Reads MFT directly for instant results.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.bleachbit.org/" target="_blank" rel="noopener">BleachBit</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Open-source system cleaner. Removes junk files safely without privacy concerns.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.revouninstaller.com/revo-uninstaller-free-download/" target="_blank" rel="noopener">Revo Uninstaller (Free)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Complete uninstaller that removes leftover registry entries and files.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 5 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">5</span>
+<h2>Networking Tools (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.wireshark.org/" target="_blank" rel="noopener">Wireshark</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Network protocol analyzer. Capture and inspect packets in real time.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://nmap.org/" target="_blank" rel="noopener">Nmap</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Network scanner and security auditor. Port scanning and host discovery.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.putty.org/" target="_blank" rel="noopener">PuTTY</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free SSH/Telnet client for Windows. Essential for remote server access.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://angryip.org/" target="_blank" rel="noopener">Angry IP Scanner</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Fast network scanner. Find all devices on your network instantly.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.advanced-ip-scanner.com/" target="_blank" rel="noopener">Advanced IP Scanner</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Network scanner for Windows. Find devices, shared folders, and remote control.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 6 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">6</span>
+<h2>Hardware &amp; Diagnostics (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.cpuid.com/softwares/cpu-z.html" target="_blank" rel="noopener">CPU-Z</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Detailed hardware info: CPU, RAM, motherboard, GPU specifications.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.hwinfo.com/" target="_blank" rel="noopener">HWiNFO</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Comprehensive hardware monitoring and reporting. Real-time sensors.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://crystalmark.info/en/software/crystaldiskinfo/" target="_blank" rel="noopener">CrystalDiskInfo</a><span class="badge-free">Free</span></div>
+<p class="card-desc">S.M.A.R.T. monitoring for HDDs and SSDs. Predict drive failures.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.memtest86.com/" target="_blank" rel="noopener">MemTest86</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Industry-standard RAM testing tool. Boot from USB to test memory.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://rufus.ie/" target="_blank" rel="noopener">Rufus</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Create bootable USB drives. Essential for OS installations and diagnostics.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.ventoy.net/" target="_blank" rel="noopener">Ventoy</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Boot multiple ISOs from one USB drive. No need to reformat for each ISO.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 7 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">7</span>
+<h2>Security Tools (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.malwarebytes.com/" target="_blank" rel="noopener">Malwarebytes (Free Scanner)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">On-demand malware scanner. Free version for manual scans.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.virustotal.com/" target="_blank" rel="noopener">VirusTotal</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Scan files/URLs against 70+ antivirus engines online.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://haveibeenpwned.com/" target="_blank" rel="noopener">Have I Been Pwned</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Check if your email/password has been compromised in data breaches.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://keepass.info/" target="_blank" rel="noopener">KeePass</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Open-source password manager. Local encrypted database.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://bitwarden.com/" target="_blank" rel="noopener">Bitwarden (Free Tier)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Cloud password manager with free tier. Cross-platform sync.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 8 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">8</span>
+<h2>Learning &amp; Reference (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.w3schools.com/" target="_blank" rel="noopener">W3Schools</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Web development tutorials and references. Great for understanding HTML/CSS/JS fundamentals.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://learn.microsoft.com/" target="_blank" rel="noopener">Microsoft Learn</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free courses on Windows, Azure, networking, and security. Official Microsoft training.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.netacad.com/" target="_blank" rel="noopener">Cisco Networking Academy</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free networking courses and labs from Cisco.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://linuxjourney.com/" target="_blank" rel="noopener">Linux Journey</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free interactive Linux tutorials from beginner to advanced.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://explainshell.com/" target="_blank" rel="noopener">Explain Shell</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Paste a Linux command and get every part explained visually.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 9 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">9</span>
+<h2>Productivity &amp; Utilities (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.7-zip.org/" target="_blank" rel="noopener">7-Zip</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Open-source file archiver. Handles zip, 7z, rar, tar, and more.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://notepad-plus-plus.org/" target="_blank" rel="noopener">Notepad++</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free source code editor. Essential for config file editing.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.voidtools.com/" target="_blank" rel="noopener">Everything (Search)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Instant file search for Windows. Finds any file in milliseconds.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://getsharex.com/" target="_blank" rel="noopener">ShareX</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Screenshot and screen recording tool. Auto-upload capabilities.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://spacejock.com/yWriter7.html" target="_blank" rel="noopener">yWriter</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free writing software. Chapter-based organization — great for documentation projects.</p>
+</div>
+</div>
+</section>
+
+<!-- Category 10 -->
+<section class="category">
+<div class="category-header">
+<span class="category-num">10</span>
+<h2>Virtual Labs &amp; Sandboxes (Free)</h2>
+</div>
+<div class="grid">
+<div class="card">
+<div class="card-title"><a href="https://www.virtualbox.org/" target="_blank" rel="noopener">VirtualBox</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free Type 2 hypervisor. Create VMs for practice labs.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://tryhackme.com/" target="_blank" rel="noopener">TryHackMe (Free Tier)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free cybersecurity labs and challenges. Hands-on practice.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.cloudskillsboost.google/" target="_blank" rel="noopener">Google Cloud Skills Boost</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free cloud computing labs and learning paths.</p>
+</div>
+</div>
+</section>
+
+<!-- Notes -->
+<div class="notes">
+<p><strong>Note:</strong> All resources listed are free to use. Some may offer paid upgrades — the free versions are sufficient for A+ study.</p>
+<p>Links verified as of June 2026. If you find a broken link, please report it.</p>
+<p>This page is part of the CompTIA A+ Complete Study Guide companion site.</p>
+</div>
+</main>
+
+<footer class="footer">
+<p>&copy; 2026 CompTIA A+ Study Hub. All rights reserved. For educational purposes only.</p>
+</footer>
+</body>
+</html>
