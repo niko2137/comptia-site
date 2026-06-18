@@ -61,6 +61,8 @@ let questionsAnsweredThisLevel = 0;
 let orbTimer = 0;
 let paused = false;
 let floatingTexts = [];
+let lasers = [];
+let laserCooldown = 0;
 let lastSpeedIncreaseTime = 0;
 
 // ========== LEVEL DATA ==========
@@ -313,6 +315,206 @@ function sfxOrb() { playTone(500, 0.15); setTimeout(() => playTone(700, 0.15), 8
 function sfxBonus() { playTone(600, 0.15); setTimeout(() => playTone(800, 0.15), 80); setTimeout(() => playTone(1000, 0.2), 160); setTimeout(() => playTone(1200, 0.3), 240); }
 
 
+// ========== LASER BEAMS ==========
+function spawnLaser() {
+    if (level < 2) return; // No lasers on level 1
+    
+    const isHorizontal = Math.random() > 0.5;
+    const laser = {
+        x: isHorizontal ? -10 : (50 + Math.random() * (canvas.width - 100)),
+        y: isHorizontal ? (50 + Math.random() * (canvas.height - 100)) : -10,
+        horizontal: isHorizontal,
+        width: isHorizontal ? canvas.width + 20 : 4,
+        height: isHorizontal ? 4 : canvas.height + 20,
+        warningTime: 90, // 1.5 seconds warning
+        activeTime: 30, // 0.5 seconds active (dangerous)
+        fadeTime: 15,
+        phase: 'warning', // warning, active, fade
+        timer: 0,
+        speed: 0 // stationary beam
+    };
+    
+    // Higher levels: more complex (diagonal, moving)
+    if (level >= 4) {
+        laser.speed = 1 + Math.random() * 2;
+        if (isHorizontal) laser.vy = (Math.random() - 0.5) * laser.speed;
+        else laser.vx = (Math.random() - 0.5) * laser.speed;
+    }
+    if (level >= 6) {
+        // Diagonal lasers
+        if (Math.random() > 0.5) {
+            laser.diagonal = true;
+            laser.angle = Math.random() * Math.PI;
+            laser.length = Math.max(canvas.width, canvas.height);
+        }
+    }
+    
+    lasers.push(laser);
+}
+
+function updateLasers() {
+    if (level < 2) return;
+    
+    laserCooldown--;
+    // Spawn frequency increases with level
+    const spawnInterval = Math.max(120, 360 - (level - 2) * 40);
+    if (laserCooldown <= 0 && gameState === 'playing') {
+        spawnLaser();
+        laserCooldown = spawnInterval;
+    }
+    
+    lasers.forEach(laser => {
+        laser.timer++;
+        
+        if (laser.phase === 'warning' && laser.timer >= laser.warningTime) {
+            laser.phase = 'active';
+            laser.timer = 0;
+        } else if (laser.phase === 'active' && laser.timer >= laser.activeTime) {
+            laser.phase = 'fade';
+            laser.timer = 0;
+        }
+        
+        // Move if has velocity
+        if (laser.vy) laser.y += laser.vy;
+        if (laser.vx) laser.x += laser.vx;
+    });
+    
+    // Remove faded lasers
+    lasers = lasers.filter(l => !(l.phase === 'fade' && l.timer >= l.fadeTime));
+    
+    // Collision: laser hits player (only during 'active' phase)
+    if (gameState === 'playing') {
+        lasers.forEach(laser => {
+            if (laser.phase !== 'active') return;
+            if (player.invincible > 0) return;
+            
+            let hit = false;
+            if (laser.diagonal) {
+                // Simplified diagonal collision (distance from line)
+                const cx = canvas.width / 2, cy = canvas.height / 2;
+                const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
+                const dist = Math.abs((player.x - cx) * dy - (player.y - cy) * dx);
+                hit = dist < 15;
+            } else if (laser.horizontal) {
+                hit = Math.abs(player.y - laser.y) < 15 && player.x > laser.x && player.x < laser.x + laser.width;
+            } else {
+                hit = Math.abs(player.x - laser.x) < 15 && player.y > laser.y && player.y < laser.y + laser.height;
+            }
+            
+            if (hit) {
+                health--;
+                player.invincible = 90;
+                screenShake = 12;
+                sfxCollision();
+                createExplosion(player.x, player.y, 60, ['#ff0066', '#ff4400', '#ffff00']);
+                addFloatingText('-1 SHIELD (LASER)', player.x, player.y - 40, '#ff0066');
+                if (health <= 0) gameOver();
+            }
+        });
+        
+        // Laser hits orbs (destroys them)
+        lasers.forEach(laser => {
+            if (laser.phase !== 'active') return;
+            for (let i = orbs.length - 1; i >= 0; i--) {
+                let hit = false;
+                if (laser.horizontal) {
+                    hit = Math.abs(orbs[i].y - laser.y) < orbs[i].radius;
+                } else {
+                    hit = Math.abs(orbs[i].x - laser.x) < orbs[i].radius;
+                }
+                if (hit) {
+                    createExplosion(orbs[i].x, orbs[i].y, 30, ['#ff0066', '#ff8800', '#ffff00']);
+                    orbs.splice(i, 1);
+                }
+            }
+        });
+    }
+}
+
+function drawLasers() {
+    lasers.forEach(laser => {
+        ctx.save();
+        
+        if (laser.phase === 'warning') {
+            // Flashing thin line warning
+            const flash = Math.sin(laser.timer * 0.3) * 0.5 + 0.5;
+            ctx.globalAlpha = flash * 0.4;
+            ctx.strokeStyle = '#ff0066';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([8, 8]);
+            
+            if (laser.diagonal) {
+                const cx = canvas.width / 2, cy = canvas.height / 2;
+                ctx.beginPath();
+                ctx.moveTo(cx - Math.cos(laser.angle) * laser.length, cy - Math.sin(laser.angle) * laser.length);
+                ctx.lineTo(cx + Math.cos(laser.angle) * laser.length, cy + Math.sin(laser.angle) * laser.length);
+                ctx.stroke();
+            } else if (laser.horizontal) {
+                ctx.beginPath();
+                ctx.moveTo(0, laser.y);
+                ctx.lineTo(canvas.width, laser.y);
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(laser.x, 0);
+                ctx.lineTo(laser.x, canvas.height);
+                ctx.stroke();
+            }
+        } else if (laser.phase === 'active') {
+            // Full deadly beam
+            ctx.globalAlpha = 1;
+            ctx.shadowColor = '#ff0066';
+            ctx.shadowBlur = 20;
+            ctx.strokeStyle = '#ff0066';
+            ctx.lineWidth = 6;
+            ctx.setLineDash([]);
+            
+            if (laser.diagonal) {
+                const cx = canvas.width / 2, cy = canvas.height / 2;
+                ctx.beginPath();
+                ctx.moveTo(cx - Math.cos(laser.angle) * laser.length, cy - Math.sin(laser.angle) * laser.length);
+                ctx.lineTo(cx + Math.cos(laser.angle) * laser.length, cy + Math.sin(laser.angle) * laser.length);
+                ctx.stroke();
+                // Inner white core
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            } else if (laser.horizontal) {
+                ctx.beginPath();
+                ctx.moveTo(0, laser.y);
+                ctx.lineTo(canvas.width, laser.y);
+                ctx.stroke();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(laser.x, 0);
+                ctx.lineTo(laser.x, canvas.height);
+                ctx.stroke();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        } else if (laser.phase === 'fade') {
+            ctx.globalAlpha = 1 - (laser.timer / laser.fadeTime);
+            ctx.strokeStyle = '#ff0066';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#ff0066';
+            ctx.shadowBlur = 10;
+            ctx.setLineDash([]);
+            
+            if (laser.horizontal) {
+                ctx.beginPath(); ctx.moveTo(0, laser.y); ctx.lineTo(canvas.width, laser.y); ctx.stroke();
+            } else {
+                ctx.beginPath(); ctx.moveTo(laser.x, 0); ctx.lineTo(laser.x, canvas.height); ctx.stroke();
+            }
+        }
+        
+        ctx.restore();
+    });
+}
+
 // ========== SPAWN OBSTACLES ==========
 function spawnObstacle() {
     const lvl = levels[level - 1];
@@ -337,7 +539,7 @@ function spawnObstacle() {
 function spawnOrb() {
     const x = 100 + Math.random() * (canvas.width - 200);
     const y = 100 + Math.random() * (canvas.height - 200);
-    orbs.push({ x, y, radius: 22, pulse: 0, hue: 0 });
+    orbs.push({ x, y, radius: 22, pulse: 0, hue: 0, age: 0 });
 }
 
 // ========== COLLISION ==========
@@ -455,7 +657,6 @@ function answerQuestion(idx) {
         if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
         
         sfxWrong();
-        screenShake = 15;
         addFloatingText('OBJECTS FASTER!', player.x, player.y - 40, '#ff0066');
         createExplosion(player.x, player.y, 50, ['#ff0066', '#ff4400', '#ff8800']);
     }
@@ -558,7 +759,7 @@ function startGame() {
     player.invincible = 0;
     paused = false;
     particles = []; obstacles = []; orbs = [];
-    floatingTexts = [];
+    floatingTexts = []; lasers = []; laserCooldown = 0;
     initBgParticles();
     initCircuitLayers();
     uiOverlay.innerHTML = '';
@@ -791,6 +992,9 @@ function drawOrbs() {
     orbs.forEach(orb => {
         orb.pulse += 0.05;
         orb.hue = (orb.hue + 2) % 360;
+        // Fade out after 7 seconds (420 frames), gone at 10 seconds (600 frames)
+        const orbAlpha = orb.age > 420 ? Math.max(0, 1 - (orb.age - 420) / 180) : 1;
+        ctx.globalAlpha = orbAlpha;
         const glow = 20 + Math.sin(orb.pulse) * 8;
 
         ctx.save();
@@ -823,6 +1027,7 @@ function drawOrbs() {
 
         ctx.restore();
         ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1.0;
     });
 }
 
@@ -958,16 +1163,37 @@ function drawStartScreen() {
 
     // High scores
     if (highScores.length > 0) {
-        const hsY = canvas.height * 0.62;
+        const hsY = canvas.height * 0.58;
+        
+        // Glowing border box for high scores
+        const boxW = 420, boxH = highScores.slice(0, 5).length * 24 + 60;
+        const boxX = canvas.width / 2 - boxW / 2, boxY2 = hsY - 20;
+        ctx.strokeStyle = '#ffdd00';
+        ctx.shadowColor = '#ffdd00';
+        ctx.shadowBlur = 15;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(boxX, boxY2, boxW, boxH);
+        ctx.fillStyle = 'rgba(255, 221, 0, 0.03)';
+        ctx.fillRect(boxX, boxY2, boxW, boxH);
+        ctx.shadowBlur = 0;
+        
         ctx.fillStyle = '#ffdd00';
-        ctx.font = 'bold 14px Courier New';
-        ctx.fillText('\u{1F3C6} HIGH SCORES', canvas.width / 2, hsY);
-        ctx.font = '12px Courier New';
+        ctx.font = 'bold 18px Courier New';
+        ctx.fillText('\u{1F3C6} HIGH SCORES \u{1F3C6}', canvas.width / 2, hsY + 6);
+        ctx.font = '13px Courier New';
         highScores.slice(0, 5).forEach((hs, i) => {
-            const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}', ' ', ' '];
+            const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}', '  ', '  '];
             ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#a8c4df';
-            ctx.fillText(`${medals[i]} ${hs.name} - ${hs.score} (Lvl ${hs.level}, ${hs.accuracy}%)`, canvas.width / 2, hsY + 22 + i * 20);
+            ctx.shadowColor = i === 0 ? '#ffd700' : 'transparent';
+            ctx.shadowBlur = i === 0 ? 8 : 0;
+            ctx.fillText(`${medals[i]} ${hs.name} - ${hs.score} (Lvl ${hs.level}, ${hs.accuracy}%)`, canvas.width / 2, hsY + 30 + i * 24);
         });
+        ctx.shadowBlur = 0;
+    } else {
+        const hsY = canvas.height * 0.62;
+        ctx.fillStyle = '#5c6b80';
+        ctx.font = '14px Courier New';
+        ctx.fillText('No high scores yet \u2014 be the first!', canvas.width / 2, hsY);
     }
 
     // Press Start (blinking)
@@ -1019,9 +1245,30 @@ function drawLevelTransition() {
 
 // ========== MAIN GAME LOOP ==========
 function update() {
-    if (gameState !== 'playing' || paused) return;
-
-    frameCount++;
+    if (paused) return;
+    
+    // Always move obstacles and spawn new ones (even during quiz)
+    if (gameState === 'playing' || gameState === 'quiz') {
+        frameCount++;
+        obstacles.forEach(obs => {
+            obs.x += obs.vx; obs.y += obs.vy;
+            obs.rotation += obs.rotSpeed;
+        });
+        obstacles = obstacles.filter(obs =>
+            obs.x > -60 && obs.x < canvas.width + 60 &&
+            obs.y > -60 && obs.y < canvas.height + 60
+        );
+        if (frameCount % spawnRate === 0) spawnObstacle();
+        
+        // Update and check lasers
+        updateLasers();
+        
+        // Fade orbs over time
+        orbs.forEach(orb => { orb.age = (orb.age || 0) + 1; });
+        orbs = orbs.filter(orb => orb.age < 600); // 10 seconds at 60fps
+    }
+    
+    if (gameState !== 'playing') return;
 
     // Speed increase every 30 seconds within a level
     const now = Date.now();
@@ -1053,27 +1300,12 @@ function update() {
     // Invincibility timer
     if (player.invincible > 0) player.invincible--;
 
-    // Spawn obstacles
-    if (frameCount % spawnRate === 0) spawnObstacle();
-
     // Spawn orbs
     orbTimer++;
     if (orbTimer > 300 + Math.random() * 200) {
         if (orbs.length < 3) spawnOrb();
         orbTimer = 0;
     }
-
-    // Update obstacles
-    obstacles.forEach(obs => {
-        obs.x += obs.vx;
-        obs.y += obs.vy;
-        obs.rotation += obs.rotSpeed;
-    });
-    // Remove off-screen obstacles
-    obstacles = obstacles.filter(obs =>
-        obs.x > -80 && obs.x < canvas.width + 80 &&
-        obs.y > -80 && obs.y < canvas.height + 80
-    );
 
     // Collision with obstacles
     if (player.invincible <= 0) {
@@ -1140,6 +1372,7 @@ function render() {
     } else if (gameState === 'playing' || gameState === 'quiz' || gameState === 'paused') {
         drawBackground();
         drawObstacles();
+        drawLasers();
         drawOrbs();
         drawPlayer();
         drawParticles();
