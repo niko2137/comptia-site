@@ -2,59 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Neon Circuit Dash — CompTIA A+ Study Hub</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0a1a; overflow: hidden; font-family: 'Courier New', monospace; }
-canvas { display: block; }
+body { background: #0a0a1a; overflow: hidden; font-family: 'Courier New', monospace; touch-action: none; }
+canvas { display: block; touch-action: none; }
 #ui-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 10;
 }
 #ui-overlay > * { pointer-events: auto; }
-.glass {
-    background: rgba(10, 10, 26, 0.85);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 240, 255, 0.3);
-    border-radius: 12px;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-60px); } }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes glow { 0%,100% { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; } 50% { text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor; } }
 @keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+@keyframes starPop { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 60% { transform: scale(1.3) rotate(10deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes flashGold { 0%,100% { color: #ffd700; text-shadow: 0 0 10px #ffd700; } 50% { color: #fff; text-shadow: 0 0 20px #ffd700, 0 0 40px #ffaa00; } }
 </style>
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
 <div id="ui-overlay"></div>
 <script>
-// ========== NEON CIRCUIT DASH ==========
+'use strict';
+
+// ========== NEON CIRCUIT DASH - COMPLETE REWRITE ==========
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const uiOverlay = document.getElementById('ui-overlay');
 
-// Canvas setup
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resize();
 window.addEventListener('resize', resize);
 
+// ========== CONSTANTS ==========
+const MAX_HEALTH = 5;
+const QUESTIONS_PER_LEVEL = 5;
+const MAX_LEVELS = 7;
+const LEVEL_CONFIGS = [
+    { speedBase: 1.0, spawnRate: 40, lasers: false, movingLasers: false, diagonalLasers: false },
+    { speedBase: 1.2, spawnRate: 35, lasers: true, movingLasers: false, diagonalLasers: false },
+    { speedBase: 1.4, spawnRate: 30, lasers: true, movingLasers: false, diagonalLasers: false },
+    { speedBase: 1.6, spawnRate: 27, lasers: true, movingLasers: true, diagonalLasers: false },
+    { speedBase: 1.8, spawnRate: 24, lasers: true, movingLasers: true, diagonalLasers: false },
+    { speedBase: 2.0, spawnRate: 22, lasers: true, movingLasers: true, diagonalLasers: true },
+    { speedBase: 2.2, spawnRate: 20, lasers: true, movingLasers: true, diagonalLasers: true }
+];
 
 // ========== GAME STATE ==========
-let gameState = 'start'; // start, playing, quiz, levelTransition, gameOver
+let gameState = 'start';
 let score = 0;
 let level = 1;
-let health = 5;
-const MAX_HEALTH = 5;
+let health = MAX_HEALTH;
 let correctAnswers = 0;
 let totalQuestions = 0;
 let startTime = 0;
-let levelTimer = 0;
-let speedMultiplier = 1.0;
+let playerSpeedMultiplier = 1.0;
+let obstacleSpeedMultiplier = 1.0;
 let maxSpeedReached = 1.0;
-let spawnRate = 60;
 let frameCount = 0;
 let highScores = JSON.parse(localStorage.getItem('neonCircuitScores') || '[]');
 let questionsAnsweredThisLevel = 0;
@@ -63,509 +71,473 @@ let paused = false;
 let floatingTexts = [];
 let lasers = [];
 let laserCooldown = 0;
-let lastSpeedIncreaseTime = 0;
+let screenShake = 0;
+let greenFlashAlpha = 0;
+let particles = [];
+let bgParticles = [];
+let obstacles = [];
+let orbs = [];
+let currentQuestion = null;
+let quizTimeLeft = 15;
+let quizInterval = null;
+let transitionTimer = 0;
+let transitionAlpha = 0;
+
 
 // ========== LEVEL DATA ==========
 const levels = [
-    { name: "Hardware", color: "#ff8c00", subjects: "CPUs, RAM, Motherboards, Storage" },
+    { name: "Hardware", color: "#ff8c00", subjects: "CPUs, RAM, Motherboards, Storage, PSUs" },
     { name: "Networking", color: "#00f0ff", subjects: "Ports, Protocols, Topologies, Cables" },
     { name: "Operating Systems", color: "#b300ff", subjects: "Windows, Linux, macOS, Commands" },
     { name: "Security", color: "#ff0066", subjects: "Threats, Encryption, Authentication" },
     { name: "Troubleshooting", color: "#00ff88", subjects: "Methodology, Tools, Diagnostics" },
-    { name: "Cloud & Virtualization", color: "#00aaff", subjects: "VMs, Cloud Models, Containers, Deployment" },
+    { name: "Cloud & Virtualization", color: "#00aaff", subjects: "VMs, Cloud Models, Containers" },
     { name: "Mobile & Operations", color: "#ffaa00", subjects: "MDM, Tickets, Procedures, Backups" }
 ];
 
-
-// ========== QUESTIONS DATABASE ==========
+// ========== QUESTIONS DATABASE (140 total - 20 per level) ==========
 const questions = [
-    // Level 1 - Hardware (15 questions)
-    [
-        { q: "What is the standard ATX motherboard size?", opts: ["305x244mm", "244x244mm", "170x170mm", "150x150mm"], ans: 0 },
-        { q: "Which RAM type requires 1.2V?", opts: ["DDR3", "DDR4", "DDR5", "DDR2"], ans: 1 },
-        { q: "What power connector does a modern motherboard use?", opts: ["20-pin", "24-pin", "8-pin", "4-pin"], ans: 1 },
-        { q: "PCIe x16 slots are primarily used for?", opts: ["Sound cards", "Graphics cards", "Network cards", "USB cards"], ans: 1 },
-        { q: "What does POST stand for?", opts: ["Power-On Self-Test", "Pre-Operation System Test", "Power Output Signal Test", "Post-Operation Status Test"], ans: 0 },
-        { q: "SATA III maximum throughput is?", opts: ["3 Gb/s", "6 Gb/s", "12 Gb/s", "1.5 Gb/s"], ans: 1 },
-        { q: "What battery type maintains BIOS settings?", opts: ["AA", "CR2032", "AAA", "9V"], ans: 1 },
-        { q: "NVMe connects via which bus?", opts: ["SATA", "USB", "PCIe", "IDE"], ans: 2 },
-        { q: "ESD can damage components at what voltage?", opts: ["1000V", "100V", "10000V", "50V"], ans: 1 },
-        { q: "What goes between CPU and heatsink?", opts: ["Thermal paste", "Glue", "Rubber pad", "Nothing"], ans: 0 },
-        { q: "DDR4 uses how many pins (desktop)?", opts: ["240", "288", "204", "260"], ans: 1 },
-        { q: "What does the 8-pin EPS connector power?", opts: ["GPU", "CPU", "Fans", "SATA drives"], ans: 1 },
-        { q: "Which form factor is smallest?", opts: ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"], ans: 2 },
-        { q: "TDP measures what?", opts: ["Clock speed", "Maximum heat output in watts", "Memory bandwidth", "Core count"], ans: 1 },
-        { q: "PCIe 4.0 speed per lane?", opts: ["~1 GB/s", "~2 GB/s", "~4 GB/s", "~500 MB/s"], ans: 1 }
-    ],
+// Level 1 - Hardware (20)
+[
+{ q: "What is the standard ATX motherboard size?", opts: ["305x244mm", "244x244mm", "170x170mm", "150x150mm"], ans: 0 },
+{ q: "Which RAM type requires 1.2V?", opts: ["DDR3", "DDR4", "DDR5", "DDR2"], ans: 1 },
+{ q: "What power connector does a modern motherboard use?", opts: ["20-pin", "24-pin", "8-pin", "4-pin"], ans: 1 },
+{ q: "PCIe x16 slots are primarily used for?", opts: ["Sound cards", "Graphics cards", "Network cards", "USB cards"], ans: 1 },
+{ q: "What does POST stand for?", opts: ["Power-On Self-Test", "Pre-Operation System Test", "Power Output Signal Test", "Post-Operation Status Test"], ans: 0 },
+{ q: "SATA III maximum throughput is?", opts: ["3 Gb/s", "6 Gb/s", "12 Gb/s", "1.5 Gb/s"], ans: 1 },
+{ q: "What battery type maintains BIOS settings?", opts: ["AA", "CR2032", "AAA", "9V"], ans: 1 },
+{ q: "NVMe connects via which bus?", opts: ["SATA", "USB", "PCIe", "IDE"], ans: 2 },
+{ q: "ESD can damage components at what voltage?", opts: ["1000V", "100V", "10000V", "50V"], ans: 1 },
+{ q: "What goes between CPU and heatsink?", opts: ["Thermal paste", "Glue", "Rubber pad", "Nothing"], ans: 0 },
+{ q: "DDR4 uses how many pins (desktop)?", opts: ["240", "288", "204", "260"], ans: 1 },
+{ q: "What does the 8-pin EPS connector power?", opts: ["GPU", "CPU", "Fans", "SATA drives"], ans: 1 },
+{ q: "Which form factor is smallest?", opts: ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"], ans: 2 },
+{ q: "TDP measures what?", opts: ["Clock speed", "Maximum heat output in watts", "Memory bandwidth", "Core count"], ans: 1 },
+{ q: "PCIe 4.0 speed per lane?", opts: ["~1 GB/s", "~2 GB/s", "~4 GB/s", "~500 MB/s"], ans: 1 },
+{ q: "What does SSD stand for?", opts: ["Solid State Drive", "Static Storage Device", "Serial System Disk", "Secure Storage Drive"], ans: 0 },
+{ q: "80 PLUS Gold PSU efficiency is?", opts: ["80%", "87%", "92%", "95%"], ans: 1 },
+{ q: "What socket does Intel 12th gen use?", opts: ["LGA 1200", "LGA 1700", "AM4", "AM5"], ans: 1 },
+{ q: "SO-DIMM is used in?", opts: ["Desktops", "Laptops", "Servers", "Printers"], ans: 1 },
+{ q: "What connects motherboard to case buttons?", opts: ["SATA cable", "System panel header", "Molex connector", "USB header"], ans: 1 }
+],
 
+// Level 2 - Networking (20)
+[
+{ q: "SSH uses which port?", opts: ["21", "22", "23", "25"], ans: 1 },
+{ q: "HTTPS runs on port?", opts: ["80", "8080", "443", "8443"], ans: 2 },
+{ q: "DHCP uses which process?", opts: ["DORA", "SYN-ACK", "HELLO", "INIT"], ans: 0 },
+{ q: "DNS operates on port?", opts: ["43", "53", "63", "73"], ans: 1 },
+{ q: "RDP uses which port?", opts: ["3389", "3306", "5900", "8080"], ans: 0 },
+{ q: "What does NAT do?", opts: ["Encrypts data", "Translates private to public IPs", "Blocks malware", "Speeds up DNS"], ans: 1 },
+{ q: "Cat 6a supports what speed at 100m?", opts: ["1 Gbps", "5 Gbps", "10 Gbps", "25 Gbps"], ans: 2 },
+{ q: "APIPA address range is?", opts: ["192.168.x.x", "10.0.x.x", "169.254.x.x", "172.16.x.x"], ans: 2 },
+{ q: "SMB uses port?", opts: ["139", "445", "443", "389"], ans: 1 },
+{ q: "How many layers in the OSI model?", opts: ["5", "6", "7", "4"], ans: 2 },
+{ q: "SMTP uses which port?", opts: ["22", "25", "53", "110"], ans: 1 },
+{ q: "What does VLAN do?", opts: ["Encrypts traffic", "Segments broadcast domains", "Boosts speed", "Blocks ports"], ans: 1 },
+{ q: "PoE stands for?", opts: ["Point of Entry", "Power over Ethernet", "Protocol of Exchange", "Port of Egress"], ans: 1 },
+{ q: "Default gateway is?", opts: ["DNS server", "Router IP for external traffic", "DHCP server", "Firewall IP"], ans: 1 },
+{ q: "SNMP uses port?", opts: ["143", "161", "389", "636"], ans: 1 },
+{ q: "IMAP uses port?", opts: ["110", "143", "993", "25"], ans: 1 },
+{ q: "What protocol syncs time?", opts: ["SNMP", "NTP (port 123)", "SMTP", "FTP"], ans: 1 },
+{ q: "POP3 uses port?", opts: ["25", "110", "143", "993"], ans: 1 },
+{ q: "SIP is used for?", opts: ["File transfer", "VoIP call setup", "Email routing", "DNS lookup"], ans: 1 },
+{ q: "FTP data port is?", opts: ["20", "21", "22", "23"], ans: 0 }
+],
+// Level 3 - Operating Systems (20)
+[
+{ q: "sfc /scannow does what?", opts: ["Formats drive", "Repairs system files", "Clears DNS", "Checks disk"], ans: 1 },
+{ q: "NTFS supports files larger than?", opts: ["2GB", "4GB", "Both", "Neither"], ans: 1 },
+{ q: "What replaces BIOS?", opts: ["CMOS", "UEFI", "POST", "MBR"], ans: 1 },
+{ q: "GPT supports up to how many partitions?", opts: ["4", "16", "64", "128"], ans: 3 },
+{ q: "chkdsk /r does what?", opts: ["Quick format", "Locates bad sectors", "Rebuilds BCD", "Clears cache"], ans: 1 },
+{ q: "Safe Mode loads what?", opts: ["All drivers", "Minimal drivers", "Network only", "No drivers"], ans: 1 },
+{ q: "DISM should run before retrying?", opts: ["chkdsk", "sfc", "bootrec", "diskpart"], ans: 1 },
+{ q: "System Restore affects personal files?", opts: ["Yes", "No", "Only documents", "Only downloads"], ans: 1 },
+{ q: "MBR max disk size?", opts: ["1TB", "2TB", "4TB", "8TB"], ans: 1 },
+{ q: "bootrec is used when?", opts: ["Slow boot", "Windows won't start", "Low disk", "Driver crash"], ans: 1 },
+{ q: "ipconfig /release does what?", opts: ["Releases DHCP lease", "Clears DNS", "Shows MAC", "Resets adapter"], ans: 0 },
+{ q: "Which command forces Group Policy refresh?", opts: ["gpresult", "gpupdate /force", "gpedit.msc", "secedit"], ans: 1 },
+{ q: "FAT32 max file size?", opts: ["2 GB", "4 GB", "8 GB", "16 GB"], ans: 1 },
+{ q: "Windows Recovery Environment acronym?", opts: ["WinRE", "WDE", "WinBoot", "WREC"], ans: 0 },
+{ q: "Task Manager shortcut?", opts: ["Ctrl+Alt+Del", "Ctrl+Shift+Esc", "Alt+F4", "Win+R"], ans: 1 },
+{ q: "msconfig is for?", opts: ["Disk management", "System Configuration", "Registry editing", "Network setup"], ans: 1 },
+{ q: "Event Viewer shows?", opts: ["Hardware temps", "System and application logs", "Network traffic", "Disk usage"], ans: 1 },
+{ q: "netstat shows?", opts: ["DNS records", "Active network connections", "Disk space", "Running services"], ans: 1 },
+{ q: "robocopy is?", opts: ["Antivirus tool", "Robust file copy tool", "Registry cleaner", "Disk formatter"], ans: 1 },
+{ q: "System Restore removes?", opts: ["Personal files", "Recently installed programs", "User accounts", "Saved passwords"], ans: 1 }
+],
 
-    // Level 2 - Networking (15 questions)
-    [
-        { q: "SSH uses which port?", opts: ["21", "22", "23", "25"], ans: 1 },
-        { q: "HTTPS runs on port?", opts: ["80", "8080", "443", "8443"], ans: 2 },
-        { q: "DHCP uses which process?", opts: ["DORA", "SYN-ACK", "HELLO", "INIT"], ans: 0 },
-        { q: "DNS operates on port?", opts: ["43", "53", "63", "73"], ans: 1 },
-        { q: "RDP uses which port?", opts: ["3389", "3306", "5900", "8080"], ans: 0 },
-        { q: "What does NAT do?", opts: ["Encrypts data", "Translates private to public IPs", "Blocks malware", "Speeds up DNS"], ans: 1 },
-        { q: "Cat 6a supports what speed at 100m?", opts: ["1 Gbps", "5 Gbps", "10 Gbps", "25 Gbps"], ans: 2 },
-        { q: "APIPA address range is?", opts: ["192.168.x.x", "10.0.x.x", "169.254.x.x", "172.16.x.x"], ans: 2 },
-        { q: "SMB uses port?", opts: ["139", "445", "443", "389"], ans: 1 },
-        { q: "How many layers in the OSI model?", opts: ["5", "6", "7", "4"], ans: 2 },
-        { q: "SMTP uses which port?", opts: ["22", "25", "53", "110"], ans: 1 },
-        { q: "What does VLAN do?", opts: ["Encrypts traffic", "Segments broadcast domains", "Boosts speed", "Blocks ports"], ans: 1 },
-        { q: "PoE stands for?", opts: ["Point of Entry", "Power over Ethernet", "Protocol of Exchange", "Port of Egress"], ans: 1 },
-        { q: "Default gateway is?", opts: ["DNS server", "Router IP for external traffic", "DHCP server", "Firewall IP"], ans: 1 },
-        { q: "SNMP uses port?", opts: ["143", "161", "389", "636"], ans: 1 }
-    ],
+// Level 4 - Security (20)
+[
+{ q: "WPA3 uses which authentication?", opts: ["PSK", "SAE", "TKIP", "WEP"], ans: 1 },
+{ q: "Phishing is what type of attack?", opts: ["Physical", "Social engineering", "Brute force", "DoS"], ans: 1 },
+{ q: "BitLocker requires?", opts: ["SSD", "TPM", "GPU", "NIC"], ans: 1 },
+{ q: "MFA combines at least how many factors?", opts: ["1", "2", "3", "4"], ans: 1 },
+{ q: "Evil Twin mimics what?", opts: ["MAC address", "Wi-Fi SSID", "IP address", "DNS server"], ans: 1 },
+{ q: "Ransomware response: first step?", opts: ["Pay ransom", "Disconnect", "Reformat", "Call police"], ans: 1 },
+{ q: "Degaussing affects which media?", opts: ["SSDs", "HDDs", "Flash drives", "CDs"], ans: 1 },
+{ q: "Secure Boot prevents?", opts: ["Rootkits", "Spam", "Phishing", "SQL injection"], ans: 0 },
+{ q: "Mantrap is now called?", opts: ["Security gate", "Access Control Vestibule", "Checkpoint", "Barrier"], ans: 1 },
+{ q: "Secure Erase is for which drive type?", opts: ["HDD", "SSD", "Tape", "Optical"], ans: 1 },
+{ q: "Whaling targets who?", opts: ["New employees", "Senior executives", "IT staff", "Vendors"], ans: 1 },
+{ q: "What is shoulder surfing?", opts: ["Hacking Wi-Fi", "Observing someone's screen", "Tailgating", "Dumpster diving"], ans: 1 },
+{ q: "Zero-day means?", opts: ["No patch available yet", "Old vulnerability", "First day of attack", "Zero risk"], ans: 0 },
+{ q: "Class C fire extinguisher is for?", opts: ["Paper fires", "Electrical fires", "Grease fires", "Chemical fires"], ans: 1 },
+{ q: "Chain of custody is required for?", opts: ["Backups", "Legal proceedings", "Audits", "Ticketing"], ans: 1 },
+{ q: "Tailgating means?", opts: ["Remote hacking", "Following someone through a door", "Email spoofing", "Password cracking"], ans: 1 },
+{ q: "DLP stands for?", opts: ["Data Link Protocol", "Data Loss Prevention", "Digital Lock Protection", "Domain Level Policy"], ans: 1 },
+{ q: "EFS encrypts?", opts: ["Entire disk", "Individual files on NTFS", "Network traffic", "Email only"], ans: 1 },
+{ q: "RADIUS is used for?", opts: ["File sharing", "Network authentication", "Disk encryption", "Virus scanning"], ans: 1 },
+{ q: "Brute force tries?", opts: ["Common passwords only", "Every possible combination", "Dictionary words", "Social engineering"], ans: 1 }
+],
+// Level 5 - Troubleshooting (20)
+[
+{ q: "First troubleshooting step?", opts: ["Test theory", "Identify problem", "Implement fix", "Document"], ans: 1 },
+{ q: "ipconfig /flushdns does what?", opts: ["Renews IP", "Clears DNS cache", "Shows MAC", "Resets adapter"], ans: 1 },
+{ q: "No internet but LAN works suggests?", opts: ["Bad NIC", "Wrong gateway", "DNS failure", "Cable issue"], ans: 1 },
+{ q: "Blue screen indicates?", opts: ["Overheating", "Kernel-level crash", "Low battery", "Virus"], ans: 1 },
+{ q: "ipconfig /all shows?", opts: ["Only IP", "MAC and DHCP server", "Routes", "Firewall rules"], ans: 1 },
+{ q: "Beep codes indicate?", opts: ["Software error", "POST failure", "Network issue", "Disk full"], ans: 1 },
+{ q: "After implementing fix, you should?", opts: ["Close ticket", "Verify solution", "Escalate", "Restart"], ans: 1 },
+{ q: "Clock resets every boot suggests?", opts: ["Bad RAM", "Dead CMOS battery", "Corrupt OS", "Bad CPU"], ans: 1 },
+{ q: "Last troubleshooting step?", opts: ["Escalate", "Test", "Document findings", "Restart"], ans: 2 },
+{ q: "PXE boot requires?", opts: ["USB drive", "DHCP + TFTP", "CD-ROM", "SSD"], ans: 1 },
+{ q: "tracert does what?", opts: ["Tests port", "Shows each hop to destination", "Clears ARP", "Renews IP"], ans: 1 },
+{ q: "netstat -an shows?", opts: ["DNS records", "All connections, numeric format", "Routing table", "Wi-Fi networks"], ans: 1 },
+{ q: "Event Viewer is for?", opts: ["Task scheduling", "System/application/security logs", "Disk cleanup", "Driver updates"], ans: 1 },
+{ q: "System Restore removes?", opts: ["Personal files", "Recently installed programs", "User accounts", "Saved passwords"], ans: 1 },
+{ q: "BSOD caused by?", opts: ["Low disk", "Kernel-level critical error", "Slow internet", "Bad mouse"], ans: 1 },
+{ q: "nslookup tests?", opts: ["Network speed", "DNS resolution", "Port availability", "Packet loss"], ans: 1 },
+{ q: "Clean boot uses?", opts: ["Safe Mode", "msconfig Selective Startup", "Command Prompt", "Recovery Drive"], ans: 1 },
+{ q: "Thermal throttling means?", opts: ["Fan speeds up", "CPU slows due to heat", "GPU overclocks", "RAM increases voltage"], ans: 1 },
+{ q: "Driver roll back is in?", opts: ["Control Panel", "Device Manager", "Task Manager", "Registry Editor"], ans: 1 },
+{ q: "DISM fixes what store?", opts: ["Driver store", "Component store", "Certificate store", "App store"], ans: 1 }
+],
 
-
-    // Level 3 - Operating Systems (15 questions)
-    [
-        { q: "sfc /scannow does what?", opts: ["Formats drive", "Repairs system files", "Clears DNS", "Checks disk"], ans: 1 },
-        { q: "NTFS supports files larger than?", opts: ["2GB", "4GB", "Both", "Neither"], ans: 1 },
-        { q: "What replaces BIOS?", opts: ["CMOS", "UEFI", "POST", "MBR"], ans: 1 },
-        { q: "GPT supports up to how many partitions?", opts: ["4", "16", "64", "128"], ans: 3 },
-        { q: "chkdsk /r does what?", opts: ["Quick format", "Locates bad sectors", "Rebuilds BCD", "Clears cache"], ans: 1 },
-        { q: "Safe Mode loads what?", opts: ["All drivers", "Minimal drivers", "Network only", "No drivers"], ans: 1 },
-        { q: "DISM should run before retrying?", opts: ["chkdsk", "sfc", "bootrec", "diskpart"], ans: 1 },
-        { q: "System Restore affects personal files?", opts: ["Yes", "No", "Only documents", "Only downloads"], ans: 1 },
-        { q: "MBR max disk size?", opts: ["1TB", "2TB", "4TB", "8TB"], ans: 1 },
-        { q: "bootrec is used when?", opts: ["Slow boot", "Windows won't start", "Low disk", "Driver crash"], ans: 1 },
-        { q: "ipconfig /release does what?", opts: ["Releases DHCP lease", "Clears DNS", "Shows MAC", "Resets adapter"], ans: 0 },
-        { q: "Which command forces Group Policy refresh?", opts: ["gpresult", "gpupdate /force", "gpedit.msc", "secedit"], ans: 1 },
-        { q: "FAT32 max file size?", opts: ["2 GB", "4 GB", "8 GB", "16 GB"], ans: 1 },
-        { q: "Windows Recovery Environment acronym?", opts: ["WinRE", "WDE", "WinBoot", "WREC"], ans: 0 },
-        { q: "Task Manager shortcut?", opts: ["Ctrl+Alt+Del", "Ctrl+Shift+Esc", "Alt+F4", "Win+R"], ans: 1 }
-    ],
-
-
-    // Level 4 - Security (15 questions)
-    [
-        { q: "WPA3 uses which authentication?", opts: ["PSK", "SAE", "TKIP", "WEP"], ans: 1 },
-        { q: "Phishing is what type of attack?", opts: ["Physical", "Social engineering", "Brute force", "DoS"], ans: 1 },
-        { q: "BitLocker requires?", opts: ["SSD", "TPM", "GPU", "NIC"], ans: 1 },
-        { q: "MFA combines at least how many factors?", opts: ["1", "2", "3", "4"], ans: 1 },
-        { q: "Evil Twin mimics what?", opts: ["MAC address", "Wi-Fi SSID", "IP address", "DNS server"], ans: 1 },
-        { q: "Ransomware response: first step?", opts: ["Pay ransom", "Disconnect", "Reformat", "Call police"], ans: 1 },
-        { q: "Degaussing affects which media?", opts: ["SSDs", "HDDs", "Flash drives", "CDs"], ans: 1 },
-        { q: "Secure Boot prevents?", opts: ["Rootkits", "Spam", "Phishing", "SQL injection"], ans: 0 },
-        { q: "Mantrap is now called?", opts: ["Security gate", "Access Control Vestibule", "Checkpoint", "Barrier"], ans: 1 },
-        { q: "Secure Erase is for which drive type?", opts: ["HDD", "SSD", "Tape", "Optical"], ans: 1 },
-        { q: "Whaling targets who?", opts: ["New employees", "Senior executives", "IT staff", "Vendors"], ans: 1 },
-        { q: "What is shoulder surfing?", opts: ["Hacking Wi-Fi", "Observing someone's screen", "Tailgating", "Dumpster diving"], ans: 1 },
-        { q: "Zero-day means?", opts: ["No patch available yet", "Old vulnerability", "First day of attack", "Zero risk"], ans: 0 },
-        { q: "Class C fire extinguisher is for?", opts: ["Paper fires", "Electrical fires", "Grease fires", "Chemical fires"], ans: 1 },
-        { q: "Chain of custody is required for?", opts: ["Backups", "Legal proceedings", "Audits", "Ticketing"], ans: 1 }
-    ],
-
-
-    // Level 5 - Troubleshooting (15 questions)
-    [
-        { q: "First troubleshooting step?", opts: ["Test theory", "Identify problem", "Implement fix", "Document"], ans: 1 },
-        { q: "ipconfig /flushdns does what?", opts: ["Renews IP", "Clears DNS cache", "Shows MAC", "Resets adapter"], ans: 1 },
-        { q: "No internet but LAN works suggests?", opts: ["Bad NIC", "Wrong gateway", "DNS failure", "Cable issue"], ans: 1 },
-        { q: "Blue screen indicates?", opts: ["Overheating", "Kernel-level crash", "Low battery", "Virus"], ans: 1 },
-        { q: "ipconfig /all shows?", opts: ["Only IP", "MAC and DHCP server", "Routes", "Firewall rules"], ans: 1 },
-        { q: "Beep codes indicate?", opts: ["Software error", "POST failure", "Network issue", "Disk full"], ans: 1 },
-        { q: "After implementing fix, you should?", opts: ["Close ticket", "Verify solution", "Escalate", "Restart"], ans: 1 },
-        { q: "Clock resets every boot suggests?", opts: ["Bad RAM", "Dead CMOS battery", "Corrupt OS", "Bad CPU"], ans: 1 },
-        { q: "Last troubleshooting step?", opts: ["Escalate", "Test", "Document findings", "Restart"], ans: 2 },
-        { q: "PXE boot requires?", opts: ["USB drive", "DHCP + TFTP", "CD-ROM", "SSD"], ans: 1 },
-        { q: "tracert does what?", opts: ["Tests port", "Shows each hop to destination", "Clears ARP", "Renews IP"], ans: 1 },
-        { q: "netstat -an shows?", opts: ["DNS records", "All connections, numeric format", "Routing table", "Wi-Fi networks"], ans: 1 },
-        { q: "Event Viewer is for?", opts: ["Task scheduling", "System/application/security logs", "Disk cleanup", "Driver updates"], ans: 1 },
-        { q: "System Restore removes?", opts: ["Personal files", "Recently installed programs", "User accounts", "Saved passwords"], ans: 1 },
-        { q: "BSOD caused by?", opts: ["Low disk", "Kernel-level critical error", "Slow internet", "Bad mouse"], ans: 1 }
-    ],
-
-
-    // Level 6 - Cloud & Virtualization (15 questions)
-    [
-        { q: "Type 1 hypervisor runs on?", opts: ["Guest OS", "Bare metal", "Container", "Browser"], ans: 1 },
-        { q: "Type 2 hypervisor example?", opts: ["ESXi", "VirtualBox", "Hyper-V Server", "KVM"], ans: 1 },
-        { q: "SaaS example?", opts: ["AWS EC2", "Microsoft 365", "Docker", "Azure VM"], ans: 1 },
-        { q: "IaaS means customer manages?", opts: ["Nothing", "VMs, OS, and apps", "Only data", "Hardware"], ans: 1 },
-        { q: "VM Snapshot is?", opts: ["Backup copy", "Point-in-time state capture", "Clone", "Template"], ans: 1 },
-        { q: "NAT mode VM uses?", opts: ["Own public IP", "Host's IP address", "No network", "Bridge IP"], ans: 1 },
-        { q: "Bridged mode gives VM?", opts: ["No network", "Own IP on LAN", "Host IP only", "VPN tunnel"], ans: 1 },
-        { q: "Elasticity means?", opts: ["Fixed resources", "Auto-scaling resources", "Manual upgrades", "Static IPs"], ans: 1 },
-        { q: "Container shares?", opts: ["Own kernel", "Host OS kernel", "Guest OS", "Hypervisor"], ans: 1 },
-        { q: "Private cloud is?", opts: ["Free tier AWS", "Organization-owned", "Public internet", "Shared hosting"], ans: 1 },
-        { q: "Hybrid cloud combines?", opts: ["Two public clouds", "Public and private", "On-prem only", "Edge and fog"], ans: 1 },
-        { q: "PaaS example?", opts: ["Gmail", "Azure App Service", "AWS S3", "Dropbox"], ans: 1 },
-        { q: "Thin client connects to?", opts: ["Local disk", "Server for desktop", "USB drive", "Cloud storage"], ans: 1 },
-        { q: "Host-only mode means?", opts: ["Full internet", "VM talks only to host", "No network", "DMZ access"], ans: 1 },
-        { q: "DaaS stands for?", opts: ["Data as a Service", "Desktop as a Service", "Device as a Service", "Domain as a Service"], ans: 1 }
-    ],
-
-
-    // Level 7 - Mobile & Operations (15 questions)
-    [
-        { q: "MDM can do what to stolen phone?", opts: ["Upgrade OS", "Remote wipe", "Install apps", "Change carrier"], ans: 1 },
-        { q: "IMEI identifies?", opts: ["SIM card", "Physical phone hardware", "Phone number", "Carrier"], ans: 1 },
-        { q: "First action for lost phone?", opts: ["Report stolen", "Remote lock", "Call carrier", "Buy new phone"], ans: 1 },
-        { q: "BYOD means?", opts: ["Buy Your Own Desktop", "Bring Your Own Device", "Build Your Own Data", "Back Your Own Drive"], ans: 1 },
-        { q: "Ticket escalation means?", opts: ["Closing ticket", "Transfer to higher support", "Deleting ticket", "Auto-resolve"], ans: 1 },
-        { q: "SLA defines?", opts: ["Hardware specs", "Response times and uptime", "Software versions", "User permissions"], ans: 1 },
-        { q: "6-step troubleshooting starts with?", opts: ["Document", "Identify the problem", "Test theory", "Implement fix"], ans: 1 },
-        { q: "Change management requires?", opts: ["Approval before changes", "Immediate action", "No documentation", "User consent"], ans: 0 },
-        { q: "P1 Critical means?", opts: ["Minor issue", "Complete outage", "Cosmetic bug", "Feature request"], ans: 1 },
-        { q: "Documentation should happen?", opts: ["Never", "After every resolution", "Only for critical", "Monthly"], ans: 1 },
-        { q: "RTO stands for?", opts: ["Real-Time Output", "Recovery Time Objective", "Remote Transfer Object", "Restore To Original"], ans: 1 },
-        { q: "3-2-1 backup rule?", opts: ["3 copies, 2 media, 1 offsite", "3 days, 2 hours, 1 minute", "3 servers, 2 sites, 1 cloud", "3 users, 2 admins, 1 root"], ans: 0 },
-        { q: "COPE means?", opts: ["Company-Only Private Equipment", "Corporate-Owned Personally Enabled", "Cloud-Operated Personal Environment", "Central Office Phone Exchange"], ans: 1 },
-        { q: "Geofencing does?", opts: ["Blocks hackers", "Triggers actions at location boundaries", "Encrypts data", "Tracks bandwidth"], ans: 1 },
-        { q: "Configuration profile delivers?", opts: ["Hardware upgrades", "Wi-Fi, VPN, email settings", "Physical keys", "SIM cards"], ans: 1 }
-    ]
+// Level 6 - Cloud & Virtualization (20)
+[
+{ q: "Type 1 hypervisor runs on?", opts: ["Guest OS", "Bare metal", "Container", "Browser"], ans: 1 },
+{ q: "Type 2 hypervisor example?", opts: ["ESXi", "VirtualBox", "Hyper-V Server", "KVM"], ans: 1 },
+{ q: "SaaS example?", opts: ["AWS EC2", "Microsoft 365", "Docker", "Azure VM"], ans: 1 },
+{ q: "IaaS means customer manages?", opts: ["Nothing", "VMs, OS, and apps", "Only data", "Hardware"], ans: 1 },
+{ q: "VM Snapshot is?", opts: ["Backup copy", "Point-in-time state capture", "Clone", "Template"], ans: 1 },
+{ q: "NAT mode VM uses?", opts: ["Own public IP", "Host's IP address", "No network", "Bridge IP"], ans: 1 },
+{ q: "Bridged mode gives VM?", opts: ["No network", "Own IP on LAN", "Host IP only", "VPN tunnel"], ans: 1 },
+{ q: "Elasticity means?", opts: ["Fixed resources", "Auto-scaling resources", "Manual upgrades", "Static IPs"], ans: 1 },
+{ q: "Container shares?", opts: ["Own kernel", "Host OS kernel", "Guest OS", "Hypervisor"], ans: 1 },
+{ q: "Private cloud is?", opts: ["Free tier AWS", "Organization-owned", "Public internet", "Shared hosting"], ans: 1 },
+{ q: "Hybrid cloud combines?", opts: ["Two public clouds", "Public and private", "On-prem only", "Edge and fog"], ans: 1 },
+{ q: "PaaS example?", opts: ["Gmail", "Azure App Service", "AWS S3", "Dropbox"], ans: 1 },
+{ q: "Thin client connects to?", opts: ["Local disk", "Server for desktop", "USB drive", "Cloud storage"], ans: 1 },
+{ q: "Host-only mode means?", opts: ["Full internet", "VM talks only to host", "No network", "DMZ access"], ans: 1 },
+{ q: "DaaS stands for?", opts: ["Data as a Service", "Desktop as a Service", "Device as a Service", "Domain as a Service"], ans: 1 },
+{ q: "Multi-tenant means?", opts: ["One user per server", "Shared infrastructure, separate data", "Dedicated hardware", "Single application"], ans: 1 },
+{ q: "Live migration is?", opts: ["Copying a VM backup", "Moving running VM between hosts", "Installing updates", "Creating snapshots"], ans: 1 },
+{ q: "Auto-scaling implements?", opts: ["Redundancy", "Elasticity", "Fault tolerance", "Load balancing"], ans: 1 },
+{ q: "Availability zone is?", opts: ["A continent", "Separate data center in same region", "A single rack", "A VPN endpoint"], ans: 1 },
+{ q: "Serverless means?", opts: ["No servers exist", "Provider manages all infrastructure", "Client-side only", "Offline computing"], ans: 1 }
+],
+// Level 7 - Mobile & Operations (20)
+[
+{ q: "MDM can do what to stolen phone?", opts: ["Upgrade OS", "Remote wipe", "Install apps", "Change carrier"], ans: 1 },
+{ q: "IMEI identifies?", opts: ["SIM card", "Physical phone hardware", "Phone number", "Carrier"], ans: 1 },
+{ q: "First action for lost phone?", opts: ["Report stolen", "Remote lock", "Call carrier", "Buy new phone"], ans: 1 },
+{ q: "BYOD means?", opts: ["Buy Your Own Desktop", "Bring Your Own Device", "Build Your Own Data", "Back Your Own Drive"], ans: 1 },
+{ q: "Ticket escalation means?", opts: ["Closing ticket", "Transfer to higher support", "Deleting ticket", "Auto-resolve"], ans: 1 },
+{ q: "SLA defines?", opts: ["Hardware specs", "Response times and uptime", "Software versions", "User permissions"], ans: 1 },
+{ q: "6-step troubleshooting starts with?", opts: ["Document", "Identify the problem", "Test theory", "Implement fix"], ans: 1 },
+{ q: "Change management requires?", opts: ["Approval before changes", "Immediate action", "No documentation", "User consent"], ans: 0 },
+{ q: "P1 Critical means?", opts: ["Minor issue", "Complete outage", "Cosmetic bug", "Feature request"], ans: 1 },
+{ q: "Documentation should happen?", opts: ["Never", "After every resolution", "Only for critical", "Monthly"], ans: 1 },
+{ q: "RTO stands for?", opts: ["Real-Time Output", "Recovery Time Objective", "Remote Transfer Object", "Restore To Original"], ans: 1 },
+{ q: "3-2-1 backup rule?", opts: ["3 copies, 2 media, 1 offsite", "3 days, 2 hours, 1 minute", "3 servers, 2 sites, 1 cloud", "3 users, 2 admins, 1 root"], ans: 0 },
+{ q: "COPE means?", opts: ["Company-Only Private Equipment", "Corporate-Owned Personally Enabled", "Cloud-Operated Personal Environment", "Central Office Phone Exchange"], ans: 1 },
+{ q: "Geofencing does?", opts: ["Blocks hackers", "Triggers actions at location boundaries", "Encrypts data", "Tracks bandwidth"], ans: 1 },
+{ q: "Configuration profile delivers?", opts: ["Hardware upgrades", "Wi-Fi, VPN, email settings", "Physical keys", "SIM cards"], ans: 1 },
+{ q: "MAM manages?", opts: ["All device settings", "Mobile applications only", "Network access", "Hardware inventory"], ans: 1 },
+{ q: "MTTR measures?", opts: ["Time between failures", "Average repair time", "Total uptime", "Backup speed"], ans: 1 },
+{ q: "MTBF measures?", opts: ["Average repair time", "Time between failures", "Total downtime", "Recovery speed"], ans: 1 },
+{ q: "e-Waste requires?", opts: ["Regular trash disposal", "Certified recycler disposal", "Burning", "Landfill only"], ans: 1 },
+{ q: "Separation of duties prevents?", opts: ["Data loss", "Single person having full control", "Hardware failure", "Network outage"], ans: 1 }
+]
 ];
 
 
 // ========== PLAYER ==========
 const player = {
     x: 0, y: 0, targetX: 0, targetY: 0,
-    width: 30, height: 20, speed: 5,
-    trail: [], invincible: 0
+    width: 34, height: 24, baseSpeed: 5,
+    trail: [], invincible: 0, angle: 0
 };
 
-// ========== PARTICLES ==========
-let particles = [];
-let bgParticles = [];
-let obstacles = [];
-let orbs = [];
-
-// Initialize background particles
+// ========== BACKGROUND ==========
 function initBgParticles() {
     bgParticles = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 50; i++) {
         bgParticles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: 0.2 + Math.random() * 0.8,
+            speed: 0.2 + Math.random() * 0.6,
             text: Math.random() > 0.5 ?
                 '0x' + Math.floor(Math.random() * 65535).toString(16).toUpperCase() :
                 Math.floor(Math.random() * 256).toString(2).padStart(8, '0'),
-            alpha: 0.1 + Math.random() * 0.2,
-            size: 8 + Math.random() * 4
+            alpha: 0.08 + Math.random() * 0.15,
+            size: 8 + Math.random() * 3
         });
     }
 }
 
-// Circuit board background layers
 const circuitLayers = [];
 function initCircuitLayers() {
     circuitLayers.length = 0;
     for (let layer = 0; layer < 3; layer++) {
         const lines = [];
-        for (let i = 0; i < 20; i++) {
+        const count = 15 + layer * 5;
+        for (let i = 0; i < count; i++) {
             lines.push({
                 x1: Math.random() * canvas.width,
                 y1: Math.random() * canvas.height,
-                len: 30 + Math.random() * 100,
+                len: 30 + Math.random() * 120,
                 horizontal: Math.random() > 0.5,
-                speed: (layer + 1) * 0.3
+                speed: (layer + 1) * 0.25
             });
         }
         circuitLayers.push(lines);
     }
 }
 
-
 // ========== INPUT ==========
 const keys = {};
 let mouseX = 0, mouseY = 0, useMouseControl = false;
+let touchActive = false;
 
 document.addEventListener('keydown', e => {
     keys[e.key] = true;
-    if (gameState === 'start' && (e.key === ' ' || e.key === 'Enter')) startGame();
+    if (gameState === 'start' && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); startGame(); }
     if (gameState === 'gameOver' && e.key === 'Enter') showStartScreen();
-    if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') togglePause();
+    if ((e.key === 'Escape' || e.key === 'p' || e.key === 'P') && (gameState === 'playing' || gameState === 'paused')) togglePause();
 });
-document.addEventListener('keyup', e => keys[e.key] = false);
+document.addEventListener('keyup', e => { keys[e.key] = false; });
 document.addEventListener('mousemove', e => {
-    mouseX = e.clientX; mouseY = e.clientY; useMouseControl = true;
+    mouseX = e.clientX; mouseY = e.clientY;
+    if (gameState === 'playing') useMouseControl = true;
 });
-document.addEventListener('touchmove', e => {
+canvas.addEventListener('touchstart', e => {
     e.preventDefault();
-    mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; useMouseControl = true;
+    touchActive = true;
+    mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY;
+    useMouseControl = true;
+    if (gameState === 'start') startGame();
+}, { passive: false });
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY;
+    useMouseControl = true;
+}, { passive: false });
+canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    touchActive = false;
 }, { passive: false });
 canvas.addEventListener('click', () => {
     if (gameState === 'start') startGame();
 });
+document.addEventListener('gesturestart', e => e.preventDefault());
 
-// ========== AUDIO (Web Audio API) ==========
+
+// ========== AUDIO (Web Audio API - lazy init) ==========
 let audioCtx = null;
 function initAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch(e) { audioCtx = null; }
+    }
 }
-function playTone(freq, duration, type='sine', volume=0.1) {
+function playTone(freq, duration, type='sine', volume=0.08) {
     if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + duration);
+    try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
 }
-function sfxCorrect() { playTone(400, 0.2); setTimeout(() => playTone(600, 0.2), 100); setTimeout(() => playTone(800, 0.3), 200); }
-function sfxWrong() { playTone(300, 0.2, 'sawtooth'); setTimeout(() => playTone(150, 0.3, 'sawtooth'), 150); }
-function sfxCollision() { playTone(80, 0.3, 'sawtooth', 0.15); playTone(60, 0.2, 'square', 0.1); }
-function sfxOrb() { playTone(500, 0.15); setTimeout(() => playTone(700, 0.15), 80); }
-function sfxBonus() { playTone(600, 0.15); setTimeout(() => playTone(800, 0.15), 80); setTimeout(() => playTone(1000, 0.2), 160); setTimeout(() => playTone(1200, 0.3), 240); }
+function sfxCorrect() { playTone(440, 0.15); setTimeout(() => playTone(660, 0.15), 80); setTimeout(() => playTone(880, 0.25), 160); }
+function sfxWrong() { playTone(300, 0.2, 'sawtooth'); setTimeout(() => playTone(150, 0.3, 'sawtooth'), 120); }
+function sfxCollision() { playTone(80, 0.3, 'sawtooth', 0.12); playTone(50, 0.2, 'square', 0.08); }
+function sfxOrb() { playTone(500, 0.12); setTimeout(() => playTone(750, 0.15), 60); }
+function sfxLevelUp() { playTone(600, 0.12); setTimeout(() => playTone(800, 0.12), 80); setTimeout(() => playTone(1000, 0.15), 160); setTimeout(() => playTone(1200, 0.2), 240); }
+function sfxLaser() { playTone(200, 0.4, 'sawtooth', 0.06); }
 
-
-// ========== LASER BEAMS ==========
-function spawnLaser() {
-    if (level < 2) return; // No lasers on level 1
-    
-    const isHorizontal = Math.random() > 0.5;
-    const laser = {
-        x: isHorizontal ? -10 : (50 + Math.random() * (canvas.width - 100)),
-        y: isHorizontal ? (50 + Math.random() * (canvas.height - 100)) : -10,
-        horizontal: isHorizontal,
-        width: isHorizontal ? canvas.width + 20 : 4,
-        height: isHorizontal ? 4 : canvas.height + 20,
-        warningTime: 90, // 1.5 seconds warning
-        activeTime: 30, // 0.5 seconds active (dangerous)
-        fadeTime: 15,
-        phase: 'warning', // warning, active, fade
-        timer: 0,
-        speed: 0 // stationary beam
-    };
-    
-    // Higher levels: more complex (diagonal, moving)
-    if (level >= 4) {
-        laser.speed = 1 + Math.random() * 2;
-        if (isHorizontal) laser.vy = (Math.random() - 0.5) * laser.speed;
-        else laser.vx = (Math.random() - 0.5) * laser.speed;
-    }
-    if (level >= 6) {
-        // Diagonal lasers
-        if (Math.random() > 0.5) {
-            laser.diagonal = true;
-            laser.angle = Math.random() * Math.PI;
-            laser.length = Math.max(canvas.width, canvas.height);
-        }
-    }
-    
-    lasers.push(laser);
-}
-
-function updateLasers() {
-    if (level < 2) return;
-    
-    laserCooldown--;
-    // Spawn frequency increases with level
-    const spawnInterval = Math.max(120, 360 - (level - 2) * 40);
-    if (laserCooldown <= 0 && gameState === 'playing') {
-        spawnLaser();
-        laserCooldown = spawnInterval;
-    }
-    
-    lasers.forEach(laser => {
-        laser.timer++;
-        
-        if (laser.phase === 'warning' && laser.timer >= laser.warningTime) {
-            laser.phase = 'active';
-            laser.timer = 0;
-        } else if (laser.phase === 'active' && laser.timer >= laser.activeTime) {
-            laser.phase = 'fade';
-            laser.timer = 0;
-        }
-        
-        // Move if has velocity
-        if (laser.vy) laser.y += laser.vy;
-        if (laser.vx) laser.x += laser.vx;
-    });
-    
-    // Remove faded lasers
-    lasers = lasers.filter(l => !(l.phase === 'fade' && l.timer >= l.fadeTime));
-    
-    // Collision: laser hits player (only during 'active' phase)
-    if (gameState === 'playing') {
-        lasers.forEach(laser => {
-            if (laser.phase !== 'active') return;
-            if (player.invincible > 0) return;
-            
-            let hit = false;
-            if (laser.diagonal) {
-                // Simplified diagonal collision (distance from line)
-                const cx = canvas.width / 2, cy = canvas.height / 2;
-                const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
-                const dist = Math.abs((player.x - cx) * dy - (player.y - cy) * dx);
-                hit = dist < 15;
-            } else if (laser.horizontal) {
-                hit = Math.abs(player.y - laser.y) < 15 && player.x > laser.x && player.x < laser.x + laser.width;
-            } else {
-                hit = Math.abs(player.x - laser.x) < 15 && player.y > laser.y && player.y < laser.y + laser.height;
-            }
-            
-            if (hit) {
-                health--;
-                player.invincible = 90;
-                screenShake = 12;
-                sfxCollision();
-                createExplosion(player.x, player.y, 60, ['#ff0066', '#ff4400', '#ffff00']);
-                addFloatingText('-1 SHIELD (LASER)', player.x, player.y - 40, '#ff0066');
-                if (health <= 0) gameOver();
-            }
-        });
-        
-        // Laser hits orbs (destroys them)
-        lasers.forEach(laser => {
-            if (laser.phase !== 'active') return;
-            for (let i = orbs.length - 1; i >= 0; i--) {
-                let hit = false;
-                if (laser.horizontal) {
-                    hit = Math.abs(orbs[i].y - laser.y) < orbs[i].radius;
-                } else {
-                    hit = Math.abs(orbs[i].x - laser.x) < orbs[i].radius;
-                }
-                if (hit) {
-                    createExplosion(orbs[i].x, orbs[i].y, 30, ['#ff0066', '#ff8800', '#ffff00']);
-                    orbs.splice(i, 1);
-                }
-            }
-        });
-        
-        // Laser hits obstacles (destroys them too)
-        lasers.forEach(laser => {
-            if (laser.phase !== 'active') return;
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                let hit = false;
-                if (laser.diagonal) {
-                    const cx = canvas.width / 2, cy = canvas.height / 2;
-                    const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
-                    const dist = Math.abs((obstacles[i].x - cx) * dy - (obstacles[i].y - cy) * dx);
-                    hit = dist < obstacles[i].radius;
-                } else if (laser.horizontal) {
-                    hit = Math.abs(obstacles[i].y - laser.y) < obstacles[i].radius;
-                } else {
-                    hit = Math.abs(obstacles[i].x - laser.x) < obstacles[i].radius;
-                }
-                if (hit) {
-                    createExplosion(obstacles[i].x, obstacles[i].y, 20, ['#ff0066', '#ff4400', '#ffaa00']);
-                    obstacles.splice(i, 1);
-                    score += 5; // Small bonus for laser destroying obstacles
-                }
-            }
-        });
-    }
-}
-
-function drawLasers() {
-    lasers.forEach(laser => {
-        ctx.save();
-        
-        if (laser.phase === 'warning') {
-            // Flashing thin line warning
-            const flash = Math.sin(laser.timer * 0.3) * 0.5 + 0.5;
-            ctx.globalAlpha = flash * 0.4;
-            ctx.strokeStyle = '#ff0066';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([8, 8]);
-            
-            if (laser.diagonal) {
-                const cx = canvas.width / 2, cy = canvas.height / 2;
-                ctx.beginPath();
-                ctx.moveTo(cx - Math.cos(laser.angle) * laser.length, cy - Math.sin(laser.angle) * laser.length);
-                ctx.lineTo(cx + Math.cos(laser.angle) * laser.length, cy + Math.sin(laser.angle) * laser.length);
-                ctx.stroke();
-            } else if (laser.horizontal) {
-                ctx.beginPath();
-                ctx.moveTo(0, laser.y);
-                ctx.lineTo(canvas.width, laser.y);
-                ctx.stroke();
-            } else {
-                ctx.beginPath();
-                ctx.moveTo(laser.x, 0);
-                ctx.lineTo(laser.x, canvas.height);
-                ctx.stroke();
-            }
-        } else if (laser.phase === 'active') {
-            // Full deadly beam
-            ctx.globalAlpha = 1;
-            ctx.shadowColor = '#ff0066';
-            ctx.shadowBlur = 20;
-            ctx.strokeStyle = '#ff0066';
-            ctx.lineWidth = 6;
-            ctx.setLineDash([]);
-            
-            if (laser.diagonal) {
-                const cx = canvas.width / 2, cy = canvas.height / 2;
-                ctx.beginPath();
-                ctx.moveTo(cx - Math.cos(laser.angle) * laser.length, cy - Math.sin(laser.angle) * laser.length);
-                ctx.lineTo(cx + Math.cos(laser.angle) * laser.length, cy + Math.sin(laser.angle) * laser.length);
-                ctx.stroke();
-                // Inner white core
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            } else if (laser.horizontal) {
-                ctx.beginPath();
-                ctx.moveTo(0, laser.y);
-                ctx.lineTo(canvas.width, laser.y);
-                ctx.stroke();
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            } else {
-                ctx.beginPath();
-                ctx.moveTo(laser.x, 0);
-                ctx.lineTo(laser.x, canvas.height);
-                ctx.stroke();
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-        } else if (laser.phase === 'fade') {
-            ctx.globalAlpha = 1 - (laser.timer / laser.fadeTime);
-            ctx.strokeStyle = '#ff0066';
-            ctx.lineWidth = 3;
-            ctx.shadowColor = '#ff0066';
-            ctx.shadowBlur = 10;
-            ctx.setLineDash([]);
-            
-            if (laser.horizontal) {
-                ctx.beginPath(); ctx.moveTo(0, laser.y); ctx.lineTo(canvas.width, laser.y); ctx.stroke();
-            } else {
-                ctx.beginPath(); ctx.moveTo(laser.x, 0); ctx.lineTo(laser.x, canvas.height); ctx.stroke();
-            }
-        }
-        
-        ctx.restore();
-    });
-}
-
-// ========== SPAWN OBSTACLES ==========
+// ========== SPAWNING ==========
 function spawnObstacle() {
     const lvl = levels[level - 1];
     const side = Math.floor(Math.random() * 4);
     let x, y, vx, vy;
-    const spd = (1 + Math.random() * 2) * speedMultiplier;
+    const spd = (1 + Math.random() * 2) * obstacleSpeedMultiplier;
+    const sizeVariance = 0.7 + Math.random() * 0.6;
 
-    if (side === 0) { x = Math.random() * canvas.width; y = -30; vx = (Math.random() - 0.5) * spd; vy = spd; }
-    else if (side === 1) { x = Math.random() * canvas.width; y = canvas.height + 30; vx = (Math.random() - 0.5) * spd; vy = -spd; }
-    else if (side === 2) { x = -30; y = Math.random() * canvas.height; vx = spd; vy = (Math.random() - 0.5) * spd; }
-    else { x = canvas.width + 30; y = Math.random() * canvas.height; vx = -spd; vy = (Math.random() - 0.5) * spd; }
+    if (side === 0) { x = Math.random() * canvas.width; y = -40; vx = (Math.random() - 0.5) * spd; vy = spd; }
+    else if (side === 1) { x = Math.random() * canvas.width; y = canvas.height + 40; vx = (Math.random() - 0.5) * spd; vy = -spd; }
+    else if (side === 2) { x = -40; y = Math.random() * canvas.height; vx = spd; vy = (Math.random() - 0.5) * spd; }
+    else { x = canvas.width + 40; y = Math.random() * canvas.height; vx = -spd; vy = (Math.random() - 0.5) * spd; }
 
     const shapes = ['diamond', 'hexagon', 'triangle', 'square', 'cross'];
     obstacles.push({
-        x, y, vx, vy, radius: 15 + Math.random() * 10,
+        x, y, vx, vy,
+        radius: (14 + Math.random() * 12) * sizeVariance,
         shape: shapes[Math.floor(Math.random() * shapes.length)],
-        color: lvl.color, rotation: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.05
+        color: lvl.color,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.04,
+        pulsePhase: Math.random() * Math.PI * 2
     });
 }
 
 function spawnOrb() {
-    const x = 100 + Math.random() * (canvas.width - 200);
-    const y = 100 + Math.random() * (canvas.height - 200);
-    orbs.push({ x, y, radius: 22, pulse: 0, hue: 0, age: 0 });
+    const margin = 80;
+    const x = margin + Math.random() * (canvas.width - margin * 2);
+    const y = margin + Math.random() * (canvas.height - margin * 2);
+    orbs.push({ x, y, radius: 24, pulse: Math.random() * Math.PI * 2, hue: 0, age: 0 });
 }
 
-// ========== COLLISION ==========
+
+// ========== LASER BEAMS ==========
+function spawnLaser() {
+    const config = LEVEL_CONFIGS[level - 1];
+    if (!config.lasers) return;
+
+    const laser = { timer: 0, phase: 'warning', warningTime: 100, activeTime: 35, fadeTime: 20 };
+
+    if (config.diagonalLasers && Math.random() > 0.5) {
+        laser.diagonal = true;
+        laser.angle = Math.random() * Math.PI;
+        laser.cx = canvas.width / 2;
+        laser.cy = canvas.height / 2;
+        laser.length = Math.max(canvas.width, canvas.height) * 1.5;
+        if (config.movingLasers) {
+            laser.rotSpeed = (Math.random() - 0.5) * 0.008;
+        }
+    } else {
+        laser.horizontal = Math.random() > 0.5;
+        if (laser.horizontal) {
+            laser.y = 60 + Math.random() * (canvas.height - 120);
+            laser.x = 0;
+            laser.width = canvas.width;
+        } else {
+            laser.x = 60 + Math.random() * (canvas.width - 120);
+            laser.y = 0;
+            laser.height = canvas.height;
+        }
+        if (config.movingLasers) {
+            laser.vy = laser.horizontal ? (Math.random() - 0.5) * 2 : 0;
+            laser.vx = !laser.horizontal ? (Math.random() - 0.5) * 2 : 0;
+        }
+    }
+    lasers.push(laser);
+}
+
+function updateLasers() {
+    const config = LEVEL_CONFIGS[level - 1];
+    if (!config.lasers) return;
+
+    laserCooldown--;
+    const interval = Math.max(100, 340 - (level - 2) * 40);
+    if (laserCooldown <= 0 && (gameState === 'playing' || gameState === 'quiz')) {
+        spawnLaser();
+        laserCooldown = interval;
+        sfxLaser();
+    }
+
+    for (let i = lasers.length - 1; i >= 0; i--) {
+        const laser = lasers[i];
+        laser.timer++;
+
+        if (laser.phase === 'warning' && laser.timer >= laser.warningTime) {
+            laser.phase = 'active'; laser.timer = 0;
+        } else if (laser.phase === 'active' && laser.timer >= laser.activeTime) {
+            laser.phase = 'fade'; laser.timer = 0;
+        } else if (laser.phase === 'fade' && laser.timer >= laser.fadeTime) {
+            lasers.splice(i, 1); continue;
+        }
+
+        // Movement
+        if (laser.vy) laser.y += laser.vy;
+        if (laser.vx) laser.x += laser.vx;
+        if (laser.rotSpeed) laser.angle += laser.rotSpeed;
+
+        // Active phase collision checks
+        if (laser.phase === 'active' && gameState === 'playing') {
+            // Hit player
+            if (player.invincible <= 0) {
+                let hit = false;
+                if (laser.diagonal) {
+                    const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
+                    const dist = Math.abs((player.x - laser.cx) * dy - (player.y - laser.cy) * dx);
+                    hit = dist < 18;
+                } else if (laser.horizontal) {
+                    hit = Math.abs(player.y - laser.y) < 18;
+                } else {
+                    hit = Math.abs(player.x - laser.x) < 18;
+                }
+                if (hit) {
+                    health--;
+                    player.invincible = 90;
+                    screenShake = 14;
+                    sfxCollision();
+                    createExplosion(player.x, player.y, 80, ['#ff0066', '#ff4400', '#ffff00', '#fff']);
+                    addFloatingText('-1 SHIELD (LASER)', player.x, player.y - 40, '#ff0066');
+                    if (health <= 0) gameOver();
+                }
+            }
+
+            // Hit obstacles (destroy them)
+            for (let j = obstacles.length - 1; j >= 0; j--) {
+                const obs = obstacles[j];
+                let hit = false;
+                if (laser.diagonal) {
+                    const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
+                    const dist = Math.abs((obs.x - laser.cx) * dy - (obs.y - laser.cy) * dx);
+                    hit = dist < obs.radius;
+                } else if (laser.horizontal) {
+                    hit = Math.abs(obs.y - laser.y) < obs.radius;
+                } else {
+                    hit = Math.abs(obs.x - laser.x) < obs.radius;
+                }
+                if (hit) {
+                    createExplosion(obs.x, obs.y, 15, ['#ff0066', '#ff4400']);
+                    obstacles.splice(j, 1);
+                    score += 5;
+                }
+            }
+
+            // Hit orbs (destroy them)
+            for (let j = orbs.length - 1; j >= 0; j--) {
+                let hit = false;
+                if (laser.diagonal) {
+                    const dx = Math.cos(laser.angle), dy = Math.sin(laser.angle);
+                    const dist = Math.abs((orbs[j].x - laser.cx) * dy - (orbs[j].y - laser.cy) * dx);
+                    hit = dist < orbs[j].radius;
+                } else if (laser.horizontal) {
+                    hit = Math.abs(orbs[j].y - laser.y) < orbs[j].radius;
+                } else {
+                    hit = Math.abs(orbs[j].x - laser.x) < orbs[j].radius;
+                }
+                if (hit) {
+                    createExplosion(orbs[j].x, orbs[j].y, 20, ['#ff0066', '#ffaa00']);
+                    orbs.splice(j, 1);
+                }
+            }
+        }
+    }
+}
+
+
+// ========== PARTICLES & EFFECTS ==========
 function checkCollision(a, b, rA, rB) {
     const dx = a.x - b.x, dy = a.y - b.y;
     return Math.sqrt(dx * dx + dy * dy) < rA + rB;
@@ -574,28 +546,21 @@ function checkCollision(a, b, rA, rB) {
 function createExplosion(x, y, count, colors) {
     for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
-        const speed = 2 + Math.random() * 5;
+        const speed = 1.5 + Math.random() * 5;
         particles.push({
             x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-            life: 1, decay: 0.01 + Math.random() * 0.02,
+            life: 1, decay: 0.012 + Math.random() * 0.018,
             color: colors[Math.floor(Math.random() * colors.length)],
-            size: 2 + Math.random() * 4
+            size: 2 + Math.random() * 5
         });
     }
 }
 
-// ========== FLOATING TEXT ==========
 function addFloatingText(text, x, y, color) {
-    floatingTexts.push({ text, x, y, life: 1, color });
+    floatingTexts.push({ text, x, y, color, life: 1 });
 }
 
-
 // ========== QUIZ SYSTEM ==========
-let currentQuestion = null;
-let quizTimeLeft = 15;
-let quizInterval = null;
-let screenShake = 0;
-
 function showQuiz() {
     gameState = 'quiz';
     const levelQs = questions[level - 1];
@@ -605,29 +570,41 @@ function showQuiz() {
 
     const overlay = document.createElement('div');
     overlay.id = 'quiz-overlay';
-    overlay.style.cssText = `position:fixed;inset:0;background:rgba(10,10,26,0.88);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.3s;`;
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(5,5,20,0.88);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.3s ease-out;';
 
     const card = document.createElement('div');
-    card.style.cssText = `max-width:600px;width:90%;padding:36px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid ${levels[level-1].color};box-shadow:0 0 40px ${levels[level-1].color}44;text-align:center;`;
+    card.style.cssText = `max-width:580px;width:92%;padding:32px;border-radius:16px;background:rgba(12,12,30,0.97);border:2px solid ${levels[level-1].color};box-shadow:0 0 50px ${levels[level-1].color}55,inset 0 0 30px rgba(0,0,0,0.5);`;
 
-    const timer = document.createElement('div');
-    timer.id = 'quiz-timer';
-    timer.style.cssText = `font-size:1.2em;color:#00f0ff;margin-bottom:16px;font-weight:bold;`;
-    timer.textContent = `⏱ ${quizTimeLeft}s`;
+    // Level tag
+    const tag = document.createElement('div');
+    tag.style.cssText = `display:inline-block;padding:4px 12px;border-radius:20px;background:${levels[level-1].color}22;border:1px solid ${levels[level-1].color}88;color:${levels[level-1].color};font-size:0.75em;margin-bottom:16px;`;
+    tag.textContent = `Level ${level}: ${levels[level-1].name}`;
+    card.appendChild(tag);
 
+    // Timer bar
+    const timerWrap = document.createElement('div');
+    timerWrap.style.cssText = 'width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:20px;overflow:hidden;';
+    const timerBar = document.createElement('div');
+    timerBar.id = 'quiz-timer-bar';
+    timerBar.style.cssText = 'width:100%;height:100%;background:linear-gradient(90deg,#00ff88,#00f0ff);border-radius:3px;transition:width 1s linear, background 0.5s;';
+    timerWrap.appendChild(timerBar);
+    card.appendChild(timerWrap);
+
+    // Question
     const qText = document.createElement('p');
-    qText.style.cssText = `color:#fff;font-size:1.2em;margin-bottom:28px;line-height:1.6;`;
+    qText.style.cssText = 'color:#fff;font-size:1.15em;margin-bottom:24px;line-height:1.6;text-align:center;';
     qText.textContent = currentQuestion.q;
-
-    card.appendChild(timer);
     card.appendChild(qText);
 
+    // Answer buttons
     currentQuestion.opts.forEach((opt, i) => {
         const btn = document.createElement('button');
-        btn.style.cssText = `display:block;width:100%;padding:14px;margin:8px 0;border:1px solid rgba(0,240,255,0.3);border-radius:8px;background:rgba(0,240,255,0.05);color:#fff;font-size:1em;cursor:pointer;transition:all 0.2s;font-family:'Courier New',monospace;`;
+        btn.style.cssText = `display:block;width:100%;padding:14px 18px;margin:8px 0;border:1px solid rgba(0,240,255,0.25);border-radius:10px;background:rgba(0,240,255,0.04);color:#e0e8f0;font-size:1em;cursor:pointer;transition:all 0.15s;font-family:'Courier New',monospace;text-align:left;min-height:48px;`;
         btn.textContent = opt;
-        btn.onmouseenter = () => btn.style.background = 'rgba(0,240,255,0.2)';
-        btn.onmouseleave = () => btn.style.background = 'rgba(0,240,255,0.05)';
+        btn.onmouseenter = () => { btn.style.background = 'rgba(0,240,255,0.15)'; btn.style.borderColor = 'rgba(0,240,255,0.6)'; btn.style.transform = 'scale(1.02)'; };
+        btn.onmouseleave = () => { btn.style.background = 'rgba(0,240,255,0.04)'; btn.style.borderColor = 'rgba(0,240,255,0.25)'; btn.style.transform = 'scale(1)'; };
+        btn.onmousedown = () => { btn.style.transform = 'scale(0.98)'; };
+        btn.onmouseup = () => { btn.style.transform = 'scale(1.02)'; };
         btn.onclick = () => answerQuestion(i);
         card.appendChild(btn);
     });
@@ -635,11 +612,17 @@ function showQuiz() {
     overlay.appendChild(card);
     uiOverlay.appendChild(overlay);
 
+    // Timer countdown
     quizInterval = setInterval(() => {
         quizTimeLeft--;
-        const t = document.getElementById('quiz-timer');
-        if (t) t.textContent = `⏱ ${quizTimeLeft}s`;
-        if (quizTimeLeft <= 0) { answerQuestion(-1); }
+        const bar = document.getElementById('quiz-timer-bar');
+        if (bar) {
+            const pct = (quizTimeLeft / 15) * 100;
+            bar.style.width = pct + '%';
+            if (quizTimeLeft <= 5) bar.style.background = 'linear-gradient(90deg,#ff0066,#ff4400)';
+            else if (quizTimeLeft <= 10) bar.style.background = 'linear-gradient(90deg,#ffaa00,#ffdd00)';
+        }
+        if (quizTimeLeft <= 0) answerQuestion(-1);
     }, 1000);
 }
 
@@ -650,49 +633,44 @@ function answerQuestion(idx) {
     if (!overlay) return;
 
     if (idx === currentQuestion.ans) {
-        // CORRECT ANSWER
-        score += 100 + quizTimeLeft * 10;
+        // CORRECT
+        const bonus = 150 + quizTimeLeft * 15;
+        score += bonus;
         correctAnswers++;
-        
-        // Correct = increase PLAYER movement speed (not obstacle speed)
-        player.speed += 0.3;
-        if (player.speed > 12) player.speed = 12; // cap player speed
-        
+        playerSpeedMultiplier += 0.15;
+        if (playerSpeedMultiplier > 3.0) playerSpeedMultiplier = 3.0;
+
         if (health >= MAX_HEALTH) {
-            // MAX LIVES BONUS
             score += 200;
-            sfxBonus();
-            addFloatingText('MAX LIVES BONUS +200', player.x, player.y - 40, '#ffdd00');
-            addFloatingText('SPEED UP!', player.x, player.y - 70, '#00f0ff');
-            createExplosion(player.x, player.y, 40, ['#ffdd00', '#ffaa00', '#fff', '#00f0ff']);
+            sfxCorrect();
+            addFloatingText('MAX LIVES +200!', player.x, player.y - 50, '#ffdd00');
+            addFloatingText('SHIP FASTER!', player.x, player.y - 80, '#00f0ff');
+            createExplosion(player.x, player.y, 60, ['#ffdd00', '#fff', '#00f0ff', '#00ff88']);
         } else {
             health++;
             sfxCorrect();
-            addFloatingText('+1 LIFE + SPEED', player.x, player.y - 40, '#00ff88');
-            createExplosion(player.x, player.y, 30, ['#00ff88', '#00f0ff', '#fff']);
+            addFloatingText('+1 LIFE', player.x, player.y - 50, '#00ff88');
+            addFloatingText('SHIP FASTER!', player.x, player.y - 80, '#00f0ff');
+            createExplosion(player.x, player.y, 40, ['#00ff88', '#00f0ff', '#fff']);
         }
+        greenFlashAlpha = 0.3;
     } else {
-        // WRONG ANSWER
-        score = Math.max(0, score - 50);
-        
-        // Wrong = ONLY increase obstacle speed (no life loss)
-        speedMultiplier += 0.2;
-        if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
-        
+        // WRONG (no life lost)
+        score = Math.max(0, score - 25);
+        obstacleSpeedMultiplier += 0.2;
+        if (obstacleSpeedMultiplier > maxSpeedReached) maxSpeedReached = obstacleSpeedMultiplier;
         sfxWrong();
-        addFloatingText('OBJECTS FASTER!', player.x, player.y - 40, '#ff0066');
+        screenShake = 8;
+        addFloatingText('OBJECTS FASTER!', player.x, player.y - 50, '#ff0066');
         createExplosion(player.x, player.y, 50, ['#ff0066', '#ff4400', '#ff8800']);
     }
 
     questionsAnsweredThisLevel++;
     overlay.remove();
     gameState = 'playing';
-    
-    // Brief invincibility after answering (prevents instant collision from queued obstacles)
-    player.invincible = 90;
+    player.invincible = 90; // Brief invincibility after quiz
 
-    // Check level progression: 4 questions per level to advance
-    if (questionsAnsweredThisLevel >= 4 && level < 7) {
+    if (questionsAnsweredThisLevel >= QUESTIONS_PER_LEVEL && level < MAX_LEVELS) {
         levelUp();
     }
 }
@@ -700,100 +678,104 @@ function answerQuestion(idx) {
 function levelUp() {
     level++;
     questionsAnsweredThisLevel = 0;
-    spawnRate = Math.max(15, 35 - (level - 1) * 3);
-    // Don't clear obstacles — let them keep flying during transition
     orbs = [];
     gameState = 'levelTransition';
-    lastSpeedIncreaseTime = Date.now();
+    transitionTimer = 0;
+    transitionAlpha = 0;
+    sfxLevelUp();
+
+    // Apply level config
+    const config = LEVEL_CONFIGS[level - 1];
+    obstacleSpeedMultiplier = Math.max(obstacleSpeedMultiplier, config.speedBase);
 
     setTimeout(() => {
         if (gameState === 'levelTransition') {
             gameState = 'playing';
-            // Immediately spawn a burst of obstacles so screen isn't empty
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => spawnObstacle(), i * 200);
-            }
+            // Spawn burst of obstacles
+            for (let i = 0; i < 4; i++) setTimeout(() => spawnObstacle(), i * 150);
         }
     }, 3000);
 }
 
-
-// ========== GAME FUNCTIONS ==========
-// ========== PAUSE SYSTEM ==========
+// ========== PAUSE ==========
 function togglePause() {
     if (gameState === 'playing') {
         paused = true;
         gameState = 'paused';
-        showPauseMenu();
+        showPauseOverlay();
     } else if (gameState === 'paused') {
         resumeGame();
     }
 }
 
-function showPauseMenu() {
+function showPauseOverlay() {
     const overlay = document.createElement('div');
     overlay.id = 'pause-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,26,0.92);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.2s;';
-    
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(5,5,20,0.92);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.2s;';
     overlay.innerHTML = `
-        <div style="text-align:center;max-width:400px;width:90%;padding:40px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid #00f0ff;box-shadow:0 0 40px #00f0ff44;">
-            <h1 style="color:#00f0ff;font-size:2em;margin-bottom:16px;">⏸ PAUSED</h1>
-            <p style="color:#a8c4df;margin-bottom:8px;">Score: ${score} | Level: ${level}/7</p>
-            <p style="color:#a8c4df;margin-bottom:24px;">Ship Speed: ${player.speed.toFixed(1)} | Objects: ${speedMultiplier.toFixed(2)}x</p>
+        <div style="text-align:center;max-width:380px;width:90%;padding:40px;border-radius:16px;background:rgba(12,12,30,0.97);border:2px solid #00f0ff;box-shadow:0 0 50px #00f0ff33;">
+            <h1 style="color:#00f0ff;font-size:2em;margin-bottom:12px;animation:glow 2s infinite;">PAUSED</h1>
+            <p style="color:#a8c4df;margin-bottom:6px;font-size:0.9em;">Score: ${score} | Level: ${level}/${MAX_LEVELS}</p>
+            <p style="color:#a8c4df;margin-bottom:24px;font-size:0.85em;">Ship: ${(player.baseSpeed * playerSpeedMultiplier).toFixed(1)} | Objects: ${obstacleSpeedMultiplier.toFixed(2)}x</p>
             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                <button onclick="resumeGame()" style="padding:14px 28px;border-radius:8px;background:#00ff88;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;font-size:1em;">▶ Resume</button>
-                <button onclick="endGame()" style="padding:14px 28px;border-radius:8px;background:#ff0066;color:#fff;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;font-size:1em;">✖ End Game</button>
+                <button onclick="resumeGame()" style="padding:14px 28px;border-radius:10px;background:#00ff88;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;font-size:1em;min-height:48px;">Resume</button>
+                <button onclick="quitToMenu()" style="padding:14px 28px;border-radius:10px;background:#ff0066;color:#fff;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;font-size:1em;min-height:48px;">Quit</button>
             </div>
-            <p style="color:#5c6b80;margin-top:16px;font-size:0.8em;">Press ESC or P to resume</p>
-        </div>
-    `;
-    
+            <p style="color:#5c6b80;margin-top:16px;font-size:0.75em;">ESC or P to resume</p>
+        </div>`;
     uiOverlay.appendChild(overlay);
 }
 
 function resumeGame() {
     paused = false;
     gameState = 'playing';
-    const overlay = document.getElementById('pause-overlay');
-    if (overlay) overlay.remove();
+    const o = document.getElementById('pause-overlay');
+    if (o) o.remove();
 }
 
-function endGame() {
-    const overlay = document.getElementById('pause-overlay');
-    if (overlay) overlay.remove();
+function quitToMenu() {
+    const o = document.getElementById('pause-overlay');
+    if (o) o.remove();
     gameOver();
 }
 
+
+// ========== GAME LIFECYCLE ==========
 function startGame() {
     initAudio();
     gameState = 'playing';
     score = 0; level = 1; health = MAX_HEALTH;
     correctAnswers = 0; totalQuestions = 0;
     questionsAnsweredThisLevel = 0;
-    speedMultiplier = 1.0; maxSpeedReached = 1.0;
-    spawnRate = 35;
-    frameCount = 0; orbTimer = 0; levelTimer = 0;
+    playerSpeedMultiplier = 1.0;
+    obstacleSpeedMultiplier = LEVEL_CONFIGS[0].speedBase;
+    maxSpeedReached = obstacleSpeedMultiplier;
+    frameCount = 0; orbTimer = 0;
     startTime = Date.now();
-    lastSpeedIncreaseTime = Date.now();
     player.x = canvas.width / 2;
-    player.y = canvas.height * 0.75;
-    player.speed = 5;
+    player.y = canvas.height * 0.7;
     player.trail = [];
-    player.invincible = 0;
+    player.invincible = 60;
+    player.angle = 0;
     paused = false;
     particles = []; obstacles = []; orbs = [];
     floatingTexts = []; lasers = []; laserCooldown = 0;
+    screenShake = 0; greenFlashAlpha = 0;
+    transitionTimer = 0; transitionAlpha = 0;
     initBgParticles();
     initCircuitLayers();
     uiOverlay.innerHTML = '';
-    
-    // Add on-screen pause button for mobile
+
+    // Mobile pause button
     const pauseBtn = document.createElement('button');
     pauseBtn.id = 'mobile-pause-btn';
-    pauseBtn.textContent = '⏸';
-    pauseBtn.style.cssText = 'position:fixed;top:12px;right:12px;width:44px;height:44px;border-radius:50%;background:rgba(0,240,255,0.15);border:1px solid rgba(0,240,255,0.4);color:#00f0ff;font-size:20px;cursor:pointer;z-index:50;backdrop-filter:blur(4px);';
-    pauseBtn.onclick = function(e) { e.stopPropagation(); togglePause(); };
+    pauseBtn.textContent = '\u23F8';
+    pauseBtn.style.cssText = 'position:fixed;top:10px;right:10px;width:48px;height:48px;border-radius:50%;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.4);color:#00f0ff;font-size:22px;cursor:pointer;z-index:50;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;';
+    pauseBtn.onclick = e => { e.stopPropagation(); togglePause(); };
     uiOverlay.appendChild(pauseBtn);
+
+    // Initial obstacles
+    for (let i = 0; i < 3; i++) setTimeout(() => spawnObstacle(), i * 300);
 }
 
 function gameOver() {
@@ -802,65 +784,72 @@ function gameOver() {
     const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
     const secs = (elapsed % 60).toString().padStart(2, '0');
     const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-    const qualifies = highScores.length < 10 || score > (highScores[highScores.length - 1]?.score || 0);
+    const isHighScore = highScores.length < 10 || score > (highScores[highScores.length - 1]?.score || 0);
+
+    // Star rating based on accuracy
+    let stars = 1;
+    if (accuracy >= 80) stars = 3;
+    else if (accuracy >= 50) stars = 2;
+    const starHTML = '<span style="font-size:2em;animation:starPop 0.5s ease-out forwards;display:inline-block;">' +
+        Array(stars).fill('\u2B50').join('') +
+        Array(3-stars).fill('<span style="opacity:0.2;">\u2B50</span>').join('') + '</span>';
 
     sfxCollision();
 
     uiOverlay.innerHTML = `
-    <div style="position:fixed;inset:0;background:rgba(10,10,26,0.92);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.5s;">
-        <div style="text-align:center;max-width:550px;width:90%;padding:40px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid #ff0066;box-shadow:0 0 60px #ff006644;">
-            <h1 style="color:#ff0066;font-size:2em;margin-bottom:8px;">GAME OVER</h1>
-            <p style="color:#a8c4df;margin-bottom:24px;">Your circuit has been breached!</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-                <div style="padding:14px;border-radius:8px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);">
-                    <div style="color:#00f0ff;font-size:0.75em;">SCORE</div>
-                    <div id="score-counter" style="color:#fff;font-size:1.6em;font-weight:bold;">0</div>
+    <div style="position:fixed;inset:0;background:rgba(5,5,20,0.93);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.5s;">
+        <div style="text-align:center;max-width:520px;width:92%;padding:36px;border-radius:16px;background:rgba(12,12,30,0.97);border:2px solid #ff0066;box-shadow:0 0 60px #ff006644;">
+            <h1 style="color:#ff0066;font-size:1.8em;margin-bottom:4px;">GAME OVER</h1>
+            <div style="margin:12px 0 20px;">${starHTML}</div>
+            ${isHighScore ? '<p style="color:#ffd700;font-size:1em;margin-bottom:16px;animation:flashGold 1s infinite;font-weight:bold;">NEW HIGH SCORE!</p>' : ''}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+                <div style="padding:12px;border-radius:10px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);">
+                    <div style="color:#00f0ff;font-size:0.7em;margin-bottom:4px;">SCORE</div>
+                    <div id="score-counter" style="color:#fff;font-size:1.5em;font-weight:bold;">0</div>
                 </div>
-                <div style="padding:14px;border-radius:8px;background:rgba(179,0,255,0.05);border:1px solid rgba(179,0,255,0.2);">
-                    <div style="color:#b300ff;font-size:0.75em;">LEVEL</div>
-                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${level} / 7</div>
+                <div style="padding:12px;border-radius:10px;background:rgba(179,0,255,0.05);border:1px solid rgba(179,0,255,0.2);">
+                    <div style="color:#b300ff;font-size:0.7em;margin-bottom:4px;">LEVEL</div>
+                    <div style="color:#fff;font-size:1.5em;font-weight:bold;">${level} / ${MAX_LEVELS}</div>
                 </div>
-                <div style="padding:14px;border-radius:8px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
-                    <div style="color:#00ff88;font-size:0.75em;">ACCURACY</div>
-                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${accuracy}%</div>
+                <div style="padding:12px;border-radius:10px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);">
+                    <div style="color:#00ff88;font-size:0.7em;margin-bottom:4px;">ACCURACY</div>
+                    <div style="color:#fff;font-size:1.5em;font-weight:bold;">${accuracy}%</div>
                 </div>
-                <div style="padding:14px;border-radius:8px;background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);">
-                    <div style="color:#ff8c00;font-size:0.75em;">TIME</div>
-                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${mins}:${secs}</div>
+                <div style="padding:12px;border-radius:10px;background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);">
+                    <div style="color:#ff8c00;font-size:0.7em;margin-bottom:4px;">TIME</div>
+                    <div style="color:#fff;font-size:1.5em;font-weight:bold;">${mins}:${secs}</div>
                 </div>
-                <div style="padding:14px;border-radius:8px;background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.2);grid-column:span 2;">
-                    <div style="color:#ffaa00;font-size:0.75em;">MAX SPEED REACHED</div>
-                    <div style="color:#fff;font-size:1.6em;font-weight:bold;">${maxSpeedReached.toFixed(2)}x</div>
+                <div style="padding:12px;border-radius:10px;background:rgba(255,170,0,0.05);border:1px solid rgba(255,170,0,0.2);grid-column:span 2;">
+                    <div style="color:#ffaa00;font-size:0.7em;margin-bottom:4px;">MAX SPEED</div>
+                    <div style="color:#fff;font-size:1.5em;font-weight:bold;">${maxSpeedReached.toFixed(2)}x</div>
                 </div>
             </div>
-            ${qualifies ? '<p style="color:#ffdd00;margin-bottom:16px;font-size:0.9em;text-shadow:0 0 8px #ffdd0066;">⭐ Get on the high scoreboard! ⭐</p>' : ''}
-            <div style="margin-bottom:20px;">
-                <input id="nameInput" type="text" maxlength="15" placeholder="Enter your name" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(0,240,255,0.3);background:rgba(0,0,0,0.5);color:#fff;font-family:'Courier New',monospace;font-size:1em;text-align:center;">
+            <div style="margin-bottom:16px;">
+                <input id="nameInput" type="text" maxlength="15" placeholder="Enter your name" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,240,255,0.3);background:rgba(0,0,0,0.5);color:#fff;font-family:'Courier New',monospace;font-size:1em;text-align:center;">
             </div>
-            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                <button onclick="saveScore()" style="padding:12px 24px;border-radius:8px;background:#00f0ff;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;">Save Score</button>
-                <button onclick="startGame()" style="padding:12px 24px;border-radius:8px;background:#00ff88;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;">Play Again</button>
-                <button onclick="showStartScreen()" style="padding:12px 24px;border-radius:8px;background:transparent;color:#a8c4df;border:1px solid #a8c4df;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;">Main Menu</button>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                <button onclick="saveScore()" style="padding:12px 20px;border-radius:10px;background:#00f0ff;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;min-height:48px;">Save Score</button>
+                <button onclick="startGame()" style="padding:12px 20px;border-radius:10px;background:#00ff88;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;min-height:48px;">Play Again</button>
+                <button onclick="showStartScreen()" style="padding:12px 20px;border-radius:10px;background:transparent;color:#a8c4df;border:1px solid #a8c4df55;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;min-height:48px;">Menu</button>
             </div>
         </div>
     </div>`;
 
     // Score counting animation
-    const counterEl = document.getElementById('score-counter');
-    if (counterEl && score > 0) {
-        let current = 0;
-        const step = Math.max(1, Math.floor(score / 60));
-        const countInterval = setInterval(() => {
-            current += step;
-            if (current >= score) { current = score; clearInterval(countInterval); }
-            counterEl.textContent = current;
+    const el = document.getElementById('score-counter');
+    if (el && score > 0) {
+        let cur = 0;
+        const step = Math.max(1, Math.floor(score / 50));
+        const iv = setInterval(() => {
+            cur += step;
+            if (cur >= score) { cur = score; clearInterval(iv); }
+            el.textContent = cur;
         }, 30);
     }
 }
 
-
 function saveScore() {
-    const name = document.getElementById('nameInput').value.trim() || 'Anonymous';
+    const name = document.getElementById('nameInput')?.value.trim() || 'Anonymous';
     const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     highScores.push({ name, score, level, accuracy, date: new Date().toLocaleDateString() });
     highScores.sort((a, b) => b.score - a.score);
@@ -872,37 +861,37 @@ function saveScore() {
 function showStartScreen() {
     gameState = 'start';
     uiOverlay.innerHTML = '';
+    obstacles = []; orbs = []; lasers = []; particles = [];
     initBgParticles();
     initCircuitLayers();
     player.x = canvas.width / 2;
     player.y = canvas.height / 2;
 }
 
+
 // ========== DRAWING ==========
 function drawBackground() {
-    // Dark gradient
     const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width * 0.7);
     grad.addColorStop(0, '#0f0f2a');
-    grad.addColorStop(1, '#0a0a1a');
+    grad.addColorStop(1, '#060612');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Circuit layers
+    // Circuit layers parallax
     circuitLayers.forEach((layer, li) => {
-        ctx.strokeStyle = `rgba(0, 240, 255, ${0.03 + li * 0.02})`;
+        ctx.strokeStyle = `rgba(0, 240, 255, ${0.025 + li * 0.015})`;
         ctx.lineWidth = 1;
         layer.forEach(line => {
             line.y1 += line.speed;
-            if (line.y1 > canvas.height + 100) { line.y1 = -100; line.x1 = Math.random() * canvas.width; }
+            if (line.y1 > canvas.height + 120) { line.y1 = -120; line.x1 = Math.random() * canvas.width; }
             ctx.beginPath();
             ctx.moveTo(line.x1, line.y1);
             if (line.horizontal) ctx.lineTo(line.x1 + line.len, line.y1);
             else ctx.lineTo(line.x1, line.y1 + line.len);
             ctx.stroke();
-            // Node dots
-            ctx.fillStyle = `rgba(0, 240, 255, ${0.1 + li * 0.05})`;
+            ctx.fillStyle = `rgba(0, 240, 255, ${0.08 + li * 0.04})`;
             ctx.beginPath();
-            ctx.arc(line.x1, line.y1, 2, 0, Math.PI * 2);
+            ctx.arc(line.x1, line.y1, 1.5, 0, Math.PI * 2);
             ctx.fill();
         });
     });
@@ -910,97 +899,126 @@ function drawBackground() {
     // Floating data fragments
     bgParticles.forEach(p => {
         p.y += p.speed;
-        if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
+        if (p.y > canvas.height + 10) { p.y = -15; p.x = Math.random() * canvas.width; }
         ctx.fillStyle = `rgba(0, 240, 255, ${p.alpha})`;
         ctx.font = `${p.size}px 'Courier New'`;
+        ctx.textAlign = 'left';
         ctx.fillText(p.text, p.x, p.y);
     });
 
     // Scanlines
-    ctx.fillStyle = 'rgba(0,0,0,0.03)';
+    ctx.fillStyle = 'rgba(0,0,0,0.025)';
     for (let y = 0; y < canvas.height; y += 3) {
         ctx.fillRect(0, y, canvas.width, 1);
     }
 
     // Vignette
-    const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width * 0.3, canvas.width/2, canvas.height/2, canvas.width * 0.7);
+    const vig = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width * 0.25, canvas.width/2, canvas.height/2, canvas.width * 0.75);
     vig.addColorStop(0, 'transparent');
-    vig.addColorStop(1, 'rgba(0,0,0,0.5)');
+    vig.addColorStop(1, 'rgba(0,0,0,0.55)');
     ctx.fillStyle = vig;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-
 function drawPlayer() {
-    // Trail
-    player.trail.push({ x: player.x, y: player.y, life: 1 });
-    if (player.trail.length > 50) player.trail.shift();
-
-    player.trail.forEach((t, i) => {
-        t.life -= 0.02;
+    // Engine trail particles
+    player.trail.push({ x: player.x, y: player.y + 12, life: 1 });
+    if (player.trail.length > 40) player.trail.shift();
+    player.trail.forEach(t => {
+        t.life -= 0.025;
         if (t.life > 0) {
             ctx.beginPath();
-            ctx.arc(t.x, t.y + 10, t.life * 4, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 240, 255, ${t.life * 0.4})`;
+            ctx.arc(t.x + (Math.random()-0.5)*3, t.y, t.life * 4, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 240, 255, ${t.life * 0.5})`;
             ctx.fill();
         }
     });
     player.trail = player.trail.filter(t => t.life > 0);
 
-    // Ship glow
-    ctx.shadowColor = player.invincible > 0 ? '#fff' : '#00f0ff';
-    ctx.shadowBlur = 15 + Math.sin(frameCount * 0.1) * 5;
+    // Calculate angle toward movement
+    const speed = player.baseSpeed * playerSpeedMultiplier;
+    let dx = 0, dy = 0;
+    if (useMouseControl) { dx = mouseX - player.x; dy = mouseY - player.y; }
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) dx -= 1;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) dx += 1;
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) dy -= 1;
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) dy += 1;
+    if (dx !== 0 || dy !== 0) {
+        const targetAngle = Math.atan2(dy, dx) + Math.PI/2;
+        let diff = targetAngle - player.angle;
+        while (diff > Math.PI) diff -= Math.PI*2;
+        while (diff < -Math.PI) diff += Math.PI*2;
+        player.angle += diff * 0.1;
+    }
 
-    // Ship body (triangle)
-    ctx.save();
-    ctx.translate(player.x, player.y);
-    ctx.beginPath();
-    ctx.moveTo(0, -15);
-    ctx.lineTo(-12, 12);
-    ctx.lineTo(12, 12);
-    ctx.closePath();
-    ctx.fillStyle = player.invincible > 0 ? '#fff' : '#00f0ff';
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    // Ship body
+    const blinkOff = player.invincible > 0 && Math.floor(frameCount / 4) % 2 === 0;
+    if (!blinkOff) {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.rotate(player.angle);
 
-    // Engine glow
-    ctx.beginPath();
-    ctx.moveTo(-6, 12);
-    ctx.lineTo(0, 12 + 8 + Math.random() * 6);
-    ctx.lineTo(6, 12);
-    ctx.fillStyle = `rgba(0, 240, 255, ${0.5 + Math.random() * 0.5})`;
-    ctx.fill();
-    ctx.restore();
+        ctx.shadowColor = player.invincible > 0 ? '#ffffff' : '#00f0ff';
+        ctx.shadowBlur = 18 + Math.sin(frameCount * 0.08) * 4;
 
+        // Main body
+        ctx.beginPath();
+        ctx.moveTo(0, -17);
+        ctx.lineTo(-14, 14);
+        ctx.lineTo(-4, 10);
+        ctx.lineTo(0, 14);
+        ctx.lineTo(4, 10);
+        ctx.lineTo(14, 14);
+        ctx.closePath();
+        ctx.fillStyle = player.invincible > 0 ? '#ffffff' : '#00f0ff';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Engine glow
+        const flicker = 6 + Math.random() * 8;
+        ctx.beginPath();
+        ctx.moveTo(-5, 14);
+        ctx.lineTo(0, 14 + flicker);
+        ctx.lineTo(5, 14);
+        ctx.fillStyle = `rgba(0, 200, 255, ${0.6 + Math.random() * 0.4})`;
+        ctx.fill();
+
+        ctx.restore();
+    }
     ctx.shadowBlur = 0;
 }
 
+
 function drawObstacles() {
     obstacles.forEach(obs => {
+        const pulseFactor = 0.95 + Math.sin(obs.pulsePhase + frameCount * 0.05) * 0.05;
         ctx.save();
         ctx.translate(obs.x, obs.y);
         ctx.rotate(obs.rotation);
+        ctx.scale(pulseFactor, pulseFactor);
         ctx.shadowColor = obs.color;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 10;
         ctx.strokeStyle = obs.color;
         ctx.lineWidth = 2;
-        ctx.fillStyle = obs.color + '33';
+        ctx.fillStyle = obs.color + '25';
 
         const r = obs.radius;
         ctx.beginPath();
         if (obs.shape === 'diamond') {
             ctx.moveTo(0, -r); ctx.lineTo(r, 0); ctx.lineTo(0, r); ctx.lineTo(-r, 0);
         } else if (obs.shape === 'hexagon') {
-            for (let i = 0; i < 6; i++) { const a = (Math.PI * 2 / 6) * i - Math.PI/2; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+            for (let i = 0; i < 6; i++) { const a = (Math.PI*2/6)*i - Math.PI/2; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
         } else if (obs.shape === 'triangle') {
-            for (let i = 0; i < 3; i++) { const a = (Math.PI * 2 / 3) * i - Math.PI/2; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+            for (let i = 0; i < 3; i++) { const a = (Math.PI*2/3)*i - Math.PI/2; ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
         } else if (obs.shape === 'cross') {
-            const w = r * 0.3;
-            ctx.moveTo(-w,-r); ctx.lineTo(w,-r); ctx.lineTo(w,-w); ctx.lineTo(r,-w); ctx.lineTo(r,w); ctx.lineTo(w,w); ctx.lineTo(w,r); ctx.lineTo(-w,r); ctx.lineTo(-w,w); ctx.lineTo(-r,w); ctx.lineTo(-r,-w); ctx.lineTo(-w,-w);
+            const w = r*0.3;
+            ctx.moveTo(-w,-r); ctx.lineTo(w,-r); ctx.lineTo(w,-w); ctx.lineTo(r,-w);
+            ctx.lineTo(r,w); ctx.lineTo(w,w); ctx.lineTo(w,r); ctx.lineTo(-w,r);
+            ctx.lineTo(-w,w); ctx.lineTo(-r,w); ctx.lineTo(-r,-w); ctx.lineTo(-w,-w);
         } else {
-            ctx.rect(-r/2, -r/2, r, r);
+            ctx.rect(-r*0.7, -r*0.7, r*1.4, r*1.4);
         }
         ctx.closePath();
         ctx.fill();
@@ -1010,76 +1028,176 @@ function drawObstacles() {
     });
 }
 
-
 function drawOrbs() {
     orbs.forEach(orb => {
-        orb.pulse += 0.05;
+        orb.pulse += 0.04;
         orb.hue = (orb.hue + 2) % 360;
-        // Fade out after 7 seconds (420 frames), gone at 10 seconds (600 frames)
-        const orbAlpha = orb.age > 420 ? Math.max(0, 1 - (orb.age - 420) / 180) : 1;
-        ctx.globalAlpha = orbAlpha;
-        const glow = 20 + Math.sin(orb.pulse) * 8;
+        const alpha = orb.age > 420 ? Math.max(0, 1 - (orb.age - 420) / 180) : 1;
+        if (alpha <= 0) return;
+        ctx.globalAlpha = alpha;
 
+        const glow = 18 + Math.sin(orb.pulse) * 8;
         ctx.save();
         ctx.translate(orb.x, orb.y);
-        ctx.rotate(orb.pulse * 0.5);
+        ctx.rotate(orb.pulse * 0.3);
         ctx.shadowColor = `hsl(${orb.hue}, 100%, 60%)`;
         ctx.shadowBlur = glow;
 
-        // Outer ring
+        // Outer shape
         ctx.beginPath();
         for (let i = 0; i < 12; i++) {
             const a = (Math.PI * 2 / 12) * i;
-            const r = orb.radius + Math.sin(orb.pulse + i) * 3;
+            const r = orb.radius + Math.sin(orb.pulse * 2 + i * 0.5) * 3;
             if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
             else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
         }
         ctx.closePath();
         ctx.strokeStyle = `hsl(${orb.hue}, 100%, 70%)`;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
-        ctx.fillStyle = `hsla(${orb.hue}, 100%, 60%, 0.2)`;
+        ctx.fillStyle = `hsla(${orb.hue}, 100%, 60%, 0.15)`;
         ctx.fill();
 
-        // Inner symbol (?)
+        // Inner "?" text
         ctx.fillStyle = '#fff';
-        ctx.font = 'bold 18px Courier New';
+        ctx.shadowColor = '#fff';
+        ctx.shadowBlur = 8;
+        ctx.font = 'bold 20px Courier New';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('?', 0, 0);
+        ctx.fillText('?', 0, 1);
 
         ctx.restore();
         ctx.shadowBlur = 0;
-        ctx.globalAlpha = 1.0;
+        ctx.globalAlpha = 1;
     });
 }
+
+function drawLasers() {
+    lasers.forEach(laser => {
+        ctx.save();
+        if (laser.phase === 'warning') {
+            const flash = Math.sin(laser.timer * 0.25) * 0.5 + 0.5;
+            ctx.globalAlpha = flash * 0.5;
+            ctx.strokeStyle = '#ff0066';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([10, 10]);
+
+            if (laser.diagonal) {
+                const cx = laser.cx, cy = laser.cy;
+                ctx.beginPath();
+                ctx.moveTo(cx - Math.cos(laser.angle)*canvas.width, cy - Math.sin(laser.angle)*canvas.width);
+                ctx.lineTo(cx + Math.cos(laser.angle)*canvas.width, cy + Math.sin(laser.angle)*canvas.width);
+                ctx.stroke();
+            } else if (laser.horizontal) {
+                ctx.beginPath(); ctx.moveTo(0, laser.y); ctx.lineTo(canvas.width, laser.y); ctx.stroke();
+            } else {
+                ctx.beginPath(); ctx.moveTo(laser.x, 0); ctx.lineTo(laser.x, canvas.height); ctx.stroke();
+            }
+
+            // Warning text flash
+            if (flash > 0.7) {
+                ctx.setLineDash([]);
+                ctx.globalAlpha = flash * 0.8;
+                ctx.fillStyle = '#ff0066';
+                ctx.font = 'bold 14px Courier New';
+                ctx.textAlign = 'center';
+                const tx = laser.horizontal ? canvas.width/2 : laser.x;
+                const ty = laser.horizontal ? laser.y - 18 : 30;
+                ctx.fillText('\u26A0 LASER', tx, ty);
+            }
+        } else if (laser.phase === 'active') {
+            ctx.globalAlpha = 1;
+            ctx.setLineDash([]);
+
+            // Outer glow
+            ctx.shadowColor = '#ff0066';
+            ctx.shadowBlur = 25;
+            ctx.strokeStyle = '#ff0066';
+            ctx.lineWidth = 8;
+
+            if (laser.diagonal) {
+                const cx = laser.cx, cy = laser.cy;
+                ctx.beginPath();
+                ctx.moveTo(cx - Math.cos(laser.angle)*canvas.width, cy - Math.sin(laser.angle)*canvas.width);
+                ctx.lineTo(cx + Math.cos(laser.angle)*canvas.width, cy + Math.sin(laser.angle)*canvas.width);
+                ctx.stroke();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+            } else if (laser.horizontal) {
+                ctx.beginPath(); ctx.moveTo(0, laser.y); ctx.lineTo(canvas.width, laser.y); ctx.stroke();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+            } else {
+                ctx.beginPath(); ctx.moveTo(laser.x, 0); ctx.lineTo(laser.x, canvas.height); ctx.stroke();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+            }
+
+            // Sparks along beam
+            if (frameCount % 2 === 0) {
+                for (let i = 0; i < 3; i++) {
+                    const t = Math.random();
+                    let sx, sy;
+                    if (laser.diagonal) {
+                        const cx = laser.cx, cy = laser.cy;
+                        sx = cx + Math.cos(laser.angle) * (t-0.5) * canvas.width * 2;
+                        sy = cy + Math.sin(laser.angle) * (t-0.5) * canvas.width * 2;
+                    } else if (laser.horizontal) {
+                        sx = Math.random() * canvas.width; sy = laser.y;
+                    } else {
+                        sx = laser.x; sy = Math.random() * canvas.height;
+                    }
+                    particles.push({ x: sx, y: sy, vx: (Math.random()-0.5)*4, vy: (Math.random()-0.5)*4,
+                        life: 0.5, decay: 0.05, color: Math.random()>0.5?'#ff0066':'#fff', size: 2 });
+                }
+            }
+        } else if (laser.phase === 'fade') {
+            ctx.globalAlpha = 1 - laser.timer / laser.fadeTime;
+            ctx.strokeStyle = '#ff0066';
+            ctx.lineWidth = 4;
+            ctx.shadowColor = '#ff0066';
+            ctx.shadowBlur = 10;
+            ctx.setLineDash([]);
+            if (laser.horizontal) { ctx.beginPath(); ctx.moveTo(0, laser.y); ctx.lineTo(canvas.width, laser.y); ctx.stroke(); }
+            else if (laser.diagonal) {
+                const cx = laser.cx, cy = laser.cy;
+                ctx.beginPath();
+                ctx.moveTo(cx - Math.cos(laser.angle)*canvas.width, cy - Math.sin(laser.angle)*canvas.width);
+                ctx.lineTo(cx + Math.cos(laser.angle)*canvas.width, cy + Math.sin(laser.angle)*canvas.width);
+                ctx.stroke();
+            } else { ctx.beginPath(); ctx.moveTo(laser.x, 0); ctx.lineTo(laser.x, canvas.height); ctx.stroke(); }
+        }
+        ctx.restore();
+    });
+}
+
 
 function drawParticles() {
     particles.forEach(p => {
         p.x += p.vx; p.y += p.vy;
         p.life -= p.decay;
-        p.vx *= 0.98; p.vy *= 0.98;
+        p.vx *= 0.97; p.vy *= 0.97;
         if (p.life > 0) {
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-            ctx.fillStyle = p.color + Math.floor(p.life * 255).toString(16).padStart(2, '0');
+            const a = Math.floor(p.life * 255).toString(16).padStart(2, '0');
+            ctx.fillStyle = p.color + a;
             ctx.fill();
         }
     });
     particles = particles.filter(p => p.life > 0);
+    if (particles.length > 500) particles.splice(0, particles.length - 500);
 }
 
 function drawFloatingTexts() {
     floatingTexts.forEach(ft => {
-        ft.life -= 0.015;
-        ft.y -= 1;
+        ft.life -= 0.012;
+        ft.y -= 0.8;
         if (ft.life > 0) {
             ctx.save();
             ctx.globalAlpha = ft.life;
             ctx.fillStyle = ft.color;
             ctx.shadowColor = ft.color;
-            ctx.shadowBlur = 10;
-            ctx.font = 'bold 18px Courier New';
+            ctx.shadowBlur = 8;
+            ctx.font = 'bold 16px Courier New';
             ctx.textAlign = 'center';
             ctx.fillText(ft.text, ft.x, ft.y);
             ctx.restore();
@@ -1088,245 +1206,270 @@ function drawFloatingTexts() {
     floatingTexts = floatingTexts.filter(ft => ft.life > 0);
 }
 
-
 function drawHUD() {
-    // Score
-    ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 20px Courier New';
+    ctx.save();
+    // Score (top-left)
     ctx.textAlign = 'left';
     ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 8;
-    ctx.fillText(`SCORE: ${score}`, 20, 36);
+    ctx.shadowBlur = 6;
+    ctx.fillStyle = '#00f0ff';
+    ctx.font = 'bold 18px Courier New';
+    ctx.fillText(`SCORE: ${score}`, 16, 32);
 
-    // Level
-    ctx.fillStyle = levels[level - 1].color;
-    ctx.shadowColor = levels[level - 1].color;
-    ctx.fillText(`LVL ${level}: ${levels[level - 1].name}`, 20, 64);
+    // Level + name
+    ctx.shadowColor = levels[level-1].color;
+    ctx.fillStyle = levels[level-1].color;
+    ctx.font = '14px Courier New';
+    ctx.fillText(`LVL ${level}: ${levels[level-1].name}`, 16, 54);
 
-    // Speed multiplier
-    ctx.fillStyle = speedMultiplier > 2.0 ? '#ff4444' : speedMultiplier > 1.5 ? '#ffaa00' : '#00ff88';
-    ctx.shadowColor = ctx.fillStyle;
-    ctx.fillText(`OBJ SPEED: ${speedMultiplier.toFixed(2)}x | SHIP: ${player.speed.toFixed(1)}`, 20, 92);
+    // Speed indicators
+    const shipSpd = (player.baseSpeed * playerSpeedMultiplier).toFixed(1);
+    const objSpd = obstacleSpeedMultiplier.toFixed(2);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#00ff88';
+    ctx.font = '12px Courier New';
+    ctx.fillText(`Ship: ${shipSpd}`, 16, 74);
+    ctx.fillStyle = obstacleSpeedMultiplier > 2.5 ? '#ff4444' : obstacleSpeedMultiplier > 1.8 ? '#ffaa00' : '#ff8c00';
+    ctx.fillText(`Objects: ${objSpd}x`, 100, 74);
 
-    // Health shields (5 hexagons)
+    // Shields (top-right, hexagons)
     ctx.textAlign = 'right';
+    const shieldX = canvas.width - 60;
     for (let i = 0; i < MAX_HEALTH; i++) {
-        ctx.fillStyle = i < health ? '#00f0ff' : '#333';
+        const sx = shieldX - i * 28;
+        ctx.fillStyle = i < health ? '#00f0ff' : '#222';
         ctx.shadowColor = i < health ? '#00f0ff' : 'transparent';
-        ctx.shadowBlur = i < health ? 8 : 0;
-        ctx.font = '22px Courier New';
-        ctx.fillText('\u2B21', canvas.width - 20 - i * 30, 36);
+        ctx.shadowBlur = i < health ? 6 : 0;
+        ctx.font = '20px Courier New';
+        ctx.fillText('\u2B22', sx, 32);
     }
 
-    // Progress bar for level advancement
-    const barW = 200, barH = 6, barX = canvas.width - barW - 20, barY = 52;
+    // Progress bar (below shields)
     ctx.shadowBlur = 0;
+    const barW = 150, barH = 5;
+    const barX = canvas.width - barW - 16, barY = 44;
     ctx.fillStyle = '#1a1a3a';
     ctx.fillRect(barX, barY, barW, barH);
-    const progress = Math.min(1, questionsAnsweredThisLevel / 4);
-    const gradient = ctx.createLinearGradient(barX, 0, barX + barW * progress, 0);
-    gradient.addColorStop(0, '#00f0ff');
-    gradient.addColorStop(1, levels[level - 1].color);
-    ctx.fillStyle = gradient;
+    const progress = Math.min(1, questionsAnsweredThisLevel / QUESTIONS_PER_LEVEL);
+    const grad = ctx.createLinearGradient(barX, 0, barX + barW * progress, 0);
+    grad.addColorStop(0, '#00f0ff');
+    grad.addColorStop(1, levels[level-1].color);
+    ctx.fillStyle = grad;
     ctx.fillRect(barX, barY, barW * progress, barH);
-
-    // Progress label
-    ctx.fillStyle = '#a8c4df';
-    ctx.font = '11px Courier New';
+    // Label
+    ctx.fillStyle = '#8899aa';
+    ctx.font = '10px Courier New';
     ctx.textAlign = 'right';
-    ctx.fillText(`${questionsAnsweredThisLevel}/4 to next level`, canvas.width - 20, barY + 18);
+    ctx.fillText(`${questionsAnsweredThisLevel}/${QUESTIONS_PER_LEVEL} questions`, canvas.width - 16, barY + 16);
 
-    ctx.textAlign = 'left';
-    ctx.shadowBlur = 0;
+    ctx.restore();
 }
 
 
 function drawStartScreen() {
     drawBackground();
+    const cx = canvas.width / 2;
+    const isMobile = canvas.width < 600;
+    const fontSize = isMobile ? 0.8 : 1;
 
-    // Title with glow
+    // Title with animated glow
     ctx.textAlign = 'center';
     ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 30;
+    ctx.shadowBlur = 25 + Math.sin(frameCount * 0.04) * 10;
     ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 48px Courier New';
-    ctx.fillText('NEON CIRCUIT DASH', canvas.width / 2, canvas.height * 0.15);
-
-    ctx.shadowBlur = 15;
+    ctx.font = `bold ${Math.floor(42*fontSize)}px Courier New`;
+    ctx.fillText('NEON CIRCUIT DASH', cx, canvas.height * 0.1);
+    ctx.shadowBlur = 10;
     ctx.fillStyle = '#b300ff';
-    ctx.font = '16px Courier New';
-    ctx.fillText('CompTIA A+ Learning Arcade', canvas.width / 2, canvas.height * 0.15 + 36);
+    ctx.font = `${Math.floor(14*fontSize)}px Courier New`;
+    ctx.fillText('CompTIA A+ Learning Arcade', cx, canvas.height * 0.1 + 30 * fontSize);
 
-    // Instructions section
+    // HOW TO PLAY section
     ctx.shadowBlur = 0;
+    const startY = canvas.height * 0.18;
     ctx.fillStyle = '#ffdd00';
-    ctx.font = 'bold 16px Courier New';
-    ctx.fillText('\u{1F579}\uFE0F HOW TO PLAY:', canvas.width / 2, canvas.height * 0.28);
+    ctx.font = `bold ${Math.floor(15*fontSize)}px Courier New`;
+    ctx.fillText('HOW TO PLAY', cx, startY);
 
-    ctx.fillStyle = '#a8c4df';
-    ctx.font = '14px Courier New';
+    ctx.font = `${Math.floor(12*fontSize)}px Courier New`;
+    ctx.fillStyle = '#c0d0e0';
     const instructions = [
-        '\u2022 Move your ship with Arrow Keys, WASD, or Mouse',
-        '\u2022 AVOID obstacles flying across the screen',
-        '\u2022 GRAB the spinning \u2753 orbs to trigger quiz questions',
-        '\u2022 Correct = +1 Life (or +200 Bonus at max!) + YOUR ship gets faster',
-        '\u2022 Wrong = OBSTACLES fly faster (no life lost, but harder to dodge!)',
-        '\u2022 Only collisions with obstacles cost you a life',
-        '\u2022 Survive 7 levels and get on the high scoreboard!',
-        '',
-        '\u2022 Press ESC or P to Pause/Resume at any time'
+        '\u{1F3AE}  Move: Arrow Keys / WASD / Mouse / Touch',
+        '\u26A0\uFE0F  Avoid obstacles flying across the screen',
+        '\u2753  Grab spinning orbs to answer quiz questions',
+        '\u2705  Correct = +Life + YOUR ship speeds up',
+        '\u274C  Wrong = Obstacles speed up (no life lost!)',
+        '\u{1F4A5}  Only collisions/lasers cost lives',
+        '\u{1F3C6}  Survive 7 levels to top the leaderboard',
+        '\u23F8\uFE0F  Pause: ESC / P / On-screen button'
     ];
+    const lineH = Math.floor(22 * fontSize);
     instructions.forEach((line, i) => {
-        ctx.fillText(line, canvas.width / 2, canvas.height * 0.34 + i * 24);
+        ctx.fillText(line, cx, startY + 24 * fontSize + i * lineH);
     });
 
+    const afterInstructions = startY + 24*fontSize + instructions.length * lineH + 12;
     ctx.fillStyle = '#ff8c00';
-    ctx.font = 'bold 14px Courier New';
-    const speedTextY = canvas.height * 0.34 + instructions.length * 24 + 16;
-    ctx.fillText('\u26A1 Speed increases with every answer \u2014 stay sharp!', canvas.width / 2, speedTextY);
+    ctx.font = `bold ${Math.floor(12*fontSize)}px Courier New`;
+    ctx.fillText('\u26A1 Speed increases with every answer \u2014 stay sharp!', cx, afterInstructions);
 
-    // High scores - positioned with proper spacing below speed text
-    const hsStartY = speedTextY + 50;
+    // High scores box with proper margin
+    const hsBoxTop = afterInstructions + 30 * fontSize;
+    const boxW = Math.min(400, canvas.width * 0.85);
+    const boxX = cx - boxW / 2;
+
     if (highScores.length > 0) {
-        const hsY = hsStartY;
-        
-        // Glowing border box for high scores
-        const boxW = 420, boxH = highScores.slice(0, 5).length * 24 + 60;
-        const boxX = canvas.width / 2 - boxW / 2, boxY2 = hsY - 20;
-        ctx.strokeStyle = '#ffdd00';
+        const entries = highScores.slice(0, 5);
+        const entryH = Math.floor(22 * fontSize);
+        const boxH = 40 + entries.length * entryH + 20;
+
+        // Box border
+        ctx.strokeStyle = '#ffdd0088';
         ctx.shadowColor = '#ffdd00';
-        ctx.shadowBlur = 15;
-        ctx.lineWidth = 2;
-        ctx.strokeRect(boxX, boxY2, boxW, boxH);
-        ctx.fillStyle = 'rgba(255, 221, 0, 0.03)';
-        ctx.fillRect(boxX, boxY2, boxW, boxH);
+        ctx.shadowBlur = 12;
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(boxX, hsBoxTop, boxW, boxH);
+        ctx.fillStyle = 'rgba(255,221,0,0.02)';
+        ctx.fillRect(boxX, hsBoxTop, boxW, boxH);
         ctx.shadowBlur = 0;
-        
+
+        // Title
         ctx.fillStyle = '#ffdd00';
-        ctx.font = 'bold 18px Courier New';
-        ctx.fillText('\u{1F3C6} HIGH SCORES \u{1F3C6}', canvas.width / 2, hsY + 6);
-        ctx.font = '13px Courier New';
-        highScores.slice(0, 5).forEach((hs, i) => {
-            const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}', '  ', '  '];
+        ctx.font = `bold ${Math.floor(16*fontSize)}px Courier New`;
+        ctx.fillText('\u{1F3C6} HIGH SCORES', cx, hsBoxTop + 24);
+
+        // Entries
+        ctx.font = `${Math.floor(12*fontSize)}px Courier New`;
+        const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}', ' 4.', ' 5.'];
+        entries.forEach((hs, i) => {
             ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#a8c4df';
-            ctx.shadowColor = i === 0 ? '#ffd700' : 'transparent';
-            ctx.shadowBlur = i === 0 ? 8 : 0;
-            ctx.fillText(`${medals[i]} ${hs.name} - ${hs.score} (Lvl ${hs.level}, ${hs.accuracy}%)`, canvas.width / 2, hsY + 30 + i * 24);
+            ctx.shadowColor = i === 0 ? '#ffd70066' : 'transparent';
+            ctx.shadowBlur = i === 0 ? 6 : 0;
+            ctx.fillText(`${medals[i]} ${hs.name} - ${hs.score} pts (Lvl ${hs.level}, ${hs.accuracy}%)`, cx, hsBoxTop + 48 + i * entryH);
         });
         ctx.shadowBlur = 0;
     } else {
-        ctx.fillStyle = '#5c6b80';
-        ctx.font = '14px Courier New';
-        ctx.fillText('No high scores yet \u2014 be the first!', canvas.width / 2, hsStartY + 10);
+        ctx.fillStyle = '#556677';
+        ctx.font = `${Math.floor(13*fontSize)}px Courier New`;
+        ctx.fillText('No high scores yet \u2014 be the first!', cx, hsBoxTop + 20);
     }
 
     // Press Start (blinking)
-    if (Math.sin(frameCount * 0.06) > 0) {
+    if (Math.sin(frameCount * 0.05) > -0.3) {
         ctx.shadowColor = '#00ff88';
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 12;
         ctx.fillStyle = '#00ff88';
-        ctx.font = 'bold 20px Courier New';
-        ctx.fillText('[ PRESS SPACE OR CLICK TO START ]', canvas.width / 2, canvas.height * 0.9);
+        ctx.font = `bold ${Math.floor(18*fontSize)}px Courier New`;
+        ctx.fillText(isMobile ? 'TAP TO START' : 'PRESS SPACE / TAP TO START', cx, canvas.height * 0.92);
     }
-
     ctx.shadowBlur = 0;
     ctx.textAlign = 'left';
 }
 
-
 function drawLevelTransition() {
-    drawBackground();
+    // Fade overlay
+    transitionTimer++;
+    if (transitionTimer < 30) transitionAlpha = transitionTimer / 30;
+    else if (transitionTimer > 150) transitionAlpha = Math.max(0, 1 - (transitionTimer - 150) / 30);
+    else transitionAlpha = 1;
 
     const lvl = levels[level - 1];
+    ctx.save();
+    ctx.globalAlpha = transitionAlpha;
     ctx.textAlign = 'center';
 
-    // Level number
+    // Large level number
     ctx.shadowColor = lvl.color;
-    ctx.shadowBlur = 30;
+    ctx.shadowBlur = 40;
     ctx.fillStyle = lvl.color;
-    ctx.font = 'bold 60px Courier New';
+    ctx.font = 'bold 72px Courier New';
     ctx.fillText(`LEVEL ${level}`, canvas.width / 2, canvas.height * 0.35);
 
     // Level name
     ctx.shadowBlur = 15;
-    ctx.font = 'bold 28px Courier New';
+    ctx.font = 'bold 30px Courier New';
     ctx.fillText(lvl.name, canvas.width / 2, canvas.height * 0.45);
 
     // Subjects
     ctx.shadowBlur = 0;
-    ctx.fillStyle = '#a8c4df';
+    ctx.fillStyle = '#c0d0e0';
     ctx.font = '16px Courier New';
     ctx.fillText(lvl.subjects, canvas.width / 2, canvas.height * 0.53);
 
-    // Speed warning
+    // Speed info
     ctx.fillStyle = '#ffaa00';
-    ctx.font = '14px Courier New';
-    ctx.fillText(`Obj Speed: ${speedMultiplier.toFixed(2)}x | Ship Speed: ${player.speed.toFixed(1)}`, canvas.width / 2, canvas.height * 0.6);
+    ctx.font = '13px Courier New';
+    ctx.fillText(`Objects: ${obstacleSpeedMultiplier.toFixed(2)}x | Ship: ${(player.baseSpeed*playerSpeedMultiplier).toFixed(1)}`, canvas.width / 2, canvas.height * 0.59);
 
+    ctx.restore();
     ctx.textAlign = 'left';
-    ctx.shadowBlur = 0;
 }
 
-// ========== MAIN GAME LOOP ==========
+
+// ========== MAIN UPDATE ==========
 function update() {
     if (paused) return;
-    
-    // Always move obstacles and spawn new ones (even during quiz and level transitions)
+
+    // frameCount always increments (for animations in all states)
+    frameCount++;
+
+    // Obstacles spawn and move in ALL active states (playing, quiz, levelTransition)
     if (gameState === 'playing' || gameState === 'quiz' || gameState === 'levelTransition') {
-        frameCount++;
+        // Move obstacles
         obstacles.forEach(obs => {
-            obs.x += obs.vx; obs.y += obs.vy;
+            obs.x += obs.vx;
+            obs.y += obs.vy;
             obs.rotation += obs.rotSpeed;
         });
+        // Remove off-screen
         obstacles = obstacles.filter(obs =>
-            obs.x > -60 && obs.x < canvas.width + 60 &&
-            obs.y > -60 && obs.y < canvas.height + 60
+            obs.x > -80 && obs.x < canvas.width + 80 &&
+            obs.y > -80 && obs.y < canvas.height + 80
         );
-        if (frameCount % spawnRate === 0) spawnObstacle();
-        
-        // Update and check lasers
+        // Spawn rate based on current level config
+        const currentSpawnRate = LEVEL_CONFIGS[level - 1].spawnRate;
+        if (frameCount % currentSpawnRate === 0) spawnObstacle();
+
+        // Update lasers
         updateLasers();
-        
-        // Fade orbs over time
-        orbs.forEach(orb => { orb.age = (orb.age || 0) + 1; });
-        orbs = orbs.filter(orb => orb.age < 600); // 10 seconds at 60fps
+
+        // Age orbs and remove expired (10s = 600 frames)
+        orbs.forEach(orb => { orb.age++; });
+        orbs = orbs.filter(orb => orb.age < 600);
     }
-    
+
+    // Only process player input and collisions in 'playing' state
     if (gameState !== 'playing') return;
 
-    // Speed increase every 30 seconds within a level
-    const now = Date.now();
-    if (now - lastSpeedIncreaseTime >= 30000) {
-        speedMultiplier += 0.05;
-        if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
-        lastSpeedIncreaseTime = now;
-    }
-
     // Player movement
+    const speed = player.baseSpeed * playerSpeedMultiplier;
     if (useMouseControl) {
         const dx = mouseX - player.x;
         const dy = mouseY - player.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist > 2) {
-            player.x += (dx / dist) * Math.min(player.speed, dist);
-            player.y += (dy / dist) * Math.min(player.speed, dist);
+            player.x += (dx / dist) * Math.min(speed, dist);
+            player.y += (dy / dist) * Math.min(speed, dist);
         }
     }
-    if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= player.speed;
-    if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += player.speed;
-    if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= player.speed;
-    if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += player.speed;
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.x -= speed;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) player.x += speed;
+    if (keys['ArrowUp'] || keys['w'] || keys['W']) player.y -= speed;
+    if (keys['ArrowDown'] || keys['s'] || keys['S']) player.y += speed;
 
-    // Clamp player
-    player.x = Math.max(15, Math.min(canvas.width - 15, player.x));
-    player.y = Math.max(15, Math.min(canvas.height - 15, player.y));
+    // Clamp
+    player.x = Math.max(18, Math.min(canvas.width - 18, player.x));
+    player.y = Math.max(18, Math.min(canvas.height - 18, player.y));
 
-    // Invincibility timer
+    // Invincibility
     if (player.invincible > 0) player.invincible--;
 
-    // Spawn orbs
+    // Green flash decay
+    if (greenFlashAlpha > 0) greenFlashAlpha -= 0.015;
+
+    // Orb spawning (every 5-8 seconds, max 3 orbs)
     orbTimer++;
-    if (orbTimer > 300 + Math.random() * 200) {
+    if (orbTimer > 300 + Math.floor(Math.random() * 180)) {
         if (orbs.length < 3) spawnOrb();
         orbTimer = 0;
     }
@@ -1334,12 +1477,13 @@ function update() {
     // Collision with obstacles
     if (player.invincible <= 0) {
         for (let i = obstacles.length - 1; i >= 0; i--) {
-            if (checkCollision(player, obstacles[i], 12, obstacles[i].radius)) {
+            if (checkCollision(player, obstacles[i], 14, obstacles[i].radius)) {
                 health--;
-                player.invincible = 60;
+                player.invincible = 75;
                 sfxCollision();
-                screenShake = 10;
-                createExplosion(player.x, player.y, 40, ['#ff0066', '#ff4400', '#00f0ff']);
+                screenShake = 12;
+                createExplosion(player.x, player.y, 70, ['#ff0066', '#ff4400', '#00f0ff', '#fff']);
+                addFloatingText('-1 SHIELD', player.x, player.y - 40, '#ff0066');
                 obstacles.splice(i, 1);
                 if (health <= 0) { gameOver(); return; }
                 break;
@@ -1349,29 +1493,27 @@ function update() {
 
     // Collision with orbs
     for (let i = orbs.length - 1; i >= 0; i--) {
-        if (checkCollision(player, orbs[i], 12, orbs[i].radius)) {
+        if (checkCollision(player, orbs[i], 14, orbs[i].radius)) {
             sfxOrb();
-            createExplosion(orbs[i].x, orbs[i].y, 20, ['#fff', '#00f0ff', '#b300ff']);
+            createExplosion(orbs[i].x, orbs[i].y, 25, ['#fff', '#00f0ff', '#b300ff', '#ffdd00']);
             orbs.splice(i, 1);
             showQuiz();
             return;
         }
     }
 
-    // Score ticks
+    // Passive score ticks
     if (frameCount % 60 === 0) score += 5;
 }
 
-
+// ========== MAIN RENDER ==========
 function render() {
+    ctx.save();
     // Screen shake
     if (screenShake > 0) {
-        ctx.save();
-        ctx.translate(
-            (Math.random() - 0.5) * screenShake,
-            (Math.random() - 0.5) * screenShake
-        );
-        screenShake--;
+        ctx.translate((Math.random()-0.5)*screenShake, (Math.random()-0.5)*screenShake);
+        screenShake *= 0.85;
+        if (screenShake < 0.5) screenShake = 0;
     }
 
     if (gameState === 'start') {
@@ -1381,6 +1523,7 @@ function render() {
         drawObstacles();
         drawLasers();
         drawParticles();
+        drawFloatingTexts();
         drawLevelTransition();
     } else if (gameState === 'playing' || gameState === 'quiz' || gameState === 'paused') {
         drawBackground();
@@ -1391,20 +1534,29 @@ function render() {
         drawParticles();
         drawFloatingTexts();
         drawHUD();
+
+        // Green flash on correct answer
+        if (greenFlashAlpha > 0) {
+            ctx.fillStyle = `rgba(0, 255, 100, ${greenFlashAlpha * 0.15})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Edge tint
+            const g = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width*0.3, canvas.width/2, canvas.height/2, canvas.width*0.7);
+            g.addColorStop(0, 'transparent');
+            g.addColorStop(1, `rgba(0, 255, 100, ${greenFlashAlpha * 0.3})`);
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
     } else if (gameState === 'gameOver') {
         drawBackground();
         drawParticles();
     }
 
-    if (screenShake > 0) {
-        ctx.restore();
-    }
+    ctx.restore();
 }
 
 function gameLoop() {
     update();
     render();
-    frameCount++;
     requestAnimationFrame(gameLoop);
 }
 
