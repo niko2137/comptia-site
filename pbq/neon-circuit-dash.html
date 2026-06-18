@@ -276,6 +276,7 @@ document.addEventListener('keydown', e => {
     keys[e.key] = true;
     if (gameState === 'start' && (e.key === ' ' || e.key === 'Enter')) startGame();
     if (gameState === 'gameOver' && e.key === 'Enter') showStartScreen();
+    if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') togglePause();
 });
 document.addEventListener('keyup', e => keys[e.key] = false);
 document.addEventListener('mousemove', e => {
@@ -428,19 +429,21 @@ function answerQuestion(idx) {
         score += 100 + quizTimeLeft * 10;
         correctAnswers++;
         
-        // Speed increase for correct: +0.05
-        speedMultiplier += 0.05;
-        if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
+        // Correct = increase PLAYER movement speed (not obstacle speed)
+        player.speed += 0.3;
+        if (player.speed > 12) player.speed = 12; // cap player speed
         
         if (health >= MAX_HEALTH) {
             // MAX LIVES BONUS
             score += 200;
             sfxBonus();
             addFloatingText('MAX LIVES BONUS +200', player.x, player.y - 40, '#ffdd00');
+            addFloatingText('SPEED UP!', player.x, player.y - 70, '#00f0ff');
             createExplosion(player.x, player.y, 40, ['#ffdd00', '#ffaa00', '#fff', '#00f0ff']);
         } else {
             health++;
             sfxCorrect();
+            addFloatingText('+1 LIFE + SPEED', player.x, player.y - 40, '#00ff88');
             createExplosion(player.x, player.y, 30, ['#00ff88', '#00f0ff', '#fff']);
         }
     } else {
@@ -448,12 +451,13 @@ function answerQuestion(idx) {
         score = Math.max(0, score - 50);
         health--;
         
-        // Speed increase for wrong: +0.15
-        speedMultiplier += 0.15;
+        // Wrong = increase OBSTACLE/GAME speed (harder to dodge)
+        speedMultiplier += 0.2;
         if (speedMultiplier > maxSpeedReached) maxSpeedReached = speedMultiplier;
         
         sfxWrong();
         screenShake = 15;
+        addFloatingText('OBJECTS FASTER!', player.x, player.y - 40, '#ff0066');
         createExplosion(player.x, player.y, 50, ['#ff0066', '#ff4400', '#ff8800']);
         if (health <= 0) { overlay.remove(); gameOver(); return; }
     }
@@ -471,7 +475,7 @@ function answerQuestion(idx) {
 function levelUp() {
     level++;
     questionsAnsweredThisLevel = 0;
-    spawnRate = Math.max(20, 60 - (level - 1) * 6);
+    spawnRate = Math.max(15, 35 - (level - 1) * 3);
     obstacles = [];
     orbs = [];
     gameState = 'levelTransition';
@@ -484,6 +488,51 @@ function levelUp() {
 
 
 // ========== GAME FUNCTIONS ==========
+// ========== PAUSE SYSTEM ==========
+function togglePause() {
+    if (gameState === 'playing') {
+        paused = true;
+        gameState = 'paused';
+        showPauseMenu();
+    } else if (gameState === 'paused') {
+        resumeGame();
+    }
+}
+
+function showPauseMenu() {
+    const overlay = document.createElement('div');
+    overlay.id = 'pause-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,26,0.92);display:flex;align-items:center;justify-content:center;z-index:100;animation:fadeIn 0.2s;';
+    
+    overlay.innerHTML = `
+        <div style="text-align:center;max-width:400px;width:90%;padding:40px;border-radius:16px;background:rgba(15,15,35,0.95);border:2px solid #00f0ff;box-shadow:0 0 40px #00f0ff44;">
+            <h1 style="color:#00f0ff;font-size:2em;margin-bottom:16px;">⏸ PAUSED</h1>
+            <p style="color:#a8c4df;margin-bottom:8px;">Score: ${score} | Level: ${level}/7</p>
+            <p style="color:#a8c4df;margin-bottom:24px;">Ship Speed: ${player.speed.toFixed(1)} | Objects: ${speedMultiplier.toFixed(2)}x</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button onclick="resumeGame()" style="padding:14px 28px;border-radius:8px;background:#00ff88;color:#0a0a1a;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;font-size:1em;">▶ Resume</button>
+                <button onclick="endGame()" style="padding:14px 28px;border-radius:8px;background:#ff0066;color:#fff;border:none;font-weight:bold;cursor:pointer;font-family:'Courier New',monospace;font-size:1em;">✖ End Game</button>
+            </div>
+            <p style="color:#5c6b80;margin-top:16px;font-size:0.8em;">Press ESC or P to resume</p>
+        </div>
+    `;
+    
+    uiOverlay.appendChild(overlay);
+}
+
+function resumeGame() {
+    paused = false;
+    gameState = 'playing';
+    const overlay = document.getElementById('pause-overlay');
+    if (overlay) overlay.remove();
+}
+
+function endGame() {
+    const overlay = document.getElementById('pause-overlay');
+    if (overlay) overlay.remove();
+    gameOver();
+}
+
 function startGame() {
     initAudio();
     gameState = 'playing';
@@ -491,14 +540,16 @@ function startGame() {
     correctAnswers = 0; totalQuestions = 0;
     questionsAnsweredThisLevel = 0;
     speedMultiplier = 1.0; maxSpeedReached = 1.0;
-    spawnRate = 60;
+    spawnRate = 35;
     frameCount = 0; orbTimer = 0; levelTimer = 0;
     startTime = Date.now();
     lastSpeedIncreaseTime = Date.now();
     player.x = canvas.width / 2;
     player.y = canvas.height * 0.75;
+    player.speed = 5;
     player.trail = [];
     player.invincible = 0;
+    paused = false;
     particles = []; obstacles = []; orbs = [];
     floatingTexts = [];
     initBgParticles();
@@ -812,7 +863,7 @@ function drawHUD() {
     // Speed multiplier
     ctx.fillStyle = speedMultiplier > 2.0 ? '#ff4444' : speedMultiplier > 1.5 ? '#ffaa00' : '#00ff88';
     ctx.shadowColor = ctx.fillStyle;
-    ctx.fillText(`SPEED: ${speedMultiplier.toFixed(2)}x`, 20, 92);
+    ctx.fillText(`OBJ SPEED: ${speedMultiplier.toFixed(2)}x | SHIP: ${player.speed.toFixed(1)}`, 20, 92);
 
     // Health shields (5 hexagons)
     ctx.textAlign = 'right';
@@ -875,9 +926,11 @@ function drawStartScreen() {
         '\u2022 Move your ship with Arrow Keys, WASD, or Mouse',
         '\u2022 AVOID obstacles flying across the screen',
         '\u2022 GRAB the spinning \u2753 orbs to trigger quiz questions',
-        '\u2022 Correct answer = +1 Life (or +200 Bonus if max lives!)',
-        '\u2022 Wrong answer = -1 Life + Speed Increase',
-        '\u2022 Survive 7 levels and top the leaderboard!'
+        '\u2022 Correct = +1 Life (or +200 Bonus at max!) + YOUR ship gets faster',
+        '\u2022 Wrong = -1 Life + OBSTACLES fly faster (harder to dodge!)',
+        '\u2022 Survive 7 levels and get on the high scoreboard!',
+        '',
+        '\u2022 Press ESC or P to Pause/Resume at any time'
     ];
     instructions.forEach((line, i) => {
         ctx.fillText(line, canvas.width / 2, canvas.height * 0.34 + i * 24);
@@ -942,7 +995,7 @@ function drawLevelTransition() {
     // Speed warning
     ctx.fillStyle = '#ffaa00';
     ctx.font = '14px Courier New';
-    ctx.fillText(`Current Speed: ${speedMultiplier.toFixed(2)}x`, canvas.width / 2, canvas.height * 0.6);
+    ctx.fillText(`Obj Speed: ${speedMultiplier.toFixed(2)}x | Ship Speed: ${player.speed.toFixed(1)}`, canvas.width / 2, canvas.height * 0.6);
 
     ctx.textAlign = 'left';
     ctx.shadowBlur = 0;
@@ -950,7 +1003,7 @@ function drawLevelTransition() {
 
 // ========== MAIN GAME LOOP ==========
 function update() {
-    if (gameState !== 'playing') return;
+    if (gameState !== 'playing' || paused) return;
 
     frameCount++;
 
@@ -1053,7 +1106,7 @@ function render() {
         drawStartScreen();
     } else if (gameState === 'levelTransition') {
         drawLevelTransition();
-    } else if (gameState === 'playing' || gameState === 'quiz') {
+    } else if (gameState === 'playing' || gameState === 'quiz' || gameState === 'paused') {
         drawBackground();
         drawObstacles();
         drawOrbs();
