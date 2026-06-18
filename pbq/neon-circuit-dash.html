@@ -476,13 +476,19 @@ function levelUp() {
     level++;
     questionsAnsweredThisLevel = 0;
     spawnRate = Math.max(15, 35 - (level - 1) * 3);
-    obstacles = [];
+    // Don't clear obstacles — let them keep flying during transition
     orbs = [];
     gameState = 'levelTransition';
     lastSpeedIncreaseTime = Date.now();
 
     setTimeout(() => {
-        if (gameState === 'levelTransition') gameState = 'playing';
+        if (gameState === 'levelTransition') {
+            gameState = 'playing';
+            // Immediately spawn a burst of obstacles so screen isn't empty
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => spawnObstacle(), i * 200);
+            }
+        }
     }, 3000);
 }
 
@@ -1113,6 +1119,21 @@ function render() {
     if (gameState === 'start') {
         drawStartScreen();
     } else if (gameState === 'levelTransition') {
+        drawBackground();
+        // Keep obstacles flying during transition
+        obstacles.forEach(obs => {
+            obs.x += obs.vx; obs.y += obs.vy;
+            obs.rotation += obs.rotSpeed;
+        });
+        obstacles = obstacles.filter(obs =>
+            obs.x > -60 && obs.x < canvas.width + 60 &&
+            obs.y > -60 && obs.y < canvas.height + 60
+        );
+        // Spawn during transition too
+        frameCount++;
+        if (frameCount % (spawnRate + 10) === 0) spawnObstacle();
+        drawObstacles();
+        drawParticles();
         drawLevelTransition();
     } else if (gameState === 'playing' || gameState === 'quiz' || gameState === 'paused') {
         drawBackground();
