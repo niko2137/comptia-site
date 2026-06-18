@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cable Match - CompTIA A+ Study Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a1a;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<script>
+// ============================================================
+// CABLE MATCH - Tetris-style Cable Sorting Game
+// CompTIA A+ Study Tool
+// ============================================================
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// Responsive canvas sizing
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// ============================================================
+// AUDIO ENGINE - Web Audio API Synth Sounds
+// ============================================================
+class AudioEngine {
+    constructor() {
+        this.ctx = null;
+        this.initialized = false;
+    }
+
+    init() {
+        if (this.initialized) return;
+        try {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this.initialized = true;
+        } catch(e) {
+            console.log('Web Audio not available');
+        }
+    }
+
+
+    playCorrect() {
+        if (!this.initialized) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1047, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.3);
+    }
+
+    playWrong() {
+        if (!this.initialized) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.4);
+    }
+
+    playDrop() {
+        if (!this.initialized) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, this.ctx.currentTime + 0.5);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.5);
+    }
+
+    playPowerUp() {
+        if (!this.initialized) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.2);
+        osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.5);
+    }
+
+    playCombo() {
+        if (!this.initialized) return;
+        const notes = [523, 659, 784, 1047];
+        notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.08);
+            gain.gain.setValueAtTime(0.2, this.ctx.currentTime + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.08 + 0.2);
+            osc.start(this.ctx.currentTime + i * 0.08);
+            osc.stop(this.ctx.currentTime + i * 0.08 + 0.2);
+        });
+    }
+
+    playGameOver() {
+        if (!this.initialized) return;
+        const notes = [400, 350, 300, 200];
+        notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.2);
+            gain.gain.setValueAtTime(0.2, this.ctx.currentTime + i * 0.2);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + i * 0.2 + 0.4);
+            osc.start(this.ctx.currentTime + i * 0.2);
+            osc.stop(this.ctx.currentTime + i * 0.2 + 0.4);
+        });
+    }
+}
+
+const audio = new AudioEngine();
+
+
+// ============================================================
+// CABLE DATA
+// ============================================================
+const CABLE_DATA = {
+    slow: {
+        name: 'Slow',
+        subtitle: 'Up to 1 Gbps',
+        color: '#ff4444',
+        glowColor: '#ff6600',
+        cables: [
+            { name: 'Cat 5e', speed: '1 Gbps', icon: '🔌' },
+            { name: 'USB 2.0', speed: '480 Mbps', icon: '🔗' },
+            { name: 'Coaxial RG-6', speed: '1 Gbps', icon: '📡' },
+            { name: 'Coaxial RG-59', speed: '270 Mbps', icon: '📡' },
+            { name: 'VGA (DE-15)', speed: 'Analog', icon: '🖥️' },
+            { name: 'DVI-A', speed: 'Analog', icon: '🖥️' },
+            { name: 'DVI-D Single', speed: '3.96 Gbps', icon: '🖥️' },
+            { name: 'Cat 5', speed: '100 Mbps', icon: '🔌' },
+            { name: 'USB 1.1', speed: '12 Mbps', icon: '🔗' },
+            { name: 'Token Ring', speed: '16 Mbps', icon: '⭕' },
+            { name: '10BASE-T', speed: '10 Mbps', icon: '🔌' },
+            { name: 'Modem Cable', speed: '56 Kbps', icon: '📞' },
+            { name: 'DSL Cable', speed: '100 Mbps', icon: '📞' },
+            { name: 'S-Video', speed: 'Analog', icon: '📺' },
+            { name: 'Composite RCA', speed: 'Analog', icon: '📺' }
+        ]
+    },
+    medium: {
+        name: 'Medium',
+        subtitle: '1-10 Gbps',
+        color: '#4488ff',
+        glowColor: '#00aaff',
+        cables: [
+            { name: 'Cat 6', speed: '1-10 Gbps', icon: '🔌' },
+            { name: 'Cat 6a', speed: '10 Gbps', icon: '🔌' },
+            { name: 'USB 3.0', speed: '5 Gbps', icon: '🔗' },
+            { name: 'USB 3.1 Gen1', speed: '5 Gbps', icon: '🔗' },
+            { name: 'USB 3.1 Gen2', speed: '10 Gbps', icon: '🔗' },
+            { name: 'HDMI 2.0', speed: '6 Gbps', icon: '🎬' },
+            { name: 'HDMI 1.4', speed: '3.4 Gbps', icon: '🎬' },
+            { name: 'DVI-D Dual', speed: '7.92 Gbps', icon: '🖥️' },
+            { name: 'DisplayPort 1.2', speed: '5.4 Gbps', icon: '🖥️' },
+            { name: 'DisplayPort 1.4', speed: '8.1 Gbps', icon: '🖥️' },
+            { name: 'SATA III', speed: '6 Gbps', icon: '💾' },
+            { name: 'eSATA', speed: '6 Gbps', icon: '💾' },
+            { name: 'SAS-2', speed: '6 Gbps', icon: '💾' },
+            { name: 'SFP+', speed: '10 Gbps', icon: '🌐' },
+            { name: 'Cat 7', speed: '10 Gbps', icon: '🔌' }
+        ]
+    },
+    fast: {
+        name: 'Fast',
+        subtitle: '10+ Gbps',
+        color: '#44ff44',
+        glowColor: '#00ff88',
+        cables: [
+            { name: 'Cat 8', speed: '25-40 Gbps', icon: '🔌' },
+            { name: 'USB 4.0', speed: '40 Gbps', icon: '🔗' },
+            { name: 'Thunderbolt 3', speed: '40 Gbps', icon: '⚡' },
+            { name: 'Thunderbolt 4', speed: '40 Gbps', icon: '⚡' },
+            { name: 'Thunderbolt 5', speed: '80 Gbps', icon: '⚡' },
+            { name: 'DisplayPort 2.0', speed: '77.4 Gbps', icon: '🖥️' },
+            { name: 'HDMI 2.1', speed: '48 Gbps', icon: '🎬' },
+            { name: 'Fiber OM3', speed: '10+ Gbps', icon: '💎' },
+            { name: 'Fiber OM4', speed: '10-100 Gbps', icon: '💎' },
+            { name: 'Fiber OM5', speed: '100+ Gbps', icon: '💎' },
+            { name: 'Fiber OS1', speed: '10+ Gbps', icon: '💎' },
+            { name: 'Fiber OS2', speed: '100+ Gbps', icon: '💎' },
+            { name: 'PCIe 4.0 x16', speed: '31.5 Gbps', icon: '🔧' },
+            { name: 'PCIe 5.0 x16', speed: '63 Gbps', icon: '🔧' },
+            { name: 'QSFP28', speed: '100 Gbps', icon: '🌐' },
+            { name: 'InfiniBand', speed: '100+ Gbps', icon: '🌐' }
+        ]
+    },
+    legacy: {
+        name: 'Legacy',
+        subtitle: 'Obsolete',
+        color: '#aa44ff',
+        glowColor: '#8800ff',
+        cables: [
+            { name: 'Parallel Port', speed: '1.2 Mbps', icon: '🖨️' },
+            { name: 'Serial Port (RS-232)', speed: '115 Kbps', icon: '📟' },
+            { name: 'PS/2', speed: '33 Kbps', icon: '⌨️' },
+            { name: 'FireWire 400', speed: '400 Mbps', icon: '🔥' },
+            { name: 'FireWire 800', speed: '800 Mbps', icon: '🔥' },
+            { name: 'IDE/PATA', speed: '133 Mbps', icon: '💾' },
+            { name: 'SCSI', speed: '640 Mbps', icon: '💾' },
+            { name: 'AGP 8x', speed: '2.1 Gbps', icon: '🔧' },
+            { name: 'ISA Bus', speed: '8 Mbps', icon: '🔧' },
+            { name: 'Centronics', speed: '1.2 Mbps', icon: '🖨️' },
+            { name: 'Game Port', speed: 'Analog', icon: '🎮' },
+            { name: 'MIDI Cable', speed: '31.25 Kbps', icon: '🎵' },
+            { name: 'Floppy Cable', speed: '500 Kbps', icon: '💾' },
+            { name: 'PCMCIA', speed: '132 Mbps', icon: '💳' },
+            { name: 'Token Ring STP', speed: '16 Mbps', icon: '⭕' }
+        ]
+    }
+};
+
+
+// ============================================================
+// GAME STATE
+// ============================================================
+const GAME_STATES = { START: 0, PLAYING: 1, GAMEOVER: 2, PAUSED: 3 };
+
+let gameState = GAME_STATES.START;
+let difficulty = 'medium';
+let score = 0;
+let lives = 3;
+let combo = 0;
+let maxCombo = 0;
+let multiplier = 1;
+let level = 1;
+let correctCount = 0;
+let totalAttempts = 0;
+let fallingCables = [];
+let particles = [];
+let powerUps = [];
+let activePowerUps = { slowmo: 0, shield: 0, doublePoints: 0 };
+let shakeAmount = 0;
+let shakeDecay = 0.9;
+let flashColor = null;
+let flashAlpha = 0;
+let gridOffset = 0;
+let gameTime = 0;
+let lastSpawnTime = 0;
+let spawnInterval = 2500;
+let fallSpeed = 1.5;
+let selectedBin = -1;
+let binFlash = [-1, 0]; // [binIndex, alpha]
+let adminMode = false;
+let adminBuffer = '';
+let highScores = [];
+let titleGlow = 0;
+let titleGlowDir = 1;
+let startScreenParticles = [];
+let difficultyHover = -1;
+
+// Categories active based on difficulty
+let activeCategories = ['slow', 'medium', 'fast'];
+
+// ============================================================
+// PARTICLE SYSTEM
+// ============================================================
+class Particle {
+    constructor(x, y, color, vx, vy, life, size) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.vx = vx || (Math.random() - 0.5) * 6;
+        this.vy = vy || (Math.random() - 0.5) * 6;
+        this.life = life || 1.0;
+        this.decay = 0.015 + Math.random() * 0.02;
+        this.size = size || 2 + Math.random() * 4;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.2;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.1; // gravity
+        this.life -= this.decay;
+        this.rotation += this.rotSpeed;
+        this.size *= 0.98;
+    }
+
+    draw() {
+        if (this.life <= 0) return;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8;
+        ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+        ctx.restore();
+    }
+}
+
+function spawnParticles(x, y, color, count) {
+    for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+        const speed = 2 + Math.random() * 5;
+        particles.push(new Particle(
+            x, y, color,
+            Math.cos(angle) * speed,
+            Math.sin(angle) * speed - 2,
+            1.0,
+            3 + Math.random() * 5
+        ));
+    }
+}
+
+function spawnTrailParticles(x, y, color) {
+    for (let i = 0; i < 3; i++) {
+        particles.push(new Particle(
+            x + (Math.random() - 0.5) * 20,
+            y,
+            color,
+            (Math.random() - 0.5) * 1,
+            Math.random() * 2,
+            0.6,
+            2 + Math.random() * 2
+        ));
+    }
+}
+
+
+// ============================================================
+// FALLING CABLE CLASS
+// ============================================================
+class FallingCable {
+    constructor(cableData, category) {
+        this.cable = cableData;
+        this.category = category;
+        this.width = 180;
+        this.height = 70;
+        this.x = 40 + Math.random() * (canvas.width - this.width - 80);
+        this.y = -this.height;
+        this.speed = fallSpeed;
+        this.rotation = (Math.random() - 0.5) * 0.1;
+        this.bobPhase = Math.random() * Math.PI * 2;
+        this.glowPulse = 0;
+        this.alive = true;
+        this.dissolving = false;
+        this.dissolveProgress = 0;
+        this.wrongFlash = 0;
+    }
+
+    update(dt) {
+        if (this.dissolving) {
+            this.dissolveProgress += 0.05;
+            if (this.dissolveProgress >= 1) {
+                this.alive = false;
+            }
+            return;
+        }
+        
+        let speedMod = activePowerUps.slowmo > 0 ? 0.4 : 1.0;
+        this.y += this.speed * speedMod * dt;
+        this.bobPhase += 0.03;
+        this.x += Math.sin(this.bobPhase) * 0.3;
+        this.glowPulse = (Math.sin(this.bobPhase * 2) + 1) / 2;
+        this.rotation = Math.sin(this.bobPhase * 0.5) * 0.05;
+        
+        if (this.wrongFlash > 0) this.wrongFlash -= 0.05;
+
+        // Trail particles
+        if (Math.random() < 0.3) {
+            const catData = CABLE_DATA[this.category];
+            spawnTrailParticles(this.x + this.width/2, this.y + this.height, catData.color + '88');
+        }
+    }
+
+    draw() {
+        if (!this.alive) return;
+        const catData = CABLE_DATA[this.category];
+        
+        ctx.save();
+        ctx.translate(this.x + this.width/2, this.y + this.height/2);
+        ctx.rotate(this.rotation);
+        
+        if (this.dissolving) {
+            ctx.globalAlpha = 1 - this.dissolveProgress;
+            ctx.scale(1 + this.dissolveProgress * 0.5, 1 + this.dissolveProgress * 0.5);
+        }
+
+        // Shadow/glow
+        const glowSize = 10 + this.glowPulse * 6;
+        ctx.shadowColor = catData.glowColor;
+        ctx.shadowBlur = glowSize;
+
+        // Background
+        const grad = ctx.createLinearGradient(-this.width/2, -this.height/2, -this.width/2, this.height/2);
+        grad.addColorStop(0, '#1a1a3a');
+        grad.addColorStop(1, '#0d0d2a');
+        
+        // Rounded rectangle
+        const r = 12;
+        ctx.beginPath();
+        ctx.roundRect(-this.width/2, -this.height/2, this.width, this.height, r);
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        // Border
+        ctx.strokeStyle = this.wrongFlash > 0 ? '#ff0000' : catData.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Icon
+        ctx.shadowBlur = 0;
+        ctx.font = '20px serif';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(this.cable.icon, -this.width/2 + 12, 5);
+
+        // Cable name
+        ctx.font = 'bold 13px Courier New';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.cable.name, 10, -8);
+
+        // Speed subtitle
+        ctx.font = '10px Courier New';
+        ctx.fillStyle = catData.color;
+        ctx.fillText(this.cable.speed, 10, 10);
+
+        // Category indicator dot
+        ctx.beginPath();
+        ctx.arc(this.width/2 - 15, -this.height/2 + 15, 5, 0, Math.PI * 2);
+        ctx.fillStyle = catData.color;
+        ctx.fill();
+
+        ctx.restore();
+    }
+}
+
+// ============================================================
+// POWER-UP CLASS
+// ============================================================
+class PowerUp {
+    constructor() {
+        const types = ['slowmo', 'shield', 'doublePoints'];
+        this.type = types[Math.floor(Math.random() * types.length)];
+        this.x = 60 + Math.random() * (canvas.width - 120);
+        this.y = -40;
+        this.size = 30;
+        this.speed = 1.2;
+        this.alive = true;
+        this.pulse = 0;
+        this.rotation = 0;
+    }
+
+    getColor() {
+        switch(this.type) {
+            case 'slowmo': return '#00ffff';
+            case 'shield': return '#ffff00';
+            case 'doublePoints': return '#ff00ff';
+        }
+    }
+
+    getIcon() {
+        switch(this.type) {
+            case 'slowmo': return '⏱️';
+            case 'shield': return '🛡️';
+            case 'doublePoints': return '×2';
+        }
+    }
+
+    update(dt) {
+        let speedMod = activePowerUps.slowmo > 0 ? 0.4 : 1.0;
+        this.y += this.speed * speedMod * dt;
+        this.pulse += 0.08;
+        this.rotation += 0.03;
+        if (this.y > canvas.height) this.alive = false;
+    }
+
+    draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        const s = this.size + Math.sin(this.pulse) * 4;
+        const color = this.getColor();
+        
+        // Glow
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 15 + Math.sin(this.pulse) * 5;
+        
+        // Hexagon shape
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI * 2 / 6) * i - Math.PI / 6;
+            const px = Math.cos(angle) * s/2;
+            const py = Math.sin(angle) * s/2;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fillStyle = color + '33';
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Icon
+        ctx.shadowBlur = 0;
+        ctx.font = this.type === 'doublePoints' ? 'bold 14px Courier New' : '16px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = color;
+        ctx.fillText(this.getIcon(), 0, 0);
+
+        ctx.restore();
+    }
+}
+
+
+// ============================================================
+// RENDERING FUNCTIONS
+// ============================================================
+
+function drawBackground() {
+    // Dark base
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Scrolling grid
+    gridOffset = (gridOffset + 0.3) % 40;
+    ctx.strokeStyle = '#1a1a4a';
+    ctx.lineWidth = 0.5;
+    
+    for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+    for (let y = gridOffset; y < canvas.height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+
+    // Subtle circuit patterns
+    ctx.strokeStyle = '#1a1a5a';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 8; i++) {
+        const x = (i * 137 + gameTime * 0.1) % canvas.width;
+        const y = (i * 89 + gridOffset * 2) % canvas.height;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 30, y);
+        ctx.lineTo(x + 30, y + 20);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x + 30, y + 20, 3, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Vignette
+    const vignette = ctx.createRadialGradient(
+        canvas.width/2, canvas.height/2, canvas.height * 0.3,
+        canvas.width/2, canvas.height/2, canvas.height * 0.8
+    );
+    vignette.addColorStop(0, 'transparent');
+    vignette.addColorStop(1, 'rgba(0,0,0,0.4)');
+    ctx.fillStyle = vignette;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawBins() {
+    const binCount = activeCategories.length;
+    const binWidth = Math.min(200, (canvas.width - 40) / binCount - 10);
+    const binHeight = 100;
+    const totalWidth = binCount * binWidth + (binCount - 1) * 10;
+    const startX = (canvas.width - totalWidth) / 2;
+    const binY = canvas.height - binHeight - 20;
+
+    for (let i = 0; i < binCount; i++) {
+        const cat = activeCategories[i];
+        const catData = CABLE_DATA[cat];
+        const binX = startX + i * (binWidth + 10);
+        
+        // Bin highlight on hover/selection
+        let isSelected = selectedBin === i;
+        let flashAlpha2 = 0;
+        if (binFlash[0] === i && binFlash[1] > 0) {
+            flashAlpha2 = binFlash[1];
+        }
+
+        ctx.save();
+        
+        // Glow effect
+        ctx.shadowColor = catData.glowColor;
+        ctx.shadowBlur = isSelected ? 20 : 8;
+        
+        // Bin background
+        const grad = ctx.createLinearGradient(binX, binY, binX, binY + binHeight);
+        grad.addColorStop(0, catData.color + '40');
+        grad.addColorStop(1, catData.color + '10');
+        
+        ctx.beginPath();
+        ctx.roundRect(binX, binY, binWidth, binHeight, [12, 12, 0, 0]);
+        ctx.fillStyle = grad;
+        ctx.fill();
+        
+        // Border
+        ctx.strokeStyle = isSelected ? '#ffffff' : catData.color;
+        ctx.lineWidth = isSelected ? 3 : 2;
+        ctx.stroke();
+
+        // Flash effect on correct/wrong
+        if (flashAlpha2 > 0) {
+            ctx.globalAlpha = flashAlpha2;
+            ctx.fillStyle = binFlash[2] || catData.color;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+
+        // Category name
+        ctx.shadowBlur = 0;
+        ctx.font = 'bold 16px Courier New';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = catData.color;
+        ctx.fillText(catData.name, binX + binWidth/2, binY + 30);
+
+        // Subtitle
+        ctx.font = '11px Courier New';
+        ctx.fillStyle = '#888888';
+        ctx.fillText(catData.subtitle, binX + binWidth/2, binY + 50);
+
+        // Key hint
+        ctx.font = 'bold 14px Courier New';
+        ctx.fillStyle = '#666666';
+        ctx.fillText(`[${i + 1}]`, binX + binWidth/2, binY + 75);
+
+        ctx.restore();
+
+        // Store bin bounds for click detection
+        if (!window.binBounds) window.binBounds = [];
+        window.binBounds[i] = { x: binX, y: binY, w: binWidth, h: binHeight };
+    }
+}
+
+function drawHUD() {
+    // Score
+    ctx.save();
+    ctx.font = 'bold 24px Courier New';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#00ffaa';
+    ctx.shadowColor = '#00ffaa';
+    ctx.shadowBlur = 10;
+    ctx.fillText(`SCORE: ${score}`, 20, 40);
+    
+    // Multiplier
+    if (multiplier > 1) {
+        ctx.font = 'bold 18px Courier New';
+        ctx.fillStyle = '#ffff00';
+        ctx.shadowColor = '#ffff00';
+        ctx.fillText(`×${multiplier}`, 20, 65);
+    }
+
+    // Combo
+    if (combo > 0) {
+        ctx.font = '14px Courier New';
+        ctx.fillStyle = '#ff88ff';
+        ctx.shadowColor = '#ff88ff';
+        ctx.fillText(`COMBO: ${combo}`, 20, 85);
+    }
+
+    // Lives
+    ctx.textAlign = 'right';
+    ctx.font = '20px serif';
+    ctx.shadowBlur = 5;
+    for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = i < lives ? '#ff4444' : '#333333';
+        ctx.shadowColor = i < lives ? '#ff4444' : 'transparent';
+        ctx.fillText('❤️', canvas.width - 20 - i * 30, 40);
+    }
+
+    // Level
+    ctx.font = 'bold 14px Courier New';
+    ctx.fillStyle = '#aaaaff';
+    ctx.shadowColor = '#aaaaff';
+    ctx.shadowBlur = 5;
+    ctx.fillText(`LEVEL ${level}`, canvas.width - 20, 70);
+
+    // Active power-ups
+    let pyOffset = 0;
+    ctx.textAlign = 'right';
+    ctx.font = '12px Courier New';
+    if (activePowerUps.slowmo > 0) {
+        ctx.fillStyle = '#00ffff';
+        ctx.fillText(`SLOW-MO: ${Math.ceil(activePowerUps.slowmo / 60)}s`, canvas.width - 20, 95 + pyOffset);
+        pyOffset += 18;
+    }
+    if (activePowerUps.shield > 0) {
+        ctx.fillStyle = '#ffff00';
+        ctx.fillText(`SHIELD: ${Math.ceil(activePowerUps.shield / 60)}s`, canvas.width - 20, 95 + pyOffset);
+        pyOffset += 18;
+    }
+    if (activePowerUps.doublePoints > 0) {
+        ctx.fillStyle = '#ff00ff';
+        ctx.fillText(`2× PTS: ${Math.ceil(activePowerUps.doublePoints / 60)}s`, canvas.width - 20, 95 + pyOffset);
+    }
+
+    ctx.restore();
+}
+
+
+function drawFlashEffect() {
+    if (flashAlpha > 0) {
+        ctx.save();
+        ctx.globalAlpha = flashAlpha;
+        ctx.fillStyle = flashColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+        flashAlpha -= 0.03;
+    }
+}
+
+function triggerScreenShake(amount) {
+    shakeAmount = amount;
+}
+
+function applyScreenShake() {
+    if (shakeAmount > 0.5) {
+        const dx = (Math.random() - 0.5) * shakeAmount;
+        const dy = (Math.random() - 0.5) * shakeAmount;
+        ctx.translate(dx, dy);
+        shakeAmount *= shakeDecay;
+    } else {
+        shakeAmount = 0;
+    }
+}
+
+// ============================================================
+// START SCREEN
+// ============================================================
+function initStartScreenParticles() {
+    startScreenParticles = [];
+    for (let i = 0; i < 50; i++) {
+        startScreenParticles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: -0.5 - Math.random() * 1,
+            size: 1 + Math.random() * 3,
+            color: ['#ff4444', '#4488ff', '#44ff44', '#aa44ff'][Math.floor(Math.random() * 4)],
+            alpha: 0.3 + Math.random() * 0.5
+        });
+    }
+}
+
+function drawStartScreen() {
+    drawBackground();
+    
+    // Floating particles
+    startScreenParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 8;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        ctx.restore();
+    });
+
+    // Title
+    titleGlow += 0.03 * titleGlowDir;
+    if (titleGlow > 1) titleGlowDir = -1;
+    if (titleGlow < 0) titleGlowDir = 1;
+
+    ctx.save();
+    ctx.textAlign = 'center';
+    
+    // Title shadow/glow
+    ctx.shadowColor = '#00ffaa';
+    ctx.shadowBlur = 20 + titleGlow * 15;
+    ctx.font = 'bold 56px Courier New';
+    ctx.fillStyle = '#00ffaa';
+    ctx.fillText('CABLE MATCH', canvas.width/2, canvas.height * 0.18);
+    
+    // Subtitle
+    ctx.shadowBlur = 8;
+    ctx.font = '18px Courier New';
+    ctx.fillStyle = '#88ffcc';
+    ctx.fillText('Sort falling cables into speed categories!', canvas.width/2, canvas.height * 0.24);
+
+    // Difficulty buttons
+    ctx.font = 'bold 20px Courier New';
+    const difficulties = [
+        { name: 'EASY', desc: '3 bins, slow speed', color: '#44ff44' },
+        { name: 'MEDIUM', desc: '3 bins, all cables', color: '#4488ff' },
+        { name: 'HARD', desc: '4 bins + Legacy', color: '#ff4444' }
+    ];
+
+    const btnWidth = 180;
+    const btnHeight = 60;
+    const btnSpacing = 20;
+    const totalBtnWidth = difficulties.length * btnWidth + (difficulties.length - 1) * btnSpacing;
+    const btnStartX = (canvas.width - totalBtnWidth) / 2;
+    const btnY = canvas.height * 0.35;
+
+    window.difficultyBtns = [];
+    
+    difficulties.forEach((d, i) => {
+        const bx = btnStartX + i * (btnWidth + btnSpacing);
+        const isHover = difficultyHover === i;
+        const isSelected = difficulty === d.name.toLowerCase();
+        
+        window.difficultyBtns.push({ x: bx, y: btnY, w: btnWidth, h: btnHeight, diff: d.name.toLowerCase() });
+        
+        ctx.shadowColor = d.color;
+        ctx.shadowBlur = isHover || isSelected ? 15 : 5;
+        
+        ctx.beginPath();
+        ctx.roundRect(bx, btnY, btnWidth, btnHeight, 10);
+        ctx.fillStyle = isSelected ? d.color + '40' : '#1a1a3a';
+        ctx.fill();
+        ctx.strokeStyle = d.color;
+        ctx.lineWidth = isSelected ? 3 : 1.5;
+        ctx.stroke();
+        
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = d.color;
+        ctx.font = 'bold 18px Courier New';
+        ctx.fillText(d.name, bx + btnWidth/2, btnY + 28);
+        ctx.font = '11px Courier New';
+        ctx.fillStyle = '#999999';
+        ctx.fillText(d.desc, bx + btnWidth/2, btnY + 48);
+    });
+
+    // Instructions
+    ctx.shadowBlur = 0;
+    ctx.font = '14px Courier New';
+    ctx.fillStyle = '#777777';
+    const instrY = canvas.height * 0.52;
+    ctx.fillText('Press 1-3 or click bins to sort cables', canvas.width/2, instrY);
+    ctx.fillText('Correct = +10pts | Wrong = -1 life', canvas.width/2, instrY + 22);
+    ctx.fillText('Combos multiply your score!', canvas.width/2, instrY + 44);
+
+    // Start button
+    const startBtnY = canvas.height * 0.65;
+    const startBtnW = 220;
+    const startBtnH = 55;
+    const startBtnX = (canvas.width - startBtnW) / 2;
+    
+    window.startBtn = { x: startBtnX, y: startBtnY, w: startBtnW, h: startBtnH };
+    
+    ctx.shadowColor = '#00ffaa';
+    ctx.shadowBlur = 15 + titleGlow * 10;
+    ctx.beginPath();
+    ctx.roundRect(startBtnX, startBtnY, startBtnW, startBtnH, 12);
+    ctx.fillStyle = '#00ffaa22';
+    ctx.fill();
+    ctx.strokeStyle = '#00ffaa';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    ctx.shadowBlur = 0;
+    ctx.font = 'bold 22px Courier New';
+    ctx.fillStyle = '#00ffaa';
+    ctx.fillText('▶ START GAME', canvas.width/2, startBtnY + 35);
+
+    // High Scores
+    drawHighScoresPanel(canvas.height * 0.78);
+
+    ctx.restore();
+}
+
+function drawHighScoresPanel(y) {
+    loadHighScores();
+    
+    const panelW = 320;
+    const panelH = Math.min(180, canvas.height * 0.2);
+    const panelX = (canvas.width - panelW) / 2;
+    
+    ctx.save();
+    ctx.shadowColor = '#ffaa00';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.roundRect(panelX, y, panelW, panelH, 10);
+    ctx.fillStyle = '#1a1a2a';
+    ctx.fill();
+    ctx.strokeStyle = '#ffaa00';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    
+    ctx.font = 'bold 16px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffaa00';
+    ctx.fillText('🏆 HIGH SCORES', canvas.width/2, y + 25);
+    
+    if (highScores.length === 0) {
+        ctx.font = '12px Courier New';
+        ctx.fillStyle = '#666666';
+        ctx.fillText('No scores yet - be the first!', canvas.width/2, y + 55);
+    } else {
+        ctx.font = '12px Courier New';
+        ctx.textAlign = 'left';
+        const maxShow = Math.min(5, highScores.length);
+        for (let i = 0; i < maxShow; i++) {
+            const s = highScores[i];
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
+            ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#888888';
+            ctx.fillText(`${medal} ${s.name || 'AAA'}`, panelX + 20, y + 50 + i * 22);
+            ctx.textAlign = 'right';
+            ctx.fillText(`${s.score}`, panelX + panelW - 20, y + 50 + i * 22);
+            ctx.textAlign = 'left';
+        }
+    }
+    ctx.restore();
+}
+
+
+// ============================================================
+// GAME OVER SCREEN
+// ============================================================
+let gameOverInput = '';
+let gameOverCursor = 0;
+let gameOverSaved = false;
+
+function drawGameOverScreen() {
+    drawBackground();
+    
+    ctx.save();
+    ctx.textAlign = 'center';
+    
+    // Game Over title
+    ctx.shadowColor = '#ff0044';
+    ctx.shadowBlur = 20;
+    ctx.font = 'bold 48px Courier New';
+    ctx.fillStyle = '#ff0044';
+    ctx.fillText('GAME OVER', canvas.width/2, canvas.height * 0.15);
+    
+    // Stats panel
+    const panelW = 360;
+    const panelH = 280;
+    const panelX = (canvas.width - panelW) / 2;
+    const panelY = canvas.height * 0.22;
+    
+    ctx.shadowColor = '#4488ff';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.roundRect(panelX, panelY, panelW, panelH, 12);
+    ctx.fillStyle = '#0d0d2a';
+    ctx.fill();
+    ctx.strokeStyle = '#4488ff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    
+    // Stats
+    const stats = [
+        { label: 'FINAL SCORE', value: score.toString(), color: '#00ffaa' },
+        { label: 'LEVEL REACHED', value: level.toString(), color: '#aaaaff' },
+        { label: 'ACCURACY', value: totalAttempts > 0 ? Math.round(correctCount/totalAttempts*100) + '%' : '0%', color: '#ffaa00' },
+        { label: 'MAX COMBO', value: maxCombo.toString(), color: '#ff88ff' },
+        { label: 'DIFFICULTY', value: difficulty.toUpperCase(), color: '#ff4444' }
+    ];
+    
+    stats.forEach((s, i) => {
+        const sy = panelY + 35 + i * 48;
+        ctx.font = '12px Courier New';
+        ctx.fillStyle = '#888888';
+        ctx.fillText(s.label, canvas.width/2, sy);
+        ctx.font = 'bold 22px Courier New';
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 5;
+        ctx.fillText(s.value, canvas.width/2, sy + 22);
+        ctx.shadowBlur = 0;
+    });
+    
+    // Name input
+    const inputY = panelY + panelH + 30;
+    if (!gameOverSaved) {
+        ctx.font = '14px Courier New';
+        ctx.fillStyle = '#aaaaaa';
+        ctx.fillText('Enter your name:', canvas.width/2, inputY);
+        
+        // Input box
+        const inputW = 200;
+        const inputH = 35;
+        const inputX = (canvas.width - inputW) / 2;
+        ctx.beginPath();
+        ctx.roundRect(inputX, inputY + 10, inputW, inputH, 6);
+        ctx.fillStyle = '#1a1a3a';
+        ctx.fill();
+        ctx.strokeStyle = '#00ffaa';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        gameOverCursor = (gameOverCursor + 1) % 60;
+        const cursorChar = gameOverCursor < 30 ? '|' : '';
+        ctx.font = '16px Courier New';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(gameOverInput + cursorChar, canvas.width/2, inputY + 33);
+        
+        // Save button
+        const saveBtnY = inputY + 55;
+        const saveBtnW = 140;
+        const saveBtnH = 40;
+        window.saveBtn = { x: (canvas.width - saveBtnW)/2, y: saveBtnY, w: saveBtnW, h: saveBtnH };
+        
+        ctx.shadowColor = '#00ffaa';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.roundRect(window.saveBtn.x, saveBtnY, saveBtnW, saveBtnH, 8);
+        ctx.fillStyle = '#00ffaa22';
+        ctx.fill();
+        ctx.strokeStyle = '#00ffaa';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.font = 'bold 14px Courier New';
+        ctx.fillStyle = '#00ffaa';
+        ctx.fillText('SAVE SCORE', canvas.width/2, saveBtnY + 26);
+    } else {
+        ctx.font = '14px Courier New';
+        ctx.fillStyle = '#00ffaa';
+        ctx.fillText('✓ Score saved!', canvas.width/2, inputY + 20);
+    }
+    
+    // Play Again button
+    const playAgainY = gameOverSaved ? inputY + 50 : inputY + 110;
+    const playBtnW = 180;
+    const playBtnH = 45;
+    window.playAgainBtn = { x: (canvas.width - playBtnW)/2, y: playAgainY, w: playBtnW, h: playBtnH };
+    
+    ctx.shadowColor = '#4488ff';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.roundRect(window.playAgainBtn.x, playAgainY, playBtnW, playBtnH, 8);
+    ctx.fillStyle = '#4488ff22';
+    ctx.fill();
+    ctx.strokeStyle = '#4488ff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.font = 'bold 16px Courier New';
+    ctx.fillStyle = '#4488ff';
+    ctx.fillText('▶ PLAY AGAIN', canvas.width/2, playAgainY + 30);
+    
+    ctx.restore();
+}
+
+
+// ============================================================
+// ADMIN CONSOLE
+// ============================================================
+let adminConsoleVisible = false;
+
+function drawAdminConsole() {
+    if (!adminConsoleVisible) return;
+    
+    ctx.save();
+    const panelW = 300;
+    const panelH = 250;
+    const panelX = canvas.width - panelW - 20;
+    const panelY = 100;
+    
+    ctx.globalAlpha = 0.95;
+    ctx.fillStyle = '#0a0a2a';
+    ctx.strokeStyle = '#ff00ff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(panelX, panelY, panelW, panelH, 8);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 14px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ff00ff';
+    ctx.fillText('🔧 ADMIN CONSOLE', panelX + panelW/2, panelY + 25);
+    
+    ctx.textAlign = 'left';
+    ctx.font = '12px Courier New';
+    const cheats = [
+        { key: 'L', desc: 'Add Life', action: () => { lives = Math.min(lives + 1, 5); } },
+        { key: 'S', desc: 'Slow Mode', action: () => { activePowerUps.slowmo = 600; } },
+        { key: 'P', desc: '+100 Points', action: () => { score += 100; } },
+        { key: 'N', desc: 'Next Level', action: () => { level++; correctCount = 0; updateDifficulty(); } },
+        { key: 'I', desc: 'Invincible 30s', action: () => { activePowerUps.shield = 1800; } },
+        { key: 'C', desc: 'Clear Scores', action: () => { highScores = []; saveHighScores(); } },
+        { key: 'X', desc: 'Close Console', action: () => { adminConsoleVisible = false; } }
+    ];
+    
+    window.adminCheats = cheats;
+    
+    cheats.forEach((c, i) => {
+        ctx.fillStyle = '#ff88ff';
+        ctx.fillText(`[${c.key}]`, panelX + 20, panelY + 55 + i * 28);
+        ctx.fillStyle = '#cccccc';
+        ctx.fillText(c.desc, panelX + 60, panelY + 55 + i * 28);
+    });
+    
+    ctx.restore();
+}
+
+// ============================================================
+// GAME LOGIC
+// ============================================================
+function startGame() {
+    audio.init();
+    gameState = GAME_STATES.PLAYING;
+    score = 0;
+    lives = 3;
+    combo = 0;
+    maxCombo = 0;
+    multiplier = 1;
+    level = 1;
+    correctCount = 0;
+    totalAttempts = 0;
+    fallingCables = [];
+    particles = [];
+    powerUps = [];
+    activePowerUps = { slowmo: 0, shield: 0, doublePoints: 0 };
+    shakeAmount = 0;
+    flashColor = null;
+    flashAlpha = 0;
+    gameTime = 0;
+    lastSpawnTime = 0;
+    gameOverInput = '';
+    gameOverSaved = false;
+    adminConsoleVisible = false;
+    adminBuffer = '';
+    
+    // Set categories based on difficulty
+    if (difficulty === 'easy') {
+        activeCategories = ['slow', 'medium', 'fast'];
+        fallSpeed = 1.0;
+        spawnInterval = 3000;
+    } else if (difficulty === 'medium') {
+        activeCategories = ['slow', 'medium', 'fast'];
+        fallSpeed = 1.5;
+        spawnInterval = 2500;
+    } else {
+        activeCategories = ['slow', 'medium', 'fast', 'legacy'];
+        fallSpeed = 2.0;
+        spawnInterval = 2000;
+    }
+    
+    updateDifficulty();
+}
+
+function updateDifficulty() {
+    // Speed increases with level
+    const baseSpeed = difficulty === 'easy' ? 1.0 : difficulty === 'medium' ? 1.5 : 2.0;
+    fallSpeed = baseSpeed + (level - 1) * 0.25;
+    
+    const baseInterval = difficulty === 'easy' ? 3000 : difficulty === 'medium' ? 2500 : 2000;
+    spawnInterval = Math.max(800, baseInterval - (level - 1) * 150);
+}
+
+function spawnCable() {
+    // Pick random category from active ones
+    const catKey = activeCategories[Math.floor(Math.random() * activeCategories.length)];
+    const catData = CABLE_DATA[catKey];
+    const cable = catData.cables[Math.floor(Math.random() * catData.cables.length)];
+    
+    const newCable = new FallingCable(cable, catKey);
+    newCable.speed = fallSpeed;
+    fallingCables.push(newCable);
+}
+
+function spawnPowerUp() {
+    if (powerUps.length < 2 && Math.random() < 0.01) {
+        powerUps.push(new PowerUp());
+    }
+}
+
+function sortCable(binIndex) {
+    if (binIndex < 0 || binIndex >= activeCategories.length) return;
+    if (fallingCables.length === 0) return;
+    
+    // Find lowest cable (closest to bins)
+    let lowestCable = null;
+    let lowestY = -Infinity;
+    
+    for (let cable of fallingCables) {
+        if (!cable.dissolving && cable.y > lowestY) {
+            lowestY = cable.y;
+            lowestCable = cable;
+        }
+    }
+    
+    if (!lowestCable) return;
+    
+    const targetCategory = activeCategories[binIndex];
+    totalAttempts++;
+    
+    if (lowestCable.category === targetCategory) {
+        // Correct!
+        correctCount++;
+        combo++;
+        if (combo > maxCombo) maxCombo = combo;
+        
+        // Update multiplier
+        if (combo >= 10) multiplier = 3;
+        else if (combo >= 5) multiplier = 2;
+        else multiplier = 1;
+        
+        // Points
+        let points = 10 * multiplier;
+        if (activePowerUps.doublePoints > 0) points *= 2;
+        score += points;
+        
+        // Effects
+        lowestCable.dissolving = true;
+        spawnParticles(lowestCable.x + lowestCable.width/2, lowestCable.y + lowestCable.height/2, 
+            CABLE_DATA[targetCategory].color, 30);
+        flashColor = '#00ff0033';
+        flashAlpha = 0.3;
+        binFlash = [binIndex, 0.8, '#00ff4488'];
+        
+        audio.playCorrect();
+        if (combo === 5 || combo === 10) audio.playCombo();
+        
+        // Level up every 10 correct
+        if (correctCount % 10 === 0) {
+            level++;
+            updateDifficulty();
+        }
+    } else {
+        // Wrong!
+        combo = 0;
+        multiplier = 1;
+        
+        if (activePowerUps.shield > 0) {
+            activePowerUps.shield = 0;
+            flashColor = '#ffff0033';
+            flashAlpha = 0.3;
+        } else {
+            lives--;
+            triggerScreenShake(15);
+            flashColor = '#ff000044';
+            flashAlpha = 0.5;
+            binFlash = [binIndex, 0.8, '#ff000088'];
+            lowestCable.wrongFlash = 1;
+            audio.playWrong();
+            
+            if (lives <= 0) {
+                gameState = GAME_STATES.GAMEOVER;
+                audio.playGameOver();
+            }
+        }
+    }
+}
+
+
+function checkPowerUpCollision() {
+    // Power-ups collected when they reach bin area
+    const binY = canvas.height - 120;
+    for (let i = powerUps.length - 1; i >= 0; i--) {
+        if (powerUps[i].y >= binY - 30) {
+            const pu = powerUps[i];
+            switch(pu.type) {
+                case 'slowmo':
+                    activePowerUps.slowmo = 480; // 8 seconds
+                    break;
+                case 'shield':
+                    activePowerUps.shield = 600; // 10 seconds
+                    break;
+                case 'doublePoints':
+                    activePowerUps.doublePoints = 480; // 8 seconds
+                    break;
+            }
+            spawnParticles(pu.x, pu.y, pu.getColor(), 20);
+            audio.playPowerUp();
+            powerUps.splice(i, 1);
+        }
+    }
+}
+
+function updatePowerUps() {
+    if (activePowerUps.slowmo > 0) activePowerUps.slowmo--;
+    if (activePowerUps.shield > 0) activePowerUps.shield--;
+    if (activePowerUps.doublePoints > 0) activePowerUps.doublePoints--;
+}
+
+// ============================================================
+// HIGH SCORE MANAGEMENT
+// ============================================================
+function loadHighScores() {
+    try {
+        const data = localStorage.getItem('cableMatchScores');
+        if (data) {
+            highScores = JSON.parse(data);
+        }
+    } catch(e) {
+        highScores = [];
+    }
+}
+
+function saveHighScores() {
+    try {
+        localStorage.setItem('cableMatchScores', JSON.stringify(highScores));
+    } catch(e) {}
+}
+
+function addHighScore(name) {
+    highScores.push({
+        name: name || 'AAA',
+        score: score,
+        level: level,
+        accuracy: totalAttempts > 0 ? Math.round(correctCount/totalAttempts*100) : 0,
+        difficulty: difficulty,
+        date: new Date().toLocaleDateString()
+    });
+    highScores.sort((a, b) => b.score - a.score);
+    highScores = highScores.slice(0, 10);
+    saveHighScores();
+}
+
+// ============================================================
+// MAIN GAME LOOP
+// ============================================================
+let lastTime = 0;
+let deltaTime = 0;
+
+function gameLoop(timestamp) {
+    deltaTime = Math.min((timestamp - lastTime) / 16.67, 3); // Cap at 3x normal speed
+    lastTime = timestamp;
+    
+    ctx.save();
+    
+    switch(gameState) {
+        case GAME_STATES.START:
+            drawStartScreen();
+            break;
+            
+        case GAME_STATES.PLAYING:
+            updateGame(deltaTime);
+            drawGame();
+            break;
+            
+        case GAME_STATES.GAMEOVER:
+            drawGameOverScreen();
+            break;
+            
+        case GAME_STATES.PAUSED:
+            drawGame();
+            drawPauseOverlay();
+            break;
+    }
+    
+    ctx.restore();
+    requestAnimationFrame(gameLoop);
+}
+
+function updateGame(dt) {
+    gameTime += dt;
+    
+    // Spawn cables
+    if (gameTime - lastSpawnTime > spawnInterval / 16.67) {
+        spawnCable();
+        lastSpawnTime = gameTime;
+    }
+    
+    // Spawn power-ups
+    spawnPowerUp();
+    
+    // Update cables
+    for (let i = fallingCables.length - 1; i >= 0; i--) {
+        fallingCables[i].update(dt);
+        
+        // Remove dead cables
+        if (!fallingCables[i].alive) {
+            fallingCables.splice(i, 1);
+            continue;
+        }
+        
+        // Cable reached bottom
+        if (!fallingCables[i].dissolving && fallingCables[i].y > canvas.height - 130) {
+            // Missed!
+            if (activePowerUps.shield > 0) {
+                activePowerUps.shield = 0;
+            } else {
+                lives--;
+                combo = 0;
+                multiplier = 1;
+                triggerScreenShake(10);
+                flashColor = '#ff660044';
+                flashAlpha = 0.4;
+                audio.playDrop();
+                
+                if (lives <= 0) {
+                    gameState = GAME_STATES.GAMEOVER;
+                    audio.playGameOver();
+                    return;
+                }
+            }
+            
+            spawnParticles(fallingCables[i].x + 90, fallingCables[i].y + 35, '#ff6600', 15);
+            fallingCables.splice(i, 1);
+        }
+    }
+    
+    // Update power-ups
+    for (let i = powerUps.length - 1; i >= 0; i--) {
+        powerUps[i].update(dt);
+        if (!powerUps[i].alive) {
+            powerUps.splice(i, 1);
+        }
+    }
+    checkPowerUpCollision();
+    updatePowerUps();
+    
+    // Update particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        if (particles[i].life <= 0) {
+            particles.splice(i, 1);
+        }
+    }
+    
+    // Update bin flash
+    if (binFlash[1] > 0) {
+        binFlash[1] -= 0.04;
+    }
+}
+
+function drawGame() {
+    ctx.save();
+    applyScreenShake();
+    
+    drawBackground();
+    
+    // Draw particles behind cables
+    particles.forEach(p => p.draw());
+    
+    // Draw power-ups
+    powerUps.forEach(p => p.draw());
+    
+    // Draw falling cables
+    fallingCables.forEach(c => c.draw());
+    
+    // Draw bins
+    drawBins();
+    
+    // Draw HUD
+    drawHUD();
+    
+    // Draw flash effect
+    drawFlashEffect();
+    
+    // Admin console
+    drawAdminConsole();
+    
+    // Slow-mo overlay effect
+    if (activePowerUps.slowmo > 0) {
+        ctx.save();
+        ctx.globalAlpha = 0.05;
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
+    
+    // Shield visual indicator
+    if (activePowerUps.shield > 0) {
+        ctx.save();
+        ctx.strokeStyle = '#ffff0044';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([10, 10]);
+        ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+        ctx.restore();
+    }
+    
+    ctx.restore();
+}
+
+function drawPauseOverlay() {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 48px Courier New';
+    ctx.fillStyle = '#00ffaa';
+    ctx.shadowColor = '#00ffaa';
+    ctx.shadowBlur = 20;
+    ctx.fillText('PAUSED', canvas.width/2, canvas.height/2 - 20);
+    
+    ctx.font = '16px Courier New';
+    ctx.shadowBlur = 5;
+    ctx.fillText('Press ESC or P to resume', canvas.width/2, canvas.height/2 + 30);
+    ctx.restore();
+}
+
+
+// ============================================================
+// INPUT HANDLING
+// ============================================================
+document.addEventListener('keydown', (e) => {
+    audio.init();
+    
+    // Admin code detection
+    if (gameState === GAME_STATES.PLAYING) {
+        adminBuffer += e.key.toUpperCase();
+        if (adminBuffer.length > 4) adminBuffer = adminBuffer.slice(-4);
+        if (adminBuffer === 'NIKO') {
+            adminConsoleVisible = !adminConsoleVisible;
+            adminBuffer = '';
+        }
+        
+        // Admin cheats
+        if (adminConsoleVisible && window.adminCheats) {
+            const cheat = window.adminCheats.find(c => c.key === e.key.toUpperCase());
+            if (cheat) cheat.action();
+        }
+    }
+    
+    switch(gameState) {
+        case GAME_STATES.START:
+            if (e.key === 'Enter' || e.key === ' ') {
+                startGame();
+            }
+            if (e.key === '1') { difficulty = 'easy'; }
+            if (e.key === '2') { difficulty = 'medium'; }
+            if (e.key === '3') { difficulty = 'hard'; }
+            break;
+            
+        case GAME_STATES.PLAYING:
+            if (e.key === '1') sortCable(0);
+            if (e.key === '2') sortCable(1);
+            if (e.key === '3') sortCable(2);
+            if (e.key === '4' && activeCategories.length >= 4) sortCable(3);
+            if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+                if (!adminConsoleVisible) {
+                    gameState = GAME_STATES.PAUSED;
+                }
+            }
+            break;
+            
+        case GAME_STATES.PAUSED:
+            if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+                gameState = GAME_STATES.PLAYING;
+            }
+            break;
+            
+        case GAME_STATES.GAMEOVER:
+            if (e.key === 'Backspace') {
+                gameOverInput = gameOverInput.slice(0, -1);
+            } else if (e.key === 'Enter') {
+                if (!gameOverSaved) {
+                    addHighScore(gameOverInput || 'AAA');
+                    gameOverSaved = true;
+                } else {
+                    startGame();
+                }
+            } else if (e.key.length === 1 && gameOverInput.length < 15 && !gameOverSaved) {
+                gameOverInput += e.key;
+            }
+            break;
+    }
+});
+
+// Mouse/Touch handling
+function getClickPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    if (e.touches) {
+        return {
+            x: (e.touches[0].clientX - rect.left) * scaleX,
+            y: (e.touches[0].clientY - rect.top) * scaleY
+        };
+    }
+    return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+    };
+}
+
+function isInRect(pos, rect) {
+    return pos.x >= rect.x && pos.x <= rect.x + rect.w &&
+           pos.y >= rect.y && pos.y <= rect.y + rect.h;
+}
+
+function handleClick(e) {
+    audio.init();
+    const pos = getClickPos(e);
+    
+    switch(gameState) {
+        case GAME_STATES.START:
+            // Difficulty buttons
+            if (window.difficultyBtns) {
+                window.difficultyBtns.forEach(btn => {
+                    if (isInRect(pos, btn)) {
+                        difficulty = btn.diff;
+                    }
+                });
+            }
+            // Start button
+            if (window.startBtn && isInRect(pos, window.startBtn)) {
+                startGame();
+            }
+            break;
+            
+        case GAME_STATES.PLAYING:
+            // Bin clicks
+            if (window.binBounds) {
+                window.binBounds.forEach((bin, i) => {
+                    if (bin && isInRect(pos, bin)) {
+                        sortCable(i);
+                    }
+                });
+            }
+            break;
+            
+        case GAME_STATES.GAMEOVER:
+            if (window.saveBtn && !gameOverSaved && isInRect(pos, window.saveBtn)) {
+                addHighScore(gameOverInput || 'AAA');
+                gameOverSaved = true;
+            }
+            if (window.playAgainBtn && isInRect(pos, window.playAgainBtn)) {
+                startGame();
+            }
+            break;
+            
+        case GAME_STATES.PAUSED:
+            gameState = GAME_STATES.PLAYING;
+            break;
+    }
+}
+
+function handleMouseMove(e) {
+    const pos = getClickPos(e);
+    
+    if (gameState === GAME_STATES.START && window.difficultyBtns) {
+        difficultyHover = -1;
+        window.difficultyBtns.forEach((btn, i) => {
+            if (isInRect(pos, btn)) {
+                difficultyHover = i;
+            }
+        });
+    }
+    
+    if (gameState === GAME_STATES.PLAYING && window.binBounds) {
+        selectedBin = -1;
+        window.binBounds.forEach((bin, i) => {
+            if (bin && isInRect(pos, bin)) {
+                selectedBin = i;
+            }
+        });
+    }
+}
+
+canvas.addEventListener('click', handleClick);
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleClick(e);
+}, { passive: false });
+canvas.addEventListener('mousemove', handleMouseMove);
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    handleMouseMove(e);
+}, { passive: false });
+
+
+// ============================================================
+// ADDITIONAL VISUAL EFFECTS
+// ============================================================
+
+// Scanline effect overlay
+function drawScanlines() {
+    ctx.save();
+    ctx.globalAlpha = 0.03;
+    ctx.fillStyle = '#000000';
+    for (let y = 0; y < canvas.height; y += 3) {
+        ctx.fillRect(0, y, canvas.width, 1);
+    }
+    ctx.restore();
+}
+
+// Combo notification
+let comboNotification = { text: '', alpha: 0, y: 0 };
+
+function showComboNotification(text, color) {
+    comboNotification = {
+        text: text,
+        color: color || '#ffff00',
+        alpha: 1.5,
+        y: canvas.height / 2,
+        scale: 2
+    };
+}
+
+function drawComboNotification() {
+    if (comboNotification.alpha <= 0) return;
+    
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, comboNotification.alpha);
+    ctx.textAlign = 'center';
+    ctx.font = `bold ${24 * comboNotification.scale}px Courier New`;
+    ctx.fillStyle = comboNotification.color;
+    ctx.shadowColor = comboNotification.color;
+    ctx.shadowBlur = 20;
+    ctx.fillText(comboNotification.text, canvas.width/2, comboNotification.y);
+    ctx.restore();
+    
+    comboNotification.alpha -= 0.02;
+    comboNotification.y -= 0.5;
+    comboNotification.scale = Math.max(1, comboNotification.scale - 0.02);
+}
+
+// Score popup animation
+let scorePopups = [];
+
+function addScorePopup(x, y, text, color) {
+    scorePopups.push({
+        x: x,
+        y: y,
+        text: text,
+        color: color,
+        alpha: 1.5,
+        vy: -2
+    });
+}
+
+function drawScorePopups() {
+    for (let i = scorePopups.length - 1; i >= 0; i--) {
+        const popup = scorePopups[i];
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, popup.alpha);
+        ctx.font = 'bold 16px Courier New';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = popup.color;
+        ctx.shadowColor = popup.color;
+        ctx.shadowBlur = 8;
+        ctx.fillText(popup.text, popup.x, popup.y);
+        ctx.restore();
+        
+        popup.y += popup.vy;
+        popup.alpha -= 0.025;
+        
+        if (popup.alpha <= 0) {
+            scorePopups.splice(i, 1);
+        }
+    }
+}
+
+// ============================================================
+// ENHANCED GAME DRAW (with all effects)
+// ============================================================
+// Override the drawGame to include extra effects
+const originalDrawGame = drawGame;
+
+// Patch the sortCable to include popups and notifications
+const originalSortCable = sortCable;
+sortCable = function(binIndex) {
+    if (binIndex < 0 || binIndex >= activeCategories.length) return;
+    if (fallingCables.length === 0) return;
+    
+    let lowestCable = null;
+    let lowestY = -Infinity;
+    
+    for (let cable of fallingCables) {
+        if (!cable.dissolving && cable.y > lowestY) {
+            lowestY = cable.y;
+            lowestCable = cable;
+        }
+    }
+    
+    if (!lowestCable) return;
+    
+    const targetCategory = activeCategories[binIndex];
+    totalAttempts++;
+    
+    if (lowestCable.category === targetCategory) {
+        correctCount++;
+        combo++;
+        if (combo > maxCombo) maxCombo = combo;
+        
+        if (combo >= 10) multiplier = 3;
+        else if (combo >= 5) multiplier = 2;
+        else multiplier = 1;
+        
+        let points = 10 * multiplier;
+        if (activePowerUps.doublePoints > 0) points *= 2;
+        score += points;
+        
+        lowestCable.dissolving = true;
+        spawnParticles(lowestCable.x + lowestCable.width/2, lowestCable.y + lowestCable.height/2, 
+            CABLE_DATA[targetCategory].color, 30);
+        flashColor = '#00ff0033';
+        flashAlpha = 0.3;
+        binFlash = [binIndex, 0.8, '#00ff4488'];
+        
+        addScorePopup(lowestCable.x + lowestCable.width/2, lowestCable.y, `+${points}`, '#00ffaa');
+        
+        audio.playCorrect();
+        
+        if (combo === 5) {
+            showComboNotification('🔥 5x COMBO! 2× MULTIPLIER', '#ffff00');
+            audio.playCombo();
+        }
+        if (combo === 10) {
+            showComboNotification('⚡ 10x COMBO! 3× MULTIPLIER', '#ff00ff');
+            audio.playCombo();
+        }
+        if (combo === 20) {
+            showComboNotification('💎 20x COMBO! INCREDIBLE!', '#00ffff');
+            audio.playCombo();
+        }
+        
+        if (correctCount % 10 === 0) {
+            level++;
+            updateDifficulty();
+            showComboNotification(`LEVEL ${level}!`, '#4488ff');
+        }
+    } else {
+        combo = 0;
+        multiplier = 1;
+        
+        if (activePowerUps.shield > 0) {
+            activePowerUps.shield = 0;
+            flashColor = '#ffff0033';
+            flashAlpha = 0.3;
+            addScorePopup(lowestCable.x + lowestCable.width/2, lowestCable.y, 'SHIELD!', '#ffff00');
+        } else {
+            lives--;
+            triggerScreenShake(15);
+            flashColor = '#ff000044';
+            flashAlpha = 0.5;
+            binFlash = [binIndex, 0.8, '#ff000088'];
+            lowestCable.wrongFlash = 1;
+            addScorePopup(lowestCable.x + lowestCable.width/2, lowestCable.y, '-1 ❤️', '#ff4444');
+            audio.playWrong();
+            
+            if (lives <= 0) {
+                gameState = GAME_STATES.GAMEOVER;
+                audio.playGameOver();
+            }
+        }
+    }
+};
+
+
+// ============================================================
+// ENHANCED DRAW GAME WITH ALL EFFECTS
+// ============================================================
+drawGame = function() {
+    ctx.save();
+    applyScreenShake();
+    
+    drawBackground();
+    
+    // Draw particles behind cables
+    particles.forEach(p => p.draw());
+    
+    // Draw power-ups
+    powerUps.forEach(p => p.draw());
+    
+    // Draw falling cables
+    fallingCables.forEach(c => c.draw());
+    
+    // Draw bins
+    drawBins();
+    
+    // Draw HUD
+    drawHUD();
+    
+    // Draw score popups
+    drawScorePopups();
+    
+    // Draw combo notification
+    drawComboNotification();
+    
+    // Draw flash effect
+    drawFlashEffect();
+    
+    // Scanlines
+    drawScanlines();
+    
+    // Admin console
+    drawAdminConsole();
+    
+    // Slow-mo overlay
+    if (activePowerUps.slowmo > 0) {
+        ctx.save();
+        ctx.globalAlpha = 0.05;
+        ctx.fillStyle = '#00ffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
+    
+    // Shield border
+    if (activePowerUps.shield > 0) {
+        ctx.save();
+        const pulse = Math.sin(gameTime * 0.1) * 0.3 + 0.7;
+        ctx.globalAlpha = 0.3 * pulse;
+        ctx.strokeStyle = '#ffff00';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([10, 10]);
+        ctx.lineDashOffset = gameTime * 2;
+        ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+        ctx.restore();
+    }
+    
+    // Double points indicator
+    if (activePowerUps.doublePoints > 0) {
+        ctx.save();
+        ctx.globalAlpha = 0.03;
+        ctx.fillStyle = '#ff00ff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+    }
+    
+    ctx.restore();
+};
+
+// ============================================================
+// MOBILE TOUCH-FRIENDLY ENHANCEMENTS
+// ============================================================
+function isMobile() {
+    return window.innerWidth <= 768 || 'ontouchstart' in window;
+}
+
+// Adjust cable size for mobile
+function adjustForMobile() {
+    if (isMobile()) {
+        // Cables will be slightly smaller on mobile
+        // Bins will be larger touch targets
+    }
+}
+
+// ============================================================
+// CABLE INFO TOOLTIP (hover on start screen)
+// ============================================================
+function drawCableInfo() {
+    if (gameState !== GAME_STATES.START) return;
+    
+    // Show a random cable fact at the bottom
+    const allCables = [...CABLE_DATA.slow.cables, ...CABLE_DATA.medium.cables, 
+                       ...CABLE_DATA.fast.cables, ...CABLE_DATA.legacy.cables];
+    const factIndex = Math.floor(gameTime / 180) % allCables.length;
+    const cable = allCables[factIndex];
+    
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.font = '11px Courier New';
+    ctx.fillStyle = '#555555';
+    ctx.fillText(`💡 Did you know? ${cable.name} has a speed of ${cable.speed}`, 
+        canvas.width/2, canvas.height - 15);
+    ctx.restore();
+}
+
+// ============================================================
+// INITIALIZE AND START
+// ============================================================
+loadHighScores();
+initStartScreenParticles();
+
+// Override gameLoop for final version with all effects
+function finalGameLoop(timestamp) {
+    deltaTime = Math.min((timestamp - lastTime) / 16.67, 3);
+    lastTime = timestamp;
+    
+    switch(gameState) {
+        case GAME_STATES.START:
+            drawStartScreen();
+            drawCableInfo();
+            break;
+            
+        case GAME_STATES.PLAYING:
+            updateGame(deltaTime);
+            drawGame();
+            break;
+            
+        case GAME_STATES.GAMEOVER:
+            drawGameOverScreen();
+            break;
+            
+        case GAME_STATES.PAUSED:
+            drawGame();
+            drawPauseOverlay();
+            break;
+    }
+    
+    requestAnimationFrame(finalGameLoop);
+}
+
+// Polyfill for roundRect if needed
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+        if (typeof r === 'number') r = [r, r, r, r];
+        if (Array.isArray(r) && r.length === 1) r = [r[0], r[0], r[0], r[0]];
+        if (Array.isArray(r) && r.length < 4) {
+            while(r.length < 4) r.push(r[0]);
+        }
+        const [tl, tr, br, bl] = r;
+        this.moveTo(x + tl, y);
+        this.lineTo(x + w - tr, y);
+        this.quadraticCurveTo(x + w, y, x + w, y + tr);
+        this.lineTo(x + w, y + h - br);
+        this.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
+        this.lineTo(x + bl, y + h);
+        this.quadraticCurveTo(x, y + h, x, y + h - bl);
+        this.lineTo(x, y + tl);
+        this.quadraticCurveTo(x, y, x + tl, y);
+        this.closePath();
+        return this;
+    };
+}
+
+// Start the game loop
+requestAnimationFrame(finalGameLoop);
+
+// Prevent scrolling on mobile
+document.body.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+console.log('%c🔌 CABLE MATCH loaded! Type NIKO during gameplay for admin console.', 
+    'color: #00ffaa; font-size: 14px; font-weight: bold;');
+</script>
+</body>
+</html>
