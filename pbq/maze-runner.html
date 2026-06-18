@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>CompTIA A+ Maze Runner</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;overflow:hidden;font-family:'Courier New',monospace;color:#fff;touch-action:none}
+#gameCanvas{display:block;margin:0 auto;image-rendering:pixelated}
+#ui-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+#hud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;padding:5px 15px;font-size:16px}
+#hud-lives{color:#ff4466;text-shadow:0 0 8px #ff4466}
+#hud-level{color:#00f0ff;text-shadow:0 0 8px #00f0ff}
+#hud-score{color:#44ff88;text-shadow:0 0 8px #44ff88}
+#mute-btn{position:absolute;top:10px;right:10px;background:rgba(0,240,255,0.15);border:1px solid #00f0ff;color:#00f0ff;padding:8px 12px;cursor:pointer;pointer-events:all;font-family:inherit;font-size:14px;border-radius:4px;z-index:20}
+#mute-btn:hover{background:rgba(0,240,255,0.3)}
+</style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<div id="ui-overlay">
+<div id="hud" style="display:none">
+<div id="hud-lives"></div>
+<div id="hud-level"></div>
+<div id="hud-score"></div>
+</div>
+</div>
+<button id="mute-btn" style="display:none">🔊</button>
+<script>
+
+// ===== COMPTIA A+ MAZE RUNNER =====
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+const hud=document.getElementById('hud');
+const hudLives=document.getElementById('hud-lives');
+const hudLevel=document.getElementById('hud-level');
+const hudScore=document.getElementById('hud-score');
+const muteBtn=document.getElementById('mute-btn');
+
+// Game State
+let gameState='start'; // start, playing, question, levelComplete, gameOver, victory
+let score=0, lives=3, level=1, highScore=0;
+let maze=[], mazeW=15, mazeH=15, cellSize=40;
+let player={x:1,y:1,px:0,py:0,moving:false,dir:null,invincible:0,powerUp:null,powerUpTime:0};
+let threats=[], particles=[], knowledgeBytes=[], questionGates=[], powerUps=[];
+let totalBytes=0, collectedBytes=0, exitOpen=false;
+let shakeTime=0, shakeIntensity=0;
+let animFrame=0, lastTime=0, deltaTime=0;
+let moveTimer=0, moveInterval=150;
+let keys={};
+let touchDir=null;
+let isMuted=false;
+let adminMode=false, adminInput='';
+let questionPool=[], currentQuestion=null, selectedAnswer=-1, questionResult=null, questionTimer=0;
+let highScores=JSON.parse(localStorage.getItem('mazeRunnerHighScores')||'[]');
+highScore=highScores.length?highScores[0].score:0;
+
+// ===== QUESTION POOL =====
+questionPool=[
+// Hardware (15)
+{q:"What does RAM stand for?",a:["Random Access Memory","Read Access Mode","Rapid Application Memory","Remote Access Module"],c:0},
+{q:"Which component stores long-term data when power is off?",a:["HDD/SSD","RAM","CPU Cache","BIOS"],c:0},
+{q:"What does POST stand for?",a:["Power-On Self-Test","Pre-Operation System Test","Power Output Signal Test","Post-Operation Status"],c:0},
+{q:"What is the function of a heat sink?",a:["Cool the CPU","Store data","Route electricity","Connect peripherals"],c:0},
+{q:"Which connector is used for SATA drives?",a:["SATA data cable","VGA cable","HDMI cable","USB cable"],c:0},
+{q:"What does PSU stand for?",a:["Power Supply Unit","Processing System Unit","Primary Storage Unit","Port Setup Utility"],c:0},
+{q:"What tool removes static charge before touching components?",a:["ESD wrist strap","Multimeter","Screwdriver","Cable tester"],c:0},
+{q:"Which memory type loses data when power is off?",a:["DRAM","SSD","HDD","ROM"],c:0},
+{q:"What does SSD stand for?",a:["Solid State Drive","System Storage Device","Serial Signal Drive","Secure Storage Disk"],c:0},
+{q:"Which device protects against power surges?",a:["Surge suppressor","Router","Switch","Modem"],c:0},
+{q:"What is the main circuit board called?",a:["Motherboard","Daughter board","Sound card","NIC"],c:0},
+{q:"What is thermal paste for?",a:["Improve heat transfer to heatsink","Glue components","Clean contacts","Lubricate fans"],c:0},
+{q:"Which expansion slot is used for graphics cards?",a:["PCIe x16","PCI","AGP","ISA"],c:0},
+{q:"What battery maintains BIOS settings?",a:["CR2032","AA","AAA","9V"],c:0},
+{q:"DDR4 desktop RAM uses how many pins?",a:["288","240","204","168"],c:0},
+// Networking (10)
+{q:"What does IP stand for?",a:["Internet Protocol","Internal Process","Input Port","Integrated Platform"],c:0},
+{q:"What device connects multiple networks?",a:["Router","Hub","Repeater","NIC"],c:0},
+{q:"What does DHCP do?",a:["Assigns IP addresses automatically","Encrypts data","Routes packets","Stores DNS records"],c:0},
+{q:"Which protocol is used for secure web browsing?",a:["HTTPS","HTTP","FTP","SMTP"],c:0},
+{q:"What does DNS resolve?",a:["Domain names to IP addresses","IP to MAC","Ports to protocols","URLs to FTP"],c:0},
+{q:"What port does HTTP use?",a:["80","443","22","25"],c:0},
+{q:"What port does SSH use?",a:["22","80","443","21"],c:0},
+{q:"What does PoE stand for?",a:["Power over Ethernet","Port of Entry","Protocol of Exchange","Packet over Ethernet"],c:0},
+{q:"Cat 6a supports what speed at 100m?",a:["10 Gbps","1 Gbps","100 Mbps","40 Gbps"],c:0},
+{q:"APIPA address range is?",a:["169.254.x.x","192.168.x.x","10.0.x.x","172.16.x.x"],c:0},
+
+// Troubleshooting (10)
+{q:"What should you check first if display shows nothing?",a:["Monitor connection and power","Replace GPU","Reinstall OS","Replace CPU"],c:0},
+{q:"What does a continuous BIOS beep indicate?",a:["Power supply or motherboard issue","Normal boot","RAM installed","Disk full"],c:0},
+{q:"First step in CompTIA troubleshooting methodology?",a:["Identify the problem","Test theory","Implement fix","Document"],c:0},
+{q:"Which tool tests power supply output?",a:["Multimeter","Crimper","Toner probe","Loopback plug"],c:0},
+{q:"Which command tests network connectivity?",a:["ping","dir","format","defrag"],c:0},
+{q:"What does CHKDSK do?",a:["Checks disk for errors","Formats drive","Defrags drive","Wipes drive"],c:0},
+{q:"sfc /scannow does what?",a:["Repairs system files","Formats disk","Clears DNS","Shows IP config"],c:0},
+{q:"Blue screen typically indicates?",a:["Driver or hardware failure","Low battery","Full disk","Slow internet"],c:0},
+{q:"PC clock resets every boot. Cause?",a:["Dead CMOS battery","Bad RAM","Virus","Full HDD"],c:0},
+{q:"ipconfig /flushdns does what?",a:["Clears DNS cache","Releases IP","Shows MAC","Resets adapter"],c:0},
+// Mobile & OS (10)
+{q:"Which OS do iPhones use?",a:["iOS","Android","Windows Mobile","Linux"],c:0},
+{q:"What does MDM stand for?",a:["Mobile Device Management","Mobile Data Monitor","Media Device Manager","Module Distribution Manager"],c:0},
+{q:"What file system is default for Windows 10/11?",a:["NTFS","FAT32","ext4","APFS"],c:0},
+{q:"Which key combo opens Task Manager?",a:["Ctrl+Shift+Esc","Alt+F4","Win+R","Ctrl+Z"],c:0},
+{q:"Which partition style supports drives >2TB?",a:["GPT","MBR","FAT32","NTFS"],c:0},
+{q:"What does GUI stand for?",a:["Graphical User Interface","General Utility Input","Global User Index","Graphics Unit Interface"],c:0},
+{q:"What does a factory reset do?",a:["Restores to manufacturer settings","Updates firmware","Installs apps","Backs up data"],c:0},
+{q:"Which wireless tech is used for contactless payments?",a:["NFC","Wi-Fi","Bluetooth","LTE"],c:0},
+{q:"What does virtualization allow?",a:["Run multiple OS on one machine","Speed up internet","Encrypt files","Print wirelessly"],c:0},
+{q:"Windows Disk Management does what?",a:["Manages disk partitions","Scans for viruses","Updates drivers","Configures network"],c:0},
+// Security (5)
+{q:"What does a firewall do?",a:["Controls network traffic","Stores passwords","Encrypts files","Scans for viruses"],c:0},
+{q:"What does VPN stand for?",a:["Virtual Private Network","Very Private Node","Visual Processing Network","Verified Public Network"],c:0},
+{q:"What is social engineering?",a:["Manipulating people to reveal info","Hacking software","Building networks","Writing code"],c:0},
+{q:"What is the principle of least privilege?",a:["Users only get access they need","Everyone gets admin","No passwords needed","Full disk encryption"],c:0},
+{q:"MFA requires at least how many factors?",a:["2","1","3","4"],c:0}
+];
+
+// ===== AUDIO SYSTEM =====
+let audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playSound(type){
+if(isMuted||!audioCtx)return;
+try{
+const osc=audioCtx.createOscillator();
+const gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+const t=audioCtx.currentTime;
+switch(type){
+case'collect':osc.type='sine';osc.frequency.setValueAtTime(523,t);osc.frequency.linearRampToValueAtTime(1047,t+0.1);gain.gain.setValueAtTime(0.3,t);gain.gain.linearRampToValueAtTime(0,t+0.15);osc.start(t);osc.stop(t+0.15);break;
+case'damage':osc.type='sawtooth';osc.frequency.setValueAtTime(150,t);osc.frequency.linearRampToValueAtTime(50,t+0.3);gain.gain.setValueAtTime(0.4,t);gain.gain.linearRampToValueAtTime(0,t+0.3);osc.start(t);osc.stop(t+0.3);break;
+case'correct':osc.type='sine';osc.frequency.setValueAtTime(523,t);gain.gain.setValueAtTime(0.3,t);osc.start(t);setTimeout(()=>{const o2=audioCtx.createOscillator();const g2=audioCtx.createGain();o2.connect(g2);g2.connect(audioCtx.destination);o2.type='sine';o2.frequency.setValueAtTime(659,audioCtx.currentTime);g2.gain.setValueAtTime(0.3,audioCtx.currentTime);g2.gain.linearRampToValueAtTime(0,audioCtx.currentTime+0.3);o2.start();o2.stop(audioCtx.currentTime+0.3)},100);gain.gain.linearRampToValueAtTime(0,t+0.3);osc.stop(t+0.3);break;
+case'wrong':osc.type='sawtooth';osc.frequency.setValueAtTime(400,t);osc.frequency.linearRampToValueAtTime(100,t+0.4);gain.gain.setValueAtTime(0.3,t);gain.gain.linearRampToValueAtTime(0,t+0.4);osc.start(t);osc.stop(t+0.4);break;
+case'levelup':osc.type='square';osc.frequency.setValueAtTime(440,t);osc.frequency.setValueAtTime(554,t+0.1);osc.frequency.setValueAtTime(659,t+0.2);osc.frequency.setValueAtTime(880,t+0.3);gain.gain.setValueAtTime(0.2,t);gain.gain.linearRampToValueAtTime(0,t+0.5);osc.start(t);osc.stop(t+0.5);break;
+case'powerup':osc.type='sine';osc.frequency.setValueAtTime(300,t);osc.frequency.linearRampToValueAtTime(900,t+0.3);gain.gain.setValueAtTime(0.3,t);gain.gain.linearRampToValueAtTime(0,t+0.4);osc.start(t);osc.stop(t+0.4);break;
+}}catch(e){}}
+
+// ===== MAZE GENERATION (Recursive Backtracking) =====
+function generateMaze(w,h){
+maze=[];
+for(let y=0;y<h;y++){maze[y]=[];for(let x=0;x<w;x++)maze[y][x]=1;}
+function carve(x,y){
+maze[y][x]=0;
+const dirs=[[0,-2],[0,2],[-2,0],[2,0]];
+shuffle(dirs);
+for(let[dx,dy]of dirs){
+const nx=x+dx,ny=y+dy;
+if(nx>0&&nx<w-1&&ny>0&&ny<h-1&&maze[ny][nx]===1){
+maze[y+dy/2][x+dx/2]=0;
+carve(nx,ny);
+}}}
+carve(1,1);
+// Ensure exit is reachable
+maze[h-2][w-2]=0;maze[h-3][w-2]=0;maze[h-2][w-3]=0;
+// Open some extra paths for better gameplay
+for(let i=0;i<Math.floor(w*h*0.03);i++){
+const rx=Math.floor(Math.random()*(w-4))+2;
+const ry=Math.floor(Math.random()*(h-4))+2;
+if(maze[ry][rx]===1){
+let adj=0;
+if(ry>0&&maze[ry-1][rx]===0)adj++;
+if(ry<h-1&&maze[ry+1][rx]===0)adj++;
+if(rx>0&&maze[ry][rx-1]===0)adj++;
+if(rx<w-1&&maze[ry][rx+1]===0)adj++;
+if(adj>=2)maze[ry][rx]=0;
+}}}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+// ===== PLACE ITEMS =====
+function getPathCells(){
+const cells=[];
+for(let y=1;y<mazeH-1;y++)for(let x=1;x<mazeW-1;x++)if(maze[y][x]===0)cells.push({x,y});
+return cells;
+}
+
+function getDeadEnds(){
+const ends=[];
+for(let y=1;y<mazeH-1;y++)for(let x=1;x<mazeW-1;x++){
+if(maze[y][x]===0){
+let walls=0;
+if(maze[y-1][x]===1)walls++;if(maze[y+1][x]===1)walls++;
+if(maze[y][x-1]===1)walls++;if(maze[y][x+1]===1)walls++;
+if(walls===3)ends.push({x,y});
+}}return ends;}
+
+function setupLevel(){
+const sizes=[15,17,19,21,23];
+const threatCounts=[2,3,3,4,4];
+const gateCounts=[2,2,3,3,4];
+const powerUpCounts=[0,0,1,1,2];
+mazeW=sizes[level-1];mazeH=sizes[level-1];
+cellSize=Math.floor(Math.min(canvas.width,canvas.height)/mazeW);
+generateMaze(mazeW,mazeH);
+
+// Place knowledge bytes
+knowledgeBytes=[];
+const pathCells=getPathCells();
+const byteCount=Math.floor(pathCells.length*0.7);
+const shuffledCells=shuffle([...pathCells]);
+for(let i=0;i<byteCount&&i<shuffledCells.length;i++){
+const c=shuffledCells[i];
+if(!(c.x<=2&&c.y<=2)&&!(c.x>=mazeW-3&&c.y>=mazeH-3)){
+knowledgeBytes.push({x:c.x,y:c.y,collected:false,pulse:Math.random()*Math.PI*2});
+}}
+totalBytes=knowledgeBytes.length;collectedBytes=0;exitOpen=false;
+
+// Place question gates
+questionGates=[];
+const gateCount=gateCounts[level-1];
+const midCells=pathCells.filter(c=>c.x>3&&c.x<mazeW-4&&c.y>3&&c.y<mazeH-4);
+const shuffledMid=shuffle([...midCells]);
+for(let i=0;i<gateCount&&i<shuffledMid.length;i++){
+const c=shuffledMid[i];
+const q=questionPool[Math.floor(Math.random()*questionPool.length)];
+questionGates.push({x:c.x,y:c.y,open:false,question:q,cooldown:0});
+}
+
+// Place power-ups in dead ends
+powerUps=[];
+const deadEnds=shuffle(getDeadEnds());
+const puCount=powerUpCounts[level-1];
+for(let i=0;i<puCount&&i<deadEnds.length;i++){
+const c=deadEnds[i];
+const type=Math.random()<0.5?'esd':'screwdriver';
+powerUps.push({x:c.x,y:c.y,type,collected:false,pulse:0});
+}
+
+// Place threats in corners
+threats=[];
+const corners=[{x:mazeW-2,y:1},{x:1,y:mazeH-2},{x:mazeW-2,y:mazeH-2},{x:Math.floor(mazeW/2),y:Math.floor(mazeH/2)}];
+const threatTypes=['malware','corrupted','overheat','surge'];
+const tCount=threatCounts[level-1];
+for(let i=0;i<tCount;i++){
+const c=corners[i%corners.length];
+// Find nearest open cell to corner
+let spawnX=c.x,spawnY=c.y;
+if(maze[spawnY][spawnX]===1){
+for(let r=1;r<5;r++){
+let found=false;
+for(let dy=-r;dy<=r&&!found;dy++)for(let dx=-r;dx<=r&&!found;dx++){
+const nx=c.x+dx,ny=c.y+dy;
+if(nx>0&&nx<mazeW-1&&ny>0&&ny<mazeH-1&&maze[ny][nx]===0){spawnX=nx;spawnY=ny;found=true;}}
+if(found)break;}}
+threats.push({x:spawnX,y:spawnY,type:threatTypes[i%4],dir:{x:0,y:0},moveTimer:0,
+speed:threatTypes[i%4]==='malware'?100:(threatTypes[i%4]==='overheat'?250:150),
+trail:[],stunned:0,lastPlayerX:1,lastPlayerY:1});
+}
+
+// Player start
+player.x=1;player.y=1;player.px=1;player.py=1;player.moving=false;player.invincible=0;player.powerUp=null;player.powerUpTime=0;
+particles=[];
+}
+
+// ===== PARTICLE SYSTEM =====
+function spawnParticles(x,y,color,count,speed,life){
+for(let i=0;i<count;i++){
+const angle=Math.random()*Math.PI*2;
+const spd=(Math.random()*0.5+0.5)*speed;
+particles.push({x,y,vx:Math.cos(angle)*spd,vy:Math.sin(angle)*spd,life,maxLife:life,color,size:Math.random()*3+1});
+}}
+
+function spawnTrailParticle(x,y){
+particles.push({x:x*cellSize+cellSize/2+Math.random()*6-3,y:y*cellSize+cellSize/2+Math.random()*6-3,
+vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,life:30,maxLife:30,color:'#00f0ff',size:Math.random()*2+1});}
+
+function updateParticles(){
+for(let i=particles.length-1;i>=0;i--){
+const p=particles[i];
+p.x+=p.vx;p.y+=p.vy;p.life--;
+if(p.life<=0)particles.splice(i,1);
+}}
+
+// ===== THREAT AI =====
+function updateThreats(dt){
+for(let t of threats){
+if(t.stunned>0){t.stunned-=dt;continue;}
+t.moveTimer-=dt;
+if(t.moveTimer<=0){
+t.moveTimer=t.speed*(level>=5?0.8:1);
+let nx=t.x,ny=t.y;
+switch(t.type){
+case'malware':{ // Random fast
+const dirs=shuffle([{x:0,y:-1},{x:0,y:1},{x:-1,y:0},{x:1,y:0}]);
+for(let d of dirs){
+if(maze[t.y+d.y]&&maze[t.y+d.y][t.x+d.x]===0){nx=t.x+d.x;ny=t.y+d.y;break;}}
+break;}
+case'corrupted':{ // Chase player last known
+t.lastPlayerX=player.x;t.lastPlayerY=player.y;
+const dx=t.lastPlayerX-t.x,dy=t.lastPlayerY-t.y;
+let dirs=[];
+if(Math.abs(dx)>Math.abs(dy)){dirs=[{x:Math.sign(dx),y:0},{x:0,y:Math.sign(dy)},{x:0,y:-Math.sign(dy)},{x:-Math.sign(dx),y:0}];}
+else{dirs=[{x:0,y:Math.sign(dy)},{x:Math.sign(dx),y:0},{x:-Math.sign(dx),y:0},{x:0,y:-Math.sign(dy)}];}
+for(let d of dirs){
+if(d.x===0&&d.y===0)continue;
+if(maze[t.y+d.y]&&maze[t.y+d.y][t.x+d.x]===0){nx=t.x+d.x;ny=t.y+d.y;break;}}
+break;}
+case'overheat':{ // Slow, leaves trail
+const dirs=shuffle([{x:0,y:-1},{x:0,y:1},{x:-1,y:0},{x:1,y:0}]);
+for(let d of dirs){
+if(maze[t.y+d.y]&&maze[t.y+d.y][t.x+d.x]===0){nx=t.x+d.x;ny=t.y+d.y;break;}}
+t.trail.push({x:t.x,y:t.y,life:180}); // 3 sec at 60fps
+break;}
+case'surge':{ // Linear bounce
+if(t.dir.x===0&&t.dir.y===0){const d=[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];t.dir=d[Math.floor(Math.random()*4)];}
+const testX=t.x+t.dir.x,testY=t.y+t.dir.y;
+if(maze[testY]&&maze[testY][testX]===0){nx=testX;ny=testY;}
+else{// Bounce
+const dirs=shuffle([{x:0,y:-1},{x:0,y:1},{x:-1,y:0},{x:1,y:0}]);
+for(let d of dirs){if(maze[t.y+d.y]&&maze[t.y+d.y][t.x+d.x]===0){t.dir=d;nx=t.x+d.x;ny=t.y+d.y;break;}}}
+break;}}
+t.x=nx;t.y=ny;
+}
+// Update overheat trails
+if(t.type==='overheat'){
+for(let i=t.trail.length-1;i>=0;i--){t.trail[i].life--;if(t.trail[i].life<=0)t.trail.splice(i,1);}
+}}}
+
+// ===== PLAYER MOVEMENT =====
+function getInputDir(){
+if(touchDir)return touchDir;
+if(keys['ArrowUp']||keys['KeyW'])return{x:0,y:-1};
+if(keys['ArrowDown']||keys['KeyS'])return{x:0,y:1};
+if(keys['ArrowLeft']||keys['KeyA'])return{x:-1,y:0};
+if(keys['ArrowRight']||keys['KeyD'])return{x:1,y:0};
+return null;
+}
+
+function updatePlayer(dt){
+if(player.invincible>0)player.invincible-=dt;
+if(player.powerUpTime>0){player.powerUpTime-=dt;if(player.powerUpTime<=0)player.powerUp=null;}
+moveTimer-=dt;
+if(moveTimer<=0){
+const dir=getInputDir();
+if(dir){
+const nx=player.x+dir.x,ny=player.y+dir.y;
+if(nx>=0&&nx<mazeW&&ny>=0&&ny<mazeH&&maze[ny][nx]===0){
+// Check question gate
+const gate=questionGates.find(g=>g.x===nx&&g.y===ny&&!g.open&&g.cooldown<=0);
+if(gate){showQuestion(gate);return;}
+player.px=player.x;player.py=player.y;
+player.x=nx;player.y=ny;
+spawnTrailParticle(player.px,player.py);
+moveTimer=moveInterval;
+// Check collections
+checkCollections();
+}else{moveTimer=50;}}else{moveTimer=30;}}
+}
+
+function checkCollections(){
+// Knowledge bytes
+for(let b of knowledgeBytes){
+if(!b.collected&&b.x===player.x&&b.y===player.y){
+b.collected=true;collectedBytes++;score+=10;
+playSound('collect');
+spawnParticles(b.x*cellSize+cellSize/2,b.y*cellSize+cellSize/2,'#44ff88',8,2,20);
+if(collectedBytes>=totalBytes)exitOpen=true;
+}}
+// Power-ups
+for(let p of powerUps){
+if(!p.collected&&p.x===player.x&&p.y===player.y){
+p.collected=true;
+player.powerUp=p.type;
+player.powerUpTime=300; // 5 seconds
+playSound('powerup');
+spawnParticles(p.x*cellSize+cellSize/2,p.y*cellSize+cellSize/2,'#ffd700',15,3,30);
+if(p.type==='screwdriver'){
+// Stun nearest threat
+let nearest=null,minDist=Infinity;
+for(let t of threats){const d=Math.abs(t.x-player.x)+Math.abs(t.y-player.y);if(d<minDist){minDist=d;nearest=t;}}
+if(nearest)nearest.stunned=180;
+}}}
+// Exit check
+if(exitOpen&&player.x===mazeW-2&&player.y===mazeH-2){
+if(level>=5){gameState='victory';playSound('levelup');}
+else{gameState='levelComplete';playSound('levelup');score+=100*level;}
+}
+// Threat collision
+for(let t of threats){
+if(t.x===player.x&&t.y===player.y&&player.invincible<=0&&player.powerUp!=='esd'){
+takeDamage();}
+// Overheat trail damage
+if(t.type==='overheat'){
+for(let tr of t.trail){
+if(tr.x===player.x&&tr.y===player.y&&player.invincible<=0&&player.powerUp!=='esd'){takeDamage();break;}}}
+}}
+
+function takeDamage(){
+lives--;player.invincible=120; // 2 sec
+shakeTime=15;shakeIntensity=5;
+playSound('damage');
+spawnParticles(player.x*cellSize+cellSize/2,player.y*cellSize+cellSize/2,'#ff4466',20,3,25);
+if(lives<=0){gameState='gameOver';saveHighScore();}
+}
+
+// ===== QUESTION SYSTEM =====
+function showQuestion(gate){
+gameState='question';
+currentQuestion=gate;
+selectedAnswer=-1;
+questionResult=null;
+questionTimer=0;
+}
+
+function answerQuestion(idx){
+if(questionResult!==null)return;
+selectedAnswer=idx;
+const correct=idx===currentQuestion.question.c;
+if(correct){
+questionResult='correct';score+=50;
+currentQuestion.open=true;
+playSound('correct');
+spawnParticles(currentQuestion.x*cellSize+cellSize/2,currentQuestion.y*cellSize+cellSize/2,'#44ff88',20,3,30);
+}else{
+questionResult='wrong';
+lives-=0.5;if(lives<=0){lives=0;}
+currentQuestion.cooldown=180; // 3 sec cooldown
+shakeTime=10;shakeIntensity=4;
+playSound('wrong');
+if(lives<=0){setTimeout(()=>{gameState='gameOver';saveHighScore();},1000);return;}
+}
+setTimeout(()=>{
+if(gameState==='question'){gameState='playing';currentQuestion=null;}
+},1500);
+}
+
+// ===== HIGH SCORES =====
+function saveHighScore(){
+highScores.push({score,level,date:new Date().toLocaleDateString()});
+highScores.sort((a,b)=>b.score-a.score);
+highScores=highScores.slice(0,10);
+localStorage.setItem('mazeRunnerHighScores',JSON.stringify(highScores));
+highScore=highScores[0].score;
+}
+
+// ===== CANVAS SIZING =====
+function resizeCanvas(){
+const maxSize=Math.min(window.innerWidth,window.innerHeight-60);
+canvas.width=Math.min(800,maxSize);
+canvas.height=canvas.width;
+if(gameState==='playing')cellSize=Math.floor(canvas.width/mazeW);
+}
+
+// ===== RENDERING =====
+function drawMaze(){
+const offsetX=(canvas.width-mazeW*cellSize)/2;
+const offsetY=(canvas.height-mazeH*cellSize)/2;
+ctx.save();
+// Screen shake
+if(shakeTime>0){
+shakeTime--;
+ctx.translate(Math.random()*shakeIntensity-shakeIntensity/2,Math.random()*shakeIntensity-shakeIntensity/2);
+}
+ctx.translate(offsetX,offsetY);
+
+// Draw walls with neon glow
+ctx.shadowColor='#00f0ff';ctx.shadowBlur=6;
+for(let y=0;y<mazeH;y++)for(let x=0;x<mazeW;x++){
+if(maze[y][x]===1){
+ctx.fillStyle='#0d1b2a';
+ctx.fillRect(x*cellSize,y*cellSize,cellSize,cellSize);
+ctx.strokeStyle='rgba(0,240,255,0.4)';ctx.lineWidth=1;
+ctx.strokeRect(x*cellSize,y*cellSize,cellSize,cellSize);
+}}
+ctx.shadowBlur=0;
+
+// Draw path
+for(let y=0;y<mazeH;y++)for(let x=0;x<mazeW;x++){
+if(maze[y][x]===0){
+ctx.fillStyle='#0a0a1a';
+ctx.fillRect(x*cellSize,y*cellSize,cellSize,cellSize);
+}}
+
+// Draw exit
+if(exitOpen){
+ctx.shadowColor='#44ff88';ctx.shadowBlur=12;
+ctx.fillStyle='#44ff88';
+ctx.fillRect((mazeW-2)*cellSize+4,(mazeH-2)*cellSize+4,cellSize-8,cellSize-8);
+ctx.shadowBlur=0;
+ctx.fillStyle='#fff';ctx.font=`${Math.floor(cellSize*0.4)}px monospace`;ctx.textAlign='center';
+ctx.fillText('EXIT',(mazeW-2)*cellSize+cellSize/2,(mazeH-2)*cellSize+cellSize/2+4);
+}else{
+ctx.fillStyle='#333';
+ctx.fillRect((mazeW-2)*cellSize+2,(mazeH-2)*cellSize+2,cellSize-4,cellSize-4);
+ctx.strokeStyle='#ff4466';ctx.lineWidth=2;
+ctx.strokeRect((mazeW-2)*cellSize+2,(mazeH-2)*cellSize+2,cellSize-4,cellSize-4);
+ctx.fillStyle='#ff4466';ctx.font=`${Math.floor(cellSize*0.3)}px monospace`;ctx.textAlign='center';
+ctx.fillText('🔒',(mazeW-2)*cellSize+cellSize/2,(mazeH-2)*cellSize+cellSize/2+4);
+}
+
+// Draw knowledge bytes (green hexagons)
+for(let b of knowledgeBytes){
+if(b.collected)continue;
+b.pulse+=0.05;
+const cx=b.x*cellSize+cellSize/2,cy=b.y*cellSize+cellSize/2;
+const r=cellSize*0.2+Math.sin(b.pulse)*2;
+ctx.shadowColor='#44ff88';ctx.shadowBlur=8+Math.sin(b.pulse)*3;
+ctx.beginPath();
+for(let i=0;i<6;i++){
+const angle=i*Math.PI/3-Math.PI/6;
+const px=cx+Math.cos(angle)*r,py=cy+Math.sin(angle)*r;
+if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+}
+ctx.closePath();ctx.fillStyle='#44ff88';ctx.fill();
+ctx.shadowBlur=0;
+}
+
+// Draw question gates (purple barriers)
+for(let g of questionGates){
+if(g.open)continue;
+if(g.cooldown>0)g.cooldown--;
+const cx=g.x*cellSize+cellSize/2,cy=g.y*cellSize+cellSize/2;
+ctx.shadowColor='#b300ff';ctx.shadowBlur=10;
+ctx.fillStyle=g.cooldown>0?'rgba(179,0,255,0.4)':'rgba(179,0,255,0.7)';
+ctx.fillRect(g.x*cellSize+2,g.y*cellSize+2,cellSize-4,cellSize-4);
+ctx.shadowBlur=0;
+ctx.fillStyle='#fff';ctx.font=`${Math.floor(cellSize*0.5)}px monospace`;ctx.textAlign='center';
+ctx.fillText('?',cx,cy+cellSize*0.15);
+}
+
+// Draw power-ups
+for(let p of powerUps){
+if(p.collected)continue;
+p.pulse+=0.08;
+const cx=p.x*cellSize+cellSize/2,cy=p.y*cellSize+cellSize/2;
+const r=cellSize*0.3;
+ctx.shadowColor='#ffd700';ctx.shadowBlur=10+Math.sin(p.pulse)*4;
+if(p.type==='esd'){
+// Wrist strap - golden circle
+ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='#ffd700';ctx.fill();
+ctx.fillStyle='#000';ctx.font=`${Math.floor(cellSize*0.25)}px monospace`;ctx.textAlign='center';
+ctx.fillText('⚡',cx,cy+4);
+}else{
+// Screwdriver - silver diamond
+ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.lineTo(cx+r,cy);ctx.lineTo(cx,cy+r);ctx.lineTo(cx-r,cy);
+ctx.closePath();ctx.fillStyle='#c0c0c0';ctx.fill();
+ctx.fillStyle='#000';ctx.font=`${Math.floor(cellSize*0.25)}px monospace`;ctx.textAlign='center';
+ctx.fillText('🔧',cx,cy+4);
+}
+ctx.shadowBlur=0;
+}
+
+// Draw overheat trails
+for(let t of threats){
+if(t.type==='overheat'){
+for(let tr of t.trail){
+const alpha=tr.life/180;
+ctx.fillStyle=`rgba(255,200,0,${alpha*0.4})`;
+ctx.fillRect(tr.x*cellSize+4,tr.y*cellSize+4,cellSize-8,cellSize-8);
+}}}
+
+// Draw threats
+for(let t of threats){
+const cx=t.x*cellSize+cellSize/2,cy=t.y*cellSize+cellSize/2;
+const r=cellSize*0.35;
+if(t.stunned>0){ctx.globalAlpha=0.4;}
+switch(t.type){
+case'malware':
+ctx.shadowColor='#ff2244';ctx.shadowBlur=10;
+ctx.fillStyle='#ff2244';
+// Spiky circle
+ctx.beginPath();
+for(let i=0;i<8;i++){
+const angle=i*Math.PI/4+animFrame*0.02;
+const outerR=r*(i%2===0?1:0.6);
+ctx.lineTo(cx+Math.cos(angle)*outerR,cy+Math.sin(angle)*outerR);
+}
+ctx.closePath();ctx.fill();break;
+case'corrupted':
+ctx.shadowColor='#ff8800';ctx.shadowBlur=10;
+ctx.fillStyle='#ff8800';
+// Square with bite
+ctx.fillRect(cx-r,cy-r,r*2,r*1.6);
+ctx.fillStyle='#0a0a1a';ctx.beginPath();ctx.arc(cx+r,cy-r+r*0.8,r*0.4,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#ff8800';break;
+case'overheat':
+ctx.shadowColor='#ffcc00';ctx.shadowBlur=10;
+ctx.fillStyle='#ffcc00';
+// Triangle/flame
+ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.lineTo(cx+r,cy+r);ctx.lineTo(cx-r,cy+r);ctx.closePath();ctx.fill();
+break;
+case'surge':
+ctx.shadowColor='#44ccff';ctx.shadowBlur=12;
+ctx.fillStyle='#44ccff';
+// Lightning bolt shape
+ctx.beginPath();ctx.moveTo(cx-r*0.3,cy-r);ctx.lineTo(cx+r*0.5,cy-r*0.1);
+ctx.lineTo(cx,cy);ctx.lineTo(cx+r*0.3,cy+r);ctx.lineTo(cx-r*0.5,cy+r*0.1);ctx.lineTo(cx,cy);
+ctx.closePath();ctx.fill();break;
+}
+ctx.shadowBlur=0;ctx.globalAlpha=1;
+}
+
+// Draw player
+const pcx=player.x*cellSize+cellSize/2,pcy=player.y*cellSize+cellSize/2;
+const pr=cellSize*0.35;
+// Glow
+if(player.powerUp==='esd'){
+ctx.shadowColor='#ffd700';ctx.shadowBlur=20;
+ctx.beginPath();ctx.arc(pcx,pcy,pr+4,0,Math.PI*2);ctx.fillStyle='rgba(255,215,0,0.3)';ctx.fill();
+}
+ctx.shadowColor='#00f0ff';ctx.shadowBlur=15;
+if(player.invincible>0&&Math.floor(player.invincible/4)%2===0){ctx.globalAlpha=0.5;}
+ctx.beginPath();ctx.arc(pcx,pcy,pr,0,Math.PI*2);
+ctx.fillStyle=player.powerUp==='esd'?'#ffd700':'#00f0ff';ctx.fill();
+ctx.shadowBlur=0;ctx.globalAlpha=1;
+// Eyes
+ctx.fillStyle='#0a0a1a';
+ctx.beginPath();ctx.arc(pcx-pr*0.3,pcy-pr*0.2,pr*0.15,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(pcx+pr*0.3,pcy-pr*0.2,pr*0.15,0,Math.PI*2);ctx.fill();
+
+// Draw particles
+for(let p of particles){
+const alpha=p.life/p.maxLife;
+ctx.globalAlpha=alpha;
+ctx.fillStyle=p.color;
+ctx.beginPath();ctx.arc(p.x,p.y,p.size*alpha,0,Math.PI*2);ctx.fill();
+}
+ctx.globalAlpha=1;
+ctx.restore();
+}
+
+// ===== QUESTION OVERLAY =====
+function drawQuestionOverlay(){
+ctx.fillStyle='rgba(0,0,0,0.85)';
+ctx.fillRect(0,0,canvas.width,canvas.height);
+const q=currentQuestion.question;
+const panelW=Math.min(canvas.width-40,600);
+const panelH=380;
+const px=(canvas.width-panelW)/2,py=(canvas.height-panelH)/2;
+// Panel
+ctx.fillStyle='#0d1b2a';
+ctx.strokeStyle='#b300ff';ctx.lineWidth=3;
+ctx.shadowColor='#b300ff';ctx.shadowBlur=15;
+ctx.fillRect(px,py,panelW,panelH);
+ctx.strokeRect(px,py,panelW,panelH);
+ctx.shadowBlur=0;
+
+// Question text
+ctx.fillStyle='#fff';ctx.font='bold 16px monospace';ctx.textAlign='center';
+wrapText(q.q,canvas.width/2,py+40,panelW-40,22);
+
+// Answer buttons
+const btnW=panelW-60,btnH=48;
+const startY=py+120;
+for(let i=0;i<4;i++){
+const bx=px+30,by=startY+i*(btnH+10);
+let bgColor='rgba(0,240,255,0.1)';
+let borderColor='#00f0ff';
+if(questionResult!==null){
+if(i===q.c){bgColor='rgba(68,255,136,0.3)';borderColor='#44ff88';}
+else if(i===selectedAnswer&&questionResult==='wrong'){bgColor='rgba(255,68,102,0.3)';borderColor='#ff4466';}
+}else if(i===selectedAnswer){bgColor='rgba(0,240,255,0.3)';}
+ctx.fillStyle=bgColor;ctx.strokeStyle=borderColor;ctx.lineWidth=2;
+ctx.fillRect(bx,by,btnW,btnH);ctx.strokeRect(bx,by,btnW,btnH);
+ctx.fillStyle='#fff';ctx.font='14px monospace';ctx.textAlign='left';
+ctx.fillText(q.a[i],bx+15,by+btnH/2+5);
+}
+// Store button positions for click detection
+currentQuestion._buttons={x:px+30,y:startY,w:btnW,h:btnH,gap:10};
+}
+
+function wrapText(text,x,y,maxW,lineH){
+const words=text.split(' ');let line='';
+for(let w of words){
+const test=line+w+' ';
+if(ctx.measureText(test).width>maxW&&line!==''){
+ctx.fillText(line.trim(),x,y);y+=lineH;line=w+' ';
+}else{line=test;}}
+ctx.fillText(line.trim(),x,y);
+}
+
+// ===== START SCREEN =====
+function drawStartScreen(){
+// Animated circuit background
+ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,canvas.width,canvas.height);
+// Circuit lines
+ctx.strokeStyle='rgba(0,240,255,0.1)';ctx.lineWidth=1;
+for(let i=0;i<20;i++){
+const y=(animFrame*0.3+i*40)%canvas.height;
+ctx.beginPath();ctx.moveTo(0,y);
+for(let x=0;x<canvas.width;x+=50){
+ctx.lineTo(x,y+(Math.sin(x*0.02+animFrame*0.01)*10));
+}
+ctx.stroke();
+}
+for(let i=0;i<15;i++){
+const x=(animFrame*0.2+i*55)%canvas.width;
+ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();
+}
+// Floating particles
+for(let i=0;i<30;i++){
+const px=(Math.sin(animFrame*0.01+i*2)*0.5+0.5)*canvas.width;
+const py=(animFrame*0.5+i*30)%canvas.height;
+ctx.fillStyle=`rgba(0,240,255,${0.2+Math.sin(animFrame*0.03+i)*0.2})`;
+ctx.beginPath();ctx.arc(px,py,2,0,Math.PI*2);ctx.fill();
+}
+
+// Title
+const titleY=canvas.height*0.25;
+ctx.shadowColor='#00f0ff';ctx.shadowBlur=20;
+ctx.fillStyle='#00f0ff';ctx.font='bold 32px monospace';ctx.textAlign='center';
+ctx.fillText('CompTIA A+',canvas.width/2,titleY);
+ctx.font='bold 42px monospace';
+ctx.fillText('MAZE RUNNER',canvas.width/2,titleY+50);
+ctx.shadowBlur=0;
+
+// Subtitle
+ctx.fillStyle='#b300ff';ctx.font='16px monospace';
+ctx.fillText('Collect Knowledge • Avoid Threats • Answer Questions',canvas.width/2,titleY+90);
+
+// Instructions
+ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='14px monospace';
+const iy=canvas.height*0.55;
+ctx.fillText('🎮 Arrow Keys / WASD to move',canvas.width/2,iy);
+ctx.fillText('💚 Collect all green bytes to unlock exit',canvas.width/2,iy+25);
+ctx.fillText('❓ Answer questions at purple gates',canvas.width/2,iy+50);
+ctx.fillText('⚠️ Avoid red/orange/yellow/blue threats',canvas.width/2,iy+75);
+
+// Start prompt
+const blink=Math.sin(animFrame*0.05)>0;
+if(blink){
+ctx.fillStyle='#44ff88';ctx.font='bold 20px monospace';
+ctx.fillText('[ PRESS SPACE or TAP to START ]',canvas.width/2,canvas.height*0.82);
+}
+
+// High scores
+if(highScores.length>0){
+ctx.fillStyle='#ffd700';ctx.font='bold 14px monospace';
+ctx.fillText('🏆 HIGH SCORES',canvas.width/2,canvas.height*0.88);
+ctx.font='12px monospace';ctx.fillStyle='#fff';
+for(let i=0;i<Math.min(3,highScores.length);i++){
+ctx.fillText(`${i+1}. ${highScores[i].score} pts (Lvl ${highScores[i].level})`,canvas.width/2,canvas.height*0.88+20+i*18);
+}}
+}
+
+// ===== LEVEL COMPLETE / GAME OVER / VICTORY SCREENS =====
+function drawLevelComplete(){
+ctx.fillStyle='rgba(0,0,0,0.9)';ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.shadowColor='#44ff88';ctx.shadowBlur=15;
+ctx.fillStyle='#44ff88';ctx.font='bold 36px monospace';ctx.textAlign='center';
+ctx.fillText('LEVEL COMPLETE!',canvas.width/2,canvas.height*0.3);
+ctx.shadowBlur=0;
+ctx.fillStyle='#fff';ctx.font='18px monospace';
+ctx.fillText(`Level ${level} cleared!`,canvas.width/2,canvas.height*0.4);
+ctx.fillText(`Score: ${score}`,canvas.width/2,canvas.height*0.47);
+ctx.fillText(`Bytes: ${collectedBytes}/${totalBytes}`,canvas.width/2,canvas.height*0.54);
+const blink=Math.sin(animFrame*0.05)>0;
+if(blink){
+ctx.fillStyle='#00f0ff';ctx.font='bold 18px monospace';
+ctx.fillText('[ PRESS SPACE for NEXT LEVEL ]',canvas.width/2,canvas.height*0.7);
+}}
+
+function drawGameOver(){
+ctx.fillStyle='rgba(0,0,0,0.9)';ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.shadowColor='#ff4466';ctx.shadowBlur=15;
+ctx.fillStyle='#ff4466';ctx.font='bold 40px monospace';ctx.textAlign='center';
+ctx.fillText('GAME OVER',canvas.width/2,canvas.height*0.3);
+ctx.shadowBlur=0;
+ctx.fillStyle='#fff';ctx.font='18px monospace';
+ctx.fillText(`Final Score: ${score}`,canvas.width/2,canvas.height*0.42);
+ctx.fillText(`Reached Level: ${level}`,canvas.width/2,canvas.height*0.49);
+ctx.fillText(`High Score: ${highScore}`,canvas.width/2,canvas.height*0.56);
+const blink=Math.sin(animFrame*0.05)>0;
+if(blink){
+ctx.fillStyle='#00f0ff';ctx.font='bold 18px monospace';
+ctx.fillText('[ PRESS SPACE to PLAY AGAIN ]',canvas.width/2,canvas.height*0.72);
+}}
+
+function drawVictory(){
+ctx.fillStyle='rgba(0,0,0,0.9)';ctx.fillRect(0,0,canvas.width,canvas.height);
+// Celebration particles
+for(let i=0;i<50;i++){
+const px=(Math.sin(animFrame*0.02+i*1.3)*0.4+0.5)*canvas.width;
+const py=(animFrame*0.8+i*20)%canvas.height;
+const colors=['#ff4466','#44ff88','#ffd700','#00f0ff','#b300ff'];
+ctx.fillStyle=colors[i%5];
+ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);ctx.fill();
+}
+ctx.shadowColor='#ffd700';ctx.shadowBlur=20;
+ctx.fillStyle='#ffd700';ctx.font='bold 36px monospace';ctx.textAlign='center';
+ctx.fillText('🏆 COMPTIA CHAMPION! 🏆',canvas.width/2,canvas.height*0.3);
+ctx.shadowBlur=0;
+ctx.fillStyle='#fff';ctx.font='20px monospace';
+ctx.fillText('You conquered all 5 levels!',canvas.width/2,canvas.height*0.42);
+ctx.fillText(`Final Score: ${score}`,canvas.width/2,canvas.height*0.5);
+ctx.fillStyle='#44ff88';ctx.font='16px monospace';
+ctx.fillText('Your A+ knowledge is UNSTOPPABLE!',canvas.width/2,canvas.height*0.6);
+const blink=Math.sin(animFrame*0.05)>0;
+if(blink){
+ctx.fillStyle='#00f0ff';ctx.font='bold 18px monospace';
+ctx.fillText('[ PRESS SPACE to PLAY AGAIN ]',canvas.width/2,canvas.height*0.75);
+}}
+
+// ===== HUD =====
+function updateHUD(){
+let hearts='';
+for(let i=0;i<3;i++){
+if(i<Math.floor(lives))hearts+='❤️';
+else if(i<lives)hearts+='💔';
+else hearts+='🖤';
+}
+hudLives.textContent=hearts;
+hudLevel.textContent=`Level ${level} | Bytes: ${collectedBytes}/${totalBytes}`;
+hudScore.textContent=`Score: ${score}`;
+}
+
+// ===== MOBILE D-PAD =====
+let dpad=null;
+function createDPad(){
+if(dpad)return;
+dpad=document.createElement('div');
+dpad.id='dpad';
+dpad.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:60px 60px 60px;grid-template-rows:60px 60px 60px;gap:4px;pointer-events:all;z-index:100;opacity:0.7;';
+const btns=[
+{label:'',grid:'1/2',dir:null},
+{label:'▲',grid:'1/2',dir:{x:0,y:-1}},
+{label:'',grid:'1/3',dir:null},
+{label:'◄',grid:'2/1',dir:{x:-1,y:0}},
+{label:'',grid:'2/2',dir:null},
+{label:'►',grid:'2/3',dir:{x:1,y:0}},
+{label:'',grid:'3/1',dir:null},
+{label:'▼',grid:'3/2',dir:{x:0,y:1}},
+{label:'',grid:'3/3',dir:null}
+];
+btns.forEach((b,i)=>{
+const btn=document.createElement('button');
+btn.textContent=b.label;
+btn.style.cssText=`background:rgba(0,240,255,0.2);border:2px solid rgba(0,240,255,0.5);color:#00f0ff;font-size:24px;border-radius:8px;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;`;
+if(!b.dir){btn.style.visibility='hidden';}
+else{
+btn.addEventListener('touchstart',(e)=>{e.preventDefault();touchDir=b.dir;},{passive:false});
+btn.addEventListener('touchend',(e)=>{e.preventDefault();touchDir=null;},{passive:false});
+btn.addEventListener('mousedown',(e)=>{touchDir=b.dir;});
+btn.addEventListener('mouseup',(e)=>{touchDir=null;});
+}
+dpad.appendChild(btn);
+});
+document.body.appendChild(dpad);
+}
+
+function showDPad(){if(!dpad)createDPad();dpad.style.display='grid';}
+function hideDPad(){if(dpad)dpad.style.display='none';}
+
+// Check if touch device
+const isTouchDevice='ontouchstart'in window||navigator.maxTouchPoints>0;
+
+// ===== ADMIN CONSOLE =====
+function openAdmin(){
+adminMode=true;
+const panel=document.createElement('div');
+panel.id='admin-panel';
+panel.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0d1b2a;border:2px solid #ffd700;padding:30px;z-index:1000;font-family:monospace;color:#ffd700;min-width:300px;border-radius:8px;';
+panel.innerHTML=`
+<h3 style="text-align:center;margin-bottom:15px;">⚙️ DEV PANEL</h3>
+<div style="margin:10px 0"><label>Level: <input type="number" id="adm-level" value="${level}" min="1" max="5" style="width:50px;background:#0a0a1a;color:#fff;border:1px solid #ffd700;padding:4px;"></label></div>
+<div style="margin:10px 0"><label>Lives: <input type="number" id="adm-lives" value="${lives}" min="1" max="10" style="width:50px;background:#0a0a1a;color:#fff;border:1px solid #ffd700;padding:4px;"></label></div>
+<div style="margin:10px 0"><label>Score: <input type="number" id="adm-score" value="${score}" min="0" style="width:80px;background:#0a0a1a;color:#fff;border:1px solid #ffd700;padding:4px;"></label></div>
+<div style="display:flex;gap:10px;margin-top:15px;justify-content:center;">
+<button onclick="applyAdmin()" style="background:#ffd700;color:#000;border:none;padding:8px 16px;cursor:pointer;font-family:monospace;border-radius:4px;">Apply</button>
+<button onclick="skipLevel()" style="background:#44ff88;color:#000;border:none;padding:8px 16px;cursor:pointer;font-family:monospace;border-radius:4px;">Skip Level</button>
+<button onclick="closeAdmin()" style="background:#ff4466;color:#fff;border:none;padding:8px 16px;cursor:pointer;font-family:monospace;border-radius:4px;">Close</button>
+</div>`;
+document.body.appendChild(panel);
+}
+
+function applyAdmin(){
+level=parseInt(document.getElementById('adm-level').value)||1;
+lives=parseFloat(document.getElementById('adm-lives').value)||3;
+score=parseInt(document.getElementById('adm-score').value)||0;
+closeAdmin();setupLevel();gameState='playing';
+}
+
+function skipLevel(){
+closeAdmin();
+if(level<5){level++;setupLevel();gameState='playing';}
+else{gameState='victory';saveHighScore();}
+}
+
+function closeAdmin(){
+adminMode=false;
+const p=document.getElementById('admin-panel');if(p)p.remove();
+}
+
+// ===== GAME LOOP =====
+function gameLoop(timestamp){
+if(!lastTime)lastTime=timestamp;
+deltaTime=timestamp-lastTime;lastTime=timestamp;
+animFrame++;
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,canvas.width,canvas.height);
+
+switch(gameState){
+case'start':
+drawStartScreen();
+hud.style.display='none';
+muteBtn.style.display='block';
+if(isTouchDevice)hideDPad();
+break;
+case'playing':
+updatePlayer(deltaTime/16.67);
+updateThreats(deltaTime/16.67);
+updateParticles();
+drawMaze();
+updateHUD();
+hud.style.display='flex';
+if(isTouchDevice)showDPad();
+break;
+case'question':
+drawMaze();
+drawQuestionOverlay();
+break;
+case'levelComplete':
+drawLevelComplete();
+if(isTouchDevice)hideDPad();
+break;
+case'gameOver':
+drawGameOver();
+if(isTouchDevice)hideDPad();
+break;
+case'victory':
+drawVictory();
+if(isTouchDevice)hideDPad();
+break;
+}
+requestAnimationFrame(gameLoop);
+}
+
+// ===== INPUT HANDLING =====
+document.addEventListener('keydown',(e)=>{
+keys[e.code]=true;
+// Admin code detection
+if(e.key.toUpperCase()==='N'||e.key.toUpperCase()==='I'||e.key.toUpperCase()==='K'||e.key.toUpperCase()==='O'){
+adminInput+=e.key.toUpperCase();
+if(adminInput.length>4)adminInput=adminInput.slice(-4);
+if(adminInput==='NIKO')openAdmin();
+}else{adminInput='';}
+
+if(e.code==='Space'){
+e.preventDefault();
+initAudio();
+if(gameState==='start'){gameState='playing';setupLevel();}
+else if(gameState==='levelComplete'){level++;setupLevel();gameState='playing';}
+else if(gameState==='gameOver'||gameState==='victory'){score=0;lives=3;level=1;gameState='playing';setupLevel();}
+}
+});
+document.addEventListener('keyup',(e)=>{keys[e.code]=false;});
+
+// ===== CLICK/TAP HANDLING =====
+canvas.addEventListener('click',(e)=>{
+initAudio();
+const rect=canvas.getBoundingClientRect();
+const x=(e.clientX-rect.left)*(canvas.width/rect.width);
+const y=(e.clientY-rect.top)*(canvas.height/rect.height);
+
+if(gameState==='start'){gameState='playing';setupLevel();}
+else if(gameState==='levelComplete'){level++;setupLevel();gameState='playing';}
+else if(gameState==='gameOver'||gameState==='victory'){score=0;lives=3;level=1;gameState='playing';setupLevel();}
+else if(gameState==='question'&&currentQuestion&&currentQuestion._buttons&&questionResult===null){
+const b=currentQuestion._buttons;
+for(let i=0;i<4;i++){
+const by=b.y+i*(b.h+b.gap);
+if(x>=b.x&&x<=b.x+b.w&&y>=by&&y<=by+b.h){
+answerQuestion(i);break;
+}}}
+});
+
+canvas.addEventListener('touchstart',(e)=>{
+e.preventDefault();
+initAudio();
+if(gameState==='start'){gameState='playing';setupLevel();}
+else if(gameState==='levelComplete'){level++;setupLevel();gameState='playing';}
+else if(gameState==='gameOver'||gameState==='victory'){score=0;lives=3;level=1;gameState='playing';setupLevel();}
+else if(gameState==='question'&&currentQuestion&&currentQuestion._buttons&&questionResult===null){
+const rect=canvas.getBoundingClientRect();
+const touch=e.touches[0];
+const x=(touch.clientX-rect.left)*(canvas.width/rect.width);
+const y=(touch.clientY-rect.top)*(canvas.height/rect.height);
+const b=currentQuestion._buttons;
+for(let i=0;i<4;i++){
+const by=b.y+i*(b.h+b.gap);
+if(x>=b.x&&x<=b.x+b.w&&y>=by&&y<=by+b.h){
+answerQuestion(i);break;
+}}}
+},{passive:false});
+
+// Mute button
+muteBtn.addEventListener('click',()=>{
+isMuted=!isMuted;
+muteBtn.textContent=isMuted?'🔇':'🔊';
+});
+
+// Window resize
+window.addEventListener('resize',resizeCanvas);
+
+// ===== INIT =====
+resizeCanvas();
+muteBtn.style.display='block';
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
