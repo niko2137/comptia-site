@@ -47,7 +47,7 @@ let threats=[], particles=[], knowledgeBytes=[], questionGates=[], powerUps=[];
 let totalBytes=0, collectedBytes=0, exitOpen=false;
 let shakeTime=0, shakeIntensity=0;
 let animFrame=0, lastTime=0, deltaTime=0;
-let moveTimer=0, moveInterval=150;
+let moveTimer=0, moveInterval=80;
 let keys={};
 let touchDir=null;
 let isMuted=false;
@@ -196,7 +196,7 @@ generateMaze(mazeW,mazeH);
 // Place knowledge bytes
 knowledgeBytes=[];
 const pathCells=getPathCells();
-const byteCount=Math.floor(pathCells.length*0.7);
+const byteCount=Math.floor(pathCells.length*0.6+Math.random()*pathCells.length*0.15);
 const shuffledCells=shuffle([...pathCells]);
 for(let i=0;i<byteCount&&i<shuffledCells.length;i++){
 const c=shuffledCells[i];
@@ -243,7 +243,7 @@ const nx=c.x+dx,ny=c.y+dy;
 if(nx>0&&nx<mazeW-1&&ny>0&&ny<mazeH-1&&maze[ny][nx]===0){spawnX=nx;spawnY=ny;found=true;}}
 if(found)break;}}
 threats.push({x:spawnX,y:spawnY,type:threatTypes[i%4],dir:{x:0,y:0},moveTimer:0,
-speed:threatTypes[i%4]==='malware'?100:(threatTypes[i%4]==='overheat'?250:150),
+speed:threatTypes[i%4]==='malware'?70:(threatTypes[i%4]==='overheat'?180:110),
 trail:[],stunned:0,lastPlayerX:1,lastPlayerY:1});
 }
 
@@ -344,7 +344,7 @@ spawnTrailParticle(player.px,player.py);
 moveTimer=moveInterval;
 // Check collections
 checkCollections();
-}else{moveTimer=50;}}else{moveTimer=30;}}
+}else{moveTimer=30;}}else{moveTimer=20;}}
 }
 
 function checkCollections(){
@@ -714,7 +714,9 @@ const iy=canvas.height*0.55;
 ctx.fillText('🎮 Arrow Keys / WASD to move',canvas.width/2,iy);
 ctx.fillText('💚 Collect all green bytes to unlock exit',canvas.width/2,iy+25);
 ctx.fillText('❓ Answer questions at purple gates',canvas.width/2,iy+50);
-ctx.fillText('⚠️ Avoid red/orange/yellow/blue threats',canvas.width/2,iy+75);
+ctx.fillText('⚠️ Threats: 🔴Malware(random) 🟠Corrupted(chaser)',canvas.width/2,iy+75);
+ctx.fillText('    🟡Overheat(leaves trail) 🔵Surge(bounces)',canvas.width/2,iy+95);
+ctx.fillText('⚡ Power-ups: 🟡ESD Strap(invincible) 🔧Screwdriver(stun)',canvas.width/2,iy+120);
 
 // Start prompt
 const blink=Math.sin(animFrame*0.05)>0;
@@ -800,8 +802,8 @@ else if(i<lives)hearts+='💔';
 else hearts+='🖤';
 }
 hudLives.textContent=hearts;
-hudLevel.textContent=`Level ${level} | Bytes: ${collectedBytes}/${totalBytes}`;
-hudScore.textContent=`Score: ${score}`;
+hudLevel.textContent=`Level ${level}`;
+hudScore.textContent=`Score: ${score} | Bytes: ${collectedBytes}/${totalBytes}`;
 }
 
 // ===== MOBILE D-PAD =====
