@@ -286,6 +286,11 @@ function startDrone(){
   droneOsc.type='sine';droneOsc.frequency.setValueAtTime(55,audioCtx.currentTime);
   droneGain.gain.setValueAtTime(0.012,audioCtx.currentTime);
   droneOsc.connect(droneGain);droneGain.connect(audioCtx.destination);droneOsc.start();
+  // Add game-show style pulsing LFO
+  const lfo=audioCtx.createOscillator();const lfoGain=audioCtx.createGain();
+  lfo.type='sine';lfo.frequency.setValueAtTime(0.5,audioCtx.currentTime);
+  lfoGain.gain.setValueAtTime(0.008,audioCtx.currentTime);
+  lfo.connect(lfoGain);lfoGain.connect(droneGain.gain);lfo.start();
 }
 function stopDrone(){if(droneOsc){droneOsc.stop();droneOsc=null;droneGain=null;}}
 
