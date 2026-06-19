@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Tiled Words — CompTIA A+ Crossword</title>
+<style>
+/* ==================== RESET & BASE ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #0a0e1a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    overflow-x: hidden;
+}
+
+/* ==================== SCANLINE OVERLAY ==================== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 240, 255, 0.015) 2px,
+        rgba(0, 240, 255, 0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ==================== FLOATING BINARY/HEX TEXT ==================== */
+.floating-text {
+    position: fixed;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: rgba(0, 240, 255, 0.07);
+    white-space: nowrap;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ==================== KEYFRAME ANIMATIONS ==================== */
+@keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(5deg); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-8px); }
+    30% { transform: translateX(8px); }
+    45% { transform: translateX(-6px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(3px); }
+}
+
+@keyframes correctPulse {
+    0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+}
+
+@keyframes boxAppear {
+    from { opacity: 0; transform: scale(0.7) rotateY(90deg); }
+    to { opacity: 1; transform: scale(1) rotateY(0deg); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.4); }
+    50% { text-shadow: 0 0 20px rgba(0, 240, 255, 1), 0 0 40px rgba(0, 240, 255, 0.6), 0 0 60px rgba(0, 240, 255, 0.3); }
+}
+
+@keyframes progressGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(0, 240, 255, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.2); }
+}
+
+@keyframes borderGlow {
+    0%, 100% { border-color: rgba(0, 240, 255, 0.3); }
+    50% { border-color: rgba(0, 240, 255, 0.7); }
+}
+
+@keyframes countUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes victoryBounce {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==================== MAIN LAYOUT ==================== */
+#app {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ==================== GLASS PANEL ==================== */
+.glass-panel {
+    background: rgba(10, 14, 26, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow:
+        0 0 30px rgba(0, 240, 255, 0.05),
+        inset 0 0 30px rgba(0, 240, 255, 0.02),
+        0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ==================== NEON UTILITY CLASSES ==================== */
+.neon-text {
+    color: #00f0ff;
+    text-shadow:
+        0 0 10px rgba(0, 240, 255, 0.8),
+        0 0 20px rgba(0, 240, 255, 0.4),
+        0 0 40px rgba(0, 240, 255, 0.2);
+}
+
+.neon-border {
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    box-shadow:
+        0 0 10px rgba(0, 240, 255, 0.2),
+        inset 0 0 10px rgba(0, 240, 255, 0.05);
+}
+
+/* ==================== GAME CONTAINER ==================== */
+.game-container {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ==================== GAME HEADER ==================== */
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 25px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.header-left {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    gap: 10px;
+}
+
+.header-center {
+    flex: 1;
+    min-width: 200px;
+    padding: 0 20px;
+}
+
+/* ==================== TIMER & SCORE ==================== */
+.timer-box, .score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-label, .score-label {
+    font-size: 0.6em;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.5;
+    margin-bottom: 3px;
+}
+
+.timer-value {
+    font-family: 'Courier New', monospace;
+    font-size: 1.6em;
+    letter-spacing: 3px;
+    animation: glowPulse 3s ease infinite;
+}
+
+.score-value {
+    font-family: 'Courier New', monospace;
+    font-size: 1.6em;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transition: transform 0.2s ease;
+}
+
+.score-value.bump {
+    transform: scale(1.3);
+}
+
+/* ==================== PROGRESS BAR ==================== */
+.progress-container {
+    position: relative;
+    width: 100%;
+    height: 26px;
+    background: rgba(0, 240, 255, 0.04);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 13px;
+    overflow: hidden;
+    animation: progressGlow 3s ease infinite;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00f0ff, #00ff88, #00f0ff);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+    border-radius: 13px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.72em;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    letter-spacing: 1px;
+}
+
+/* ==================== ACTION BUTTONS ==================== */
+.action-btn {
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 0.78em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.check-btn {
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    color: #00f0ff;
+}
+
+.check-btn:hover {
+    background: rgba(0, 240, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.reveal-btn {
+    background: rgba(255, 215, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    color: #ffd700;
+}
+
+.reveal-btn:hover {
+    background: rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transform: translateY(-1px);
+}
+
+/* ==================== CLUE ROWS ==================== */
+.clues-container {
+    padding: 15px 20px;
+}
+
+.clue-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    margin: 5px 0;
+    border-radius: 10px;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 15px;
+}
+
+.clue-row:hover {
+    background: rgba(0, 240, 255, 0.03);
+    border-left-color: rgba(0, 240, 255, 0.2);
+}
+
+.clue-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.clue-num {
+    font-weight: bold;
+    color: #00f0ff;
+    font-size: 0.9em;
+    min-width: 26px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.clue-text {
+    font-size: 0.88em;
+    opacity: 0.8;
+    line-height: 1.3;
+}
+
+.clue-len {
+    opacity: 0.4;
+    font-size: 0.85em;
+    margin-left: 4px;
+}
+
+/* ==================== LETTER BOXES ==================== */
+.letter-boxes {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.letter-box {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(0, 240, 255, 0.25);
+    border-radius: 7px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0, 240, 255, 0.02);
+    transition: all 0.2s ease;
+    animation: boxAppear 0.4s ease both;
+}
+
+.letter-box.has-letter {
+    border-color: rgba(0, 240, 255, 0.5);
+    background: rgba(0, 240, 255, 0.06);
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.letter-box.box-full {
+    border-color: rgba(0, 240, 255, 0.8);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), inset 0 0 5px rgba(0, 240, 255, 0.1);
+}
+
+.letter-box.cursor-box {
+    animation: borderGlow 1s ease infinite;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+/* ==================== ROW STATES ==================== */
+.row-selected {
+    border-left-color: #00f0ff !important;
+    background: rgba(0, 240, 255, 0.05) !important;
+    box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.03);
+}
+
+.row-selected .letter-box {
+    border-color: rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.15);
+}
+
+.row-correct {
+    border-left-color: #00ff88 !important;
+    background: rgba(0, 255, 136, 0.04) !important;
+}
+
+.row-correct .letter-box {
+    border-color: #00ff88;
+    color: #00ff88;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+    text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+}
+
+.row-revealed {
+    border-left-color: #ffd700 !important;
+    background: rgba(255, 215, 0, 0.03) !important;
+}
+
+.row-revealed .letter-box {
+    border-color: #ffd700;
+    color: #ffd700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+/* ==================== STATUS ICONS ==================== */
+.checkmark {
+    color: #00ff88;
+    font-size: 1.5em;
+    margin-left: 10px;
+    animation: slideInRight 0.4s ease;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+}
+
+.reveal-icon {
+    font-size: 1.2em;
+    margin-left: 10px;
+    animation: slideInRight 0.3s ease;
+    opacity: 0.8;
+}
+
+/* ==================== SHAKE & FLASH ANIMATIONS ==================== */
+.shake {
+    animation: shake 0.5s ease;
+}
+
+.wrong-flash .letter-box {
+    border-color: #ff4444 !important;
+    box-shadow: 0 0 12px rgba(255, 68, 68, 0.5) !important;
+    background: rgba(255, 68, 68, 0.05) !important;
+}
+
+.correct-flash {
+    animation: correctPulse 1.2s ease;
+}
+
+/* ==================== STATS BOXES ==================== */
+.stat-box {
+    background: rgba(0, 240, 255, 0.03);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    border-radius: 12px;
+    padding: 18px 12px;
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    border-color: rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+.stat-value {
+    animation: countUp 0.6s ease;
+}
+
+.stat-label {
+    font-size: 0.65em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.45;
+    margin-top: 6px;
+}
+
+/* ==================== ADMIN BADGE ==================== */
+.admin-badge {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.15);
+    border: 1px solid rgba(255, 0, 0, 0.6);
+    color: #ff4444;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.7em;
+    font-weight: bold;
+    z-index: 1000;
+    letter-spacing: 2px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ==================== MOBILE KEYBOARD ==================== */
+.mobile-keyboard {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 14, 26, 0.97);
+    border-top: 1px solid rgba(0, 240, 255, 0.3);
+    padding: 10px;
+    display: none;
+    z-index: 500;
+    backdrop-filter: blur(10px);
+}
+
+.mobile-keyboard.show {
+    display: block;
+    animation: slideInUp 0.3s ease;
+}
+
+.kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin: 4px 0;
+}
+
+.kb-key {
+    min-width: 32px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 6px;
+    color: #e0e0e0;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.kb-key:active {
+    background: rgba(0, 240, 255, 0.3);
+    transform: scale(0.92);
+}
+
+.kb-key.wide {
+    min-width: 60px;
+    font-size: 0.7em;
+    letter-spacing: 1px;
+}
+
+.kb-key.enter-key {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: rgba(0, 255, 136, 0.4);
+    color: #00ff88;
+}
+
+.kb-key.backspace-key {
+    background: rgba(255, 100, 100, 0.1);
+    border-color: rgba(255, 100, 100, 0.3);
+    color: #ff6b6b;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    #app {
+        padding: 10px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 12px 15px;
+    }
+
+    .header-left {
+        justify-content: center;
+    }
+
+    .header-right {
+        justify-content: center;
+    }
+
+    .header-center {
+        padding: 8px 0;
+    }
+
+    .clue-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .letter-boxes {
+        align-self: center;
+    }
+
+    .letter-box {
+        width: 34px;
+        height: 34px;
+        font-size: 1em;
+        border-radius: 5px;
+    }
+
+    .clue-text {
+        white-space: normal;
+        font-size: 0.82em;
+    }
+
+    .glass-panel {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+
+    .game-container {
+        padding-bottom: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .letter-box {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9em;
+        gap: 3px;
+    }
+
+    .letter-boxes {
+        gap: 3px;
+    }
+
+    .timer-value, .score-value {
+        font-size: 1.3em;
+    }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+
+// ============================================================
+// PUZZLE DATA - 3 Sets of 10 CompTIA A+ Clues
+// ============================================================
+const puzzleSets = [
+    [
+        { clue: "Port 22, encrypted remote access", answer: "SSH", num: 1 },
+        { clue: "Full-disk encryption, needs TPM", answer: "BITLOCKER", num: 2 },
+        { clue: "169.254.x.x auto-assigned address", answer: "APIPA", num: 3 },
+        { clue: "Minimum 3 drives, striping with parity", answer: "RAID5", num: 4 },
+        { clue: "Controls network traffic with rules", answer: "FIREWALL", num: 5 },
+        { clue: "Power-On Self-Test", answer: "POST", num: 6 },
+        { clue: "Port 443, encrypted web traffic", answer: "HTTPS", num: 7 },
+        { clue: "Security chip for encryption keys", answer: "TPM", num: 8 },
+        { clue: "Translates domain names to IPs", answer: "DNS", num: 9 },
+        { clue: "Assigns IP addresses via DORA process", answer: "DHCP", num: 10 }
+    ],
+    [
+        { clue: "Port 445, Windows file sharing", answer: "SMB", num: 1 },
+        { clue: "Repairs corrupted Windows system files", answer: "SFC", num: 2 },
+        { clue: "Malware demanding ransom payment", answer: "RANSOMWARE", num: 3 },
+        { clue: "Multiple private IPs share one public IP", answer: "NAT", num: 4 },
+        { clue: "Legacy disk partition format, max 2TB", answer: "MBR", num: 5 },
+        { clue: "Connects different networks together", answer: "ROUTER", num: 6 },
+        { clue: "Non-volatile flash storage drive", answer: "SSD", num: 7 },
+        { clue: "Converts AC to DC for components", answer: "PSU", num: 8 },
+        { clue: "Requires two or more verification factors", answer: "MFA", num: 9 },
+        { clue: "Encrypted tunnel over public network", answer: "VPN", num: 10 }
+    ],
+    [
+        { clue: "Volatile working memory for CPU", answer: "RAM", num: 1 },
+        { clue: "Dedicated chip for rendering graphics", answer: "GPU", num: 2 },
+        { clue: "Modern BIOS replacement with GUI", answer: "UEFI", num: 3 },
+        { clue: "Windows command to check disk errors", answer: "CHKDSK", num: 4 },
+        { clue: "Visual desktop interface with windows", answer: "GUI", num: 5 },
+        { clue: "Wired LAN cable standard Cat5e/Cat6", answer: "ETHERNET", num: 6 },
+        { clue: "Two or more authentication factors", answer: "MFA", num: 7 },
+        { clue: "Encrypts files and demands Bitcoin", answer: "RANSOMWARE", num: 8 },
+        { clue: "Unencrypted remote access on port 23", answer: "TELNET", num: 9 },
+        { clue: "Self-assigned IP when DHCP fails", answer: "APIPA", num: 10 }
+    ]
+];
+
+// ============================================================
+// GAME STATE
+// ============================================================
+let gameState = {
+    screen: 'start',
+    currentPuzzle: null,
+    currentSetIndex: -1,
+    selectedRow: 0,
+    inputs: [],
+    solved: [],
+    revealed: [],
+    score: 0,
+    timerStarted: false,
+    timerInterval: null,
+    elapsed: 0,
+    adminMode: false,
+    adminBuffer: '',
+    animatingScore: 0,
+    wrongAttempts: 0,
+    isMobile: false
+};
+
+// ============================================================
+// AUDIO ENGINE (Web Audio API)
+// ============================================================
+const AudioEngine = {
+    ctx: null,
+    initialized: false,
+
+    init() {
+        if (this.initialized) return;
+        try {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this.initialized = true;
+        } catch (e) {
+            console.warn('Web Audio not supported');
+        }
+    },
+
+    resume() {
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+    },
+
+    playClick() {
+        if (!this.ctx) return;
+        this.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.03);
+        gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+        osc.start(this.ctx.currentTime);
+        osc.stop(this.ctx.currentTime + 0.05);
+    },
+
+    playCorrect() {
+        if (!this.ctx) return;
+        this.resume();
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            const t = this.ctx.currentTime + i * 0.09;
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+            osc.start(t);
+            osc.stop(t + 0.35);
+        });
+    },
+
+    playWrong() {
+        if (!this.ctx) return;
+        this.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+        osc.start(this.ctx.currentTime);
+        osc.stop(this.ctx.currentTime + 0.3);
+    },
+
+    playVictory() {
+        if (!this.ctx) return;
+        this.resume();
+        const melody = [523, 587, 659, 698, 784, 880, 988, 1047, 1175, 1319];
+        melody.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            const osc2 = this.ctx.createOscillator();
+            osc.connect(gain);
+            osc2.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.type = 'sine';
+            osc2.type = 'triangle';
+            osc.frequency.value = freq;
+            osc2.frequency.value = freq * 1.5;
+            const t = this.ctx.currentTime + i * 0.13;
+            gain.gain.setValueAtTime(0.1, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+            osc.start(t);
+            osc2.start(t);
+            osc.stop(t + 0.5);
+            osc2.stop(t + 0.5);
+        });
+    },
+
+    playReveal() {
+        if (!this.ctx) return;
+        this.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+        osc.start(this.ctx.currentTime);
+        osc.stop(this.ctx.currentTime + 0.3);
+    }
+};
+
+// ============================================================
+// HIGH SCORES (localStorage)
+// ============================================================
+function getHighScores() {
+    try {
+        return JSON.parse(localStorage.getItem('crosswordScores')) || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveHighScore(score, time, wordsSolved) {
+    const scores = getHighScores();
+    scores.push({
+        score: score,
+        time: time,
+        wordsSolved: wordsSolved,
+        date: new Date().toLocaleDateString()
+    });
+    scores.sort((a, b) => b.score - a.score);
+    localStorage.setItem('crosswordScores', JSON.stringify(scores.slice(0, 5)));
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer() {
+    if (gameState.timerStarted) return;
+    gameState.timerStarted = true;
+    gameState.timerInterval = setInterval(() => {
+        gameState.elapsed++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function stopTimer() {
+    if (gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+        gameState.timerInterval = null;
+    }
+}
+
+function formatTime(seconds) {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+}
+
+function updateTimerDisplay() {
+    const el = document.getElementById('timer-display');
+    if (el) el.textContent = formatTime(gameState.elapsed);
+}
+
+// ============================================================
+// PARTICLE SYSTEM
+// ============================================================
+let particles = [];
+let particleCanvas = null;
+let particleCtx = null;
+let particleAnimating = false;
+
+function initParticleCanvas() {
+    particleCanvas = document.getElementById('particle-canvas');
+    if (!particleCanvas) return;
+    particleCtx = particleCanvas.getContext('2d');
+    resizeParticleCanvas();
+}
+
+function resizeParticleCanvas() {
+    if (!particleCanvas) return;
+    particleCanvas.width = window.innerWidth;
+    particleCanvas.height = window.innerHeight;
+}
+
+function spawnParticles(x, y, count, colors) {
+    for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.5;
+        const speed = 3 + Math.random() * 8;
+        particles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 2,
+            life: 1.0,
+            decay: 0.008 + Math.random() * 0.015,
+            size: 2 + Math.random() * 5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.2
+        });
+    }
+    if (!particleAnimating) {
+        particleAnimating = true;
+        requestAnimationFrame(updateParticles);
+    }
+}
+
+function updateParticles() {
+    if (!particleCtx) {
+        particleAnimating = false;
+        return;
+    }
+    particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+    particles = particles.filter(p => p.life > 0);
+
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.12;
+        p.vx *= 0.99;
+        p.life -= p.decay;
+        p.rotation += p.rotSpeed;
+
+        particleCtx.save();
+        particleCtx.globalAlpha = p.life * p.life;
+        particleCtx.translate(p.x, p.y);
+        particleCtx.rotate(p.rotation);
+        particleCtx.fillStyle = p.color;
+        particleCtx.shadowColor = p.color;
+        particleCtx.shadowBlur = 6;
+        // Draw small square particle
+        const half = p.size / 2;
+        particleCtx.fillRect(-half, -half, p.size, p.size);
+        particleCtx.restore();
+    }
+
+    if (particles.length > 0) {
+        requestAnimationFrame(updateParticles);
+    } else {
+        particleAnimating = false;
+    }
+}
+
+// ============================================================
+// SCORE ANIMATION
+// ============================================================
+function animateScore(target) {
+    const el = document.getElementById('score-display');
+    if (!el) return;
+    const start = gameState.animatingScore;
+    const diff = target - start;
+    if (diff === 0) return;
+    const duration = 400;
+    const startTime = performance.now();
+
+    // Add bump effect
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 200);
+
+    function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        gameState.animatingScore = Math.round(start + diff * eased);
+        if (el) el.textContent = gameState.animatingScore;
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+// ============================================================
+// FLOATING BACKGROUND ELEMENTS
+// ============================================================
+function createFloatingText() {
+    const fragments = [
+        '0x4F', '10110', 'TCP/IP', '0xFF', 'SYN',
+        'ACK', '01001', 'HTTPS', '0xDEAD', 'BIOS',
+        '11010', 'IPv6', '0xBEEF', 'ARP', '01110',
+        'DNS', 'SSH', 'RAID', 'NIC', 'DHCP'
+    ];
+    for (let i = 0; i < 20; i++) {
+        const div = document.createElement('div');
+        div.className = 'floating-text';
+        div.textContent = fragments[i % fragments.length];
+        div.style.left = (Math.random() * 95) + '%';
+        div.style.animationDelay = (Math.random() * 25) + 's';
+        div.style.animationDuration = (18 + Math.random() * 20) + 's';
+        div.style.fontSize = (10 + Math.random() * 6) + 'px';
+        document.body.appendChild(div);
+    }
+}
+
+// ============================================================
+// MOBILE DETECTION
+// ============================================================
+function detectMobile() {
+    gameState.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
+
+
+// ============================================================
+// RENDER: START SCREEN
+// ============================================================
+function renderStartScreen() {
+    const scores = getHighScores();
+    let scoreRows = '';
+    if (scores.length > 0) {
+        scoreRows = scores.map((s, i) => {
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`;
+            const highlight = i === 0 ? 'color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.5)' : '';
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid rgba(0,240,255,0.08);${highlight}">
+                <span style="min-width:30px">${medal}</span>
+                <span style="flex:1;text-align:center">${s.score} pts</span>
+                <span style="flex:1;text-align:center">${s.wordsSolved}/10</span>
+                <span style="flex:1;text-align:center">${formatTime(s.time)}</span>
+                <span style="opacity:0.5;font-size:0.85em">${s.date}</span>
+            </div>`;
+        }).join('');
+    } else {
+        scoreRows = '<div style="text-align:center;padding:25px;opacity:0.4;font-style:italic">No high scores yet — be the first!</div>';
+    }
+
+    document.getElementById('app').innerHTML = `
+        <canvas id="particle-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10"></canvas>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;position:relative;z-index:2">
+            <div class="glass-panel" style="text-align:center;max-width:620px;width:100%;animation:fadeIn 0.8s ease">
+                <div style="margin-bottom:20px">
+                    <h1 style="font-size:2.6em;margin-bottom:4px;letter-spacing:3px" class="neon-text">TILED WORDS</h1>
+                    <p style="font-size:1.05em;opacity:0.6;letter-spacing:1px">CompTIA A+ Crossword Puzzle</p>
+                </div>
+                <div style="width:80px;height:2px;background:linear-gradient(90deg,transparent,#00f0ff,transparent);margin:18px auto"></div>
+                <p style="margin-bottom:28px;opacity:0.5;font-size:0.88em;line-height:1.5">
+                    10 clues • Type your answers • Beat the clock<br>
+                    <span style="font-size:0.9em">+100 pts per word • -10 wrong • -25 reveal</span>
+                </p>
+                <button id="start-btn" style="background:linear-gradient(135deg,rgba(0,240,255,0.15),rgba(0,240,255,0.03));border:2px solid #00f0ff;color:#00f0ff;padding:16px 55px;font-size:1.25em;font-weight:bold;border-radius:10px;cursor:pointer;transition:all 0.3s;box-shadow:0 0 25px rgba(0,240,255,0.2);letter-spacing:2px">
+                    START PUZZLE
+                </button>
+                <div style="margin-top:35px;text-align:left">
+                    <h3 style="color:#00f0ff;margin-bottom:12px;font-size:0.85em;text-transform:uppercase;letter-spacing:3px;text-align:center">
+                        ⚡ High Scores ⚡
+                    </h3>
+                    <div class="neon-border" style="border-radius:10px;overflow:hidden;font-size:0.85em">
+                        <div style="display:flex;justify-content:space-between;padding:9px 14px;background:rgba(0,240,255,0.06);font-weight:bold;border-bottom:1px solid rgba(0,240,255,0.2);font-size:0.9em;letter-spacing:1px">
+                            <span style="min-width:30px">Rank</span>
+                            <span style="flex:1;text-align:center">Score</span>
+                            <span style="flex:1;text-align:center">Words</span>
+                            <span style="flex:1;text-align:center">Time</span>
+                            <span>Date</span>
+                        </div>
+                        ${scoreRows}
+                    </div>
+                </div>
+                <div style="margin-top:22px;font-size:0.72em;opacity:0.35;line-height:1.6">
+                    <p>↑↓ Navigate clues • Type to fill letters • Enter to submit</p>
+                    <p>Tab = next clue • Check = highlight errors • Reveal = show answer</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Button interactions
+    const btn = document.getElementById('start-btn');
+    btn.addEventListener('click', startGame);
+    btn.addEventListener('mouseenter', function() {
+        this.style.boxShadow = '0 0 45px rgba(0,240,255,0.5), inset 0 0 15px rgba(0,240,255,0.1)';
+        this.style.transform = 'scale(1.05)';
+        this.style.borderColor = '#fff';
+    });
+    btn.addEventListener('mouseleave', function() {
+        this.style.boxShadow = '0 0 25px rgba(0,240,255,0.2)';
+        this.style.transform = 'scale(1)';
+        this.style.borderColor = '#00f0ff';
+    });
+}
+
+
+
+// ============================================================
+// RENDER: GAME SCREEN
+// ============================================================
+function renderGameScreen() {
+    const puzzle = gameState.currentPuzzle;
+    if (!puzzle) return;
+
+    const clueRows = puzzle.map((item, idx) => {
+        const isSelected = idx === gameState.selectedRow;
+        const isSolved = gameState.solved[idx];
+        const isRevealed = gameState.revealed[idx];
+        const letters = gameState.inputs[idx] || [];
+        const boxCount = item.answer.length;
+
+        let rowClass = '';
+        let statusIcon = '';
+        if (isSolved && !isRevealed) {
+            rowClass = 'row-correct';
+            statusIcon = '<span class="checkmark">✓</span>';
+        } else if (isRevealed) {
+            rowClass = 'row-revealed';
+            statusIcon = '<span class="reveal-icon">👁</span>';
+        } else if (isSelected) {
+            rowClass = 'row-selected';
+        }
+
+        let boxes = '';
+        for (let i = 0; i < boxCount; i++) {
+            const letter = letters[i] || '';
+            const hasLetter = letter !== '';
+            const isCursor = isSelected && !isSolved && !isRevealed && i === letters.length;
+            let boxClasses = 'letter-box';
+            if (hasLetter) boxClasses += ' has-letter';
+            if (isCursor) boxClasses += ' cursor-box';
+            if (letters.length === boxCount && !isSolved && isSelected) boxClasses += ' box-full';
+            boxes += `<div class="${boxClasses}" id="box-${idx}-${i}" style="animation-delay:${i * 0.04}s">${letter}</div>`;
+        }
+
+        // Admin mode: show answer hint
+        const adminHint = gameState.adminMode && !isSolved && !isRevealed
+            ? `<span style="font-size:0.7em;color:#ff4444;opacity:0.7;margin-left:8px">[${item.answer}]</span>`
+            : '';
+
+        return `
+            <div class="clue-row ${rowClass}" data-row="${idx}" id="row-${idx}">
+                <div class="clue-info">
+                    <span class="clue-num">${item.num}.</span>
+                    <span class="clue-text">${item.clue} <span class="clue-len">(${item.answer.length})</span>${adminHint}</span>
+                </div>
+                <div class="letter-boxes">${boxes}${statusIcon}</div>
+            </div>
+        `;
+    }).join('');
+
+    const solvedCount = gameState.solved.filter(Boolean).length;
+    const progressPct = (solvedCount / 10) * 100;
+
+    document.getElementById('app').innerHTML = `
+        <canvas id="particle-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100"></canvas>
+        <div class="game-container">
+            <div class="game-header glass-panel">
+                <div class="header-left">
+                    <div class="timer-box">
+                        <span class="timer-label">TIME</span>
+                        <span id="timer-display" class="timer-value neon-text">${formatTime(gameState.elapsed)}</span>
+                    </div>
+                    <div class="score-box">
+                        <span class="score-label">SCORE</span>
+                        <span id="score-display" class="score-value">${gameState.animatingScore}</span>
+                    </div>
+                </div>
+                <div class="header-center">
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width:${progressPct}%"></div>
+                        <span class="progress-text">${solvedCount} of 10 solved</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="check-btn" class="action-btn check-btn" title="Check current word (no penalty)">CHECK</button>
+                    <button id="reveal-btn" class="action-btn reveal-btn" title="Reveal answer (-25 pts)">REVEAL</button>
+                </div>
+            </div>
+            <div class="clues-container glass-panel">
+                ${clueRows}
+            </div>
+            ${gameState.adminMode ? '<div class="admin-badge">⚡ ADMIN MODE ⚡</div>' : ''}
+        </div>
+        ${gameState.isMobile ? renderMobileKeyboard() : ''}
+    `;
+
+    initParticleCanvas();
+    attachGameListeners();
+    updateTimerDisplay();
+}
+
+
+
+// ============================================================
+// RENDER: MOBILE KEYBOARD
+// ============================================================
+function renderMobileKeyboard() {
+    const row1 = 'QWERTYUIOP'.split('');
+    const row2 = 'ASDFGHJKL'.split('');
+    const row3 = 'ZXCVBNM'.split('');
+
+    const makeKey = (ch) => `<div class="kb-key" data-key="${ch}">${ch}</div>`;
+
+    return `
+        <div class="mobile-keyboard show">
+            <div class="kb-row">${row1.map(makeKey).join('')}</div>
+            <div class="kb-row">${row2.map(makeKey).join('')}</div>
+            <div class="kb-row">
+                <div class="kb-key wide enter-key" data-key="Enter">ENTER</div>
+                ${row3.map(makeKey).join('')}
+                <div class="kb-key wide backspace-key" data-key="Backspace">⌫</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key wide" data-key="1" style="min-width:28px">1</div>
+                <div class="kb-key wide" data-key="2" style="min-width:28px">2</div>
+                <div class="kb-key wide" data-key="3" style="min-width:28px">3</div>
+                <div class="kb-key wide" data-key="4" style="min-width:28px">4</div>
+                <div class="kb-key wide" data-key="5" style="min-width:28px">5</div>
+                <div class="kb-key wide" data-key="6" style="min-width:28px">6</div>
+                <div class="kb-key wide" data-key="7" style="min-width:28px">7</div>
+                <div class="kb-key wide" data-key="8" style="min-width:28px">8</div>
+                <div class="kb-key wide" data-key="9" style="min-width:28px">9</div>
+                <div class="kb-key wide" data-key="0" style="min-width:28px">0</div>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================================
+// RENDER: COMPLETE SCREEN
+// ============================================================
+function renderCompleteScreen() {
+    const solvedCount = gameState.solved.filter(Boolean).length;
+    const revealedCount = gameState.revealed.filter(Boolean).length;
+    const correctCount = solvedCount - revealedCount;
+    const scores = getHighScores();
+
+    let scoreRows = '';
+    if (scores.length > 0) {
+        scoreRows = scores.map((s, i) => {
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`;
+            return `<div style="display:flex;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(0,240,255,0.08);${i===0?'color:#ffd700;':''}">
+                <span>${medal}</span><span>${s.score} pts</span><span>${s.wordsSolved}/10</span><span>${formatTime(s.time)}</span>
+            </div>`;
+        }).join('');
+    }
+
+    document.getElementById('app').innerHTML = `
+        <canvas id="particle-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100"></canvas>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;position:relative;z-index:2">
+            <div class="glass-panel" style="text-align:center;max-width:520px;width:100%;animation:victoryBounce 0.6s ease">
+                <h2 class="neon-text" style="font-size:2.2em;margin-bottom:8px;letter-spacing:2px">PUZZLE COMPLETE!</h2>
+                <p style="opacity:0.5;font-size:0.85em;margin-bottom:5px">Congratulations! 🎉</p>
+                <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,#00f0ff,transparent);margin:15px auto"></div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:25px 0;text-align:center">
+                    <div class="stat-box">
+                        <div class="stat-value neon-text" style="font-size:2.2em">${gameState.score}</div>
+                        <div class="stat-label">FINAL SCORE</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="font-size:2.2em;color:#00ff88">${formatTime(gameState.elapsed)}</div>
+                        <div class="stat-label">TIME TAKEN</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="font-size:2.2em;color:#ffd700">${correctCount}/10</div>
+                        <div class="stat-label">SOLVED</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="font-size:2.2em;color:${revealedCount > 0 ? '#ff6b6b' : '#00ff88'}">${revealedCount}</div>
+                        <div class="stat-label">REVEALED</div>
+                    </div>
+                </div>
+
+                ${scoreRows ? `
+                    <div style="margin-top:20px;text-align:left">
+                        <h3 style="color:#00f0ff;margin-bottom:10px;font-size:0.8em;text-transform:uppercase;letter-spacing:2px;text-align:center">High Scores</h3>
+                        <div class="neon-border" style="border-radius:8px;overflow:hidden;font-size:0.82em">${scoreRows}</div>
+                    </div>
+                ` : ''}
+
+                <button id="play-again-btn" style="margin-top:28px;background:linear-gradient(135deg,rgba(0,240,255,0.15),rgba(0,240,255,0.03));border:2px solid #00f0ff;color:#00f0ff;padding:14px 45px;font-size:1.1em;font-weight:bold;border-radius:10px;cursor:pointer;transition:all 0.3s;box-shadow:0 0 20px rgba(0,240,255,0.2);letter-spacing:2px">
+                    PLAY AGAIN
+                </button>
+            </div>
+        </div>
+    `;
+
+    initParticleCanvas();
+
+    // Victory particle bursts
+    setTimeout(() => {
+        for (let i = 0; i < 6; i++) {
+            setTimeout(() => {
+                spawnParticles(
+                    100 + Math.random() * (window.innerWidth - 200),
+                    100 + Math.random() * (window.innerHeight * 0.4),
+                    50,
+                    ['#00f0ff', '#ff00aa', '#ffd700', '#00ff88', '#b300ff', '#ff6b6b']
+                );
+            }, i * 350);
+        }
+    }, 300);
+
+    document.getElementById('play-again-btn').addEventListener('click', () => {
+        resetGame();
+        renderStartScreen();
+    });
+}
+
+
+
+// ============================================================
+// GAME LOGIC
+// ============================================================
+function startGame() {
+    AudioEngine.init();
+    AudioEngine.resume();
+
+    // Select random puzzle set
+    const setIdx = Math.floor(Math.random() * puzzleSets.length);
+    gameState.currentPuzzle = puzzleSets[setIdx];
+    gameState.currentSetIndex = setIdx;
+    gameState.selectedRow = 0;
+    gameState.inputs = gameState.currentPuzzle.map(() => []);
+    gameState.solved = new Array(10).fill(false);
+    gameState.revealed = new Array(10).fill(false);
+    gameState.score = 0;
+    gameState.animatingScore = 0;
+    gameState.elapsed = 0;
+    gameState.timerStarted = false;
+    gameState.screen = 'playing';
+    gameState.adminMode = false;
+    gameState.adminBuffer = '';
+    gameState.wrongAttempts = 0;
+
+    renderGameScreen();
+}
+
+function resetGame() {
+    stopTimer();
+    gameState = {
+        screen: 'start',
+        currentPuzzle: null,
+        currentSetIndex: -1,
+        selectedRow: 0,
+        inputs: [],
+        solved: [],
+        revealed: [],
+        score: 0,
+        timerStarted: false,
+        timerInterval: null,
+        elapsed: 0,
+        adminMode: false,
+        adminBuffer: '',
+        animatingScore: 0,
+        wrongAttempts: 0,
+        isMobile: gameState.isMobile
+    };
+    particles = [];
+}
+
+function selectRow(idx) {
+    if (idx < 0 || idx >= 10) return;
+    gameState.selectedRow = idx;
+    renderGameScreen();
+
+    // Scroll selected row into view on mobile
+    setTimeout(() => {
+        const row = document.getElementById(`row-${idx}`);
+        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+}
+
+function submitWord(rowIdx) {
+    if (gameState.solved[rowIdx] || gameState.revealed[rowIdx]) return;
+
+    const puzzle = gameState.currentPuzzle[rowIdx];
+    const input = gameState.inputs[rowIdx].join('').toUpperCase();
+    const row = document.getElementById(`row-${rowIdx}`);
+
+    if (input === puzzle.answer) {
+        // === CORRECT ===
+        gameState.solved[rowIdx] = true;
+        gameState.score += 100;
+        animateScore(gameState.score);
+        AudioEngine.playCorrect();
+
+        // Particle burst at row position
+        if (row) {
+            const rect = row.getBoundingClientRect();
+            spawnParticles(
+                rect.right - 50,
+                rect.top + rect.height / 2,
+                25,
+                ['#00ff88', '#00f0ff', '#88ffcc']
+            );
+        }
+
+        // Check if all solved
+        const allDone = gameState.solved.every(Boolean);
+        if (allDone) {
+            setTimeout(() => completeGame(), 900);
+        } else {
+            // Auto-advance to next unsolved
+            setTimeout(() => {
+                const next = findNextUnsolved(rowIdx);
+                if (next !== -1) selectRow(next);
+                else renderGameScreen();
+            }, 600);
+        }
+    } else {
+        // === WRONG ===
+        gameState.wrongAttempts++;
+        gameState.score = Math.max(0, gameState.score - 10);
+        animateScore(gameState.score);
+        AudioEngine.playWrong();
+
+        if (row) {
+            row.classList.add('shake', 'wrong-flash');
+            setTimeout(() => {
+                row.classList.remove('shake', 'wrong-flash');
+            }, 550);
+        }
+    }
+
+    setTimeout(() => renderGameScreen(), 650);
+}
+
+function checkWord(rowIdx) {
+    if (gameState.solved[rowIdx] || gameState.revealed[rowIdx]) return;
+    startTimer();
+
+    const puzzle = gameState.currentPuzzle[rowIdx];
+    const input = gameState.inputs[rowIdx];
+
+    let allCorrect = true;
+    for (let i = 0; i < puzzle.answer.length; i++) {
+        const box = document.getElementById(`box-${rowIdx}-${i}`);
+        if (!box) continue;
+
+        if (input[i] && input[i].toUpperCase() === puzzle.answer[i]) {
+            box.style.borderColor = '#00ff88';
+            box.style.boxShadow = '0 0 10px rgba(0,255,136,0.5)';
+            box.style.color = '#00ff88';
+        } else if (input[i]) {
+            box.style.borderColor = '#ff4444';
+            box.style.boxShadow = '0 0 10px rgba(255,68,68,0.5)';
+            box.style.color = '#ff4444';
+            allCorrect = false;
+        } else {
+            allCorrect = false;
+        }
+    }
+
+    // If all letters are correct via check, auto-submit
+    if (allCorrect && input.length === puzzle.answer.length) {
+        setTimeout(() => submitWord(rowIdx), 500);
+    }
+}
+
+function revealWord(rowIdx) {
+    if (gameState.solved[rowIdx] || gameState.revealed[rowIdx]) return;
+    startTimer();
+
+    const puzzle = gameState.currentPuzzle[rowIdx];
+    gameState.inputs[rowIdx] = puzzle.answer.split('');
+    gameState.revealed[rowIdx] = true;
+    gameState.solved[rowIdx] = true;
+    gameState.score = Math.max(0, gameState.score - 25);
+    animateScore(gameState.score);
+    AudioEngine.playReveal();
+
+    renderGameScreen();
+
+    // Check if all done
+    const allDone = gameState.solved.every(Boolean);
+    if (allDone) setTimeout(() => completeGame(), 900);
+}
+
+function findNextUnsolved(from) {
+    for (let i = 1; i <= 10; i++) {
+        const idx = (from + i) % 10;
+        if (!gameState.solved[idx] && !gameState.revealed[idx]) return idx;
+    }
+    return -1;
+}
+
+function findPrevUnsolved(from) {
+    for (let i = 1; i <= 10; i++) {
+        const idx = (from - i + 10) % 10;
+        if (!gameState.solved[idx] && !gameState.revealed[idx]) return idx;
+    }
+    return -1;
+}
+
+function completeGame() {
+    stopTimer();
+    gameState.screen = 'complete';
+    AudioEngine.playVictory();
+    const solvedCount = gameState.solved.filter(Boolean).length;
+    saveHighScore(gameState.score, gameState.elapsed, solvedCount);
+    renderCompleteScreen();
+}
+
+
+
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
+function attachGameListeners() {
+    // Row click to select
+    document.querySelectorAll('.clue-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            if (e.target.closest('.action-btn')) return;
+            const idx = parseInt(row.dataset.row);
+            if (!gameState.solved[idx] && !gameState.revealed[idx]) {
+                selectRow(idx);
+                startTimer();
+            }
+        });
+    });
+
+    // Check button
+    const checkBtn = document.getElementById('check-btn');
+    if (checkBtn) {
+        checkBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            checkWord(gameState.selectedRow);
+        });
+    }
+
+    // Reveal button
+    const revealBtn = document.getElementById('reveal-btn');
+    if (revealBtn) {
+        revealBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            revealWord(gameState.selectedRow);
+        });
+    }
+
+    // Mobile keyboard
+    document.querySelectorAll('.kb-key').forEach(key => {
+        key.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const k = key.dataset.key;
+            handleKeyInput(k);
+        });
+        key.addEventListener('click', (e) => {
+            e.preventDefault();
+            const k = key.dataset.key;
+            handleKeyInput(k);
+        });
+    });
+}
+
+// ============================================================
+// INPUT HANDLER (shared between keyboard and mobile)
+// ============================================================
+function handleKeyInput(key) {
+    if (gameState.screen !== 'playing') return;
+    startTimer();
+
+    const row = gameState.selectedRow;
+    const puzzle = gameState.currentPuzzle[row];
+
+    if (gameState.solved[row] || gameState.revealed[row]) {
+        // Only allow navigation on solved rows
+        if (key === 'Tab' || key === 'ArrowDown') {
+            const next = findNextUnsolved(row);
+            if (next !== -1) selectRow(next);
+        } else if (key === 'ArrowUp') {
+            const prev = findPrevUnsolved(row);
+            if (prev !== -1) selectRow(prev);
+        }
+        return;
+    }
+
+    if (key === 'Enter') {
+        if (gameState.inputs[row].length === puzzle.answer.length) {
+            submitWord(row);
+        }
+    } else if (key === 'Backspace') {
+        if (gameState.inputs[row].length > 0) {
+            gameState.inputs[row].pop();
+            renderGameScreen();
+        }
+    } else if (key === 'Tab') {
+        const next = findNextUnsolved(row);
+        if (next !== -1) selectRow(next);
+    } else if (key === 'ArrowDown') {
+        selectRow((row + 1) % 10);
+    } else if (key === 'ArrowUp') {
+        selectRow((row - 1 + 10) % 10);
+    } else if (/^[a-zA-Z0-9]$/.test(key)) {
+        AudioEngine.playClick();
+        if (gameState.inputs[row].length < puzzle.answer.length) {
+            gameState.inputs[row].push(key.toUpperCase());
+            renderGameScreen();
+        }
+    }
+}
+
+// ============================================================
+// KEYBOARD EVENT
+// ============================================================
+document.addEventListener('keydown', (e) => {
+    if (gameState.screen === 'start') {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            startGame();
+        }
+        return;
+    }
+
+    if (gameState.screen !== 'playing') return;
+
+    // Admin code detection: typing NIKO
+    gameState.adminBuffer += e.key.toUpperCase();
+    if (gameState.adminBuffer.length > 4) {
+        gameState.adminBuffer = gameState.adminBuffer.slice(-4);
+    }
+    if (gameState.adminBuffer === 'NIKO') {
+        gameState.adminMode = !gameState.adminMode;
+        if (gameState.adminMode) {
+            console.log('%c=== ADMIN MODE ACTIVATED ===', 'color: #ff4444; font-size: 16px; font-weight: bold');
+            console.log('%cAnswers:', 'color: #00f0ff; font-weight: bold');
+            gameState.currentPuzzle.forEach((p, i) => {
+                console.log(`  ${i + 1}. ${p.answer} — "${p.clue}"`);
+            });
+        } else {
+            console.log('%c=== ADMIN MODE DEACTIVATED ===', 'color: #888');
+        }
+        gameState.adminBuffer = '';
+        renderGameScreen();
+        return;
+    }
+
+    // Prevent default for game keys
+    if (['Tab', 'Enter', 'Backspace', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        e.preventDefault();
+    }
+
+    // Don't process single char keys if modifier is held (allow Ctrl+R refresh etc)
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    handleKeyInput(e.key);
+});
+
+// Touch support for starting timer
+document.addEventListener('touchstart', () => {
+    if (gameState.screen === 'playing') {
+        AudioEngine.resume();
+        startTimer();
+    }
+}, { passive: true });
+
+
+
+// ============================================================
+// WINDOW EVENTS
+// ============================================================
+window.addEventListener('resize', () => {
+    resizeParticleCanvas();
+});
+
+// Prevent zoom on double-tap for mobile
+document.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+}, { passive: false });
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+(function init() {
+    detectMobile();
+    createFloatingText();
+    renderStartScreen();
+})();
+
+</script>
+</body>
+</html>

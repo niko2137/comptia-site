@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Wordle — Guess the IT Term</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0e1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Scanline overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 136, 0.015) 2px,
+                rgba(0, 255, 136, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Particle canvas overlay */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .game-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .score-display, .round-display {
+            background: rgba(0, 240, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            color: #00f0ff;
+        }
+
+        .category-badge {
+            background: rgba(0, 255, 136, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            border-radius: 30px;
+            padding: 12px 28px;
+            font-size: 1.1em;
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+            text-align: center;
+            margin: 15px auto;
+            display: inline-block;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 10px rgba(0, 255, 136, 0.2); }
+            to { box-shadow: 0 0 25px rgba(0, 255, 136, 0.5); }
+        }
+
+        /* Word tiles */
+        .word-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 30px 0;
+            min-height: 70px;
+        }
+
+        .letter-tile {
+            width: 52px;
+            height: 58px;
+            border: 2px solid rgba(0, 240, 255, 0.6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #00f0ff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+            background: rgba(0, 240, 255, 0.03);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-tile.revealed {
+            animation: tileReveal 0.5s ease forwards;
+            border-color: #00ff88;
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.9);
+            background: rgba(0, 255, 136, 0.08);
+        }
+
+        @keyframes tileReveal {
+            0% { transform: scale(1.3) rotateY(90deg); opacity: 0; }
+            50% { transform: scale(1.1) rotateY(0deg); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .letter-tile.space-tile {
+            border: none;
+            background: transparent;
+            width: 25px;
+        }
+
+        /* Circuit board life indicator */
+        .circuit-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .circuit-board {
+            width: 320px;
+            height: 80px;
+        }
+
+        .circuit-segment {
+            transition: all 0.5s ease;
+        }
+
+        .circuit-segment.active {
+            stroke: #00ff88;
+            filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.8));
+        }
+
+        .circuit-segment.shorted {
+            stroke: #ff3333;
+            filter: drop-shadow(0 0 8px rgba(255, 50, 50, 0.9));
+            animation: shortCircuit 0.5s ease;
+        }
+
+        @keyframes shortCircuit {
+            0%, 100% { opacity: 1; }
+            25% { opacity: 0.3; }
+            50% { opacity: 1; }
+            75% { opacity: 0.4; }
+        }
+
+        .circuit-node {
+            transition: all 0.3s ease;
+        }
+
+        .circuit-node.active {
+            fill: #00ff88;
+            filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.8));
+        }
+
+        .circuit-node.shorted {
+            fill: #ff3333;
+            filter: drop-shadow(0 0 6px rgba(255, 50, 50, 0.9));
+        }
+
+        /* Keyboard */
+        .keyboard-container {
+            margin: 25px auto;
+            max-width: 600px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .key-btn {
+            min-width: 44px;
+            height: 50px;
+            border: 2px solid rgba(0, 240, 255, 0.5);
+            border-radius: 8px;
+            background: rgba(0, 240, 255, 0.04);
+            color: #00f0ff;
+            font-size: 1.2em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .key-btn:hover:not(.used-correct):not(.used-wrong) {
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .key-btn.used-correct {
+            background: rgba(0, 255, 136, 0.3);
+            border-color: #00ff88;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+            cursor: default;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+        }
+
+        .key-btn.used-wrong {
+            background: rgba(80, 80, 80, 0.3);
+            border-color: rgba(100, 100, 100, 0.4);
+            color: #555;
+            text-shadow: none;
+            cursor: default;
+            animation: wrongFlash 0.4s ease;
+        }
+
+        @keyframes wrongFlash {
+            0% { background: rgba(255, 50, 50, 0.5); border-color: #ff3333; }
+            100% { background: rgba(80, 80, 80, 0.3); border-color: rgba(100, 100, 100, 0.4); }
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid;
+        }
+
+        .hint-btn {
+            background: rgba(255, 170, 0, 0.1);
+            border-color: rgba(255, 170, 0, 0.5);
+            color: #ffaa00;
+        }
+
+        .hint-btn:hover {
+            background: rgba(255, 170, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+        }
+
+        .solve-btn {
+            background: rgba(180, 0, 255, 0.1);
+            border-color: rgba(180, 0, 255, 0.5);
+            color: #b400ff;
+        }
+
+        .solve-btn:hover {
+            background: rgba(180, 0, 255, 0.2);
+            box-shadow: 0 0 20px rgba(180, 0, 255, 0.4);
+        }
+
+        .hint-text {
+            text-align: center;
+            margin: 10px 0;
+            color: #ffaa00;
+            font-style: italic;
+            text-shadow: 0 0 8px rgba(255, 170, 0, 0.5);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+</style>
+</head>
+<body>
+
+    <style>
+        /* Solve modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(10, 14, 26, 0.95);
+            border: 2px solid rgba(180, 0, 255, 0.5);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(180, 0, 255, 0.3);
+        }
+
+        .modal-content h3 {
+            color: #b400ff;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(180, 0, 255, 0.6);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(180, 0, 255, 0.05);
+            border: 2px solid rgba(180, 0, 255, 0.4);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1.2em;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            text-align: center;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .modal-input:focus {
+            border-color: #b400ff;
+            box-shadow: 0 0 15px rgba(180, 0, 255, 0.4);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-buttons button {
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-submit {
+            background: rgba(0, 255, 136, 0.15);
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+        }
+
+        .modal-submit:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .modal-cancel {
+            background: rgba(255, 50, 50, 0.1);
+            border: 2px solid rgba(255, 50, 50, 0.4);
+            color: #ff5555;
+        }
+
+        .modal-cancel:hover {
+            background: rgba(255, 50, 50, 0.2);
+            box-shadow: 0 0 15px rgba(255, 50, 50, 0.4);
+        }
+
+        /* Start screen */
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            background: #0a0e1a;
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .game-title {
+            font-size: 2.8em;
+            color: #00f0ff;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 0.4);
+            margin-bottom: 10px;
+            text-align: center;
+            animation: titlePulse 3s infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            from { text-shadow: 0 0 20px rgba(0, 240, 255, 0.6), 0 0 40px rgba(0, 240, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(0, 240, 255, 1), 0 0 60px rgba(0, 240, 255, 0.6); }
+        }
+
+        .game-subtitle {
+            font-size: 1.2em;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .start-btn, .play-again-btn {
+            padding: 16px 40px;
+            font-size: 1.3em;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            background: rgba(0, 240, 255, 0.1);
+            border: 2px solid #00f0ff;
+            border-radius: 12px;
+            color: #00f0ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            animation: btnPulse 2s infinite alternate;
+        }
+
+        @keyframes btnPulse {
+            from { box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+            to { box-shadow: 0 0 30px rgba(0, 240, 255, 0.6); }
+        }
+
+        .start-btn:hover, .play-again-btn:hover {
+            background: rgba(0, 240, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        /* Category filter */
+        .filter-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .filter-select {
+            padding: 10px 20px;
+            background: rgba(0, 240, 255, 0.05);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 8px;
+            color: #00f0ff;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .filter-select option {
+            background: #0a0e1a;
+            color: #e0e0e0;
+        }
+
+        /* High scores */
+        .high-scores {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .high-scores h3 {
+            color: #ffaa00;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .score-list {
+            list-style: none;
+        }
+
+        .score-list li {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: rgba(255, 170, 0, 0.05);
+            border: 1px solid rgba(255, 170, 0, 0.2);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            color: #ffaa00;
+            font-size: 0.95em;
+        }
+
+        .score-list li:first-child {
+            border-color: rgba(255, 215, 0, 0.5);
+            background: rgba(255, 215, 0, 0.08);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        /* End screen */
+        .end-stats {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .end-stats p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #e0e0e0;
+        }
+
+        .end-stats .final-score {
+            font-size: 2.5em;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+            animation: scoreCount 1s ease;
+        }
+
+        @keyframes scoreCount {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .end-stats .stat-label {
+            color: #00f0ff;
+            font-size: 0.9em;
+        }
+
+        /* Wrong guess shake */
+        @keyframes shakeWord {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shakeWord 0.5s ease;
+        }
+
+        /* Round transition */
+        .round-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 200;
+        }
+
+        .round-transition.active {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .round-transition h2 {
+            font-size: 2.5em;
+            color: #00f0ff;
+            text-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.3); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .round-transition .round-score {
+            margin-top: 15px;
+            font-size: 1.3em;
+            color: #00ff88;
+        }
+
+        /* Admin mode */
+        .admin-answer {
+            text-align: center;
+            color: #ff00aa;
+            font-size: 1em;
+            margin: 5px 0;
+            text-shadow: 0 0 10px rgba(255, 0, 170, 0.5);
+            display: none;
+        }
+
+        .admin-answer.visible {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .game-title { font-size: 1.8em; }
+            .letter-tile { width: 40px; height: 46px; font-size: 1.4em; }
+            .key-btn { min-width: 32px; height: 44px; font-size: 1em; }
+            .game-header { flex-direction: column; align-items: center; }
+            .word-container { gap: 5px; }
+            .keyboard-row { gap: 4px; }
+        }
+
+        @media (max-width: 400px) {
+            .key-btn { min-width: 28px; height: 42px; font-size: 0.9em; }
+            .letter-tile { width: 34px; height: 40px; font-size: 1.2em; }
+        }
+    </style>
+
+
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Start Screen -->
+    <div class="screen" id="startScreen">
+        <div class="game-title">⚡ Tech Wordle ⚡</div>
+        <div class="game-subtitle">Guess the IT Term</div>
+        <div class="filter-container">
+            <select class="filter-select" id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="Hardware">Hardware</option>
+                <option value="Networking">Networking</option>
+                <option value="Security">Security</option>
+                <option value="Storage">Storage</option>
+                <option value="Operating Systems">Operating Systems</option>
+            </select>
+        </div>
+        <button class="start-btn" id="startBtn">▶ START GAME</button>
+        <div class="high-scores" id="startHighScores">
+            <h3>🏆 HIGH SCORES</h3>
+            <ul class="score-list" id="startScoreList"></ul>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div class="screen hidden" id="endScreen">
+        <div class="game-title">GAME COMPLETE</div>
+        <div class="end-stats">
+            <p class="stat-label">TOTAL SCORE</p>
+            <p class="final-score" id="finalScore">0</p>
+            <p><span class="stat-label">Words Guessed:</span> <span id="wordsGuessed">0</span>/10</p>
+            <p><span class="stat-label">Accuracy:</span> <span id="accuracy">0</span>%</p>
+        </div>
+        <button class="play-again-btn" id="playAgainBtn">▶ PLAY AGAIN</button>
+        <div class="high-scores">
+            <h3>🏆 HIGH SCORES</h3>
+            <ul class="score-list" id="endScoreList"></ul>
+        </div>
+    </div>
+
+    <!-- Round Transition -->
+    <div class="round-transition" id="roundTransition">
+        <h2 id="transitionText">Round 1</h2>
+        <p class="round-score" id="transitionScore"></p>
+    </div>
+
+    <!-- Solve Modal -->
+    <div class="modal-overlay" id="solveModal">
+        <div class="modal-content">
+            <h3>🔓 Solve the Word</h3>
+            <input type="text" class="modal-input" id="solveInput" placeholder="Type your guess..." maxlength="20" autocomplete="off">
+            <div class="modal-buttons">
+                <button class="modal-submit" id="solveSubmit">SUBMIT</button>
+                <button class="modal-cancel" id="solveCancel">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game -->
+    <div class="game-container" id="gameArea" style="display:none;">
+        <div class="game-header">
+            <div class="score-display">💎 Score: <span id="currentScore">0</span></div>
+            <div class="round-display">📟 Round: <span id="currentRound">1</span>/10</div>
+        </div>
+
+        <div style="text-align:center;">
+            <div class="category-badge" id="categoryBadge">Category: Hardware</div>
+        </div>
+
+        <div class="admin-answer" id="adminAnswer">ANSWER: ---</div>
+
+        <div class="word-container" id="wordContainer"></div>
+
+        <div class="circuit-container">
+            <svg class="circuit-board" viewBox="0 0 320 80" id="circuitBoard">
+                <!-- Circuit board paths -->
+                <rect x="5" y="5" width="310" height="70" rx="8" fill="none" stroke="rgba(0,240,255,0.2)" stroke-width="1"/>
+                <!-- Segment 1 -->
+                <path class="circuit-segment active" id="seg1" d="M 30 40 L 60 40 L 60 25 L 75 25" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+                <circle class="circuit-node active" id="node1" cx="30" cy="40" r="4" fill="#00ff88"/>
+                <!-- Segment 2 -->
+                <path class="circuit-segment active" id="seg2" d="M 75 25 L 95 25 L 95 55 L 115 55" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+                <circle class="circuit-node active" id="node2" cx="95" cy="25" r="4" fill="#00ff88"/>
+                <!-- Segment 3 -->
+                <path class="circuit-segment active" id="seg3" d="M 115 55 L 140 55 L 140 35 L 165 35" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+                <circle class="circuit-node active" id="node3" cx="140" cy="55" r="4" fill="#00ff88"/>
+                <!-- Segment 4 -->
+                <path class="circuit-segment active" id="seg4" d="M 165 35 L 190 35 L 190 60 L 215 60" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+                <circle class="circuit-node active" id="node4" cx="190" cy="35" r="4" fill="#00ff88"/>
+                <!-- Segment 5 -->
+                <path class="circuit-segment active" id="seg5" d="M 215 60 L 240 60 L 240 30 L 260 30" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+                <circle class="circuit-node active" id="node5" cx="240" cy="60" r="4" fill="#00ff88"/>
+                <!-- Segment 6 -->
+                <path class="circuit-segment active" id="seg6" d="M 260 30 L 280 30 L 280 50 L 295 50" fill="none" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round"/>
+                <circle class="circuit-node active" id="node6" cx="295" cy="50" r="4" fill="#00ff88"/>
+                <!-- End node -->
+                <circle cx="295" cy="50" r="6" fill="none" stroke="rgba(0,240,255,0.5)" stroke-width="1.5"/>
+                <!-- Label -->
+                <text x="160" y="75" text-anchor="middle" fill="rgba(0,240,255,0.4)" font-size="9" font-family="Courier New">SYSTEM INTEGRITY</text>
+            </svg>
+        </div>
+
+        <div class="keyboard-container" id="keyboard"></div>
+
+        <div class="action-buttons">
+            <button class="action-btn hint-btn" id="hintBtn">💡 Reveal Hint (-50 pts)</button>
+            <button class="action-btn solve-btn" id="solveBtn">🔑 Solve</button>
+        </div>
+
+        <p class="hint-text" id="hintText" style="display:none;"></p>
+    </div>
+
+
+    <script>
+    // ===== WORD BANK =====
+    const WORD_BANK = [
+        { word: "MOTHERBOARD", category: "Hardware", definition: "Main PCB connecting all components" },
+        { word: "PROCESSOR", category: "Hardware", definition: "The CPU that executes instructions" },
+        { word: "HEATSINK", category: "Hardware", definition: "Passive cooling device for CPUs" },
+        { word: "GIGABYTE", category: "Hardware", definition: "Approximately one billion bytes" },
+        { word: "PERIPHERAL", category: "Hardware", definition: "External device connected to computer" },
+        { word: "FIRMWARE", category: "Hardware", definition: "Software embedded in hardware ROM" },
+        { word: "ETHERNET", category: "Networking", definition: "Wired LAN technology using twisted pair" },
+        { word: "FIREWALL", category: "Networking", definition: "Filters network traffic using rules" },
+        { word: "BANDWIDTH", category: "Networking", definition: "Maximum data transfer rate of a connection" },
+        { word: "PROTOCOL", category: "Networking", definition: "Set of rules for data communication" },
+        { word: "SUBNET", category: "Networking", definition: "Logical subdivision of an IP network" },
+        { word: "LATENCY", category: "Networking", definition: "Delay in network data transmission" },
+        { word: "ROUTER", category: "Networking", definition: "Connects different networks together" },
+        { word: "GATEWAY", category: "Networking", definition: "Network node connecting two different networks" },
+        { word: "ENCRYPTION", category: "Security", definition: "Converting data to unreadable format" },
+        { word: "MALWARE", category: "Security", definition: "Malicious software designed to harm" },
+        { word: "RANSOMWARE", category: "Security", definition: "Malware that encrypts files for payment" },
+        { word: "PHISHING", category: "Security", definition: "Social engineering via fake emails" },
+        { word: "AUTHENTICATION", category: "Security", definition: "Verifying user identity" },
+        { word: "ANTIVIRUS", category: "Security", definition: "Software that detects and removes malware" },
+        { word: "PARTITION", category: "Storage", definition: "Logical division of a hard drive" },
+        { word: "DEFRAGMENT", category: "Storage", definition: "Reorganizing fragmented disk data" },
+        { word: "FILESYSTEM", category: "Storage", definition: "Method of organizing files on storage" },
+        { word: "STORAGE", category: "Storage", definition: "Device or medium for saving data" },
+        { word: "BACKUP", category: "Storage", definition: "Copy of data for disaster recovery" },
+        { word: "VIRTUALIZATION", category: "Operating Systems", definition: "Running multiple OS on one machine" },
+        { word: "HYPERVISOR", category: "Operating Systems", definition: "Software managing virtual machines" },
+        { word: "REGISTRY", category: "Operating Systems", definition: "Windows hierarchical configuration database" },
+        { word: "KERNEL", category: "Operating Systems", definition: "Core component of an operating system" },
+        { word: "DRIVER", category: "Operating Systems", definition: "Software enabling hardware communication" }
+    ];
+
+    // ===== GAME STATE =====
+    let gameState = {
+        currentWord: null,
+        revealedLetters: [],
+        wrongGuesses: 0,
+        maxWrong: 6,
+        score: 0,
+        round: 0,
+        totalRounds: 10,
+        wordsGuessed: 0,
+        totalCorrectLetters: 0,
+        totalGuesses: 0,
+        hintUsed: false,
+        gameActive: false,
+        adminMode: false,
+        adminBuffer: '',
+        selectedCategory: 'all',
+        roundWords: []
+    };
+
+    // ===== AUDIO ENGINE (Web Audio API) =====
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function playTone(freq, duration, type = 'sine', gainVal = 0.15) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playCorrectSound() {
+        initAudio();
+        playTone(523, 0.15);
+        setTimeout(() => playTone(659, 0.15), 80);
+        setTimeout(() => playTone(784, 0.2), 160);
+    }
+
+    function playWrongSound() {
+        initAudio();
+        playTone(300, 0.2, 'sawtooth', 0.1);
+        setTimeout(() => playTone(200, 0.3, 'sawtooth', 0.08), 100);
+    }
+
+    function playWordComplete() {
+        initAudio();
+        const notes = [523, 659, 784, 880, 1047];
+        notes.forEach((note, i) => {
+            setTimeout(() => playTone(note, 0.25, 'sine', 0.12), i * 100);
+        });
+    }
+
+    function playGameOver() {
+        initAudio();
+        playTone(400, 0.3, 'sawtooth', 0.1);
+        setTimeout(() => playTone(300, 0.3, 'sawtooth', 0.08), 200);
+        setTimeout(() => playTone(200, 0.5, 'sawtooth', 0.06), 400);
+    }
+
+    // ===== PARTICLE SYSTEM =====
+    const particleCanvas = document.getElementById('particleCanvas');
+    const pCtx = particleCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeParticleCanvas() {
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
+    }
+    resizeParticleCanvas();
+    window.addEventListener('resize', resizeParticleCanvas);
+
+    class Particle {
+        constructor(x, y, color, speedX, speedY, size, life) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.speedX = speedX;
+            this.speedY = speedY;
+            this.size = size;
+            this.life = life;
+            this.maxLife = life;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.life--;
+            this.speedY += 0.02;
+        }
+        draw(ctx) {
+            const alpha = this.life / this.maxLife;
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size * alpha, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    function spawnParticles(x, y, count, colors) {
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+            const speed = 2 + Math.random() * 4;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particles.push(new Particle(
+                x, y, color,
+                Math.cos(angle) * speed,
+                Math.sin(angle) * speed,
+                2 + Math.random() * 3,
+                40 + Math.random() * 30
+            ));
+        }
+    }
+
+    function animateParticles() {
+        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        particles = particles.filter(p => p.life > 0);
+        particles.forEach(p => {
+            p.update();
+            p.draw(pCtx);
+        });
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+
+    // ===== HIGH SCORES =====
+    function getHighScores() {
+        try {
+            const scores = JSON.parse(localStorage.getItem('wordleTechScores') || '[]');
+            return scores.sort((a, b) => b.score - a.score).slice(0, 5);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveHighScore(score) {
+        const scores = getHighScores();
+        scores.push({ score: score, date: new Date().toLocaleDateString() });
+        scores.sort((a, b) => b.score - a.score);
+        localStorage.setItem('wordleTechScores', JSON.stringify(scores.slice(0, 5)));
+    }
+
+    function renderHighScores(listEl) {
+        const scores = getHighScores();
+        listEl.innerHTML = '';
+        if (scores.length === 0) {
+            listEl.innerHTML = '<li style="justify-content:center; color:#666;">No scores yet</li>';
+            return;
+        }
+        scores.forEach((s, i) => {
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${medal} #${i + 1}</span><span>${s.score} pts</span><span>${s.date}</span>`;
+            listEl.appendChild(li);
+        });
+    }
+
+    // ===== GAME LOGIC =====
+    function selectWords() {
+        let pool = [...WORD_BANK];
+        if (gameState.selectedCategory !== 'all') {
+            pool = pool.filter(w => w.category === gameState.selectedCategory);
+        }
+        // Shuffle
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        // Take 10 (or all available if less)
+        gameState.roundWords = pool.slice(0, gameState.totalRounds);
+        // If not enough words, repeat some
+        while (gameState.roundWords.length < gameState.totalRounds) {
+            const extra = pool[Math.floor(Math.random() * pool.length)];
+            gameState.roundWords.push(extra);
+        }
+    }
+
+    function startGame() {
+        initAudio();
+        gameState.selectedCategory = document.getElementById('categoryFilter').value;
+        gameState.score = 0;
+        gameState.round = 0;
+        gameState.wordsGuessed = 0;
+        gameState.totalCorrectLetters = 0;
+        gameState.totalGuesses = 0;
+        gameState.gameActive = true;
+        selectWords();
+
+        document.getElementById('startScreen').classList.add('hidden');
+        document.getElementById('endScreen').classList.add('hidden');
+        document.getElementById('gameArea').style.display = 'block';
+        document.getElementById('currentScore').textContent = '0';
+
+        nextRound();
+    }
+
+    function nextRound() {
+        if (gameState.round >= gameState.totalRounds) {
+            endGame();
+            return;
+        }
+
+        gameState.currentWord = gameState.roundWords[gameState.round];
+        gameState.revealedLetters = [];
+        gameState.wrongGuesses = 0;
+        gameState.hintUsed = false;
+        gameState.round++;
+
+        document.getElementById('currentRound').textContent = gameState.round;
+        document.getElementById('hintText').style.display = 'none';
+        document.getElementById('hintBtn').disabled = false;
+        document.getElementById('hintBtn').style.opacity = '1';
+
+        if (gameState.adminMode) {
+            document.getElementById('adminAnswer').textContent = 'ANSWER: ' + gameState.currentWord.word;
+            document.getElementById('adminAnswer').classList.add('visible');
+        }
+
+        // Show transition
+        showRoundTransition();
+
+        // Reset circuit board
+        resetCircuitBoard();
+
+        // Update display
+        renderWord();
+        renderKeyboard();
+        updateCategoryBadge();
+    }
+
+    function showRoundTransition() {
+        const trans = document.getElementById('roundTransition');
+        const text = document.getElementById('transitionText');
+        const score = document.getElementById('transitionScore');
+        text.textContent = `Round ${gameState.round}`;
+        score.textContent = gameState.round > 1 ? `Score: ${gameState.score}` : 'Good luck!';
+        trans.classList.add('active');
+        setTimeout(() => {
+            trans.classList.remove('active');
+        }, 1500);
+    }
+
+    function updateCategoryBadge() {
+        document.getElementById('categoryBadge').textContent = `Category: ${gameState.currentWord.category}`;
+    }
+
+    function renderWord() {
+        const container = document.getElementById('wordContainer');
+        container.innerHTML = '';
+        const word = gameState.currentWord.word;
+
+        for (let i = 0; i < word.length; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'letter-tile';
+            tile.dataset.index = i;
+
+            if (word[i] === ' ') {
+                tile.classList.add('space-tile');
+            } else if (gameState.revealedLetters.includes(word[i])) {
+                tile.textContent = word[i];
+                tile.classList.add('revealed');
+            } else {
+                tile.textContent = '_';
+            }
+            container.appendChild(tile);
+        }
+    }
+
+    function renderKeyboard() {
+        const container = document.getElementById('keyboard');
+        container.innerHTML = '';
+        const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+
+        rows.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'keyboard-row';
+            for (const letter of row) {
+                const btn = document.createElement('button');
+                btn.className = 'key-btn';
+                btn.textContent = letter;
+                btn.dataset.letter = letter;
+                btn.addEventListener('click', () => guessLetter(letter));
+                rowDiv.appendChild(btn);
+            }
+            container.appendChild(rowDiv);
+        });
+    }
+
+    function guessLetter(letter) {
+        if (!gameState.gameActive) return;
+        if (gameState.revealedLetters.includes(letter)) return;
+
+        const btn = document.querySelector(`.key-btn[data-letter="${letter}"]`);
+        if (btn && (btn.classList.contains('used-correct') || btn.classList.contains('used-wrong'))) return;
+
+        const word = gameState.currentWord.word;
+        gameState.totalGuesses++;
+
+        if (word.includes(letter)) {
+            // Correct guess
+            gameState.revealedLetters.push(letter);
+            gameState.totalCorrectLetters++;
+            if (btn) btn.classList.add('used-correct');
+            playCorrectSound();
+
+            // Animate tiles
+            const tiles = document.querySelectorAll('.letter-tile');
+            tiles.forEach((tile, i) => {
+                if (word[i] === letter) {
+                    setTimeout(() => {
+                        tile.textContent = letter;
+                        tile.classList.add('revealed');
+                        // Spawn green particles at tile position
+                        const rect = tile.getBoundingClientRect();
+                        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 8, ['#00ff88', '#00f0ff', '#88ffcc']);
+                    }, i * 80);
+                }
+            });
+
+            // Check if word is complete
+            setTimeout(() => checkWordComplete(), word.length * 80 + 100);
+        } else {
+            // Wrong guess
+            gameState.wrongGuesses++;
+            if (btn) btn.classList.add('used-wrong');
+            playWrongSound();
+
+            // Shake word
+            const container = document.getElementById('wordContainer');
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 500);
+
+            // Short circuit
+            shortCircuitSegment(gameState.wrongGuesses);
+
+            // Check game over for this round
+            if (gameState.wrongGuesses >= gameState.maxWrong) {
+                setTimeout(() => roundFailed(), 600);
+            }
+        }
+    }
+
+    function checkWordComplete() {
+        const word = gameState.currentWord.word;
+        const allLetters = [...new Set(word.replace(/ /g, '').split(''))];
+        const allRevealed = allLetters.every(l => gameState.revealedLetters.includes(l));
+
+        if (allRevealed) {
+            wordSolved();
+        }
+    }
+
+    function wordSolved() {
+        gameState.wordsGuessed++;
+        const roundScore = Math.max(0, 100 - (gameState.wrongGuesses * 10) - (gameState.hintUsed ? 50 : 0));
+        gameState.score += roundScore;
+        document.getElementById('currentScore').textContent = gameState.score;
+
+        playWordComplete();
+
+        // Big particle burst
+        const container = document.getElementById('wordContainer');
+        const rect = container.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 50, ['#00ff88', '#00f0ff', '#ffaa00', '#b400ff', '#ff00aa']);
+
+        // Proceed to next round after delay
+        setTimeout(() => nextRound(), 2000);
+    }
+
+    function roundFailed() {
+        playGameOver();
+        // Reveal the word
+        const word = gameState.currentWord.word;
+        const tiles = document.querySelectorAll('.letter-tile');
+        tiles.forEach((tile, i) => {
+            if (word[i] !== ' ' && !gameState.revealedLetters.includes(word[i])) {
+                tile.textContent = word[i];
+                tile.style.color = '#ff3333';
+                tile.style.borderColor = '#ff3333';
+                tile.style.textShadow = '0 0 10px rgba(255,50,50,0.8)';
+            }
+        });
+
+        // Red particles
+        const container = document.getElementById('wordContainer');
+        const rect = container.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 30, ['#ff3333', '#ff6666', '#ff0000']);
+
+        // 0 points for this round, move on
+        setTimeout(() => nextRound(), 2500);
+    }
+
+    function endGame() {
+        gameState.gameActive = false;
+        document.getElementById('gameArea').style.display = 'none';
+
+        // Calculate accuracy
+        const accuracy = gameState.totalGuesses > 0
+            ? Math.round((gameState.totalCorrectLetters / gameState.totalGuesses) * 100)
+            : 0;
+
+        document.getElementById('finalScore').textContent = gameState.score;
+        document.getElementById('wordsGuessed').textContent = gameState.wordsGuessed;
+        document.getElementById('accuracy').textContent = accuracy;
+
+        saveHighScore(gameState.score);
+        renderHighScores(document.getElementById('endScoreList'));
+
+        document.getElementById('endScreen').classList.remove('hidden');
+
+        // Celebration particles
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                spawnParticles(
+                    Math.random() * window.innerWidth,
+                    Math.random() * window.innerHeight * 0.5,
+                    30,
+                    ['#00ff88', '#00f0ff', '#ffaa00', '#b400ff', '#ff00aa']
+                );
+            }, i * 300);
+        }
+    }
+
+
+    // ===== CIRCUIT BOARD =====
+    function resetCircuitBoard() {
+        for (let i = 1; i <= 6; i++) {
+            const seg = document.getElementById('seg' + i);
+            const node = document.getElementById('node' + i);
+            seg.classList.remove('shorted');
+            seg.classList.add('active');
+            node.classList.remove('shorted');
+            node.classList.add('active');
+        }
+    }
+
+    function shortCircuitSegment(guessNum) {
+        const segIndex = guessNum;
+        if (segIndex > 6) return;
+        const seg = document.getElementById('seg' + segIndex);
+        const node = document.getElementById('node' + segIndex);
+        seg.classList.remove('active');
+        seg.classList.add('shorted');
+        node.classList.remove('active');
+        node.classList.add('shorted');
+
+        // Spark particles at circuit position
+        const svgEl = document.getElementById('circuitBoard');
+        const rect = svgEl.getBoundingClientRect();
+        const sparkX = rect.left + (segIndex / 7) * rect.width;
+        const sparkY = rect.top + rect.height / 2;
+        spawnParticles(sparkX, sparkY, 15, ['#ff3333', '#ff6600', '#ffaa00', '#ffffff']);
+    }
+
+    // ===== HINT SYSTEM =====
+    document.getElementById('hintBtn').addEventListener('click', () => {
+        if (!gameState.gameActive || gameState.hintUsed) return;
+        gameState.hintUsed = true;
+        const hintText = document.getElementById('hintText');
+        hintText.textContent = `💡 Definition: "${gameState.currentWord.definition}"`;
+        hintText.style.display = 'block';
+        document.getElementById('hintBtn').disabled = true;
+        document.getElementById('hintBtn').style.opacity = '0.5';
+    });
+
+    // ===== SOLVE MODAL =====
+    document.getElementById('solveBtn').addEventListener('click', () => {
+        if (!gameState.gameActive) return;
+        document.getElementById('solveModal').classList.add('active');
+        document.getElementById('solveInput').value = '';
+        document.getElementById('solveInput').focus();
+    });
+
+    document.getElementById('solveCancel').addEventListener('click', () => {
+        document.getElementById('solveModal').classList.remove('active');
+    });
+
+    document.getElementById('solveSubmit').addEventListener('click', submitSolve);
+
+    document.getElementById('solveInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') submitSolve();
+        if (e.key === 'Escape') document.getElementById('solveModal').classList.remove('active');
+    });
+
+    function submitSolve() {
+        const guess = document.getElementById('solveInput').value.trim().toUpperCase();
+        document.getElementById('solveModal').classList.remove('active');
+
+        if (!guess) return;
+
+        if (guess === gameState.currentWord.word) {
+            // Reveal all letters
+            const word = gameState.currentWord.word;
+            const allLetters = [...new Set(word.replace(/ /g, '').split(''))];
+            allLetters.forEach(l => {
+                if (!gameState.revealedLetters.includes(l)) {
+                    gameState.revealedLetters.push(l);
+                }
+            });
+            renderWord();
+            wordSolved();
+        } else {
+            // Wrong solve attempt counts as a wrong guess
+            gameState.wrongGuesses++;
+            gameState.totalGuesses++;
+            playWrongSound();
+            shortCircuitSegment(gameState.wrongGuesses);
+
+            const container = document.getElementById('wordContainer');
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 500);
+
+            if (gameState.wrongGuesses >= gameState.maxWrong) {
+                setTimeout(() => roundFailed(), 600);
+            }
+        }
+    }
+
+    // ===== KEYBOARD INPUT =====
+    document.addEventListener('keydown', (e) => {
+        // Admin code detection
+        const key = e.key.toUpperCase();
+        if (key.length === 1 && /[A-Z]/.test(key)) {
+            gameState.adminBuffer += key;
+            if (gameState.adminBuffer.length > 4) {
+                gameState.adminBuffer = gameState.adminBuffer.slice(-4);
+            }
+            if (gameState.adminBuffer === 'NIKO') {
+                gameState.adminMode = !gameState.adminMode;
+                const adminEl = document.getElementById('adminAnswer');
+                if (gameState.adminMode && gameState.currentWord) {
+                    adminEl.textContent = 'ANSWER: ' + gameState.currentWord.word;
+                    adminEl.classList.add('visible');
+                } else {
+                    adminEl.classList.remove('visible');
+                }
+                gameState.adminBuffer = '';
+            }
+        }
+
+        // Game letter input
+        if (!gameState.gameActive) return;
+        if (document.getElementById('solveModal').classList.contains('active')) return;
+
+        if (key.length === 1 && /[A-Z]/.test(key)) {
+            guessLetter(key);
+        }
+    });
+
+    // ===== START / RESTART =====
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('playAgainBtn').addEventListener('click', () => {
+        document.getElementById('endScreen').classList.add('hidden');
+        document.getElementById('startScreen').classList.remove('hidden');
+    });
+
+    // ===== INITIAL RENDER =====
+    renderHighScores(document.getElementById('startScoreList'));
+
+    // ===== BACKGROUND AMBIENT PARTICLES =====
+    function ambientParticles() {
+        if (Math.random() < 0.03) {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            particles.push(new Particle(
+                x, y,
+                `rgba(0, 240, 255, ${0.2 + Math.random() * 0.3})`,
+                (Math.random() - 0.5) * 0.5,
+                (Math.random() - 0.5) * 0.5,
+                1 + Math.random() * 2,
+                60 + Math.random() * 60
+            ));
+        }
+        requestAnimationFrame(ambientParticles);
+    }
+    ambientParticles();
+    </script>
+</body>
+</html>
