@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Scramble — Fill in the Blank</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0e1a;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #00f0ff, #ff00aa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+.subtitle { color: #8899aa; margin-bottom: 20px; font-size: 1.1rem; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Tech Scramble</h1>
+<p class="subtitle">Fill in the blanks — CompTIA A+ Edition</p>
+
+
+<div id="menu-screen">
+  <div class="menu-box">
+    <h2>Select Difficulty</h2>
+    <button class="btn" onclick="startGame('easy')">Easy (Shorter words, fewer decoys)</button>
+    <button class="btn" onclick="startGame('medium')">Medium (Mixed words)</button>
+    <button class="btn" onclick="startGame('hard')">Hard (Longer words, more decoys)</button>
+    <div id="high-scores-menu"></div>
+  </div>
+</div>
+
+<div id="game-screen" style="display:none;">
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-label">Score</span><span id="score">0</span></div>
+    <div class="stat"><span class="stat-label">Word</span><span id="progress">1/10</span></div>
+    <div class="stat" id="hearts-container"><span class="stat-label">Attempts</span><span id="hearts">❤️❤️❤️❤️❤️</span></div>
+  </div>
+  <div id="hint-box"></div>
+  <div id="word-display"></div>
+  <div id="letter-tiles"></div>
+  <button class="btn btn-small" onclick="showMenu()" style="margin-top:30px;">Quit to Menu</button>
+</div>
+
+<div id="complete-screen" style="display:none;">
+  <div class="complete-box">
+    <h2>Round Complete!</h2>
+    <div id="final-stats"></div>
+    <button class="btn" onclick="startGame(currentDifficulty)">Play Again</button>
+    <button class="btn" onclick="showMenu()">Menu</button>
+  </div>
+</div>
+</div>
+
+
+<style>
+.menu-box, .complete-box {
+  background: rgba(20,30,60,0.9);
+  border: 1px solid rgba(0,240,255,0.3);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 500px;
+  margin: 40px auto;
+  backdrop-filter: blur(10px);
+}
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  margin: 12px 0;
+  background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,0,170,0.15));
+  border: 1px solid rgba(0,240,255,0.5);
+  border-radius: 8px;
+  color: #00f0ff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn:hover {
+  background: linear-gradient(135deg, rgba(0,240,255,0.3), rgba(255,0,170,0.3));
+  box-shadow: 0 0 20px rgba(0,240,255,0.4);
+  transform: translateY(-2px);
+}
+.btn-small { display: inline-block; width: auto; font-size: 0.9rem; padding: 10px 20px; }
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: rgba(20,30,60,0.8);
+  border-radius: 12px;
+  border: 1px solid rgba(0,240,255,0.2);
+  flex-wrap: wrap;
+}
+.stat { display: flex; flex-direction: column; align-items: center; }
+.stat-label { font-size: 0.8rem; color: #8899aa; text-transform: uppercase; }
+.stat span:last-child { font-size: 1.3rem; color: #00f0ff; font-weight: bold; }
+#hint-box {
+  background: rgba(0,240,255,0.08);
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 10px;
+  padding: 15px 25px;
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+  color: #aaddff;
+  font-style: italic;
+}
+
+
+#word-display {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 30px 0;
+  min-height: 60px;
+}
+.letter-slot {
+  width: 42px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+.letter-slot.revealed {
+  background: rgba(0,240,255,0.1);
+  color: rgba(0,240,255,0.7);
+  border: 2px solid rgba(0,240,255,0.3);
+}
+.letter-slot.blank {
+  background: rgba(20,30,60,0.8);
+  border-bottom: 3px solid #00f0ff;
+  box-shadow: 0 4px 15px rgba(0,240,255,0.2);
+  color: transparent;
+}
+.letter-slot.filled {
+  background: rgba(0,255,136,0.15);
+  border: 2px solid #00ff88;
+  color: #00ff88;
+  box-shadow: 0 0 15px rgba(0,255,136,0.3);
+  animation: fillPop 0.3s ease;
+}
+@keyframes fillPop {
+  0% { transform: scale(0.5); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }
+}
+.letter-slot.correct-flash {
+  animation: greenFlash 0.5s;
+}
+@keyframes greenFlash {
+  0%,100% { box-shadow: 0 0 15px rgba(0,255,136,0.3); }
+  50% { box-shadow: 0 0 30px rgba(0,255,136,0.8); }
+}
+
+
+#letter-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 600px;
+}
+.tile {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  background: rgba(20,30,60,0.9);
+  border: 2px solid rgba(0,240,255,0.5);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #fff;
+  user-select: none;
+}
+.tile:hover {
+  background: rgba(0,240,255,0.2);
+  box-shadow: 0 0 15px rgba(0,240,255,0.4);
+  transform: scale(1.1);
+}
+.tile:active { transform: scale(0.95); }
+.tile.used {
+  opacity: 0.3;
+  pointer-events: none;
+  border-color: rgba(0,240,255,0.1);
+}
+.tile.wrong {
+  animation: shake 0.4s;
+  border-color: #ff3355;
+  background: rgba(255,51,85,0.2);
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+#final-stats { margin: 20px 0; font-size: 1.1rem; line-height: 2.2; }
+#high-scores-menu {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(0,240,255,0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(0,240,255,0.15);
+}
+#high-scores-menu h3 { color: #00f0ff; margin-bottom: 10px; font-size: 1rem; }
+.hs-entry { font-size: 0.85rem; color: #aabbcc; margin: 4px 0; }
+
+
+/* Admin console */
+#admin-console {
+  display: none;
+  position: fixed;
+  bottom: 20px; right: 20px;
+  background: rgba(20,30,60,0.95);
+  border: 1px solid #00f0ff;
+  border-radius: 12px;
+  padding: 20px;
+  z-index: 10000;
+  min-width: 250px;
+}
+#admin-console h3 { color: #00f0ff; margin-bottom: 10px; }
+#admin-console button {
+  display: block; width: 100%; margin: 5px 0; padding: 8px;
+  background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.3);
+  border-radius: 6px; color: #00f0ff; cursor: pointer;
+}
+#admin-console button:hover { background: rgba(0,240,255,0.2); }
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+  .letter-slot { width: 34px; height: 44px; font-size: 1.3rem; }
+  .tile { width: 40px; height: 40px; font-size: 1.1rem; }
+  .menu-box, .complete-box { padding: 20px; margin: 20px; }
+  .stats-bar { gap: 15px; }
+}
+</style>
+
+<div id="admin-console">
+  <h3>Admin Console</h3>
+  <button onclick="solveWord()">Solve Current Word</button>
+  <button onclick="skipWord()">Skip Word</button>
+  <button onclick="clearScores()">Clear High Scores</button>
+  <button onclick="closeAdmin()">Close</button>
+</div>
+
+
+<script>
+// Word bank
+const WORD_BANK = [
+  { word: 'MOTHERBOARD', hint: 'Main circuit board' },
+  { word: 'ETHERNET', hint: 'Wired network technology' },
+  { word: 'FIREWALL', hint: 'Controls network traffic' },
+  { word: 'BLUETOOTH', hint: 'Short-range wireless' },
+  { word: 'ENCRYPTION', hint: 'Scrambles data for security' },
+  { word: 'VIRTUALIZATION', hint: 'Multiple OS on one machine' },
+  { word: 'MALWARE', hint: 'Malicious software' },
+  { word: 'BANDWIDTH', hint: 'Data transfer capacity' },
+  { word: 'PERIPHERAL', hint: 'External device' },
+  { word: 'AUTHENTICATION', hint: 'Verifying identity' },
+  { word: 'SUBNET', hint: 'Network division' },
+  { word: 'FIRMWARE', hint: 'Embedded device software' },
+  { word: 'RANSOMWARE', hint: 'Encrypts files for payment' },
+  { word: 'PROTOCOL', hint: 'Communication rules' },
+  { word: 'PARTITION', hint: 'Disk division' },
+  { word: 'DEFRAGMENT', hint: 'Reorganize disk data' },
+  { word: 'HYPERVISOR', hint: 'Manages virtual machines' },
+  { word: 'TROUBLESHOOT', hint: 'Diagnose and fix issues' },
+  { word: 'PHISHING', hint: 'Fraudulent emails' },
+  { word: 'PROCESSOR', hint: 'CPU' },
+  { word: 'HEATSINK', hint: 'Cools the CPU' },
+  { word: 'THUNDERBOLT', hint: 'Fast I/O connection' },
+  { word: 'GIGABYTE', hint: '1024 megabytes' },
+  { word: 'LATENCY', hint: 'Network delay' },
+  { word: 'DOMAIN', hint: 'Network grouping in Windows' }
+];
+
+
+const DIFFICULTY_CONFIG = {
+  easy: { maxLength: 9, decoys: 3, wordsPerRound: 10, revealPercent: 0.5 },
+  medium: { maxLength: 12, decoys: 4, wordsPerRound: 10, revealPercent: 0.35 },
+  hard: { maxLength: 99, decoys: 6, wordsPerRound: 10, revealPercent: 0.25 }
+};
+
+let currentDifficulty = 'easy';
+let currentWords = [];
+let currentWordIndex = 0;
+let currentWord = '';
+let blanks = [];
+let filledBlanks = [];
+let attempts = 5;
+let score = 0;
+let wordsCompleted = 0;
+let gameActive = false;
+
+// Audio
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playSound(type) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    gain.gain.value = 0.12;
+    if (type === 'correct') {
+      osc.frequency.value = 523;
+      osc.type = 'sine';
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start();
+      setTimeout(() => osc.frequency.value = 659, 80);
+      setTimeout(() => osc.frequency.value = 784, 160);
+      osc.stop(ctx.currentTime + 0.3);
+    } else if (type === 'wrong') {
+      osc.frequency.value = 250;
+      osc.type = 'sawtooth';
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(); osc.stop(ctx.currentTime + 0.3);
+    } else if (type === 'wordComplete') {
+      osc.frequency.value = 440;
+      osc.type = 'sine';
+      gain.gain.value = 0.15;
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.start();
+      setTimeout(() => osc.frequency.value = 554, 100);
+      setTimeout(() => osc.frequency.value = 659, 200);
+      setTimeout(() => osc.frequency.value = 880, 300);
+      osc.stop(ctx.currentTime + 0.6);
+    } else if (type === 'gameOver') {
+      osc.frequency.value = 300;
+      osc.type = 'square';
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      osc.start();
+      setTimeout(() => osc.frequency.value = 200, 150);
+      osc.stop(ctx.currentTime + 0.5);
+    }
+  } catch(e) {}
+}
+
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startGame(difficulty) {
+  currentDifficulty = difficulty;
+  const config = DIFFICULTY_CONFIG[difficulty];
+  // Filter words by length for easy mode
+  let pool = WORD_BANK.filter(w => w.word.length <= config.maxLength);
+  if (pool.length < config.wordsPerRound) pool = [...WORD_BANK];
+  shuffle(pool);
+  currentWords = pool.slice(0, config.wordsPerRound);
+  currentWordIndex = 0;
+  score = 0;
+  wordsCompleted = 0;
+  gameActive = true;
+
+  document.getElementById('menu-screen').style.display = 'none';
+  document.getElementById('complete-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('score').textContent = '0';
+  loadWord();
+}
+
+function loadWord() {
+  if (currentWordIndex >= currentWords.length) {
+    endRound();
+    return;
+  }
+  const config = DIFFICULTY_CONFIG[currentDifficulty];
+  const wordObj = currentWords[currentWordIndex];
+  currentWord = wordObj.word;
+  attempts = 5;
+  filledBlanks = [];
+
+  // Determine which positions to reveal vs blank
+  const indices = [...Array(currentWord.length).keys()];
+  shuffle(indices);
+  const revealCount = Math.floor(currentWord.length * config.revealPercent);
+  const revealIndices = new Set(indices.slice(0, revealCount));
+
+  blanks = [];
+  for (let i = 0; i < currentWord.length; i++) {
+    if (!revealIndices.has(i)) blanks.push(i);
+  }
+
+  // Update UI
+  document.getElementById('progress').textContent = `${currentWordIndex+1}/${currentWords.length}`;
+  document.getElementById('hint-box').textContent = `Hint: ${wordObj.hint}`;
+  updateHearts();
+  renderWord(revealIndices);
+  renderTiles(config.decoys);
+}
+
+
+function renderWord(revealIndices) {
+  const display = document.getElementById('word-display');
+  display.innerHTML = '';
+  for (let i = 0; i < currentWord.length; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'letter-slot';
+    slot.dataset.index = i;
+    if (revealIndices.has(i)) {
+      slot.classList.add('revealed');
+      slot.textContent = currentWord[i];
+    } else {
+      slot.classList.add('blank');
+      slot.textContent = '_';
+    }
+    display.appendChild(slot);
+  }
+}
+
+function renderTiles(decoyCount) {
+  const container = document.getElementById('letter-tiles');
+  container.innerHTML = '';
+  // Get the missing letters
+  const missingLetters = blanks.map(i => currentWord[i]);
+  // Add decoy letters
+  const allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let decoys = [];
+  for (let i = 0; i < decoyCount; i++) {
+    decoys.push(allLetters[Math.floor(Math.random() * 26)]);
+  }
+  const tiles = shuffle([...missingLetters, ...decoys]);
+
+  tiles.forEach((letter, idx) => {
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    tile.textContent = letter;
+    tile.dataset.idx = idx;
+    tile.addEventListener('click', () => handleTileClick(tile, letter));
+    container.appendChild(tile);
+  });
+}
+
+function handleTileClick(tile, letter) {
+  if (!gameActive || tile.classList.contains('used')) return;
+
+  // Find next unfilled blank
+  const nextBlankIdx = blanks[filledBlanks.length];
+  if (nextBlankIdx === undefined) return;
+
+  const expectedLetter = currentWord[nextBlankIdx];
+
+  if (letter === expectedLetter) {
+    // Correct
+    playSound('correct');
+    tile.classList.add('used');
+    filledBlanks.push(letter);
+
+    // Fill in the slot
+    const slot = document.querySelector(`.letter-slot[data-index="${nextBlankIdx}"]`);
+    slot.textContent = letter;
+    slot.classList.remove('blank');
+    slot.classList.add('filled');
+    setTimeout(() => slot.classList.add('correct-flash'), 50);
+
+    // Check if word complete
+    if (filledBlanks.length === blanks.length) {
+      wordComplete();
+    }
+  } else {
+    // Wrong
+    playSound('wrong');
+    attempts--;
+    updateHearts();
+    tile.classList.add('wrong');
+    setTimeout(() => tile.classList.remove('wrong'), 400);
+
+    if (attempts <= 0) {
+      wordFailed();
+    }
+  }
+}
+
+
+function updateHearts() {
+  document.getElementById('hearts').textContent = '❤️'.repeat(attempts) + '🖤'.repeat(5 - attempts);
+}
+
+function wordComplete() {
+  playSound('wordComplete');
+  const points = attempts * 20;
+  score += points;
+  wordsCompleted++;
+  document.getElementById('score').textContent = score;
+
+  // Flash all slots green
+  document.querySelectorAll('.letter-slot').forEach(s => s.classList.add('correct-flash'));
+
+  setTimeout(() => {
+    currentWordIndex++;
+    loadWord();
+  }, 1200);
+}
+
+function wordFailed() {
+  playSound('gameOver');
+  // Reveal the full word
+  for (let i = 0; i < currentWord.length; i++) {
+    const slot = document.querySelector(`.letter-slot[data-index="${i}"]`);
+    slot.textContent = currentWord[i];
+    slot.classList.remove('blank');
+    slot.classList.add('revealed');
+    slot.style.borderColor = '#ff3355';
+  }
+
+  setTimeout(() => {
+    currentWordIndex++;
+    loadWord();
+  }, 2000);
+}
+
+function endRound() {
+  gameActive = false;
+  playSound('wordComplete');
+  const accuracy = currentWords.length > 0 ? Math.round((wordsCompleted / currentWords.length) * 100) : 0;
+
+  document.getElementById('final-stats').innerHTML = `
+    <div>Score: <strong style="color:#00f0ff;">${score}</strong></div>
+    <div>Words Completed: <strong>${wordsCompleted}/${currentWords.length}</strong></div>
+    <div>Accuracy: <strong>${accuracy}%</strong></div>
+    <div>Difficulty: <strong style="text-transform:capitalize;">${currentDifficulty}</strong></div>
+  `;
+
+  saveScore(currentDifficulty, score, wordsCompleted, accuracy);
+
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('complete-screen').style.display = 'block';
+}
+
+
+function saveScore(diff, score, words, accuracy) {
+  const key = 'scrambleScores';
+  let scores = JSON.parse(localStorage.getItem(key) || '{}');
+  if (!scores[diff]) scores[diff] = [];
+  scores[diff].push({ score, words, accuracy, date: new Date().toLocaleDateString() });
+  scores[diff].sort((a,b) => b.score - a.score);
+  scores[diff] = scores[diff].slice(0, 5);
+  localStorage.setItem(key, JSON.stringify(scores));
+}
+
+function getScores(diff) {
+  const key = 'scrambleScores';
+  let scores = JSON.parse(localStorage.getItem(key) || '{}');
+  return scores[diff] || [];
+}
+
+function showMenu() {
+  gameActive = false;
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('complete-screen').style.display = 'none';
+  document.getElementById('menu-screen').style.display = 'block';
+  renderHighScores();
+}
+
+function renderHighScores() {
+  const container = document.getElementById('high-scores-menu');
+  let html = '<h3>High Scores</h3>';
+  ['easy','medium','hard'].forEach(diff => {
+    const scores = getScores(diff);
+    html += `<div style="margin:10px 0;"><strong style="color:#00f0ff;text-transform:capitalize;">${diff}</strong>`;
+    if (scores.length === 0) {
+      html += '<div class="hs-entry">No scores yet</div>';
+    } else {
+      scores.forEach((s,i) => {
+        html += `<div class="hs-entry">${i+1}. ${s.score} pts — ${s.words} words — ${s.accuracy}%</div>`;
+      });
+    }
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+
+// Admin console - type "NIKO"
+let adminBuffer = '';
+document.addEventListener('keydown', (e) => {
+  adminBuffer += e.key.toUpperCase();
+  if (adminBuffer.length > 4) adminBuffer = adminBuffer.slice(-4);
+  if (adminBuffer === 'NIKO') {
+    document.getElementById('admin-console').style.display = 'block';
+    adminBuffer = '';
+  }
+});
+
+function solveWord() {
+  if (!gameActive) return;
+  // Fill all remaining blanks
+  while (filledBlanks.length < blanks.length) {
+    const idx = blanks[filledBlanks.length];
+    const letter = currentWord[idx];
+    filledBlanks.push(letter);
+    const slot = document.querySelector(`.letter-slot[data-index="${idx}"]`);
+    slot.textContent = letter;
+    slot.classList.remove('blank');
+    slot.classList.add('filled');
+  }
+  wordComplete();
+}
+
+function skipWord() {
+  if (!gameActive) return;
+  currentWordIndex++;
+  loadWord();
+}
+
+function clearScores() {
+  localStorage.removeItem('scrambleScores');
+  renderHighScores();
+  alert('High scores cleared!');
+}
+
+function closeAdmin() {
+  document.getElementById('admin-console').style.display = 'none';
+}
+
+// Init
+showMenu();
+</script>
+</body>
+</html>
