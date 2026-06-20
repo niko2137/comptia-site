@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal Takedown - IT Threat Defense</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#00ff88;font-family:'Courier New',monospace;overflow:hidden;height:100vh;display:flex;justify-content:center;align-items:center}
+#gameContainer{display:flex;gap:10px;padding:10px}
+#leftPanel{display:flex;flex-direction:column;align-items:center}
+#integrityBar{width:300px;height:24px;border:2px solid #00ff88;border-radius:4px;margin-bottom:8px;overflow:hidden;position:relative}
+#integrityFill{height:100%;width:100%;background:linear-gradient(90deg,#ff4444,#ffaa00,#00ff88);transition:width 0.3s}
+#integrityText{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#fff;text-shadow:0 0 4px #000}
+canvas{border:2px solid #00ff88;box-shadow:0 0 20px rgba(0,255,136,0.3)}
+#rightPanel{width:200px;display:flex;flex-direction:column;gap:8px;padding:10px;border:1px solid #00ff88;border-radius:8px;background:rgba(0,255,136,0.03)}
+.panel-item{padding:8px;border:1px solid rgba(0,255,136,0.3);border-radius:4px;text-align:center;font-size:13px}
+.panel-item label{color:#4488ff;font-size:10px;display:block;margin-bottom:2px}
+.panel-item span{color:#00ff88;font-size:16px;font-weight:bold}
+.btn{padding:8px 16px;border:1px solid #00ff88;background:transparent;color:#00ff88;cursor:pointer;border-radius:4px;font-family:inherit;font-size:12px;transition:all 0.2s}
+.btn:hover{background:#00ff88;color:#0a0a1a}
+#questionOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:100;justify-content:center;align-items:center}
+#questionBox{background:#0d1b2a;border:2px solid #00ff88;border-radius:12px;padding:24px;max-width:550px;width:90%;box-shadow:0 0 30px rgba(0,255,136,0.4)}
+#questionBox h3{color:#ff4444;font-size:14px;margin-bottom:8px;text-transform:uppercase;animation:blink 0.5s 3}
+#questionBox p{color:#fff;font-size:15px;margin-bottom:16px;line-height:1.4}
+.answer-btn{display:block;width:100%;padding:10px;margin:6px 0;border:1px solid #4488ff;background:transparent;color:#fff;cursor:pointer;border-radius:4px;font-family:inherit;font-size:13px;text-align:left;transition:all 0.2s}
+.answer-btn:hover{background:rgba(68,136,255,0.2);border-color:#00ff88}
+#categoryTag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;margin-bottom:8px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+#threatFlash{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;color:#ff4444;text-shadow:0 0 20px #ff4444;z-index:50;animation:flashIn 0.8s forwards}
+@keyframes flashIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+#bsodOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0000aa;z-index:200;justify-content:center;align-items:center;flex-direction:column;color:#fff;font-size:18px}
+#adminPanel{display:none;position:fixed;top:10px;right:10px;background:#1a1a2e;border:2px solid #ffaa00;padding:15px;border-radius:8px;z-index:300;color:#ffaa00;font-size:12px}
+#adminPanel button{margin:4px;padding:4px 8px;background:#ffaa00;color:#0a0a1a;border:none;cursor:pointer;border-radius:3px;font-size:11px}
+#highScoreModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:150;justify-content:center;align-items:center}
+#highScoreBox{background:#0d1b2a;border:2px solid #00ff88;padding:24px;border-radius:12px;text-align:center;min-width:300px}
+#highScoreBox h2{color:#00ff88;margin-bottom:12px;text-shadow:0 0 10px #00ff88}
+#highScoreBox ol{text-align:left;padding-left:20px;color:#fff;font-size:13px;line-height:2}
+#mobileControls{display:none;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);gap:8px;z-index:50}
+.touch-btn{width:50px;height:50px;border:2px solid #00ff88;background:rgba(0,255,136,0.1);color:#00ff88;font-size:20px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+@media(max-width:768px){#gameContainer{flex-direction:column;align-items:center}#rightPanel{flex-direction:row;flex-wrap:wrap;width:100%}#mobileControls{display:flex}}
+</style>
+</head>
+<body>
+
+<div id="gameContainer">
+<div id="leftPanel">
+<div id="integrityBar"><div id="integrityFill"></div><span id="integrityText">System Integrity: 100%</span></div>
+<canvas id="grid" width="300" height="540"></canvas>
+</div>
+<div id="rightPanel">
+<div class="panel-item"><label>SCORE</label><span id="scoreDisplay">0</span></div>
+<div class="panel-item"><label>LEVEL</label><span id="levelDisplay">1</span></div>
+<div class="panel-item"><label>INTEGRITY</label><span id="intDisplay">100%</span></div>
+<div class="panel-item"><label>STREAK</label><span id="streakDisplay">0</span></div>
+<div class="panel-item"><label>HIGH SCORE</label><span id="highDisplay">0</span></div>
+<button class="btn" onclick="togglePause()">PAUSE</button>
+<button class="btn" onclick="toggleMute()">MUTE</button>
+<button class="btn" onclick="showHighScores()">SCORES</button>
+<button class="btn" onclick="window.location.href='../index.html'">RETURN</button>
+</div>
+</div>
+<div id="threatFlash">THREAT DETECTED!</div>
+<div id="questionOverlay"><div id="questionBox"></div></div>
+<div id="bsodOverlay"><p>:( BSOD EVENT</p><p>3 incorrect answers in a row</p><p style="font-size:14px;margin-top:10px">Adding threat blocks...</p></div>
+<div id="highScoreModal"><div id="highScoreBox"><h2>HIGH SCORES</h2><ol id="scoreList"></ol><button class="btn" onclick="closeHighScores()">CLOSE</button></div></div>
+<div id="adminPanel"><h4>ADMIN PANEL</h4><button onclick="adminClear()">Clear Board</button><button onclick="adminAddRow()">Add Row</button><button onclick="adminFullIntegrity()">Full Integrity</button><button onclick="adminLevelUp()">Level Up</button><button onclick="adminTriggerQ()">Trigger Q</button></div>
+<div id="mobileControls">
+<button class="touch-btn" ontouchstart="moveLeft()" onclick="moveLeft()">&#9664;</button>
+<button class="touch-btn" ontouchstart="moveDown()" onclick="moveDown()">&#9660;</button>
+<button class="touch-btn" ontouchstart="rotatePiece()" onclick="rotatePiece()">&#8635;</button>
+<button class="touch-btn" ontouchstart="moveRight()" onclick="moveRight()">&#9654;</button>
+</div>
+
+<script>
+const COLS=10,ROWS=18,BLOCK=30,canvas=document.getElementById('grid'),ctx=canvas.getContext('2d');
+const COLORS={red:'#ff4444',yellow:'#ffaa00',blue:'#4488ff',green:'#00ff88'};
+const CATEGORIES=['Hardware','Networking','OS/Software','Security','Troubleshooting'];
+const CAT_COLORS={Hardware:'yellow',Networking:'red','OS/Software':'blue',Security:'all',Troubleshooting:'green'};
+let board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+let score=0,level=1,integrity=100,streak=0,wrongStreak=0,correctCount=0;
+let paused=false,muted=false,gameOver=false,bsodActive=false,questionActive=false;
+let dropInterval=800,dropTimer=0,lastTime=0,questionTimer=0,questionInterval=20000;
+let currentPiece=null,adminMode=false,adminBuffer='';
+let audioCtx=null,musicLoaded=false;
+
+// Tetris shapes
+const SHAPES=[
+[[1,1,1,1]],
+[[1,1],[1,1]],
+[[1,1,1],[0,1,0]],
+[[1,1,1],[1,0,0]],
+[[1,1,1],[0,0,1]],
+[[1,1,0],[0,1,1]],
+[[0,1,1],[1,1,0]]
+];
+
+function pickColor(){const c=['red','yellow','blue'];return c[Math.floor(Math.random()*c.length)];}
+function newPiece(){const shape=SHAPES[Math.floor(Math.random()*SHAPES.length)];const color=pickColor();return{shape,color,x:Math.floor(COLS/2)-Math.floor(shape[0].length/2),y:0};}
+
+function collides(piece,ox=0,oy=0){
+for(let r=0;r<piece.shape.length;r++)for(let c=0;c<piece.shape[r].length;c++){
+if(!piece.shape[r][c])continue;
+let nx=piece.x+c+ox,ny=piece.y+r+oy;
+if(nx<0||nx>=COLS||ny>=ROWS)return true;
+if(ny>=0&&board[ny][nx])return true;
+}return false;
+}
+
+function lock(piece){
+for(let r=0;r<piece.shape.length;r++)for(let c=0;c<piece.shape[r].length;c++){
+if(!piece.shape[r][c])continue;
+let ny=piece.y+r,nx=piece.x+c;
+if(ny>=0&&ny<ROWS)board[ny][nx]=piece.color;
+}
+checkIntegrity();
+}
+
+function clearFullRows(){
+let cleared=0;
+for(let r=ROWS-1;r>=0;r--){
+if(board[r].every(c=>c!==0)){board.splice(r,1);board.unshift(Array(COLS).fill(0));cleared++;r++;}
+}
+if(cleared>0)score+=cleared*50;
+updateUI();
+}
+
+function clearColorRows(color,count){
+let cleared=0;
+for(let r=ROWS-1;r>=0&&cleared<count;r--){
+if(board[r].some(c=>c===color||color==='all')){board.splice(r,1);board.unshift(Array(COLS).fill(0));cleared++;r++;}
+}
+return cleared;
+}
+
+function clearBottomRows(count){
+let cleared=0;
+for(let r=ROWS-1;r>=0&&cleared<count;r--){
+if(board[r].some(c=>c!==0)){board.splice(r,1);board.unshift(Array(COLS).fill(0));cleared++;r++;}
+}
+return cleared;
+}
+
+function addThreatRows(count){
+for(let i=0;i<count;i++){
+board.shift();
+let row=Array(COLS).fill(0).map(()=>Math.random()>0.3?pickColor():0);
+board.push(row);
+}
+checkIntegrity();
+}
+
+function checkIntegrity(){
+let filled=0,total=ROWS*COLS;
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r][c])filled++;
+integrity=Math.max(0,Math.round(100-(filled/total)*200));
+if(integrity<=0){gameOver=true;endGame();}
+updateUI();
+}
+
+function updateUI(){
+document.getElementById('scoreDisplay').textContent=score;
+document.getElementById('levelDisplay').textContent=level;
+document.getElementById('intDisplay').textContent=integrity+'%';
+document.getElementById('streakDisplay').textContent=streak;
+document.getElementById('integrityFill').style.width=integrity+'%';
+document.getElementById('integrityText').textContent='System Integrity: '+integrity+'%';
+let hs=getHighScores();
+document.getElementById('highDisplay').textContent=hs.length?hs[0].score:0;
+}
+
+function draw(){
+ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,canvas.width,canvas.height);
+// Grid lines
+ctx.strokeStyle='rgba(0,255,136,0.1)';
+for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*BLOCK);ctx.lineTo(COLS*BLOCK,r*BLOCK);ctx.stroke();}
+for(let c=0;c<=COLS;c++){ctx.beginPath();ctx.moveTo(c*BLOCK,0);ctx.lineTo(c*BLOCK,ROWS*BLOCK);ctx.stroke();}
+// Board blocks
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+if(board[r][c]){drawBlock(c,r,board[r][c]);}
+}
+// Current piece
+if(currentPiece){
+for(let r=0;r<currentPiece.shape.length;r++)for(let c=0;c<currentPiece.shape[r].length;c++){
+if(currentPiece.shape[r][c])drawBlock(currentPiece.x+c,currentPiece.y+r,currentPiece.color);
+}}
+}
+
+function drawBlock(x,y,color){
+ctx.fillStyle=COLORS[color]||'#888';
+ctx.shadowBlur=8;ctx.shadowColor=COLORS[color]||'#888';
+ctx.fillRect(x*BLOCK+1,y*BLOCK+1,BLOCK-2,BLOCK-2);
+ctx.shadowBlur=0;
+ctx.strokeStyle='rgba(255,255,255,0.3)';
+ctx.strokeRect(x*BLOCK+1,y*BLOCK+1,BLOCK-2,BLOCK-2);
+}
+
+function moveLeft(){if(currentPiece&&!collides(currentPiece,-1,0))currentPiece.x--;}
+function moveRight(){if(currentPiece&&!collides(currentPiece,1,0))currentPiece.x++;}
+function moveDown(){if(currentPiece&&!collides(currentPiece,0,1))currentPiece.y++;else lockAndNext();}
+function hardDrop(){if(!currentPiece)return;while(!collides(currentPiece,0,1))currentPiece.y++;lockAndNext();}
+
+function rotatePiece(){
+if(!currentPiece)return;
+let s=currentPiece.shape,rows=s.length,cols=s[0].length;
+let rotated=Array.from({length:cols},(_,c)=>Array.from({length:rows},(_,r)=>s[rows-1-r][c]));
+let old=currentPiece.shape;currentPiece.shape=rotated;
+if(collides(currentPiece))currentPiece.shape=old;
+}
+
+function lockAndNext(){
+lock(currentPiece);clearFullRows();
+currentPiece=newPiece();
+if(collides(currentPiece)){gameOver=true;endGame();}
+}
+
+// Question Bank - 50 questions (10 per category)
+const QUESTIONS=[
+// Hardware (10)
+{cat:'Hardware',q:'What is the primary purpose of RAM?',a:['Temporary data storage for active processes','Permanent file storage','Network routing','Power regulation'],correct:0},
+{cat:'Hardware',q:'What does a CPU primarily do?',a:['Processes instructions and calculations','Stores files permanently','Manages network traffic','Converts AC to DC'],correct:0},
+{cat:'Hardware',q:'What is the role of a PSU in a computer?',a:['Converts AC power to DC for components','Processes data','Manages memory','Controls display output'],correct:0},
+{cat:'Hardware',q:'What is the max speed of SATA III?',a:['6 Gbps','3 Gbps','1 Gbps','10 Gbps'],correct:0},
+{cat:'Hardware',q:'What does thermal paste do?',a:['Transfers heat between CPU and heatsink','Cools RAM modules','Lubricates fan bearings','Protects against ESD'],correct:0},
+{cat:'Hardware',q:'What do POST beep codes indicate?',a:['Hardware errors during startup','Software crashes','Network issues','Driver conflicts'],correct:0},
+{cat:'Hardware',q:'What prevents ESD damage to components?',a:['Anti-static wrist strap','Rubber gloves','Safety goggles','Face mask'],correct:0},
+{cat:'Hardware',q:'What advantage does NVMe have over SATA?',a:['Much faster data transfer speeds','Lower cost','Larger physical size','Better power efficiency'],correct:0},
+{cat:'Hardware',q:'What is the standard voltage for DDR4 RAM?',a:['1.2V','1.5V','1.8V','2.0V'],correct:0},
+{cat:'Hardware',q:'Which motherboard form factor is largest?',a:['ATX','Micro-ATX','Mini-ITX','Nano-ITX'],correct:0},
+// Networking (10)
+{cat:'Networking',q:'What port does SSH use by default?',a:['22','21','23','25'],correct:0},
+{cat:'Networking',q:'What does DHCP automatically assign?',a:['IP addresses to devices','Passwords to users','Files to folders','Drivers to hardware'],correct:0},
+{cat:'Networking',q:'What is the primary function of DNS?',a:['Translates domain names to IP addresses','Assigns MAC addresses','Encrypts network traffic','Manages bandwidth'],correct:0},
+{cat:'Networking',q:'What does a /24 subnet mask provide?',a:['254 usable host addresses','128 hosts','512 hosts','1024 hosts'],correct:0},
+{cat:'Networking',q:'What does an APIPA address (169.254.x.x) indicate?',a:['DHCP server unreachable','DNS failure','Firewall blocking','Cable disconnected'],correct:0},
+{cat:'Networking',q:'What speed does Cat6a support?',a:['10 Gbps','1 Gbps','100 Mbps','40 Gbps'],correct:0},
+{cat:'Networking',q:'What does NAT do on a router?',a:['Translates private IPs to public IPs','Filters malware','Assigns hostnames','Encrypts data'],correct:0},
+{cat:'Networking',q:'How many layers are in the OSI model?',a:['7','5','4','6'],correct:0},
+{cat:'Networking',q:'What port does SMB use?',a:['445','443','80','3389'],correct:0},
+{cat:'Networking',q:'What port does RDP use?',a:['3389','445','22','443'],correct:0},
+// OS/Software (10)
+{cat:'OS/Software',q:'What does the sfc /scannow command do?',a:['Scans and repairs system files','Formats a drive','Checks network connectivity','Defragments disk'],correct:0},
+{cat:'OS/Software',q:'What is a key advantage of NTFS over FAT32?',a:['Supports files larger than 4GB','Faster read speed','Works on all OS','Uses less space'],correct:0},
+{cat:'OS/Software',q:'What is Safe Mode primarily used for?',a:['Troubleshooting with minimal drivers loaded','Faster boot times','Network diagnostics','File encryption'],correct:0},
+{cat:'OS/Software',q:'What does Event Viewer display?',a:['System logs and error events','Running processes','Network connections','Installed programs'],correct:0},
+{cat:'OS/Software',q:'What keyboard shortcut opens Task Manager?',a:['Ctrl+Shift+Esc','Ctrl+Alt+F4','Alt+Tab','Win+R'],correct:0},
+{cat:'OS/Software',q:'What advantage does GPT have over MBR?',a:['Supports drives larger than 2TB','Faster boot','Better encryption','Lower power use'],correct:0},
+{cat:'OS/Software',q:'What does System Restore do?',a:['Reverts system to a previous state','Deletes all files','Reinstalls Windows','Updates drivers'],correct:0},
+{cat:'OS/Software',q:'What tool edits the Windows Registry?',a:['regedit','msconfig','devmgmt','diskpart'],correct:0},
+{cat:'OS/Software',q:'What does chkdsk do?',a:['Checks disk for errors and bad sectors','Checks network speed','Monitors CPU temp','Scans for viruses'],correct:0},
+{cat:'OS/Software',q:'Where do you change boot device order?',a:['BIOS/UEFI setup','Control Panel','Task Manager','Device Manager'],correct:0},
+// Security (10)
+{cat:'Security',q:'What is a firewall\'s primary function?',a:['Filters network traffic based on rules','Encrypts files','Manages passwords','Scans for viruses'],correct:0},
+{cat:'Security',q:'What does MFA stand for?',a:['Multi-Factor Authentication','Master File Access','Main Firewall Application','Managed Folder Archive'],correct:0},
+{cat:'Security',q:'What does BitLocker require to function?',a:['TPM chip (or USB key alternative)','GPU acceleration','SSD drive','Internet connection'],correct:0},
+{cat:'Security',q:'What is phishing?',a:['Deceptive messages to steal credentials','A type of malware','Network scanning','Password cracking'],correct:0},
+{cat:'Security',q:'What is the first response to ransomware?',a:['Disconnect from network immediately','Pay the ransom','Restart the computer','Run Windows Update'],correct:0},
+{cat:'Security',q:'What authentication does WPA3 use?',a:['SAE (Simultaneous Authentication of Equals)','PSK only','WEP keys','Open authentication'],correct:0},
+{cat:'Security',q:'What is an Evil Twin attack?',a:['Fake WiFi access point mimicking legitimate one','Dual virus infection','Two-factor bypass','Clone phishing'],correct:0},
+{cat:'Security',q:'What is social engineering?',a:['Manipulating people to reveal information','Coding malware','Network scanning','Hardware hacking'],correct:0},
+{cat:'Security',q:'What is the principle of least privilege?',a:['Users get minimum access needed for their role','Everyone gets admin access','Passwords must be complex','All ports are closed'],correct:0},
+{cat:'Security',q:'What is a VPN primarily used for?',a:['Encrypted tunnel for secure remote access','Faster internet speed','File storage','Email filtering'],correct:0},
+// Troubleshooting (10)
+{cat:'Troubleshooting',q:'What is the first step in troubleshooting?',a:['Identify the problem','Replace hardware','Reinstall OS','Update drivers'],correct:0},
+{cat:'Troubleshooting',q:'What does ipconfig /flushdns do?',a:['Clears the DNS resolver cache','Renews IP address','Resets network adapter','Disables firewall'],correct:0},
+{cat:'Troubleshooting',q:'What commonly causes a BSOD?',a:['Driver or hardware failure','Low disk space','Slow internet','Too many desktop icons'],correct:0},
+{cat:'Troubleshooting',q:'What symptom indicates a dead CMOS battery?',a:['Clock resets and BIOS settings lost on reboot','Blue screen','No display','Fan noise'],correct:0},
+{cat:'Troubleshooting',q:'When would you use bootrec /fixmbr?',a:['When Windows cannot boot due to corrupt MBR','To speed up boot','To change boot order','To repair files'],correct:0},
+{cat:'Troubleshooting',q:'What does tracert show?',a:['The route packets take to a destination','Current IP config','Open ports','DNS records'],correct:0},
+{cat:'Troubleshooting',q:'How do you perform a clean boot?',a:['Disable all non-Microsoft startup items via msconfig','Reinstall Windows','Remove all programs','Format the drive'],correct:0},
+{cat:'Troubleshooting',q:'Where do you roll back a driver?',a:['Device Manager > device properties > Driver tab','Control Panel > Programs','Task Manager','Registry Editor'],correct:0},
+{cat:'Troubleshooting',q:'Why run DISM before sfc /scannow?',a:['DISM repairs the component store sfc relies on','DISM is faster','sfc needs admin rights','They do the same thing'],correct:0},
+{cat:'Troubleshooting',q:'What does PXE boot require?',a:['Network adapter with PXE support and DHCP server','USB drive','CD-ROM','Bluetooth connection'],correct:0}
+];
+
+// Question system
+let usedQuestions=[];
+function getQuestion(){
+let available=QUESTIONS.filter((_,i)=>!usedQuestions.includes(i));
+if(!available.length){usedQuestions=[];available=QUESTIONS;}
+let idx=Math.floor(Math.random()*available.length);
+let realIdx=QUESTIONS.indexOf(available[idx]);
+usedQuestions.push(realIdx);
+return available[idx];
+}
+
+function showQuestion(){
+if(gameOver||questionActive||bsodActive)return;
+questionActive=true;paused=true;
+let q=getQuestion();
+let flash=document.getElementById('threatFlash');
+flash.style.display='block';setTimeout(()=>flash.style.display='none',800);
+let catColor=CAT_COLORS[q.cat]||'green';
+let colorHex=COLORS[catColor]||'#00ff88';
+let html=`<h3>THREAT DETECTED!</h3>
+<div id="categoryTag" style="background:${colorHex};color:#000">${q.cat}</div>
+<p>${q.q}</p>`;
+q.a.forEach((a,i)=>{
+html+=`<button class="answer-btn" onclick="answerQuestion(${i},${q.correct},'${q.cat}')">${String.fromCharCode(65+i)}) ${a}</button>`;
+});
+document.getElementById('questionBox').innerHTML=html;
+document.getElementById('questionOverlay').style.display='flex';
+playSound('question');
+}
+
+function answerQuestion(selected,correct,cat){
+document.getElementById('questionOverlay').style.display='none';
+questionActive=false;paused=false;
+if(selected===correct){
+streak++;wrongStreak=0;correctCount++;
+let catColor=CAT_COLORS[cat]||'all';
+let matchBonus=(catColor!=='all'&&catColor!=='green');
+let cleared=0;
+if(cat==='Troubleshooting'){cleared=clearBottomRows(2);}
+else if(catColor==='all'){cleared=clearColorRows('all',2);}
+else{cleared=clearColorRows(catColor,3);}
+score+=matchBonus?(150*level):(75*level);
+score+=cleared*50;
+integrity=Math.min(100,integrity+5);
+// Power-ups
+if(streak===3){clearColorRows('red',ROWS);showPowerUp('ANTIVIRUS SCAN: Red threats cleared!');}
+if(streak===5){convertThreats(5);showPowerUp('DRIVER ROLLBACK: 5 threats converted!');}
+if(streak===7){let c=clearColorRows('all',5);integrity=Math.min(100,integrity+15);score+=c*50;showPowerUp('SYSTEM RESTORE: 5 rows cleared + 15% integrity!');}
+if(correctCount%8===0){level++;dropInterval=Math.max(200,dropInterval-80);}
+playSound('correct');
+}else{
+score=Math.max(0,score-100);streak=0;wrongStreak++;
+addThreatRows(2);
+if(wrongStreak>=3){triggerBSOD();wrongStreak=0;}
+playSound('wrong');
+}
+updateUI();
+}
+
+function convertThreats(count){
+let converted=0;
+for(let r=ROWS-1;r>=0&&converted<count;r--)for(let c=0;c<COLS&&converted<count;c++){
+if(board[r][c]&&board[r][c]!=='green'){board[r][c]='green';converted++;}
+}}
+
+function triggerBSOD(){
+bsodActive=true;paused=true;
+document.getElementById('bsodOverlay').style.display='flex';
+setTimeout(()=>{document.getElementById('bsodOverlay').style.display='none';addThreatRows(3);bsodActive=false;paused=false;updateUI();},3000);
+}
+
+function showPowerUp(msg){
+let flash=document.getElementById('threatFlash');
+flash.textContent=msg;flash.style.color='#00ff88';flash.style.display='block';
+setTimeout(()=>{flash.style.display='none';flash.textContent='THREAT DETECTED!';flash.style.color='#ff4444';},1500);
+}
+
+// Game loop
+function gameLoop(time){
+if(gameOver)return;
+requestAnimationFrame(gameLoop);
+if(paused){draw();return;}
+let delta=time-lastTime;lastTime=time;
+dropTimer+=delta;questionTimer+=delta;
+if(dropTimer>dropInterval){dropTimer=0;
+if(currentPiece&&!collides(currentPiece,0,1))currentPiece.y++;
+else if(currentPiece)lockAndNext();
+}
+if(questionTimer>questionInterval){questionTimer=0;showQuestion();}
+draw();
+}
+
+function startGame(){
+board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+score=0;level=1;integrity=100;streak=0;wrongStreak=0;correctCount=0;
+gameOver=false;paused=false;bsodActive=false;questionActive=false;
+dropInterval=800;dropTimer=0;questionTimer=0;usedQuestions=[];
+currentPiece=newPiece();lastTime=performance.now();
+updateUI();requestAnimationFrame(gameLoop);
+}
+
+function endGame(){
+saveHighScore(score);
+let msg=`SYSTEM COMPROMISED!\n\nFinal Score: ${score}\nLevel: ${level}\nIntegrity: ${integrity}%\n\nPress OK to restart.`;
+setTimeout(()=>{alert(msg);startGame();},100);
+}
+
+function togglePause(){if(!questionActive&&!bsodActive)paused=!paused;}
+function toggleMute(){muted=!muted;}
+
+// High scores
+function getHighScores(){return JSON.parse(localStorage.getItem('terminalTakedownScores')||'[]');}
+function saveHighScore(s){let scores=getHighScores();scores.push({score:s,level:level,date:new Date().toLocaleDateString()});scores.sort((a,b)=>b.score-a.score);scores=scores.slice(0,10);localStorage.setItem('terminalTakedownScores',JSON.stringify(scores));}
+function showHighScores(){
+let scores=getHighScores();
+let html='';scores.forEach((s,i)=>{html+=`<li style="color:${i===0?'#ffaa00':i<3?'#4488ff':'#ccc'}">${s.score} pts - Lv${s.level} (${s.date})</li>`;});
+if(!html)html='<li style="color:#888">No scores yet</li>';
+document.getElementById('scoreList').innerHTML=html;
+document.getElementById('highScoreModal').style.display='flex';
+}
+function closeHighScores(){document.getElementById('highScoreModal').style.display='none';}
+
+// Sound effects (Web Audio API)
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
+function playSound(type){
+if(muted)return;initAudio();
+let osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+osc.connect(gain);gain.connect(audioCtx.destination);
+gain.gain.value=0.1;
+if(type==='correct'){osc.frequency.value=600;osc.type='sine';gain.gain.setValueAtTime(0.1,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.3);osc.start();osc.stop(audioCtx.currentTime+0.3);}
+else if(type==='wrong'){osc.frequency.value=200;osc.type='sawtooth';gain.gain.setValueAtTime(0.1,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.4);osc.start();osc.stop(audioCtx.currentTime+0.4);}
+else if(type==='question'){osc.frequency.value=440;osc.type='square';gain.gain.setValueAtTime(0.05,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.2);osc.start();osc.stop(audioCtx.currentTime+0.2);}
+}
+
+// Music loader
+try{let s=document.createElement('script');s.src='../js/music/Terminal-Takedown-music.js';s.onload=()=>{musicLoaded=true;};document.head.appendChild(s);}catch(e){}
+
+// Keyboard controls
+document.addEventListener('keydown',e=>{
+if(gameOver||paused)return;
+if(e.key==='ArrowLeft')moveLeft();
+else if(e.key==='ArrowRight')moveRight();
+else if(e.key==='ArrowDown')moveDown();
+else if(e.key==='ArrowUp')rotatePiece();
+else if(e.key===' ')hardDrop();
+// Admin mode detection
+adminBuffer+=e.key;if(adminBuffer.length>20)adminBuffer=adminBuffer.slice(-20);
+if(adminBuffer.includes('IamTesting')){adminMode=true;document.getElementById('adminPanel').style.display='block';adminBuffer='';}
+});
+
+// Admin functions
+function adminClear(){board=Array.from({length:ROWS},()=>Array(COLS).fill(0));updateUI();}
+function adminAddRow(){addThreatRows(1);updateUI();}
+function adminFullIntegrity(){integrity=100;updateUI();}
+function adminLevelUp(){level++;dropInterval=Math.max(200,dropInterval-80);updateUI();}
+function adminTriggerQ(){showQuestion();}
+
+// Start
+startGame();
+</script>
+</body>
+</html>
