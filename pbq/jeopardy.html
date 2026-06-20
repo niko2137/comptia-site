@@ -408,6 +408,7 @@ function buildBoard(){
   let headerHtml=`<header class="header">
     <div class="title-bar"><h1>CompTIA A+ Jeopardy</h1></div>
     <div class="header-controls">
+      <a class="btn" href="../index.html" title="Return to Hub" style="text-decoration:none;">←</a>
       <button class="btn" id="soundBtn" title="Toggle Sound" onclick="toggleSound()">🔊</button>
       <button class="btn" id="newGameBtn" title="New Game" onclick="newGame()">↻</button>
     </div>
@@ -856,6 +857,13 @@ function adminRemovePlayer(){
   buildBoard();
   renderAdmin();
 }
+
+// ===== MUSIC LOADER =====
+(function(){
+  const s=document.createElement('script');s.src='../js/music/Jeopardy-music.js';
+  s.onload=()=>{if(typeof song!=='undefined'&&window.CPlayer){try{const p=new CPlayer();p.init(song);p.generate();let c=setInterval(()=>{if(p.generate()>=1){clearInterval(c);const w=p.createWave();const a=document.createElement('audio');a.src=URL.createObjectURL(new Blob([w],{type:'audio/wav'}));a.loop=true;a.volume=0.25;window._jeopMusic=a;}},100);}catch(e){}}};
+  s.onerror=()=>{};document.head.appendChild(s);
+})();
 
 // ===== INIT =====
 showStartScreen();

@@ -2,1398 +2,574 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSI Layer Climb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>OSI Layer Climb - CompTIA A+ Study Game</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    background: #0a0a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: 'Courier New', monospace;
-    overflow: hidden;
-}
-#gameContainer {
-    position: relative;
-    width: 800px;
-    height: 600px;
-}
-canvas {
-    display: block;
-    border: 2px solid #00f0ff;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
-    border-radius: 4px;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a1a;overflow:hidden;font-family:'Courier New',monospace;display:flex;height:100vh;width:100vw;color:#fff;}
+#game-area{flex:1;display:flex;overflow:hidden;}
+#climb-view{flex:1;position:relative;min-width:0;}
+#climb-view canvas{display:block;width:100%;height:100%;}
+#question-view{width:42%;min-width:320px;background:#0d0d2a;border-left:2px solid #00ffaa33;display:flex;flex-direction:column;padding:20px;overflow-y:auto;}
 </style>
 </head>
 <body>
-<div id="gameContainer">
-<canvas id="gameCanvas" width="800" height="600"></canvas>
+<div id="game-area">
+    <div id="climb-view"><canvas id="gameCanvas"></canvas></div>
+    <div id="question-view">
+        <div id="q-header" style="text-align:center;margin-bottom:15px;">
+            <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:2px;">Current Layer</div>
+            <div id="q-layer" style="font-size:22px;font-weight:bold;color:#00ffaa;margin-top:4px;">—</div>
+        </div>
+        <div id="q-box" style="background:#1a1a3a;border:1px solid #333;border-radius:10px;padding:18px;margin-bottom:15px;min-height:80px;">
+            <div id="q-text" style="font-size:14px;line-height:1.6;color:#eee;">Press START to begin climbing!</div>
+        </div>
+        <div id="q-answers" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div id="q-feedback" style="text-align:center;margin-top:12px;font-size:13px;min-height:20px;"></div>
+    </div>
 </div>
+
+<div id="side-panel" style="width:200px;min-width:200px;background:linear-gradient(180deg,#0d0d2a,#1a1a3a);border-left:2px solid #00ffaa33;padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;">
+    <div style="text-align:center;font-size:12px;font-weight:bold;color:#00ffaa;text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1px solid #00ffaa44;">OSI Climb</div>
+    <div class="sr"><span class="sl">Score</span><span class="sv" id="p-score">0</span></div>
+    <div class="sr"><span class="sl">Level</span><span class="sv lv" id="p-level">1</span></div>
+    <div class="sr"><span class="sl">Lives</span><span class="sv li" id="p-lives">5</span></div>
+    <div class="sr"><span class="sl">Layer</span><span class="sv la" id="p-layer">1/7</span></div>
+    <div class="sr"><span class="sl">Streak</span><span class="sv st" id="p-streak">0</span></div>
+    <div class="sr"><span class="sl">Time</span><span class="sv ti" id="p-time">0:00</span></div>
+    <div class="sr"><span class="sl">Difficulty</span><span class="sv di" id="p-diff">Medium</span></div>
+    <div id="hs-box" style="margin-top:8px;padding:6px;background:#0a0a1a;border:1px solid #fa033;border-radius:6px;">
+        <h4 style="font-size:10px;color:#fa0;text-align:center;margin-bottom:4px;">HIGH SCORES</h4>
+        <div id="hs-list" style="font-size:9px;color:#888;"></div>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;">
+        <button onclick="togglePause()" id="btn-pause" class="pb pause">⏸ PAUSE</button>
+        <button onclick="toggleMute()" id="btn-mute" class="pb mute">🔊 MUTE</button>
+        <a href="../index.html" class="pb ret">← RETURN</a>
+    </div>
+</div>
+<style>
+.sr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #fff1;}
+.sl{font-size:10px;color:#888;text-transform:uppercase;}
+.sv{font-size:14px;font-weight:bold;color:#0fa;}
+.lv{color:#aaf;}.li{color:#f44;}.la{color:#0f8;}.st{color:#fa0;}.ti{color:#0cf;}.di{color:#f8f;}
+.pb{display:block;width:100%;padding:8px;border:1px solid #00ffaa44;background:#00ffaa11;color:#00ffaa;font-family:monospace;font-size:11px;font-weight:bold;text-align:center;cursor:pointer;border-radius:5px;text-decoration:none;transition:all 0.2s;}
+.pb:hover{background:#00ffaa33;}
+.pb.pause{border-color:#fa044;background:#fa011;color:#fa0;}
+.pb.mute{border-color:#f4f44;background:#f4f11;color:#f4f;}
+.pb.ret{border-color:#f4444;background:#f4411;color:#f44;}
+.ans-btn{display:block;width:100%;padding:14px 16px;background:#1a1a3a;border:1.5px solid #333355;border-radius:8px;color:#ddd;font-family:monospace;font-size:13px;text-align:left;cursor:pointer;transition:all 0.2s;}
+.ans-btn:hover{background:#00ccff11;border-color:#00ccff;}
+.ans-btn.correct{background:#00442244;border-color:#00ff88;color:#00ff88;}
+.ans-btn.wrong{background:#440000;border-color:#ff4444;color:#ff4444;}
+.ans-btn.reveal{border-color:#00ff8866;color:#00ff88aa;}
+@media(max-width:900px){
+    body{flex-direction:column;}
+    #game-area{flex-direction:column;height:auto;flex:1;}
+    #climb-view{height:35vh;min-height:200px;}
+    #question-view{width:100%;min-width:unset;border-left:none;border-top:2px solid #00ffaa33;flex:1;padding:12px;}
+    #side-panel{width:100%!important;min-width:unset!important;flex-direction:row;flex-wrap:wrap;padding:6px;gap:4px;border-left:none;border-top:2px solid #00ffaa33;max-height:90px;}
+    #side-panel>div:first-child{display:none;}
+    .sr{flex:1;min-width:60px;border-bottom:none;text-align:center;flex-direction:column;}
+    #hs-box{display:none;}
+    #side-panel>div:last-child{flex-direction:row;margin-top:0;width:100%;}
+    #side-panel>div:last-child>*{flex:1;padding:5px;font-size:10px!important;}
+}
+</style>
+
 <script>
+// ============================================================
+// OSI LAYER CLIMB - Complete Remake
+// LARGER interface, animation LEFT, questions RIGHT
+// 5 lives, difficulty selection, no overlapping text
+// ============================================================
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const W = 800, H = 600;
+function resizeCanvas(){const v=document.getElementById('climb-view');canvas.width=v.clientWidth;canvas.height=v.clientHeight;}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
 
-// Game State
-let gameState = 'start'; // start, playing, gameover, victory
-let score = 0;
-let currentZone = 0; // 0-based (0=zone1, 6=zone7)
-let wrongAnswers = 0;
-let totalAnswered = 0;
-let correctAnswered = 0;
-let highestZone = 0;
-let muted = false;
-let animTime = 0;
-let shakeTimer = 0;
-let shakeIntensity = 0;
+// AUDIO
+class SFX{
+    constructor(){this.ctx=null;this.on=false;this.muted=false;}
+    init(){if(this.on)return;try{this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.on=true;}catch(e){}}
+    p(f,t,d,fe){if(!this.on||this.muted)return;const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);o.type=t;o.frequency.setValueAtTime(f,this.ctx.currentTime);if(fe)o.frequency.exponentialRampToValueAtTime(fe,this.ctx.currentTime+d);g.gain.setValueAtTime(0.2,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,this.ctx.currentTime+d);o.start();o.stop(this.ctx.currentTime+d);}
+    correct(){this.p(440,'sine',0.15,880);setTimeout(()=>this.p(660,'sine',0.12,1320),80);}
+    wrong(){this.p(300,'sawtooth',0.3,80);}
+    climb(){this.p(300,'triangle',0.15,700);}
+    fall(){this.p(500,'sawtooth',0.3,100);}
+    victory(){[523,659,784,1047,1318].forEach((f,i)=>setTimeout(()=>this.p(f,'sine',0.15),i*100));}
+    gameOver(){[400,300,200,100].forEach((f,i)=>setTimeout(()=>this.p(f,'sawtooth',0.2),i*120));}
+}
+const sfx=new SFX();
 
-// Hiker state
-let hikerY = 0;
-let hikerTargetY = 0;
-let hikerAnimState = 'idle'; // idle, climbing, slipping, falling
-let hikerAnimFrame = 0;
-let hikerAnimTimer = 0;
-let hikerRotation = 0;
-let fallTimer = 0;
-
-// Particles
-let particles = [];
-
-// Floating text
-let floatingTexts = [];
-
-// Clouds
-let clouds = [];
-for (let i = 0; i < 6; i++) {
-    clouds.push({ x: Math.random() * W, y: 30 + Math.random() * 100, w: 60 + Math.random() * 80, speed: 0.2 + Math.random() * 0.3 });
+// MUSIC
+function loadMusic(){
+    const s=document.createElement('script');s.src='../js/music/OSI-Layer-Climb-music.js';
+    s.onload=()=>{if(typeof song!=='undefined'&&window.CPlayer&&sfx.ctx){try{const p=new CPlayer();p.init(song);p.generate();let c=setInterval(()=>{if(p.generate()>=1){clearInterval(c);const w=p.createWave();const a=document.createElement('audio');a.src=URL.createObjectURL(new Blob([w],{type:'audio/wav'}));a.loop=true;a.volume=0.3;if(!sfx.muted)a.play().catch(()=>{});window._music=a;}},100);}catch(e){}}};
+    s.onerror=()=>{};document.head.appendChild(s);
 }
 
-// Question state
-let showQuestion = false;
-let currentQuestion = null;
-let questionOptions = [];
-let questionBtnBounds = [];
-let selectedAnswer = -1;
-let questionFeedback = '';
-let feedbackTimer = 0;
+// OSI LAYERS
+const OSI_LAYERS=[
+    {num:1,name:'Physical',color:'#ff4444',desc:'Bits, cables, signals'},
+    {num:2,name:'Data Link',color:'#ff8800',desc:'Frames, MAC addresses, switches'},
+    {num:3,name:'Network',color:'#ffcc00',desc:'Packets, IP addresses, routers'},
+    {num:4,name:'Transport',color:'#44ff44',desc:'Segments, TCP/UDP, ports'},
+    {num:5,name:'Session',color:'#00ccff',desc:'Sessions, authentication'},
+    {num:6,name:'Presentation',color:'#4488ff',desc:'Encryption, compression, format'},
+    {num:7,name:'Application',color:'#aa44ff',desc:'HTTP, FTP, SMTP, DNS'}
+];
 
-// Audio context
-let audioCtx = null;
-function initAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+// QUESTIONS BY LAYER (Easy/Medium/Hard variants)
+const QUESTIONS={
+1:[ // Physical
+{q:"What unit of data operates at the Physical layer?",a:["Bits","Frames","Packets","Segments"],c:0,d:'e'},
+{q:"Which device operates at Layer 1?",a:["Hub","Switch","Router","Firewall"],c:0,d:'e'},
+{q:"Cat 6a cable supports up to what speed?",a:["10 Gbps","1 Gbps","100 Mbps","40 Gbps"],c:0,d:'m'},
+{q:"What topology has all devices on one cable?",a:["Bus","Star","Ring","Mesh"],c:0,d:'m'},
+{q:"Which connector is used for fiber optic?",a:["SC/LC","RJ-45","RJ-11","BNC"],c:0,d:'h'},
+{q:"T568B pin 1-2 pair is what color?",a:["Orange","Green","Blue","Brown"],c:0,d:'h'},
+{q:"What does NIC stand for?",a:["Network Interface Card","Network Internal Card","Net Input Controller","None of these"],c:0,d:'e'},
+{q:"Single-mode fiber uses what light source?",a:["Laser","LED","Halogen","Infrared"],c:0,d:'h'},
+],
+2:[ // Data Link
+{q:"What addressing is used at Layer 2?",a:["MAC address","IP address","Port number","URL"],c:0,d:'e'},
+{q:"Which device operates primarily at Layer 2?",a:["Switch","Router","Hub","Modem"],c:0,d:'e'},
+{q:"What PDU is used at the Data Link layer?",a:["Frame","Packet","Segment","Bit"],c:0,d:'m'},
+{q:"ARP resolves what to what?",a:["IP to MAC","MAC to IP","DNS to IP","Port to IP"],c:0,d:'m'},
+{q:"What sublayer handles media access control?",a:["MAC","LLC","NIC","PHY"],c:0,d:'h'},
+{q:"802.1Q is used for what?",a:["VLAN tagging","Wireless","Encryption","Routing"],c:0,d:'h'},
+{q:"A MAC address is how many bits?",a:["48","32","64","128"],c:0,d:'m'},
+],
+3:[ // Network
+{q:"What device operates at Layer 3?",a:["Router","Switch","Hub","Access Point"],c:0,d:'e'},
+{q:"What PDU is used at the Network layer?",a:["Packet","Frame","Segment","Datagram"],c:0,d:'e'},
+{q:"IPv4 addresses are how many bits?",a:["32","48","64","128"],c:0,d:'m'},
+{q:"What protocol finds the best path?",a:["OSPF","HTTP","FTP","SMTP"],c:0,d:'m'},
+{q:"CIDR notation /24 means what subnet mask?",a:["255.255.255.0","255.255.0.0","255.0.0.0","255.255.255.128"],c:0,d:'h'},
+{q:"What is the loopback address?",a:["127.0.0.1","192.168.1.1","10.0.0.1","0.0.0.0"],c:0,d:'e'},
+{q:"TTL prevents what?",a:["Infinite loops","Hacking","Data loss","Slow speeds"],c:0,d:'m'},
+],
+4:[ // Transport
+{q:"TCP operates at which layer?",a:["Transport","Network","Session","Application"],c:0,d:'e'},
+{q:"What is TCP's 3-way handshake?",a:["SYN, SYN-ACK, ACK","GET, POST, PUT","Open, Send, Close","None of these"],c:0,d:'m'},
+{q:"UDP is connectionless. What does that mean?",a:["No guaranteed delivery","No data sent","No port numbers","No speed"],c:0,d:'e'},
+{q:"What port range is 'well-known'?",a:["0-1023","1024-49151","49152-65535","0-255"],c:0,d:'m'},
+{q:"Which is faster but unreliable?",a:["UDP","TCP","ICMP","ARP"],c:0,d:'e'},
+{q:"Port 443 is used by?",a:["HTTPS","HTTP","FTP","SSH"],c:0,d:'h'},
+{q:"What does TCP use to ensure order?",a:["Sequence numbers","MAC addresses","TTL","Checksums only"],c:0,d:'h'},
+],
+5:[ // Session
+{q:"Layer 5 manages what?",a:["Sessions between apps","Physical cables","IP routing","Data encryption"],c:0,d:'e'},
+{q:"Which protocol uses sessions?",a:["NetBIOS","IP","Ethernet","Wi-Fi"],c:0,d:'m'},
+{q:"Session layer handles?",a:["Dialog control","Bit transmission","Routing","Compression"],c:0,d:'m'},
+{q:"RPC operates at which layer?",a:["Session","Transport","Network","Physical"],c:0,d:'h'},
+{q:"What maintains a session state?",a:["Session ID/tokens","MAC address","IP address","Port number"],c:0,d:'h'},
+{q:"Full-duplex communication means?",a:["Both directions simultaneously","One direction only","Alternating directions","No communication"],c:0,d:'e'},
+],
+6:[ // Presentation
+{q:"Layer 6 handles what?",a:["Data formatting/encryption","Routing","Sessions","Physical signals"],c:0,d:'e'},
+{q:"SSL/TLS encryption works at which layer?",a:["Presentation","Transport","Application","Network"],c:0,d:'m'},
+{q:"Which is a data format handled at Layer 6?",a:["JPEG, ASCII, MPEG","IP, TCP","MAC, LLC","SYN, ACK"],c:0,d:'m'},
+{q:"Data compression occurs at layer?",a:["Presentation","Physical","Network","Transport"],c:0,d:'e'},
+{q:"Character encoding (ASCII/Unicode) is at?",a:["Presentation","Application","Session","Transport"],c:0,d:'h'},
+{q:"What does serialization do at this layer?",a:["Converts objects to transmittable format","Routes packets","Creates sessions","Manages ports"],c:0,d:'h'},
+],
+7:[ // Application
+{q:"HTTP operates at which OSI layer?",a:["Application","Presentation","Transport","Session"],c:0,d:'e'},
+{q:"Which port does DNS use?",a:["53","80","443","22"],c:0,d:'m'},
+{q:"SMTP is used for?",a:["Sending email","Web browsing","File transfer","Remote login"],c:0,d:'e'},
+{q:"What port does SSH use?",a:["22","23","25","21"],c:0,d:'m'},
+{q:"SNMP is used for?",a:["Network management","Email","Web","File sharing"],c:0,d:'h'},
+{q:"FTP uses which two ports?",a:["20 and 21","22 and 23","80 and 443","25 and 110"],c:0,d:'h'},
+{q:"Which protocol resolves names to IPs?",a:["DNS","DHCP","ARP","RARP"],c:0,d:'e'},
+]
+};
+
+
+// GAME STATE
+const ST={START:0,PLAYING:1,GAMEOVER:2,PAUSED:3,VICTORY:4};
+let state=ST.START;
+let score=0,lives=5,currentLayer=1,streak=0,maxStreak=0,level=1;
+let difficulty='medium'; // easy, medium, hard
+let startTS=0,totalCorrect=0,totalQ=0;
+let climberY=0,targetClimberY=0; // animation position
+let particles=[],shakeAmt=0;
+let adminMode=false,adminBuf='',adminVisible=false;
+let highScores=[],currentQuestion=null,answered=false;
+let muted=false;
+
+// Climber animation
+let climberBob=0,climberGlow=0;
+
+function getLayerY(layerNum){
+    // Layer 1 at bottom, layer 7 at top
+    const margin=50;
+    const usableH=canvas.height-margin*2;
+    return canvas.height-margin-((layerNum-1)/6)*usableH;
+}
+
+// PARTICLE
+class P{
+    constructor(x,y,c){this.x=x;this.y=y;this.c=c;this.vx=(Math.random()-0.5)*5;this.vy=(Math.random()-0.5)*5-2;this.life=1;this.size=3+Math.random()*3;}
+    update(){this.x+=this.vx;this.y+=this.vy;this.vy+=0.1;this.life-=0.025;}
+    draw(){if(this.life<=0)return;ctx.save();ctx.globalAlpha=this.life;ctx.fillStyle=this.c;ctx.shadowColor=this.c;ctx.shadowBlur=4;ctx.fillRect(this.x-this.size/2,this.y-this.size/2,this.size,this.size);ctx.restore();}
+}
+function burst(x,y,c,n){for(let i=0;i<n;i++)particles.push(new P(x,y,c));}
+
+// HIGH SCORES
+function loadHS(){try{highScores=JSON.parse(localStorage.getItem('osiClimb2')||'[]');}catch(e){highScores=[];}}
+function saveHS(){try{localStorage.setItem('osiClimb2',JSON.stringify(highScores));}catch(e){}}
+function addHS(name){highScores.push({name:name||'AAA',score,layer:currentLayer,date:new Date().toLocaleDateString()});highScores.sort((a,b)=>b.score-a.score);highScores=highScores.slice(0,10);saveHS();}
+function renderHS(){loadHS();const el=document.getElementById('hs-list');if(!el)return;el.innerHTML=highScores.slice(0,4).map((s,i)=>`<div style="display:flex;justify-content:space-between;padding:1px 0;"><span style="color:#ccc">${i+1}.${s.name}</span><span style="color:#fa0">${s.score}</span></div>`).join('')||'<div style="color:#555">None yet</div>';}
+
+function togglePause(){
+    if(state===ST.PLAYING){state=ST.PAUSED;document.getElementById('btn-pause').textContent='▶ RESUME';}
+    else if(state===ST.PAUSED){state=ST.PLAYING;document.getElementById('btn-pause').textContent='⏸ PAUSE';}
+}
+function toggleMute(){muted=!muted;sfx.muted=muted;document.getElementById('btn-mute').textContent=muted?'🔇 UNMUTE':'🔊 MUTE';if(window._music){if(muted)window._music.pause();else window._music.play().catch(()=>{});}}
+
+function updatePanel(){
+    document.getElementById('p-score').textContent=score;
+    document.getElementById('p-level').textContent=level;
+    document.getElementById('p-lives').textContent='❤'.repeat(Math.max(0,lives));
+    document.getElementById('p-layer').textContent=`${currentLayer}/7`;
+    document.getElementById('p-streak').textContent=streak;
+    document.getElementById('p-diff').textContent=difficulty.charAt(0).toUpperCase()+difficulty.slice(1);
+    const el=Math.floor((Date.now()-startTS)/1000);
+    document.getElementById('p-time').textContent=`${Math.floor(el/60)}:${(el%60).toString().padStart(2,'0')}`;
+    renderHS();
 }
 
 
-// Sound functions
-function playCorrectSound() {
-    if (muted || !audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.type = 'sine';
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-    osc.frequency.setValueAtTime(660, audioCtx.currentTime + 0.1);
-    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.2);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+// GAME LOGIC
+function startGame(){
+    sfx.init();loadMusic();
+    state=ST.PLAYING;score=0;lives=5;currentLayer=1;streak=0;maxStreak=0;level=1;
+    totalCorrect=0;totalQ=0;startTS=Date.now();
+    climberY=getLayerY(1);targetClimberY=climberY;
+    particles=[];answered=false;adminBuf='';
+    askQuestion();updatePanel();
 }
 
-function playWrongSound() {
-    if (muted || !audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.type = 'sawtooth';
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-    osc.frequency.linearRampToValueAtTime(150, audioCtx.currentTime + 0.3);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+function getFilteredQuestions(layer){
+    const qs=QUESTIONS[layer]||[];
+    if(difficulty==='easy') return qs.filter(q=>q.d==='e'||q.d==='m');
+    if(difficulty==='hard') return qs.filter(q=>q.d==='m'||q.d==='h');
+    return qs; // medium = all
 }
 
-function playRopeSnap() {
-    if (muted || !audioCtx) return;
-    const bufferSize = audioCtx.sampleRate * 0.3;
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
-    const source = audioCtx.createBufferSource();
-    const gain = audioCtx.createGain();
-    source.buffer = buffer;
-    source.connect(gain); gain.connect(audioCtx.destination);
-    gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-    source.start();
-}
-
-function playVictoryFanfare() {
-    if (muted || !audioCtx) return;
-    const notes = [523, 659, 784, 1047, 1319];
-    notes.forEach((freq, i) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime + i * 0.15);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
-        osc.start(audioCtx.currentTime + i * 0.15);
-        osc.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+function askQuestion(){
+    const pool=getFilteredQuestions(currentLayer);
+    if(pool.length===0)return;
+    currentQuestion=pool[Math.floor(Math.random()*pool.length)];
+    answered=false;
+    
+    // Update question UI
+    const layer=OSI_LAYERS[currentLayer-1];
+    document.getElementById('q-layer').textContent=`Layer ${layer.num}: ${layer.name}`;
+    document.getElementById('q-layer').style.color=layer.color;
+    document.getElementById('q-text').textContent=currentQuestion.q;
+    document.getElementById('q-feedback').textContent='';
+    
+    // Render answer buttons
+    const container=document.getElementById('q-answers');
+    container.innerHTML='';
+    currentQuestion.a.forEach((ans,i)=>{
+        const btn=document.createElement('button');
+        btn.className='ans-btn';
+        btn.textContent=`${i+1}. ${ans}`;
+        btn.onclick=()=>answerQ(i);
+        container.appendChild(btn);
     });
 }
 
-
-// Zone definitions
-const zones = [
-    { name: 'Physical Layer', layer: 1, color: '#5c4033', lightColor: '#8b6b55' },
-    { name: 'Data Link Layer', layer: 2, color: '#2d5a27', lightColor: '#4a8a42' },
-    { name: 'Network Layer', layer: 3, color: '#8b6b4a', lightColor: '#b89070' },
-    { name: 'Transport Layer', layer: 4, color: '#6b7b8f', lightColor: '#8fa0b5' },
-    { name: 'Session Layer', layer: 5, color: '#2d8a4e', lightColor: '#4ab870' },
-    { name: 'Presentation Layer', layer: 6, color: '#a8d5ff', lightColor: '#cce8ff' },
-    { name: 'Application Layer', layer: 7, color: '#ff8c00', lightColor: '#ffb347' }
-];
-
-// Questions database
-const questions = [
-    [ // Zone 1 - Physical
-        { q: "What layer deals with raw bits over a physical medium?", a: "Physical (Layer 1)", opts: ["Physical (Layer 1)", "Data Link (Layer 2)", "Network (Layer 3)", "Transport (Layer 4)"] },
-        { q: "Which device operates at Layer 1 only?", a: "Hub", opts: ["Hub", "Switch", "Router", "Firewall"] },
-        { q: "Cat 6a cable operates at which layer?", a: "Physical", opts: ["Physical", "Data Link", "Network", "Application"] },
-        { q: "What does Layer 1 NOT handle?", a: "Logical addressing", opts: ["Logical addressing", "Voltage levels", "Cable types", "Signal encoding"] },
-        { q: "Which is a Layer 1 specification?", a: "Voltage levels and cable types", opts: ["Voltage levels and cable types", "MAC addressing", "IP routing", "Port numbers"] }
-    ],
-    [ // Zone 2 - Data Link
-        { q: "What addressing does Layer 2 use?", a: "MAC addresses", opts: ["MAC addresses", "IP addresses", "Port numbers", "URLs"] },
-        { q: "Which device operates primarily at Layer 2?", a: "Switch", opts: ["Switch", "Router", "Hub", "Modem"] },
-        { q: "What is the Layer 2 data unit called?", a: "Frame", opts: ["Frame", "Packet", "Segment", "Bit"] },
-        { q: "802.11 (Wi-Fi) operates at which layer?", a: "Data Link (Layer 2)", opts: ["Data Link (Layer 2)", "Physical (Layer 1)", "Network (Layer 3)", "Session (Layer 5)"] },
-        { q: "ARP resolves IP to what?", a: "MAC address", opts: ["MAC address", "Port number", "Domain name", "Subnet mask"] }
-    ],
-    [ // Zone 3 - Network
-        { q: "What layer handles logical addressing and routing?", a: "Network (Layer 3)", opts: ["Network (Layer 3)", "Transport (Layer 4)", "Data Link (Layer 2)", "Session (Layer 5)"] },
-        { q: "Which device operates at Layer 3?", a: "Router", opts: ["Router", "Switch", "Hub", "Access Point"] },
-        { q: "What is the Layer 3 data unit called?", a: "Packet", opts: ["Packet", "Frame", "Segment", "Datagram"] },
-        { q: "IP (Internet Protocol) operates at which layer?", a: "Network", opts: ["Network", "Transport", "Data Link", "Application"] },
-        { q: "ICMP (ping) operates at which layer?", a: "Network (Layer 3)", opts: ["Network (Layer 3)", "Transport (Layer 4)", "Application (Layer 7)", "Data Link (Layer 2)"] }
-    ],
-    [ // Zone 4 - Transport
-        { q: "TCP and UDP operate at which layer?", a: "Transport (Layer 4)", opts: ["Transport (Layer 4)", "Network (Layer 3)", "Session (Layer 5)", "Application (Layer 7)"] },
-        { q: "What does Layer 4 use to identify applications?", a: "Port numbers", opts: ["Port numbers", "MAC addresses", "IP addresses", "Domain names"] },
-        { q: "What is the Layer 4 data unit called?", a: "Segment", opts: ["Segment", "Packet", "Frame", "Bit"] },
-        { q: "Which protocol guarantees delivery?", a: "TCP", opts: ["TCP", "UDP", "ICMP", "ARP"] },
-        { q: "Flow control and error recovery happen at?", a: "Transport layer", opts: ["Transport layer", "Network layer", "Data Link layer", "Physical layer"] }
-    ],
-    [ // Zone 5 - Session
-        { q: "What layer manages sessions between applications?", a: "Session (Layer 5)", opts: ["Session (Layer 5)", "Transport (Layer 4)", "Presentation (Layer 6)", "Application (Layer 7)"] },
-        { q: "NetBIOS operates at which layer?", a: "Session", opts: ["Session", "Network", "Transport", "Application"] },
-        { q: "What layer establishes, maintains, and terminates connections?", a: "Session", opts: ["Session", "Transport", "Network", "Application"] },
-        { q: "RPC (Remote Procedure Call) operates at?", a: "Session layer", opts: ["Session layer", "Application layer", "Transport layer", "Network layer"] },
-        { q: "Session layer handles?", a: "Dialog control between systems", opts: ["Dialog control between systems", "Data encryption", "Routing packets", "Error correction"] }
-    ],
-    [ // Zone 6 - Presentation
-        { q: "What layer handles data formatting and encryption?", a: "Presentation (Layer 6)", opts: ["Presentation (Layer 6)", "Application (Layer 7)", "Session (Layer 5)", "Transport (Layer 4)"] },
-        { q: "SSL/TLS encryption operates at which layer?", a: "Presentation", opts: ["Presentation", "Application", "Transport", "Session"] },
-        { q: "Data compression happens at?", a: "Presentation layer", opts: ["Presentation layer", "Application layer", "Session layer", "Transport layer"] },
-        { q: "JPEG and ASCII are examples of which layer?", a: "Presentation", opts: ["Presentation", "Application", "Session", "Physical"] },
-        { q: "Character encoding conversion occurs at?", a: "Presentation (Layer 6)", opts: ["Presentation (Layer 6)", "Application (Layer 7)", "Session (Layer 5)", "Data Link (Layer 2)"] }
-    ],
-    [ // Zone 7 - Application
-        { q: "HTTP, FTP, and SMTP operate at?", a: "Application (Layer 7)", opts: ["Application (Layer 7)", "Presentation (Layer 6)", "Session (Layer 5)", "Transport (Layer 4)"] },
-        { q: "What layer provides services directly to user applications?", a: "Application", opts: ["Application", "Presentation", "Session", "Transport"] },
-        { q: "DNS operates at which layer?", a: "Application", opts: ["Application", "Network", "Transport", "Session"] },
-        { q: "DHCP operates at which layer?", a: "Application (Layer 7)", opts: ["Application (Layer 7)", "Network (Layer 3)", "Transport (Layer 4)", "Data Link (Layer 2)"] },
-        { q: "What's the highest layer in the OSI model?", a: "Application (Layer 7)", opts: ["Application (Layer 7)", "Presentation (Layer 6)", "Session (Layer 5)", "Physical (Layer 1)"] }
-    ]
-];
-
-// Shuffle array helper
-function shuffle(arr) {
-    let a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-
-// Get zone Y position (top of zone)
-function getZoneY(zone) {
-    const zoneHeight = H / 7;
-    return H - (zone + 1) * zoneHeight;
-}
-
-// Get hiker Y for a zone
-function getHikerY(zone) {
-    const zoneHeight = H / 7;
-    return H - (zone + 1) * zoneHeight + zoneHeight / 2 - 48;
-}
-
-// Initialize game
-function initGame() {
-    score = 0;
-    currentZone = 0;
-    wrongAnswers = 0;
-    totalAnswered = 0;
-    correctAnswered = 0;
-    highestZone = 0;
-    hikerY = getHikerY(0);
-    hikerTargetY = hikerY;
-    hikerAnimState = 'idle';
-    hikerAnimFrame = 0;
-    hikerRotation = 0;
-    fallTimer = 0;
-    particles = [];
-    floatingTexts = [];
-    showQuestion = false;
-    gameState = 'playing';
-    presentQuestion();
-}
-
-// Present a question for current zone
-function presentQuestion() {
-    const zoneQuestions = questions[currentZone];
-    const q = zoneQuestions[Math.floor(Math.random() * zoneQuestions.length)];
-    currentQuestion = q;
-    questionOptions = shuffle(q.opts);
-    questionBtnBounds = [];
-    selectedAnswer = -1;
-    questionFeedback = '';
-    feedbackTimer = 0;
-    showQuestion = true;
-}
-
-// Handle answer selection
-function handleAnswer(index) {
-    if (selectedAnswer !== -1) return;
-    selectedAnswer = index;
-    totalAnswered++;
-    const isCorrect = questionOptions[index] === currentQuestion.a;
-
-    if (isCorrect) {
-        correctAnswered++;
-        score += 100;
-        questionFeedback = 'correct';
-        feedbackTimer = 60;
-        playCorrectSound();
+function answerQ(idx){
+    if(answered||state!==ST.PLAYING)return;
+    answered=true;totalQ++;
+    
+    const btns=document.querySelectorAll('.ans-btn');
+    
+    if(idx===currentQuestion.c){
+        // CORRECT
+        totalCorrect++;streak++;if(streak>maxStreak)maxStreak=streak;
+        const pts=(difficulty==='hard'?20:difficulty==='easy'?5:10)*level;
+        score+=pts*(streak>=5?2:1);
+        
+        btns[idx].classList.add('correct');
+        document.getElementById('q-feedback').innerHTML=`<span style="color:#00ff88">✓ Correct! +${pts*(streak>=5?2:1)} pts</span>`;
+        sfx.correct();
+        
+        const layer=OSI_LAYERS[currentLayer-1];
+        burst(canvas.width/2,getLayerY(currentLayer),layer.color,15);
+        sfx.climb();
+        
+        // Move up after delay
+        setTimeout(()=>{
+            if(currentLayer<7){
+                currentLayer++;
+                targetClimberY=getLayerY(currentLayer);
+                askQuestion();updatePanel();
+            } else {
+                // VICTORY - completed all 7 layers!
+                state=ST.VICTORY;sfx.victory();
+                score+=100*level; // bonus
+                level++;
+                showVictory();
+            }
+        },1200);
     } else {
-        wrongAnswers++;
-        score = Math.max(0, score - 50);
-        questionFeedback = 'wrong';
-        feedbackTimer = 60;
-        playWrongSound();
-    }
-}
-
-// Process after feedback shown
-function processAnswer() {
-    showQuestion = false;
-    const isCorrect = questionFeedback === 'correct';
-
-    if (isCorrect) {
-        // Check if at final zone - victory!
-        if (currentZone >= 6) {
-            highestZone = 6;
-            // Green sparkle particles
-            for (let i = 0; i < 20; i++) {
-                particles.push({
-                    x: 200 + Math.random() * 30, y: hikerY + 48,
-                    vx: (Math.random() - 0.5) * 3, vy: -Math.random() * 4 - 1,
-                    life: 60, maxLife: 60,
-                    color: `hsl(${120 + Math.random() * 40}, 100%, ${50 + Math.random() * 30}%)`
-                });
-            }
-            floatingTexts.push({ text: 'SUMMIT!', x: 250, y: hikerY, vy: -1.5, life: 90, color: '#ffd700' });
-            setTimeout(() => {
-                if (gameState === 'playing') {
-                    gameState = 'victory';
-                    score += 500;
-                    playVictoryFanfare();
-                    // Fireworks
-                    for (let i = 0; i < 120; i++) {
-                        const angle = Math.random() * Math.PI * 2;
-                        const speed = 2 + Math.random() * 5;
-                        particles.push({
-                            x: W / 2, y: H / 3,
-                            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                            life: 90, maxLife: 90,
-                            color: `hsl(${Math.random() * 360}, 100%, 60%)`
-                        });
-                    }
-                }
-            }, 1200);
+        // WRONG
+        streak=0;lives--;
+        btns[idx].classList.add('wrong');
+        btns[currentQuestion.c].classList.add('reveal');
+        document.getElementById('q-feedback').innerHTML=`<span style="color:#ff4444">✗ Wrong! Answer: ${currentQuestion.a[currentQuestion.c]}</span>`;
+        sfx.wrong();sfx.fall();
+        shakeAmt=8;
+        
+        if(lives<=0){
+            setTimeout(()=>{state=ST.GAMEOVER;sfx.gameOver();showGameOver();},1200);
         } else {
-            // Climb up
-            currentZone++;
-            if (currentZone > highestZone) highestZone = currentZone;
-            hikerTargetY = getHikerY(currentZone);
-            hikerAnimState = 'climbing';
-            hikerAnimFrame = 0;
-            // Green sparkle particles
-            for (let i = 0; i < 20; i++) {
-                particles.push({
-                    x: 200 + Math.random() * 30, y: hikerY + 48,
-                    vx: (Math.random() - 0.5) * 3, vy: -Math.random() * 4 - 1,
-                    life: 60, maxLife: 60,
-                    color: `hsl(${120 + Math.random() * 40}, 100%, ${50 + Math.random() * 30}%)`
-                });
-            }
-            floatingTexts.push({ text: '+1 Layer', x: 250, y: hikerY, vy: -1.5, life: 60, color: '#00ff88' });
-            setTimeout(presentQuestion, 1500);
-        }
-    } else {
-        // Slip down
-        if (currentZone > 0) {
-            currentZone--;
-            hikerTargetY = getHikerY(currentZone);
-            hikerAnimState = 'slipping';
-            hikerAnimFrame = 0;
-        }
-        // Red particles
-        for (let i = 0; i < 30; i++) {
-            particles.push({
-                x: 200 + Math.random() * 30, y: hikerY + 48,
-                vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4,
-                life: 45, maxLife: 45,
-                color: `hsl(${Math.random() * 20}, 100%, ${40 + Math.random() * 30}%)`
-            });
-        }
-        floatingTexts.push({ text: '-1 Layer', x: 250, y: hikerY, vy: -1.5, life: 60, color: '#ff4444' });
-        shakeTimer = 12;
-        shakeIntensity = 5;
-
-        // Check game over
-        if (wrongAnswers >= 3) {
-            playRopeSnap();
-            // Rope snap particles
-            for (let i = 0; i < 50; i++) {
-                particles.push({
-                    x: W / 2 - 60 + Math.random() * 120, y: 30,
-                    vx: (Math.random() - 0.5) * 6, vy: Math.random() * 3 + 1,
-                    life: 60, maxLife: 60, color: '#ffffff'
-                });
-            }
-            hikerAnimState = 'falling';
-            fallTimer = 120;
-            setTimeout(() => { gameState = 'gameover'; }, 2200);
-        } else {
-            setTimeout(presentQuestion, 1200);
+            // Fall down one layer
+            setTimeout(()=>{
+                if(currentLayer>1){currentLayer--;targetClimberY=getLayerY(currentLayer);}
+                askQuestion();updatePanel();
+            },1500);
         }
     }
+    updatePanel();
+}
+
+function showVictory(){
+    document.getElementById('q-text').innerHTML='<span style="color:#ffd700;font-size:18px;font-weight:bold;">🎉 SUMMIT REACHED!</span><br><br>You climbed all 7 OSI layers!<br>Starting next round...';
+    document.getElementById('q-answers').innerHTML='';
+    document.getElementById('q-feedback').textContent=`+${100*level} bonus points!`;
+    setTimeout(()=>{
+        if(state===ST.VICTORY){
+            currentLayer=1;targetClimberY=getLayerY(1);
+            state=ST.PLAYING;askQuestion();updatePanel();
+        }
+    },3000);
+}
+
+function showGameOver(){
+    const layer=OSI_LAYERS[currentLayer-1];
+    document.getElementById('q-layer').textContent='GAME OVER';
+    document.getElementById('q-layer').style.color='#ff0044';
+    document.getElementById('q-text').innerHTML=`<div style="text-align:center;"><div style="font-size:16px;color:#ff4444;font-weight:bold;margin-bottom:10px;">You fell from the tower!</div><div style="color:#aaa;">Score: <b style="color:#0fa">${score}</b></div><div style="color:#aaa;">Reached: Layer ${currentLayer} (${layer.name})</div><div style="color:#aaa;">Accuracy: ${totalQ>0?Math.round(totalCorrect/totalQ*100):0}%</div><div style="color:#aaa;">Best Streak: ${maxStreak}</div></div>`;
+    document.getElementById('q-answers').innerHTML=`<input id="go-name" type="text" maxlength="12" placeholder="Your name" style="width:100%;padding:10px;background:#1a1a3a;border:1px solid #0fa;border-radius:6px;color:#fff;font-family:monospace;font-size:14px;text-align:center;margin-bottom:8px;"><button class="ans-btn" style="text-align:center;border-color:#0fa;color:#0fa;" onclick="saveScore()">SAVE SCORE</button><button class="ans-btn" style="text-align:center;border-color:#00ccff;color:#00ccff;margin-top:8px;" onclick="startGame()">▶ CLIMB AGAIN</button>`;
+    document.getElementById('q-feedback').textContent='';
+}
+function saveScore(){
+    const name=document.getElementById('go-name')?.value||'AAA';
+    addHS(name);renderHS();
+    document.getElementById('q-feedback').innerHTML='<span style="color:#0fa">✓ Saved!</span>';
 }
 
 
-// Draw pixel-art hiker
-function drawHiker(x, y, state, frame) {
-    ctx.save();
-    const scale = 2;
+// CANVAS DRAWING - Mountain/Climb Animation
+let gridOff=0;
 
-    if (state === 'falling') {
-        hikerRotation += 0.08;
-        ctx.translate(x + 32, y + 48);
-        ctx.rotate(hikerRotation);
-        ctx.translate(-(x + 32), -(y + 48));
-    }
-
-    // Breathing bob for idle
-    let bob = 0;
-    if (state === 'idle') {
-        bob = Math.sin(animTime * 0.05) * 2;
-    }
-
-    const drawY = y + bob;
-
-    // Boots (dark brown)
-    ctx.fillStyle = '#3d2817';
-    ctx.fillRect(x + 8 * scale, drawY + 42 * scale / 2, 6 * scale, 6 * scale);
-    ctx.fillRect(x + 18 * scale, drawY + 42 * scale / 2, 6 * scale, 6 * scale);
-
-    // Pants (denim blue)
-    ctx.fillStyle = '#4a6fa5';
-    ctx.fillRect(x + 8 * scale, drawY + 30 * scale / 2, 6 * scale, 12 * scale);
-    ctx.fillRect(x + 18 * scale, drawY + 30 * scale / 2, 6 * scale, 12 * scale);
-    ctx.fillRect(x + 10 * scale, drawY + 28 * scale / 2, 12 * scale, 4 * scale);
-
-    // Body / shirt (green backpack blends)
-    ctx.fillStyle = '#4a8855';
-    ctx.fillRect(x + 8 * scale, drawY + 16 * scale / 2, 16 * scale, 14 * scale);
-
-    // Backpack (forest green)
-    ctx.fillStyle = '#2d5a27';
-    ctx.fillRect(x + 20 * scale, drawY + 16 * scale / 2, 8 * scale, 12 * scale);
-    ctx.fillRect(x + 22 * scale, drawY + 14 * scale / 2, 6 * scale, 4 * scale);
-
-    // Arms
-    ctx.fillStyle = '#d4a574';
-    if (state === 'climbing') {
-        // Arm-over-arm animation (4 frames)
-        const armOffset = Math.sin(frame * Math.PI / 2) * 4;
-        ctx.fillRect(x + 4 * scale, drawY + (18 + armOffset) * scale / 2, 4 * scale, 8 * scale);
-        ctx.fillRect(x + 24 * scale, drawY + (18 - armOffset) * scale / 2, 4 * scale, 8 * scale);
-    } else if (state === 'slipping') {
-        // Grabbing motion
-        ctx.fillRect(x + 2 * scale, drawY + 14 * scale / 2, 6 * scale, 4 * scale);
-        ctx.fillRect(x + 24 * scale, drawY + 14 * scale / 2, 6 * scale, 4 * scale);
-    } else if (state === 'falling') {
-        // Flailing
-        const flail = Math.sin(animTime * 0.3) * 6;
-        ctx.fillRect(x + (2 + flail) * scale, drawY + 12 * scale / 2, 4 * scale, 10 * scale);
-        ctx.fillRect(x + (26 - flail) * scale, drawY + 12 * scale / 2, 4 * scale, 10 * scale);
-    } else {
-        ctx.fillRect(x + 4 * scale, drawY + 18 * scale / 2, 4 * scale, 8 * scale);
-        ctx.fillRect(x + 24 * scale, drawY + 18 * scale / 2, 4 * scale, 8 * scale);
-    }
-
-    // Head (skin)
-    ctx.fillStyle = '#d4a574';
-    ctx.fillRect(x + 10 * scale, drawY + 6 * scale / 2, 12 * scale, 10 * scale);
-
-    // Eyes
-    ctx.fillStyle = '#222';
-    ctx.fillRect(x + 12 * scale, drawY + 10 * scale / 2, 2 * scale, 2 * scale);
-    ctx.fillRect(x + 18 * scale, drawY + 10 * scale / 2, 2 * scale, 2 * scale);
-
-    // Smile
-    ctx.fillStyle = '#8b4513';
-    if (state !== 'falling' && state !== 'slipping') {
-        ctx.fillRect(x + 13 * scale, drawY + 13 * scale / 2, 6 * scale, 1 * scale);
-    }
-
-    // Hat (bright red)
-    ctx.fillStyle = '#ff3333';
-    ctx.fillRect(x + 8 * scale, drawY + 2 * scale / 2, 16 * scale, 5 * scale);
-    ctx.fillRect(x + 6 * scale, drawY + 5 * scale / 2, 20 * scale, 2 * scale);
-
-    ctx.restore();
-}
-
-
-// Draw mountain with zones
-function drawMountain() {
-    const zoneH = H / 7;
-
-    for (let i = 0; i < 7; i++) {
-        const y = H - (i + 1) * zoneH;
-        const zone = zones[i];
-
-        // Zone background
-        const grad = ctx.createLinearGradient(0, y, 0, y + zoneH);
-        grad.addColorStop(0, zone.lightColor);
-        grad.addColorStop(1, zone.color);
-        ctx.fillStyle = grad;
-
-        // Mountain shape - wider at base, narrower at top
-        const narrowFactor = 0.6 + (6 - i) * 0.06;
-        const leftEdge = 50 + i * 15;
-        const rightEdge = 350 - i * 10;
-
-        ctx.beginPath();
-        ctx.moveTo(leftEdge, y + zoneH);
-        ctx.lineTo(leftEdge - 20, y + zoneH);
-        ctx.lineTo(leftEdge + 5, y);
-        ctx.lineTo(rightEdge - 5, y);
-        ctx.lineTo(rightEdge + 20, y + zoneH);
-        ctx.lineTo(rightEdge, y + zoneH);
-        ctx.closePath();
-        ctx.fill();
-
-        // Mountain texture - rocky lines
-        ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-        ctx.lineWidth = 1;
-        for (let j = 0; j < 3; j++) {
-            const lineY = y + zoneH * (0.2 + j * 0.3);
-            ctx.beginPath();
-            ctx.moveTo(leftEdge + 10 + j * 5, lineY);
-            ctx.lineTo(leftEdge + 40 + j * 20 + Math.sin(i + j) * 15, lineY + 5);
-            ctx.lineTo(rightEdge - 30 - j * 10, lineY - 3);
-            ctx.stroke();
-        }
-
-        // Zone banner
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        const bannerX = rightEdge + 30;
-        const bannerY = y + zoneH / 2 - 10;
-        ctx.fillRect(bannerX, bannerY, 140, 22);
-        ctx.strokeStyle = zone.lightColor;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(bannerX, bannerY, 140, 22);
-
-        ctx.fillStyle = '#fff';
-        ctx.font = '10px Courier New';
-        ctx.textAlign = 'left';
-        ctx.fillText(`L${zone.layer}: ${zone.name}`, bannerX + 5, bannerY + 15);
-    }
-
-    // Snow cap on top
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.moveTo(140, getZoneY(6));
-    ctx.lineTo(180, getZoneY(6) - 15);
-    ctx.lineTo(250, getZoneY(6) - 10);
-    ctx.lineTo(280, getZoneY(6));
-    ctx.closePath();
-    ctx.fill();
-}
-
-// Draw sky and clouds
-function drawSky() {
-    // Gradient sky
-    const grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, '#0d1b2a');
-    grad.addColorStop(0.3, '#1b2838');
-    grad.addColorStop(0.7, '#2d4a3e');
-    grad.addColorStop(1, '#1a1a2e');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Stars
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    for (let i = 0; i < 30; i++) {
-        const sx = (i * 127 + 50) % W;
-        const sy = (i * 83 + 20) % (H * 0.4);
-        const size = (Math.sin(animTime * 0.02 + i) + 1) * 0.5 + 0.5;
-        ctx.fillRect(sx, sy, size * 2, size * 2);
-    }
-
-    // Clouds with parallax
-    ctx.fillStyle = 'rgba(200, 220, 255, 0.15)';
-    clouds.forEach(cloud => {
-        cloud.x += cloud.speed;
-        if (cloud.x > W + cloud.w) cloud.x = -cloud.w;
-        ctx.beginPath();
-        ctx.ellipse(cloud.x, cloud.y, cloud.w / 2, 15, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.ellipse(cloud.x + cloud.w * 0.3, cloud.y - 8, cloud.w * 0.3, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-    });
-}
-
-
-// Draw rope system
-function drawRopes() {
-    const ropeX = W / 2 - 60;
-    const ropeY = 15;
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(ropeX - 10, ropeY - 8, 140, 30);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(ropeX - 10, ropeY - 8, 140, 30);
-
-    ctx.fillStyle = '#aaa';
-    ctx.font = '9px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText('ROPE', ropeX + 60, ropeY);
-
-    for (let i = 0; i < 3; i++) {
-        const x = ropeX + i * 45;
-        const broken = i < wrongAnswers;
-        const stressed = i === wrongAnswers - 1;
-
-        if (broken) {
-            // Broken rope
-            ctx.strokeStyle = '#444';
-            ctx.lineWidth = 3;
-            ctx.setLineDash([3, 3]);
-            ctx.beginPath();
-            ctx.moveTo(x + 5, ropeY + 5);
-            ctx.lineTo(x + 35, ropeY + 5);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            // X mark
-            ctx.strokeStyle = '#ff3333';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(x + 14, ropeY + 1);
-            ctx.lineTo(x + 26, ropeY + 11);
-            ctx.moveTo(x + 26, ropeY + 1);
-            ctx.lineTo(x + 14, ropeY + 11);
-            ctx.stroke();
-        } else {
-            // Healthy rope
-            let ropeColor = '#44ff44';
-            if (i === wrongAnswers && wrongAnswers === 1) ropeColor = '#ffff44';
-            if (i === wrongAnswers && wrongAnswers === 2) ropeColor = '#ff6644';
-
-            ctx.strokeStyle = ropeColor;
-            ctx.lineWidth = 4;
-            ctx.shadowColor = ropeColor;
-            ctx.shadowBlur = 5;
-            ctx.beginPath();
-            ctx.moveTo(x + 5, ropeY + 5);
-            ctx.quadraticCurveTo(x + 20, ropeY + 10, x + 35, ropeY + 5);
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-
-            // Rope texture
-            ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-            ctx.lineWidth = 1;
-            for (let j = 0; j < 4; j++) {
-                const tx = x + 8 + j * 7;
-                ctx.beginPath();
-                ctx.moveTo(tx, ropeY + 3);
-                ctx.lineTo(tx + 3, ropeY + 8);
-                ctx.stroke();
-            }
-        }
-    }
-}
-
-// Draw progress bar (right side)
-function drawProgressBar() {
-    const barX = W - 50;
-    const barY = 60;
-    const barH = H - 120;
-    const zoneH = barH / 7;
-
+function drawClimbView(){
     // Background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(barX - 5, barY - 5, 40, barH + 10);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(barX - 5, barY - 5, 40, barH + 10);
-
-    for (let i = 0; i < 7; i++) {
-        const y = barY + barH - (i + 1) * zoneH;
-        const isCurrent = i === currentZone;
-        const isCompleted = i < currentZone;
-
-        if (isCompleted) {
-            ctx.fillStyle = zones[i].color;
-            ctx.fillRect(barX, y, 30, zoneH - 2);
-        } else if (isCurrent) {
-            ctx.fillStyle = zones[i].color;
-            ctx.globalAlpha = 0.5 + Math.sin(animTime * 0.1) * 0.3;
-            ctx.fillRect(barX, y, 30, zoneH - 2);
-            ctx.globalAlpha = 1;
-            // Pulsing dot
-            ctx.fillStyle = '#fff';
-            ctx.shadowColor = '#fff';
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(barX + 15, y + zoneH / 2, 4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
+    ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,canvas.width,canvas.height);
+    gridOff=(gridOff+0.1)%40;
+    ctx.strokeStyle='#1a1a2a';ctx.lineWidth=0.5;
+    for(let y=gridOff;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+    
+    // Draw OSI layers as platforms
+    const margin=50;
+    const usableH=canvas.height-margin*2;
+    const layerH=usableH/7;
+    
+    for(let i=0;i<7;i++){
+        const layer=OSI_LAYERS[i];
+        const ly=getLayerY(i+1);
+        const isActive=i+1===currentLayer;
+        const isClimbed=i+1<currentLayer;
+        
+        ctx.save();
+        // Platform
+        const pw=canvas.width*0.7;
+        const px=(canvas.width-pw)/2;
+        
+        if(isClimbed){
+            ctx.fillStyle=layer.color+'44';
+            ctx.shadowColor=layer.color;ctx.shadowBlur=5;
+        } else if(isActive){
+            ctx.fillStyle=layer.color+'66';
+            ctx.shadowColor=layer.color;ctx.shadowBlur=12;
         } else {
-            ctx.strokeStyle = zones[i].color;
-            ctx.lineWidth = 1;
-            ctx.strokeRect(barX + 2, y + 2, 26, zoneH - 6);
+            ctx.fillStyle='#1a1a3a55';
         }
-
-        // Layer number
-        ctx.fillStyle = isCurrent ? '#fff' : '#888';
-        ctx.font = '9px Courier New';
-        ctx.textAlign = 'center';
-        ctx.fillText(String(i + 1), barX + 15, y + zoneH / 2 + 3);
+        
+        ctx.fillRect(px,ly-2,pw,8);
+        
+        // Layer label
+        ctx.font=isActive?'bold 13px Courier New':'11px Courier New';
+        ctx.textAlign='left';
+        ctx.fillStyle=isActive?layer.color:(isClimbed?layer.color+'aa':'#555');
+        ctx.shadowBlur=0;
+        ctx.fillText(`L${i+1} ${layer.name}`,px+5,ly-10);
+        
+        // Right side description
+        ctx.textAlign='right';ctx.font='9px Courier New';
+        ctx.fillStyle=isActive?'#aaa':'#444';
+        ctx.fillText(layer.desc,px+pw-5,ly-10);
+        
+        ctx.restore();
     }
-}
-
-// Draw score
-function drawScore() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(10, 10, 120, 35);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(10, 10, 120, 35);
-
-    ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 10px Courier New';
-    ctx.textAlign = 'left';
-    ctx.fillText('SCORE', 20, 25);
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 16px Courier New';
-    ctx.fillText(String(score).padStart(5, '0'), 20, 40);
-}
-
-// Draw mute button
-function drawMuteButton() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(W - 45, 10, 35, 25);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(W - 45, 10, 35, 25);
-    ctx.fillStyle = muted ? '#ff4444' : '#00f0ff';
-    ctx.font = '12px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText(muted ? '🔇' : '🔊', W - 28, 27);
-}
-
-
-// Draw question panel
-function drawQuestionPanel() {
-    if (!showQuestion || !currentQuestion) return;
-
-    // Overlay
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, W, H);
-
-    // Glass panel
-    const panelX = 100, panelY = 80, panelW = 600, panelH = 440;
-    ctx.fillStyle = 'rgba(20, 30, 50, 0.85)';
-    ctx.fillRect(panelX, panelY, panelW, panelH);
-
-    // Neon border
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 15;
-    ctx.strokeRect(panelX, panelY, panelW, panelH);
-    ctx.shadowBlur = 0;
-
-    // Inner glow line
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.3)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(panelX + 5, panelY + 5, panelW - 10, panelH - 10);
-
-    // Zone badge
-    const zone = zones[currentZone];
-    ctx.fillStyle = zone.color;
-    ctx.fillRect(panelX + panelW / 2 - 80, panelY + 15, 160, 28);
-    ctx.strokeStyle = zone.lightColor;
-    ctx.lineWidth = 1;
-    ctx.strokeRect(panelX + panelW / 2 - 80, panelY + 15, 160, 28);
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 12px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText(`Layer ${zone.layer}: ${zone.name}`, panelX + panelW / 2, panelY + 34);
-
-    // Question text
-    ctx.fillStyle = '#fff';
-    ctx.font = '16px Courier New';
-    ctx.textAlign = 'center';
-
-    // Word wrap question
-    const words = currentQuestion.q.split(' ');
-    let lines = [];
-    let line = '';
-    words.forEach(word => {
-        const test = line + word + ' ';
-        if (ctx.measureText(test).width > panelW - 80) {
-            lines.push(line.trim());
-            line = word + ' ';
-        } else {
-            line = test;
-        }
-    });
-    lines.push(line.trim());
-
-    lines.forEach((l, i) => {
-        ctx.fillText(l, panelX + panelW / 2, panelY + 75 + i * 24);
-    });
-
-    // Answer buttons
-    const btnW = 500, btnH = 52;
-    const btnX = panelX + (panelW - btnW) / 2;
-    const btnStartY = panelY + 130 + lines.length * 10;
-
-    questionOptions.forEach((opt, i) => {
-        const btnY = btnStartY + i * (btnH + 12);
-        let btnColor = 'rgba(30, 50, 80, 0.8)';
-        let borderColor = '#00f0ff';
-        let textColor = '#fff';
-
-        if (selectedAnswer !== -1) {
-            if (opt === currentQuestion.a) {
-                btnColor = 'rgba(0, 180, 80, 0.6)';
-                borderColor = '#00ff88';
-                textColor = '#00ff88';
-            } else if (i === selectedAnswer) {
-                btnColor = 'rgba(180, 0, 0, 0.6)';
-                borderColor = '#ff4444';
-                textColor = '#ff4444';
-            }
-        }
-
-        ctx.fillStyle = btnColor;
-        ctx.fillRect(btnX, btnY, btnW, btnH);
-        ctx.strokeStyle = borderColor;
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(btnX, btnY, btnW, btnH);
-
-        ctx.fillStyle = textColor;
-        ctx.font = '14px Courier New';
-        ctx.textAlign = 'center';
-        ctx.fillText(opt, btnX + btnW / 2, btnY + btnH / 2 + 5);
-
-        // Store button bounds for click detection
-        questionBtnBounds[i] = { x: btnX, y: btnY, w: btnW, h: btnH };
-    });
-
-    // Feedback
-    if (questionFeedback && feedbackTimer > 30) {
-        const fbY = panelY + panelH - 45;
-        if (questionFeedback === 'correct') {
-            ctx.fillStyle = '#00ff88';
-            ctx.font = 'bold 18px Courier New';
-            ctx.shadowColor = '#00ff88';
-            ctx.shadowBlur = 10;
-            ctx.fillText('✓ CORRECT! Climbing up...', panelX + panelW / 2, fbY);
-        } else {
-            ctx.fillStyle = '#ff4444';
-            ctx.font = 'bold 18px Courier New';
-            ctx.shadowColor = '#ff4444';
-            ctx.shadowBlur = 10;
-            ctx.fillText('✗ WRONG! Slipping down...', panelX + panelW / 2, fbY);
-        }
-        ctx.shadowBlur = 0;
-    }
-}
-
-
-// Draw particles
-function drawParticles() {
-    particles.forEach(p => {
-        const alpha = p.life / p.maxLife;
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = alpha;
-        const size = 2 + alpha * 3;
-        ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
-    });
-    ctx.globalAlpha = 1;
-}
-
-// Update particles
-function updateParticles() {
-    particles = particles.filter(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.05; // gravity
-        p.life--;
-        return p.life > 0;
-    });
-}
-
-// Draw floating texts
-function drawFloatingTexts() {
-    floatingTexts.forEach(ft => {
-        const alpha = ft.life / 60;
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = ft.color;
-        ctx.shadowColor = ft.color;
-        ctx.shadowBlur = 10;
-        ctx.font = 'bold 18px Courier New';
-        ctx.textAlign = 'center';
-        ctx.fillText(ft.text, ft.x, ft.y);
-        ctx.shadowBlur = 0;
-    });
-    ctx.globalAlpha = 1;
-}
-
-// Update floating texts
-function updateFloatingTexts() {
-    floatingTexts = floatingTexts.filter(ft => {
-        ft.y += ft.vy;
-        ft.life--;
-        return ft.life > 0;
-    });
-}
-
-// Draw start screen
-function drawStartScreen() {
-    drawSky();
-
-    // Mountain silhouette
-    ctx.fillStyle = '#1a1a2e';
-    ctx.beginPath();
-    ctx.moveTo(0, H);
-    ctx.lineTo(100, H - 200);
-    ctx.lineTo(200, H - 350);
-    ctx.lineTo(300, H - 500);
-    ctx.lineTo(400, H - 450);
-    ctx.lineTo(500, H - 300);
-    ctx.lineTo(600, H - 380);
-    ctx.lineTo(700, H - 250);
-    ctx.lineTo(W, H - 150);
-    ctx.lineTo(W, H);
-    ctx.closePath();
-    ctx.fill();
-
-    // Second layer
-    ctx.fillStyle = '#252545';
-    ctx.beginPath();
-    ctx.moveTo(0, H);
-    ctx.lineTo(150, H - 150);
-    ctx.lineTo(300, H - 280);
-    ctx.lineTo(400, H - 350);
-    ctx.lineTo(500, H - 200);
-    ctx.lineTo(650, H - 250);
-    ctx.lineTo(W, H - 100);
-    ctx.lineTo(W, H);
-    ctx.closePath();
-    ctx.fill();
-
-    // Title
-    ctx.fillStyle = '#00f0ff';
-    ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 20;
-    ctx.font = 'bold 48px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText('OSI LAYER CLIMB', W / 2, 120);
-    ctx.shadowBlur = 0;
-
-    // Subtitle
-    ctx.fillStyle = '#aaa';
-    ctx.font = '16px Courier New';
-    ctx.fillText('Reach the Summit or Fall to the Valley', W / 2, 160);
-
-    // Hiker at base
-    drawHiker(W / 2 - 32, H - 180, 'idle', 0);
-
-    // Mountain icon
-    ctx.fillStyle = '#ff8c00';
-    ctx.font = '40px Courier New';
-    ctx.fillText('⛰️', W / 2, 220);
-
-    // Instructions
-    ctx.fillStyle = '#ccc';
-    ctx.font = '13px Courier New';
-    ctx.fillText('Answer OSI model questions to climb the mountain', W / 2, 280);
-    ctx.fillText('3 wrong answers = rope snaps = GAME OVER', W / 2, 305);
-    ctx.fillText('Reach Layer 7 to become an OSI Master!', W / 2, 330);
-
-    // Start button
-    const btnPulse = Math.sin(animTime * 0.05) * 0.3 + 0.7;
-    ctx.fillStyle = `rgba(0, 240, 255, ${btnPulse * 0.2})`;
-    ctx.fillRect(W / 2 - 120, 370, 240, 50);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = '#00f0ff';
-    ctx.shadowBlur = 10;
-    ctx.strokeRect(W / 2 - 120, 370, 240, 50);
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 18px Courier New';
-    ctx.fillText('⛏ Begin Ascent ⛏', W / 2, 400);
-
-    // High Scores
-    drawHighScores(440);
-}
-
-// Draw high scores
-function drawHighScores(startY) {
-    const scores = getHighScores();
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.fillRect(W / 2 - 180, startY, 360, 140);
-    ctx.strokeStyle = '#ff8c00';
-    ctx.lineWidth = 1.5;
-    ctx.shadowColor = '#ff8c00';
-    ctx.shadowBlur = 8;
-    ctx.strokeRect(W / 2 - 180, startY, 360, 140);
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = '#ff8c00';
-    ctx.font = 'bold 16px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText('🏆 HIGH SCORES 🏆', W / 2, startY + 25);
-
-    if (scores.length === 0) {
-        ctx.fillStyle = '#666';
-        ctx.font = '12px Courier New';
-        ctx.fillText('No high scores yet. Be the first!', W / 2, startY + 70);
-    } else {
-        scores.slice(0, 5).forEach((s, i) => {
-            const y = startY + 48 + i * 20;
-            const medals = ['🥇', '🥈', '🥉', ' 4.', ' 5.'];
-            ctx.fillStyle = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#888';
-            ctx.font = '12px Courier New';
-            ctx.textAlign = 'left';
-            ctx.fillText(`${medals[i]} ${s.name}`, W / 2 - 150, y);
-            ctx.textAlign = 'right';
-            ctx.fillText(`${s.score} pts - L${s.highestZone + 1}`, W / 2 + 150, y);
-        });
-    }
-    ctx.textAlign = 'center';
-}
-
-
-// Draw game over screen
-function drawGameOverScreen() {
-    drawSky();
-    drawMountain();
-
-    // Dark overlay
-    ctx.fillStyle = 'rgba(30, 0, 0, 0.8)';
-    ctx.fillRect(0, 0, W, H);
-
-    // Red flash on edges
-    const grad = ctx.createRadialGradient(W/2, H/2, H*0.3, W/2, H/2, H*0.7);
-    grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(200, 0, 0, 0.3)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Game Over text
-    ctx.fillStyle = '#ff3333';
-    ctx.shadowColor = '#ff3333';
-    ctx.shadowBlur = 20;
-    ctx.font = 'bold 56px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', W / 2, 120);
-    ctx.shadowBlur = 0;
-
-    // Rope snapped message
-    ctx.fillStyle = '#ffaa44';
-    ctx.font = '16px Courier New';
-    ctx.fillText('The rope snapped!', W / 2, 160);
-
-    // Stats panel
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(W / 2 - 200, 190, 400, 200);
-    ctx.strokeStyle = '#ff4444';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(W / 2 - 200, 190, 400, 200);
-
-    ctx.fillStyle = '#fff';
-    ctx.font = '14px Courier New';
-    ctx.fillText(`Final Score: ${score}`, W / 2, 230);
-    ctx.fillText(`Highest Zone: ${highestZone + 1} (${zones[highestZone].name})`, W / 2, 260);
-    const accuracy = totalAnswered > 0 ? Math.round((correctAnswered / totalAnswered) * 100) : 0;
-    ctx.fillText(`Accuracy: ${accuracy}%`, W / 2, 290);
-    ctx.fillText(`Questions Answered: ${totalAnswered}`, W / 2, 320);
-    ctx.fillText(`Wrong Answers: ${wrongAnswers}`, W / 2, 350);
-
-    // Buttons
-    // Try Again
-    ctx.fillStyle = 'rgba(0, 100, 50, 0.5)';
-    ctx.fillRect(W / 2 - 130, 420, 120, 45);
-    ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(W / 2 - 130, 420, 120, 45);
-    ctx.fillStyle = '#00ff88';
-    ctx.font = 'bold 14px Courier New';
-    ctx.fillText('Try Again', W / 2 - 70, 447);
-
-    // Main Menu
-    ctx.fillStyle = 'rgba(50, 50, 100, 0.5)';
-    ctx.fillRect(W / 2 + 10, 420, 120, 45);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(W / 2 + 10, 420, 120, 45);
-    ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 14px Courier New';
-    ctx.fillText('Main Menu', W / 2 + 70, 447);
-
-    // High scores below
-    drawHighScores(490);
-}
-
-// Draw victory screen
-function drawVictoryScreen() {
-    drawSky();
-    drawMountain();
-
-    // Golden overlay
-    ctx.fillStyle = 'rgba(50, 40, 0, 0.6)';
-    ctx.fillRect(0, 0, W, H);
-
-    // Rainbow cycling text
-    const hue = (animTime * 3) % 360;
-    ctx.fillStyle = `hsl(${hue}, 100%, 60%)`;
-    ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
-    ctx.shadowBlur = 25;
-    ctx.font = 'bold 52px Courier New';
-    ctx.textAlign = 'center';
-    ctx.fillText('OSI MASTER!', W / 2, 100);
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = '#ffd700';
-    ctx.font = '18px Courier New';
-    ctx.fillText('🏔️ You reached the summit! 🏔️', W / 2, 140);
-
-    // Stats
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(W / 2 - 200, 170, 400, 180);
-    ctx.strokeStyle = '#ffd700';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 8;
-    ctx.strokeRect(W / 2 - 200, 170, 400, 180);
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = '#fff';
-    ctx.font = '15px Courier New';
-    ctx.fillText(`Score: ${score - 500} + 500 Summit Bonus`, W / 2, 210);
-    ctx.fillStyle = '#ffd700';
-    ctx.font = 'bold 22px Courier New';
-    ctx.fillText(`Total: ${score}`, W / 2, 245);
-    const accuracy = totalAnswered > 0 ? Math.round((correctAnswered / totalAnswered) * 100) : 0;
-    ctx.fillStyle = '#fff';
-    ctx.font = '14px Courier New';
-    ctx.fillText(`Accuracy: ${accuracy}%`, W / 2, 280);
-    ctx.fillText(`Questions: ${totalAnswered} | Wrong: ${wrongAnswers}`, W / 2, 310);
-
-    // Name entry
-    ctx.fillStyle = '#aaa';
-    ctx.font = '12px Courier New';
-    ctx.fillText('Enter your name for high scores:', W / 2, 370);
-
-    // Name input field
-    ctx.fillStyle = 'rgba(0, 20, 40, 0.8)';
-    ctx.fillRect(W / 2 - 100, 380, 200, 30);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(W / 2 - 100, 380, 200, 30);
-    ctx.fillStyle = '#fff';
-    ctx.font = '14px Courier New';
-    ctx.fillText(playerName + (animTime % 40 < 20 ? '|' : ''), W / 2, 400);
-
-    // Save button
-    ctx.fillStyle = 'rgba(0, 100, 50, 0.5)';
-    ctx.fillRect(W / 2 - 130, 430, 120, 40);
-    ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(W / 2 - 130, 430, 120, 40);
-    ctx.fillStyle = '#00ff88';
-    ctx.font = 'bold 13px Courier New';
-    ctx.fillText('Save Score', W / 2 - 70, 455);
-
-    // Play Again
-    ctx.fillStyle = 'rgba(50, 50, 100, 0.5)';
-    ctx.fillRect(W / 2 + 10, 430, 120, 40);
-    ctx.strokeStyle = '#00f0ff';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(W / 2 + 10, 430, 120, 40);
-    ctx.fillStyle = '#00f0ff';
-    ctx.font = 'bold 13px Courier New';
-    ctx.fillText('Play Again', W / 2 + 70, 455);
-
-    // Firework particles
-    drawParticles();
-
-    // High scores
-    drawHighScores(490);
-}
-
-let playerName = '';
-
-
-// High score management
-function getHighScores() {
-    try {
-        return JSON.parse(localStorage.getItem('osiClimbScores') || '[]');
-    } catch { return []; }
-}
-
-function saveHighScore(name, finalScore, zone) {
-    const scores = getHighScores();
-    scores.push({
-        name: name || 'Anonymous',
-        score: finalScore,
-        highestZone: zone,
-        accuracy: totalAnswered > 0 ? Math.round((correctAnswered / totalAnswered) * 100) : 0,
-        date: new Date().toLocaleDateString()
-    });
-    scores.sort((a, b) => b.score - a.score);
-    localStorage.setItem('osiClimbScores', JSON.stringify(scores.slice(0, 5)));
-}
-
-// Main game loop
-function update() {
-    animTime++;
-
-    // Hiker position interpolation
-    if (hikerAnimState === 'climbing') {
-        hikerY += (hikerTargetY - hikerY) * 0.03;
-        hikerAnimTimer++;
-        hikerAnimFrame = Math.floor(hikerAnimTimer / 8) % 4;
-        if (Math.abs(hikerY - hikerTargetY) < 1) {
-            hikerY = hikerTargetY;
-            hikerAnimState = 'idle';
-            hikerAnimTimer = 0;
-        }
-    } else if (hikerAnimState === 'slipping') {
-        hikerY += (hikerTargetY - hikerY) * 0.06;
-        hikerAnimTimer++;
-        hikerAnimFrame = Math.floor(hikerAnimTimer / 10) % 2;
-        if (Math.abs(hikerY - hikerTargetY) < 1) {
-            hikerY = hikerTargetY;
-            hikerAnimState = 'idle';
-            hikerAnimTimer = 0;
-        }
-    } else if (hikerAnimState === 'falling') {
-        hikerY += 3;
-        fallTimer--;
-        if (hikerY > H + 100) hikerAnimState = 'idle';
-    }
-
-    // Screen shake
-    if (shakeTimer > 0) shakeTimer--;
-
-    // Feedback timer
-    if (feedbackTimer > 0) {
-        feedbackTimer--;
-        if (feedbackTimer === 0 && selectedAnswer !== -1) {
-            processAnswer();
-        }
-    }
-
-    updateParticles();
-    updateFloatingTexts();
-
-    // Victory fireworks
-    if (gameState === 'victory' && animTime % 30 === 0) {
-        const fx = 100 + Math.random() * (W - 200);
-        const fy = 50 + Math.random() * 150;
-        for (let i = 0; i < 20; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 1 + Math.random() * 3;
-            particles.push({
-                x: fx, y: fy,
-                vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                life: 50, maxLife: 50,
-                color: `hsl(${Math.random() * 360}, 100%, 60%)`
-            });
-        }
-    }
-}
-
-function draw() {
+    
+    // Draw climber
+    climberBob+=0.05;climberGlow+=0.03;
+    // Smooth movement
+    climberY+=(targetClimberY-climberY)*0.08;
+    
+    const cx=canvas.width/2;
+    const cy=climberY-20+Math.sin(climberBob)*3;
+    const layer=OSI_LAYERS[currentLayer-1];
+    
     ctx.save();
-
-    // Screen shake
-    if (shakeTimer > 0) {
-        const sx = (Math.random() - 0.5) * shakeIntensity;
-        const sy = (Math.random() - 0.5) * shakeIntensity;
-        ctx.translate(sx, sy);
+    ctx.shadowColor=layer.color;ctx.shadowBlur=10+Math.sin(climberGlow)*5;
+    // Character body
+    ctx.fillStyle=layer.color;
+    ctx.beginPath();ctx.arc(cx,cy-12,8,0,Math.PI*2);ctx.fill(); // head
+    ctx.fillRect(cx-5,cy-4,10,16); // body
+    // Arms
+    ctx.fillRect(cx-12,cy,6,3);
+    ctx.fillRect(cx+6,cy,6,3);
+    // Legs
+    ctx.fillRect(cx-5,cy+12,4,8);
+    ctx.fillRect(cx+1,cy+12,4,8);
+    ctx.restore();
+    
+    // Arrow indicator
+    if(state===ST.PLAYING){
+        ctx.save();
+        ctx.font='16px Courier New';ctx.textAlign='center';
+        ctx.fillStyle=layer.color;
+        ctx.globalAlpha=0.5+Math.sin(climberGlow*2)*0.3;
+        ctx.fillText('▲',cx,cy-30);
+        ctx.restore();
     }
-
-    if (gameState === 'start') {
-        drawStartScreen();
-    } else if (gameState === 'playing') {
-        drawSky();
-        drawMountain();
-        drawHiker(170, hikerY, hikerAnimState, hikerAnimFrame);
-        drawParticles();
-        drawFloatingTexts();
-        drawRopes();
-        drawScore();
-        drawProgressBar();
-        drawMuteButton();
-        drawQuestionPanel();
-    } else if (gameState === 'gameover') {
-        drawGameOverScreen();
-        drawParticles();
-    } else if (gameState === 'victory') {
-        drawVictoryScreen();
+    
+    // Particles
+    particles.forEach(p=>{p.update();p.draw();});
+    particles=particles.filter(p=>p.life>0);
+    
+    // Shake
+    if(shakeAmt>0.5){ctx.translate((Math.random()-0.5)*shakeAmt,(Math.random()-0.5)*shakeAmt);shakeAmt*=0.9;}
+    
+    // Pause overlay on canvas
+    if(state===ST.PAUSED){
+        ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.textAlign='center';ctx.font='bold 28px Courier New';ctx.fillStyle='#00ffaa';
+        ctx.shadowColor='#00ffaa';ctx.shadowBlur=10;
+        ctx.fillText('PAUSED',canvas.width/2,canvas.height/2);
     }
+    
+    // Start screen overlay
+    if(state===ST.START){
+        ctx.fillStyle='rgba(10,10,26,0.92)';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.textAlign='center';
+        ctx.shadowColor='#00ffaa';ctx.shadowBlur=12;
+        ctx.font='bold 28px Courier New';ctx.fillStyle='#00ffaa';
+        ctx.fillText('OSI LAYER',canvas.width/2,canvas.height*0.25);
+        ctx.fillText('CLIMB',canvas.width/2,canvas.height*0.33);
+        ctx.shadowBlur=0;ctx.font='13px Courier New';ctx.fillStyle='#aaa';
+        ctx.fillText('Answer questions to climb',canvas.width/2,canvas.height*0.42);
+        ctx.fillText('all 7 OSI layers!',canvas.width/2,canvas.height*0.46);
+        
+        // Difficulty selection
+        ctx.font='bold 12px Courier New';ctx.fillStyle='#888';
+        ctx.fillText('SELECT DIFFICULTY:',canvas.width/2,canvas.height*0.55);
+        const diffs=[{k:'easy',c:'#44ff44'},{k:'medium',c:'#4488ff'},{k:'hard',c:'#ff4444'}];
+        const bw=80,bh=35,gap=10;
+        const totalW=diffs.length*bw+(diffs.length-1)*gap;
+        const sx=(canvas.width-totalW)/2;
+        window.diffBtns=[];
+        diffs.forEach((d,i)=>{
+            const bx=sx+i*(bw+gap),by=canvas.height*0.58;
+            window.diffBtns[i]={x:bx,y:by,w:bw,h:bh,k:d.k};
+            ctx.strokeStyle=difficulty===d.k?d.c:'#555';
+            ctx.lineWidth=difficulty===d.k?2:1;
+            ctx.beginPath();ctx.roundRect(bx,by,bw,bh,5);ctx.stroke();
+            if(difficulty===d.k){ctx.fillStyle=d.c+'22';ctx.fill();}
+            ctx.font='bold 11px Courier New';ctx.fillStyle=difficulty===d.k?d.c:'#666';
+            ctx.fillText(d.k.toUpperCase(),bx+bw/2,by+bh/2+4);
+        });
+        
+        // Start button
+        const sbw=150,sbh=40,sbx=(canvas.width-sbw)/2,sby=canvas.height*0.72;
+        window.startBtn={x:sbx,y:sby,w:sbw,h:sbh};
+        ctx.shadowColor='#00ffaa';ctx.shadowBlur=8;
+        ctx.beginPath();ctx.roundRect(sbx,sby,sbw,sbh,8);ctx.strokeStyle='#00ffaa';ctx.lineWidth=2;ctx.stroke();
+        ctx.fillStyle='#00ffaa22';ctx.fill();ctx.shadowBlur=0;
+        ctx.font='bold 16px Courier New';ctx.fillStyle='#00ffaa';
+        ctx.fillText('▶ CLIMB',canvas.width/2,sby+26);
+    }
+}
 
+
+// ADMIN
+function drawAdmin(){
+    if(!adminVisible)return;
+    ctx.save();const pw=220,ph=180,px=5,py=5;
+    ctx.globalAlpha=0.95;ctx.fillStyle='#0a0a2a';ctx.strokeStyle='#f0f';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(px,py,pw,ph,6);ctx.fill();ctx.stroke();ctx.globalAlpha=1;
+    ctx.font='bold 11px Courier New';ctx.textAlign='center';ctx.fillStyle='#f0f';ctx.fillText('🔧 ADMIN',px+pw/2,py+16);
+    ctx.textAlign='left';ctx.font='10px Courier New';
+    const ch=[{k:'L',d:'Add Life',f:()=>{lives=Math.min(lives+1,9);}},{k:'S',d:'+500 pts',f:()=>{score+=500;}},{k:'N',d:'Next Layer',f:()=>{if(currentLayer<7){currentLayer++;targetClimberY=getLayerY(currentLayer);askQuestion();}}},{k:'V',d:'Victory',f:()=>{currentLayer=7;state=ST.VICTORY;showVictory();}},{k:'R',d:'Reset Scores',f:()=>{highScores=[];saveHS();renderHS();}},{k:'X',d:'Close',f:()=>{adminVisible=false;}}];
+    window.adminCh=ch;
+    ch.forEach((c,i)=>{ctx.fillStyle='#f8f';ctx.fillText(`[${c.k}]`,px+10,py+35+i*22);ctx.fillStyle='#ccc';ctx.fillText(c.d,px+40,py+35+i*22);});
     ctx.restore();
 }
 
-function gameLoop() {
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
+// MAIN LOOP
+function loop(){
+    ctx.save();
+    if(shakeAmt>0.5){ctx.translate((Math.random()-0.5)*shakeAmt,(Math.random()-0.5)*shakeAmt);shakeAmt*=0.9;}else shakeAmt=0;
+    drawClimbView();
+    if(state===ST.PLAYING||state===ST.QUESTION)drawAdmin();
+    ctx.restore();
+    requestAnimationFrame(loop);
 }
 
-
-// Input handling
-canvas.addEventListener('click', (e) => {
-    initAudio();
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = W / rect.width;
-    const scaleY = H / rect.height;
-    const mx = (e.clientX - rect.left) * scaleX;
-    const my = (e.clientY - rect.top) * scaleY;
-
-    if (gameState === 'start') {
-        // Begin Ascent button
-        if (mx >= W / 2 - 120 && mx <= W / 2 + 120 && my >= 370 && my <= 420) {
-            initGame();
-        }
-    } else if (gameState === 'playing') {
-        // Mute button
-        if (mx >= W - 45 && mx <= W - 10 && my >= 10 && my <= 35) {
-            muted = !muted;
-            return;
-        }
-
-        // Question answer buttons
-        if (showQuestion && selectedAnswer === -1) {
-            questionOptions.forEach((opt, i) => {
-                const b = questionBtnBounds[i];
-                if (b && mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
-                    handleAnswer(i);
-                }
-            });
-        }
-    } else if (gameState === 'gameover') {
-        // Try Again button
-        if (mx >= W / 2 - 130 && mx <= W / 2 - 10 && my >= 420 && my <= 465) {
-            initGame();
-        }
-        // Main Menu button
-        if (mx >= W / 2 + 10 && mx <= W / 2 + 130 && my >= 420 && my <= 465) {
-            gameState = 'start';
-        }
-    } else if (gameState === 'victory') {
-        // Save Score button
-        if (mx >= W / 2 - 130 && mx <= W / 2 - 10 && my >= 430 && my <= 470) {
-            saveHighScore(playerName, score, highestZone);
-            playerName = '';
-            gameState = 'start';
-        }
-        // Play Again button
-        if (mx >= W / 2 + 10 && mx <= W / 2 + 130 && my >= 430 && my <= 470) {
-            initGame();
-        }
+// INPUT
+document.addEventListener('keydown',e=>{
+    sfx.init();
+    adminBuf+=e.key;if(adminBuf.length>12)adminBuf=adminBuf.slice(-12);
+    if(adminBuf.includes('IamTesting')){adminMode=true;adminVisible=!adminVisible;adminBuf='';}
+    if(adminVisible&&window.adminCh){const c=window.adminCh.find(x=>x.k===e.key.toUpperCase());if(c){c.f();updatePanel();}}
+    
+    if(state===ST.START){if(e.key==='Enter'||e.key===' ')startGame();}
+    else if(state===ST.PLAYING){
+        if(e.key>='1'&&e.key<='4'&&!answered)answerQ(parseInt(e.key)-1);
+        if(e.key==='Escape'||e.key==='p'||e.key==='P')togglePause();
     }
+    else if(state===ST.PAUSED){if(e.key==='Escape'||e.key==='p'||e.key==='P')togglePause();}
 });
 
-// Keyboard input for name entry
-document.addEventListener('keydown', (e) => {
-    if (gameState === 'victory') {
-        if (e.key === 'Backspace') {
-            playerName = playerName.slice(0, -1);
-        } else if (e.key === 'Enter') {
-            saveHighScore(playerName, score, highestZone);
-            playerName = '';
-            gameState = 'start';
-        } else if (e.key.length === 1 && playerName.length < 15) {
-            playerName += e.key;
-        }
+// Canvas clicks (for start screen)
+function getPos(e){const r=canvas.getBoundingClientRect();const sx=canvas.width/r.width,sy=canvas.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};}
+function inR(p,r){return p.x>=r.x&&p.x<=r.x+r.w&&p.y>=r.y&&p.y<=r.y+r.h;}
+function cClick(e){
+    sfx.init();const pos=getPos(e);
+    if(state===ST.START){
+        if(window.diffBtns)window.diffBtns.forEach(b=>{if(inR(pos,b))difficulty=b.k;});
+        if(window.startBtn&&inR(pos,window.startBtn))startGame();
     }
-    // Space to start
-    if (e.key === ' ' && gameState === 'start') {
-        initAudio();
-        initGame();
-    }
-});
-
-// Touch support
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const clickEvent = new MouseEvent('click', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-    });
-    canvas.dispatchEvent(clickEvent);
-});
-
-// Responsive scaling
-function resizeCanvas() {
-    const container = document.getElementById('gameContainer');
-    const maxW = window.innerWidth - 20;
-    const maxH = window.innerHeight - 20;
-    const scale = Math.min(maxW / W, maxH / H, 1);
-    container.style.transform = `scale(${scale})`;
-    container.style.transformOrigin = 'center center';
+    if(state===ST.PAUSED)togglePause();
 }
+canvas.addEventListener('click',cClick);
+canvas.addEventListener('touchstart',e=>{e.preventDefault();cClick(e);},{passive:false});
 
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
+// Panel time updater
+setInterval(()=>{if(state===ST.PLAYING)updatePanel();},1000);
 
-// Start the game loop
-gameLoop();
+loadHS();renderHS();
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
