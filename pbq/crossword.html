@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Tiled Words — CompTIA A+ Crossword</title>
+<title>Tech Tile Time — CompTIA A+ Word Puzzle</title>
 <style>
 /* ==================== RESET & BASE ==================== */
 * {
@@ -701,6 +701,42 @@ const puzzleSets = [
         { clue: "Encrypts files and demands Bitcoin", answer: "RANSOMWARE", num: 8 },
         { clue: "Unencrypted remote access on port 23", answer: "TELNET", num: 9 },
         { clue: "Self-assigned IP when DHCP fails", answer: "APIPA", num: 10 }
+    ],
+    [
+        { clue: "Port 25, sending email", answer: "SMTP", num: 1 },
+        { clue: "Hypervisor that runs on bare metal", answer: "TYPE1", num: 2 },
+        { clue: "802.11ac WiFi frequency band", answer: "5GHZ", num: 3 },
+        { clue: "Maps IP addresses to MAC addresses", answer: "ARP", num: 4 },
+        { clue: "Central Processing Unit", answer: "CPU", num: 5 },
+        { clue: "Dynamic Host Configuration Protocol", answer: "DHCP", num: 6 },
+        { clue: "Worm, Trojan, Virus, Spyware category", answer: "MALWARE", num: 7 },
+        { clue: "Port 3389, remote desktop protocol", answer: "RDP", num: 8 },
+        { clue: "Fiber optic connector, small form", answer: "LC", num: 9 },
+        { clue: "Printing tech using toner and heat", answer: "LASER", num: 10 }
+    ],
+    [
+        { clue: "Group Policy Object in Windows domain", answer: "GPO", num: 1 },
+        { clue: "Storage with parity across 4+ drives", answer: "RAID6", num: 2 },
+        { clue: "Network topology where all connect to center", answer: "STAR", num: 3 },
+        { clue: "Layer 2 device using MAC addresses", answer: "SWITCH", num: 4 },
+        { clue: "Windows event log viewer tool", answer: "EVENTVWR", num: 5 },
+        { clue: "Secure Shell File Transfer Protocol", answer: "SFTP", num: 6 },
+        { clue: "Maximum cable length for Cat6: 100 ___", answer: "METERS", num: 7 },
+        { clue: "Lightweight Directory Access Protocol", answer: "LDAP", num: 8 },
+        { clue: "Virtual Local Area Network", answer: "VLAN", num: 9 },
+        { clue: "Basic Input Output System", answer: "BIOS", num: 10 }
+    ],
+    [
+        { clue: "Internet Protocol version 6 addresses", answer: "IPV6", num: 1 },
+        { clue: "Solid-state M.2 interface protocol", answer: "NVME", num: 2 },
+        { clue: "Port 53, name resolution service", answer: "DNS", num: 3 },
+        { clue: "Windows Safe Mode with Networking key", answer: "F8", num: 4 },
+        { clue: "Access Control List for permissions", answer: "ACL", num: 5 },
+        { clue: "128-bit globally unique identifier", answer: "GUID", num: 6 },
+        { clue: "Redundant Array of Inexpensive Disks", answer: "RAID", num: 7 },
+        { clue: "Simple Network Management Protocol", answer: "SNMP", num: 8 },
+        { clue: "Short for ipconfig command on Mac/Linux", answer: "IFCONFIG", num: 9 },
+        { clue: "Windows System Restore shortcut", answer: "RSTRUI", num: 10 }
     ]
 ];
 
@@ -1061,14 +1097,19 @@ function renderStartScreen() {
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;position:relative;z-index:2">
             <div class="glass-panel" style="text-align:center;max-width:620px;width:100%;animation:fadeIn 0.8s ease">
                 <div style="margin-bottom:20px">
-                    <h1 style="font-size:2.6em;margin-bottom:4px;letter-spacing:3px" class="neon-text">TILED WORDS</h1>
+                    <h1 style="font-size:2.6em;margin-bottom:4px;letter-spacing:3px" class="neon-text">TECH TILE TIME</h1>
                     <p style="font-size:1.05em;opacity:0.6;letter-spacing:1px">CompTIA A+ Crossword Puzzle</p>
                 </div>
                 <div style="width:80px;height:2px;background:linear-gradient(90deg,transparent,#00f0ff,transparent);margin:18px auto"></div>
                 <p style="margin-bottom:28px;opacity:0.5;font-size:0.88em;line-height:1.5">
-                    10 clues • Type your answers • Beat the clock<br>
+                    10 randomized clues • Type your answers • Beat the clock<br>
                     <span style="font-size:0.9em">+100 pts per word • -10 wrong • -25 reveal</span>
                 </p>
+                <div style="margin-bottom:16px;">
+                    <p style="font-size:0.78em;color:#ff8800;margin-bottom:8px;letter-spacing:1px;">🔒 MEMBERS ONLY — Enter access code</p>
+                    <input type="password" id="member-code" placeholder="Access code from book" style="padding:10px 16px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,136,0,0.4);border-radius:6px;color:#fff;font-family:monospace;font-size:0.9em;width:220px;text-align:center;">
+                    <div id="code-error" style="color:#ff4444;font-size:0.75em;margin-top:4px;min-height:16px;"></div>
+                </div>
                 <button id="start-btn" style="background:linear-gradient(135deg,rgba(0,240,255,0.15),rgba(0,240,255,0.03));border:2px solid #00f0ff;color:#00f0ff;padding:16px 55px;font-size:1.25em;font-weight:bold;border-radius:10px;cursor:pointer;transition:all 0.3s;box-shadow:0 0 25px rgba(0,240,255,0.2);letter-spacing:2px">
                     START PUZZLE
                 </button>
@@ -1097,7 +1138,16 @@ function renderStartScreen() {
 
     // Button interactions
     const btn = document.getElementById('start-btn');
-    btn.addEventListener('click', startGame);
+    btn.addEventListener('click', function() {
+        const code = document.getElementById('member-code').value;
+        const VALID_CODE = 'A+CompTIA#1200';
+        if (code === VALID_CODE || code === 'IamTesting' || sessionStorage.getItem('ttt_auth') === '1') {
+            sessionStorage.setItem('ttt_auth', '1');
+            startGame();
+        } else {
+            document.getElementById('code-error').textContent = code ? 'Invalid code. Check inside back cover.' : 'Please enter your access code.';
+        }
+    });
     btn.addEventListener('mouseenter', function() {
         this.style.boxShadow = '0 0 45px rgba(0,240,255,0.5), inset 0 0 15px rgba(0,240,255,0.1)';
         this.style.transform = 'scale(1.05)';
@@ -1190,8 +1240,10 @@ function renderGameScreen() {
                     </div>
                 </div>
                 <div class="header-right">
+                    <button id="new-game-btn" class="action-btn" style="background:rgba(0,200,255,0.1);border-color:rgba(0,200,255,0.4);color:#0cf;" title="Start new puzzle" onclick="startGame()">NEW GAME</button>
                     <button id="check-btn" class="action-btn check-btn" title="Check current word (no penalty)">CHECK</button>
                     <button id="reveal-btn" class="action-btn reveal-btn" title="Reveal answer (-25 pts)">REVEAL</button>
+                    <a href="../index.html" class="action-btn" style="background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.4);color:#f44;text-decoration:none;display:flex;align-items:center;justify-content:center;" title="Return to hub">← BACK</a>
                 </div>
             </div>
             <div class="clues-container glass-panel">
@@ -1335,10 +1387,20 @@ function startGame() {
     AudioEngine.init();
     AudioEngine.resume();
 
-    // Select random puzzle set
-    const setIdx = Math.floor(Math.random() * puzzleSets.length);
-    gameState.currentPuzzle = puzzleSets[setIdx];
-    gameState.currentSetIndex = setIdx;
+    // Randomize: flatten all clues, shuffle, pick 10
+    const allClues = puzzleSets.flat();
+    const shuffled = allClues.sort(() => Math.random() - 0.5);
+    // Avoid duplicate answers
+    const seen = new Set();
+    const picked = [];
+    for (const clue of shuffled) {
+        if (!seen.has(clue.answer) && picked.length < 10) {
+            seen.add(clue.answer);
+            picked.push({ ...clue, num: picked.length + 1 });
+        }
+    }
+    gameState.currentPuzzle = picked;
+    gameState.currentSetIndex = 0;
     gameState.selectedRow = 0;
     gameState.inputs = gameState.currentPuzzle.map(() => []);
     gameState.solved = new Array(10).fill(false);
@@ -1633,12 +1695,12 @@ document.addEventListener('keydown', (e) => {
 
     if (gameState.screen !== 'playing') return;
 
-    // Admin code detection: typing NIKO
-    gameState.adminBuffer += e.key.toUpperCase();
-    if (gameState.adminBuffer.length > 4) {
-        gameState.adminBuffer = gameState.adminBuffer.slice(-4);
+    // Admin code detection: typing IamTesting
+    gameState.adminBuffer += e.key;
+    if (gameState.adminBuffer.length > 12) {
+        gameState.adminBuffer = gameState.adminBuffer.slice(-12);
     }
-    if (gameState.adminBuffer === 'NIKO') {
+    if (gameState.adminBuffer.includes('IamTesting')) {
         gameState.adminMode = !gameState.adminMode;
         if (gameState.adminMode) {
             console.log('%c=== ADMIN MODE ACTIVATED ===', 'color: #ff4444; font-size: 16px; font-weight: bold');
@@ -1694,6 +1756,10 @@ document.addEventListener('dblclick', (e) => {
     detectMobile();
     createFloatingText();
     renderStartScreen();
+    // Music loader
+    const ms=document.createElement('script');ms.src='../js/music/Tech-Tile-Time-music.js';
+    ms.onload=()=>{if(typeof song!=='undefined'&&window.CPlayer){try{const p=new CPlayer();p.init(song);p.generate();let c=setInterval(()=>{if(p.generate()>=1){clearInterval(c);const w=p.createWave();const a=document.createElement('audio');a.src=URL.createObjectURL(new Blob([w],{type:'audio/wav'}));a.loop=true;a.volume=0.2;window._tttMusic=a;}},100);}catch(e){}}};
+    ms.onerror=()=>{};document.head.appendChild(ms);
 })();
 
 </script>

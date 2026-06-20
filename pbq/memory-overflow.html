@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Memory Overflow - CompTIA Study Game</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0a0a1a;
+    color: #00ff88;
+    font-family: 'Courier New', monospace;
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0, 255, 136, 0.03) 2px, rgba(0, 255, 136, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+#game-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10px;
+    min-height: 100vh;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+#board-wrapper {
+    position: relative;
+    width: 300px;
+    height: 600px;
+    border: 2px solid #00f0ff;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0, 240, 255, 0.1);
+    background: rgba(0, 10, 20, 0.9);
+    flex-shrink: 0;
+}
+#tetris-canvas { display: block; }
+#right-panel {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.panel-btn {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #00f0ff;
+    background: rgba(0, 240, 255, 0.1);
+    color: #00f0ff;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+.panel-btn:hover {
+    background: rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+.panel-section {
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    padding: 8px;
+    background: rgba(0, 10, 30, 0.8);
+}
+.panel-section h3 {
+    color: #00f0ff;
+    font-size: 11px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.panel-section .value {
+    color: #00ff88;
+    font-size: 18px;
+    font-weight: bold;
+}
+.meter-bar {
+    width: 100%;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00f0ff;
+    margin-top: 4px;
+    position: relative;
+    overflow: hidden;
+}
+.meter-fill {
+    height: 100%;
+    transition: width 0.3s;
+}
+.memory-fill { background: linear-gradient(90deg, #00ff88, #ff4444); }
+.cpu-fill { background: linear-gradient(90deg, #00f0ff, #ff00aa); }
+
+#high-scores {
+    border: 2px solid #00ff88;
+    padding: 8px;
+    background: rgba(0, 30, 20, 0.8);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4), 0 0 30px rgba(0, 255, 136, 0.2);
+    animation: glowPulse 2s ease-in-out infinite;
+}
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4), 0 0 30px rgba(0, 255, 136, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.6), 0 0 50px rgba(0, 255, 136, 0.3); }
+}
+#high-scores h3 {
+    color: #00ff88;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.hs-entry {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #00f0ff;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+}
+.hs-entry:first-of-type { color: #ffd700; }
+#question-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+#question-overlay.active { display: flex; }
+#question-box {
+    max-width: 500px;
+    width: 100%;
+    border: 2px solid #00f0ff;
+    background: rgba(0, 10, 30, 0.95);
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+}
+
+#question-box h3 {
+    color: #00f0ff;
+    font-size: 12px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+#question-text {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+#question-timer {
+    color: #ff4444;
+    font-size: 14px;
+    text-align: right;
+    margin-bottom: 10px;
+}
+.answer-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    border: 1px solid #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+}
+.answer-btn:hover {
+    background: rgba(0, 255, 136, 0.3);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+.answer-btn.correct { background: rgba(0, 255, 0, 0.4); border-color: #0f0; }
+.answer-btn.wrong { background: rgba(255, 0, 0, 0.4); border-color: #f00; }
+#difficulty-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 10px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+}
+.diff-easy { background: #0a3; color: #fff; }
+.diff-medium { background: #a80; color: #fff; }
+.diff-hard { background: #a00; color: #fff; }
+#start-screen, #gameover-screen {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 26, 0.97);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+#start-screen h1 {
+    font-size: 36px;
+    color: #00f0ff;
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    margin-bottom: 10px;
+}
+#start-screen p {
+    color: #00ff88;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.start-btn {
+    padding: 15px 40px;
+    border: 2px solid #00ff88;
+    background: transparent;
+    color: #00ff88;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 136, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.7); }
+}
+#gameover-screen { display: none; }
+#gameover-screen h1 { color: #ff4444; font-size: 28px; margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+#gameover-screen .stats { color: #00f0ff; font-size: 14px; margin: 5px 0; }
+#gameover-screen .final-score { color: #00ff88; font-size: 32px; margin: 10px 0; }
+#admin-panel {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 220px;
+    background: rgba(20, 0, 40, 0.95);
+    border: 2px solid #ff00aa;
+    padding: 15px;
+    z-index: 5000;
+    box-shadow: 0 0 20px rgba(255, 0, 170, 0.5);
+}
+#admin-panel h3 { color: #ff00aa; font-size: 12px; margin-bottom: 10px; }
+#admin-panel label { color: #fff; font-size: 11px; display: block; margin: 5px 0 2px; }
+#admin-panel input, #admin-panel select {
+    width: 100%;
+    padding: 5px;
+    background: #111;
+    border: 1px solid #ff00aa;
+    color: #fff;
+    font-family: monospace;
+    margin-bottom: 5px;
+}
+#admin-panel button {
+    width: 100%;
+    padding: 6px;
+    margin: 3px 0;
+    background: rgba(255, 0, 170, 0.2);
+    border: 1px solid #ff00aa;
+    color: #ff00aa;
+    cursor: pointer;
+    font-family: monospace;
+}
+
+#mobile-controls {
+    display: none;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+.mobile-btn {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #00f0ff;
+    background: rgba(0, 240, 255, 0.1);
+    color: #00f0ff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+.mobile-btn:active {
+    background: rgba(0, 240, 255, 0.4);
+}
+#powerup-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 255, 136, 0.2);
+    border: 2px solid #00ff88;
+    padding: 15px 25px;
+    color: #00ff88;
+    font-size: 18px;
+    z-index: 3000;
+    display: none;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+}
+@media (max-width: 540px) {
+    #game-container { flex-direction: column; align-items: center; }
+    #right-panel { width: 300px; flex-direction: row; flex-wrap: wrap; }
+    #right-panel .panel-section { flex: 1; min-width: 90px; }
+    #mobile-controls { display: flex; }
+    #board-wrapper { width: 280px; height: 560px; }
+    #tetris-canvas { width: 280px; height: 560px; }
+}
+@media (max-width: 360px) {
+    #board-wrapper { width: 250px; height: 500px; }
+    #tetris-canvas { width: 250px; height: 500px; }
+}
+</style>
+</head>
+<body>
+
+<div id="start-screen">
+    <h1>MEMORY OVERFLOW</h1>
+    <p>[ RAM is filling up. Clear data before system crash. ]</p>
+    <p style="font-size:11px;color:#666;">Blocks = memory fragments. Complete rows, answer questions to clear them.</p>
+    <button class="start-btn" onclick="startGame()">INITIALIZE SYSTEM</button>
+    <div style="margin-top:20px;font-size:10px;color:#444;">Arrow Keys: Move/Rotate | Space: Hard Drop | Answer questions to clear rows</div>
+</div>
+
+<div id="gameover-screen">
+    <h1>/// SYSTEM CRASH ///</h1>
+    <div class="final-score" id="final-score">0</div>
+    <div class="stats" id="go-level">Level: 1</div>
+    <div class="stats" id="go-questions">Questions Answered: 0</div>
+    <div class="stats" id="go-accuracy">Accuracy: 0%</div>
+    <div style="margin-top:15px;">
+        <button class="start-btn" id="restore-btn" onclick="restoreBackup()" style="font-size:14px;padding:10px 20px;margin:5px;">RESTORE BACKUP</button>
+        <button class="start-btn" onclick="startGame()" style="font-size:14px;padding:10px 20px;margin:5px;">REBOOT SYSTEM</button>
+    </div>
+</div>
+
+<div id="game-container">
+    <div id="board-wrapper">
+        <canvas id="tetris-canvas" width="300" height="600"></canvas>
+    </div>
+    <div id="right-panel">
+        <div style="display:flex;gap:5px;">
+            <button class="panel-btn" id="pause-btn" onclick="togglePause()">⏸</button>
+            <button class="panel-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+            <a href="../index.html" class="panel-btn" style="text-decoration:none;">↩</a>
+        </div>
+        <div class="panel-section"><h3>SCORE</h3><div class="value" id="score-display">0</div></div>
+        <div class="panel-section"><h3>LEVEL</h3><div class="value" id="level-display">1</div></div>
+        <div class="panel-section"><h3>LINES</h3><div class="value" id="lines-display">0</div></div>
+        <div class="panel-section"><h3>STREAK 🔥</h3><div class="value" id="streak-display">0</div></div>
+
+        <div class="panel-section">
+            <h3>MEMORY USAGE</h3>
+            <div class="meter-bar"><div class="meter-fill memory-fill" id="memory-meter" style="width:0%"></div></div>
+            <div style="font-size:10px;color:#888;margin-top:2px;" id="memory-pct">0%</div>
+        </div>
+        <div class="panel-section">
+            <h3>CPU LOAD</h3>
+            <div class="meter-bar"><div class="meter-fill cpu-fill" id="cpu-meter" style="width:0%"></div></div>
+            <div style="font-size:10px;color:#888;margin-top:2px;" id="cpu-pct">0%</div>
+        </div>
+        <div class="panel-section"><h3>NEXT PIECE</h3><canvas id="next-canvas" width="100" height="80" style="display:block;margin:5px auto;"></canvas></div>
+        <div id="high-scores">
+            <h3>🏆 HIGH SCORES 🏆</h3>
+            <div id="hs-list"></div>
+        </div>
+    </div>
+</div>
+
+<div id="mobile-controls">
+    <button class="mobile-btn" ontouchstart="moveLeft()" onclick="moveLeft()">◀</button>
+    <button class="mobile-btn" ontouchstart="moveRight()" onclick="moveRight()">◀</button>
+    <button class="mobile-btn" ontouchstart="rotatePiece()" onclick="rotatePiece()">↻</button>
+    <button class="mobile-btn" ontouchstart="softDrop()" onclick="softDrop()">▼</button>
+    <button class="mobile-btn" ontouchstart="hardDrop()" onclick="hardDrop()">⏬</button>
+</div>
+
+<div id="question-overlay">
+    <div id="question-box">
+        <div id="difficulty-badge" class="diff-easy">EASY</div>
+        <h3 id="q-category">LOGIC</h3>
+        <div id="question-timer">⏱ 10s</div>
+        <div id="question-text">Question goes here</div>
+        <div id="answers-container"></div>
+    </div>
+</div>
+
+<div id="powerup-notification"></div>
+
+<div id="admin-panel">
+    <h3>🔧 ADMIN PANEL</h3>
+    <label>Skip to Level:</label>
+    <select id="admin-level" onchange="adminSetLevel(this.value)">
+
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+        <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+        <option value="13">13</option><option value="14">14</option><option value="15">15</option>
+    </select>
+    <label>Set Score:</label>
+    <input type="number" id="admin-score" value="0">
+    <button onclick="adminSetScore()">Apply Score</button>
+    <button onclick="adminToggleInvincible()">Toggle Invincibility</button>
+    <button onclick="triggerQuestion()">Trigger Question</button>
+    <button onclick="adminClearBoard()">Clear Board</button>
+    <button onclick="document.getElementById('admin-panel').style.display='none'">Close</button>
+</div>
+
+<script>
+// ===== GAME STATE =====
+const COLS = 10, ROWS = 20, CELL = 30;
+let board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+let score = 0, level = 1, linesCleared = 0, streak = 0;
+let gameRunning = false, gamePaused = false, gameOver = false;
+let currentPiece = null, nextPiece = null;
+let dropInterval = 1500, dropTimer = 0, lastTime = 0;
+let questionTimer = null, questionInterval = null;
+let pendingRows = [], totalCorrect = 0, totalQuestions = 0;
+let usedBackup = false, invincible = false, muted = false;
+let adminMode = false, typedKeys = '';
+let freezeTimer = 0, frozen = false;
+const canvas = document.getElementById('tetris-canvas');
+const ctx = canvas.getContext('2d');
+const nextCanvas = document.getElementById('next-canvas');
+const nextCtx = nextCanvas.getContext('2d');
+
+// ===== HEX LABELS =====
+const hexLabels = ['0x4F','0xFF','0xA0','0x7E','0xBB','0xCC','0xDD','0x1A','0x9F','0x3C',
+    '0xDE','0xAD','0xBE','0xEF','0x00','0x11','0x22','0x33','0x44','0x55'];
+
+// ===== TETRIS PIECES =====
+const PIECES = {
+    I: { shape: [[1,1,1,1]], color: '#00f0ff' },
+    O: { shape: [[1,1],[1,1]], color: '#ffd700' },
+    T: { shape: [[0,1,0],[1,1,1]], color: '#b300ff' },
+    S: { shape: [[0,1,1],[1,1,0]], color: '#00ff88' },
+    Z: { shape: [[1,1,0],[0,1,1]], color: '#ff4444' },
+    L: { shape: [[1,0],[1,0],[1,1]], color: '#ff8800' },
+    J: { shape: [[0,1],[0,1],[1,1]], color: '#4488ff' }
+};
+const PIECE_NAMES = ['I','O','T','S','Z','L','J'];
+
+function randomPiece() {
+    const name = PIECE_NAMES[Math.floor(Math.random() * PIECE_NAMES.length)];
+    const p = PIECES[name];
+    return {
+        shape: p.shape.map(r => [...r]),
+        color: p.color,
+        x: Math.floor(COLS/2) - Math.floor(p.shape[0].length/2),
+        y: 0,
+        label: hexLabels[Math.floor(Math.random() * hexLabels.length)]
+    };
+}
+
+function rotateMat(matrix) {
+    const rows = matrix.length, cols = matrix[0].length;
+    const result = [];
+    for (let c = 0; c < cols; c++) {
+        result.push([]);
+        for (let r = rows - 1; r >= 0; r--) {
+            result[c].push(matrix[r][c]);
+        }
+    }
+    return result;
+}
+
+function collides(piece, offX = 0, offY = 0) {
+    for (let r = 0; r < piece.shape.length; r++) {
+        for (let c = 0; c < piece.shape[r].length; c++) {
+            if (!piece.shape[r][c]) continue;
+            const nx = piece.x + c + offX;
+            const ny = piece.y + r + offY;
+            if (nx < 0 || nx >= COLS || ny >= ROWS) return true;
+            if (ny >= 0 && board[ny][nx]) return true;
+        }
+    }
+    return false;
+}
+
+function lockPiece() {
+    for (let r = 0; r < currentPiece.shape.length; r++) {
+        for (let c = 0; c < currentPiece.shape[r].length; c++) {
+            if (!currentPiece.shape[r][c]) continue;
+            const ny = currentPiece.y + r;
+            const nx = currentPiece.x + c;
+            if (ny < 0) { if (!invincible) triggerGameOver(); return; }
+            board[ny][nx] = { color: currentPiece.color, label: currentPiece.label };
+        }
+    }
+    score += 10 * level;
+    checkCompletedRows();
+    currentPiece = nextPiece;
+    nextPiece = randomPiece();
+    if (collides(currentPiece)) { if (!invincible) triggerGameOver(); }
+    updateUI();
+    drawNextPiece();
+}
+
+function checkCompletedRows() {
+    for (let r = 0; r < ROWS; r++) {
+        if (board[r].every(cell => cell !== 0)) {
+            if (!pendingRows.includes(r)) pendingRows.push(r);
+        }
+    }
+    // Highlight pending rows
+    pendingRows.forEach(r => {
+        for (let c = 0; c < COLS; c++) {
+            if (board[r][c]) board[r][c].pending = true;
+        }
+    });
+}
+
+function clearRows(count) {
+    let cleared = 0;
+    pendingRows.sort((a, b) => b - a);
+    while (cleared < count && pendingRows.length > 0) {
+        const row = pendingRows.pop();
+        board.splice(row, 1);
+        board.unshift(Array(COLS).fill(0));
+        cleared++;
+        // Adjust remaining pending row indices
+        pendingRows = pendingRows.map(r => r >= row ? r : r + 1);
+    }
+    if (cleared > 0) {
+        linesCleared += cleared;
+        score += 100 * cleared * level;
+    }
+    // Recalculate pending rows
+    pendingRows = [];
+    checkCompletedRows();
+    updateUI();
+}
+
+function addRandomBlocks(count) {
+    for (let i = 0; i < count; i++) {
+        // Shift everything up
+        board.shift();
+        const newRow = Array(COLS).fill(0);
+        const gaps = Math.floor(Math.random() * 3) + 1;
+        for (let c = 0; c < COLS; c++) {
+            if (Math.random() > gaps / COLS) {
+                newRow[c] = { color: '#666', label: '0x??' };
+            }
+        }
+        board.push(newRow);
+    }
+    checkCompletedRows();
+}
+
+// ===== MOVEMENT =====
+function moveLeft() { if (currentPiece && !collides(currentPiece, -1, 0)) currentPiece.x--; }
+function moveRight() { if (currentPiece && !collides(currentPiece, 1, 0)) currentPiece.x++; }
+function softDrop() {
+    if (currentPiece && !collides(currentPiece, 0, 1)) { currentPiece.y++; score += 1; }
+    else if (currentPiece) lockPiece();
+}
+function hardDrop() {
+    if (!currentPiece) return;
+    while (!collides(currentPiece, 0, 1)) { currentPiece.y++; score += 2; }
+    lockPiece();
+}
+function rotatePiece() {
+    if (!currentPiece) return;
+    const rotated = rotateMat(currentPiece.shape);
+    const old = currentPiece.shape;
+    currentPiece.shape = rotated;
+    if (collides(currentPiece)) {
+        // Wall kick attempts
+        if (!collides(currentPiece, 1, 0)) { currentPiece.x++; return; }
+        if (!collides(currentPiece, -1, 0)) { currentPiece.x--; return; }
+        if (!collides(currentPiece, 2, 0)) { currentPiece.x += 2; return; }
+        if (!collides(currentPiece, -2, 0)) { currentPiece.x -= 2; return; }
+        currentPiece.shape = old;
+    }
+}
+
+// ===== RENDERING =====
+function draw() {
+    ctx.clearRect(0, 0, 300, 600);
+    // Draw grid
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+    for (let r = 0; r <= ROWS; r++) {
+        ctx.beginPath(); ctx.moveTo(0, r * CELL); ctx.lineTo(300, r * CELL); ctx.stroke();
+    }
+    for (let c = 0; c <= COLS; c++) {
+        ctx.beginPath(); ctx.moveTo(c * CELL, 0); ctx.lineTo(c * CELL, 600); ctx.stroke();
+    }
+    // Draw board
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            if (board[r][c]) {
+                const cell = board[r][c];
+                ctx.fillStyle = cell.pending ? '#ffff00' : cell.color;
+                ctx.shadowColor = cell.color;
+                ctx.shadowBlur = cell.pending ? 8 : 4;
+                ctx.fillRect(c * CELL + 1, r * CELL + 1, CELL - 2, CELL - 2);
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.font = '7px monospace';
+                ctx.fillText(cell.label || '', c * CELL + 3, r * CELL + 18);
+            }
+        }
+    }
+
+    // Draw current piece
+    if (currentPiece) {
+        // Ghost piece
+        let ghostY = currentPiece.y;
+        while (!collides({...currentPiece, y: ghostY + 1}, 0, 0)) ghostY++;
+        if (ghostY !== currentPiece.y) {
+            ctx.globalAlpha = 0.2;
+            for (let r = 0; r < currentPiece.shape.length; r++) {
+                for (let c = 0; c < currentPiece.shape[r].length; c++) {
+                    if (currentPiece.shape[r][c]) {
+                        ctx.fillStyle = currentPiece.color;
+                        ctx.fillRect((currentPiece.x + c) * CELL + 1, (ghostY + r) * CELL + 1, CELL - 2, CELL - 2);
+                    }
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+        // Actual piece
+        for (let r = 0; r < currentPiece.shape.length; r++) {
+            for (let c = 0; c < currentPiece.shape[r].length; c++) {
+                if (currentPiece.shape[r][c]) {
+                    ctx.fillStyle = currentPiece.color;
+                    ctx.shadowColor = currentPiece.color;
+                    ctx.shadowBlur = 6;
+                    ctx.fillRect((currentPiece.x + c) * CELL + 1, (currentPiece.y + r) * CELL + 1, CELL - 2, CELL - 2);
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+                    ctx.font = '7px monospace';
+                    ctx.fillText(currentPiece.label, (currentPiece.x + c) * CELL + 3, (currentPiece.y + r) * CELL + 18);
+                }
+            }
+        }
+    }
+}
+
+function drawNextPiece() {
+    nextCtx.clearRect(0, 0, 100, 80);
+    if (!nextPiece) return;
+    const offsetX = (100 - nextPiece.shape[0].length * 20) / 2;
+    const offsetY = (80 - nextPiece.shape.length * 20) / 2;
+    for (let r = 0; r < nextPiece.shape.length; r++) {
+        for (let c = 0; c < nextPiece.shape[r].length; c++) {
+            if (nextPiece.shape[r][c]) {
+                nextCtx.fillStyle = nextPiece.color;
+                nextCtx.shadowColor = nextPiece.color;
+                nextCtx.shadowBlur = 5;
+                nextCtx.fillRect(offsetX + c * 20, offsetY + r * 20, 18, 18);
+                nextCtx.shadowBlur = 0;
+            }
+        }
+    }
+}
+
+// ===== QUESTION BANK =====
+const questions = [
+// LOGIC (10)
+{cat:'Logic',q:'What comes next: 2, 4, 8, 16, ?',a:'32',opts:['24','32','64','20'],diff:'easy'},
+{cat:'Logic',q:'Which is NOT a binary number?',a:'142',opts:['101','110','142','111'],diff:'easy'},
+{cat:'Logic',q:'If A=1, B=2, C=3... what is C+A+B?',a:'6',opts:['6','7','8','312'],diff:'easy'},
+{cat:'Logic',q:'How many bits in a byte?',a:'8',opts:['4','8','16','32'],diff:'easy'},
+{cat:'Logic',q:'What is 0xFF in decimal?',a:'255',opts:['256','255','128','16'],diff:'medium'},
+{cat:'Logic',q:"What's the binary of 10?",a:'1010',opts:['1010','1100','1001','0110'],diff:'medium'},
+{cat:'Logic',q:'How many values can 4 bits represent?',a:'16',opts:['4','8','16','32'],diff:'medium'},
+{cat:'Logic',q:'What is 2^10?',a:'1024',opts:['512','1024','2048','256'],diff:'medium'},
+{cat:'Logic',q:'What number base does hexadecimal use?',a:'16',opts:['8','10','16','12'],diff:'easy'},
+{cat:'Logic',q:'In binary, what is 1+1?',a:'10',opts:['2','10','11','01'],diff:'hard'},
+// IT KNOWLEDGE (10)
+{cat:'IT',q:'What does RAM stand for?',a:'Random Access Memory',opts:['Random Access Memory','Read Active Memory','Rapid Access Module','Remote Application Manager'],diff:'easy'},
+{cat:'IT',q:'Which protocol uses port 443?',a:'HTTPS',opts:['HTTP','HTTPS','FTP','SSH'],diff:'easy'},
+{cat:'IT',q:'What does POST do?',a:'Tests hardware on boot',opts:['Sends data online','Tests hardware on boot','Formats drive','Creates partition'],diff:'medium'},
+{cat:'IT',q:'RAID 5 needs minimum how many drives?',a:'3',opts:['2','3','4','5'],diff:'medium'},
+{cat:'IT',q:'What does SSD stand for?',a:'Solid State Drive',opts:['Solid State Drive','System Storage Device','Serial Signal Drive','Super Speed Disk'],diff:'easy'},
+{cat:'IT',q:'Default subnet mask for Class C?',a:'255.255.255.0',opts:['255.0.0.0','255.255.0.0','255.255.255.0','255.255.255.128'],diff:'medium'},
+{cat:'IT',q:'Which command flushes DNS cache?',a:'ipconfig /flushdns',opts:['netstat -a','ipconfig /flushdns','ping localhost','nslookup'],diff:'hard'},
+{cat:'IT',q:'What port does SSH use?',a:'22',opts:['21','22','23','25'],diff:'easy'},
+{cat:'IT',q:'BitLocker requires what chip?',a:'TPM',opts:['GPU','TPM','SSD','NIC'],diff:'hard'},
+{cat:'IT',q:'APIPA address range starts with?',a:'169.254',opts:['192.168','10.0','169.254','172.16'],diff:'hard'},
+
+// CODE/TECH (10)
+{cat:'Code',q:'What data structure uses LIFO?',a:'Stack',opts:['Queue','Stack','Array','Tree'],diff:'easy'},
+{cat:'Code',q:'What does SQL stand for?',a:'Structured Query Language',opts:['Simple Query Logic','Structured Query Language','System Queue List','Server Query Link'],diff:'easy'},
+{cat:'Code',q:'HTTP status 404 means?',a:'Not Found',opts:['Server Error','Not Found','Forbidden','OK'],diff:'easy'},
+{cat:'Code',q:'What is localhost IP?',a:'127.0.0.1',opts:['192.168.1.1','127.0.0.1','10.0.0.1','0.0.0.0'],diff:'easy'},
+{cat:'Code',q:'What does API stand for?',a:'Application Programming Interface',opts:['Application Programming Interface','Active Protocol Integration','Advanced Program Input','Automated Process Interface'],diff:'medium'},
+{cat:'Code',q:'Which is a loop: for, if, var, return?',a:'for',opts:['for','if','var','return'],diff:'easy'},
+{cat:'Code',q:'What does CSS stand for?',a:'Cascading Style Sheets',opts:['Computer Style Syntax','Cascading Style Sheets','Core System Styles','Creative Style Scripts'],diff:'easy'},
+{cat:'Code',q:'Git command to save changes?',a:'git commit',opts:['git save','git commit','git push','git store'],diff:'medium'},
+{cat:'Code',q:'What file extension is JavaScript?',a:'.js',opts:['.java','.js','.jsx','.jscript'],diff:'easy'},
+{cat:'Code',q:'HTML stands for?',a:'HyperText Markup Language',opts:['HyperText Markup Language','High Tech Modern Language','Home Tool Markup Language','HyperText Machine Language'],diff:'easy'},
+// TRIVIA (10)
+{cat:'Trivia',q:'Who founded Microsoft?',a:'Bill Gates',opts:['Steve Jobs','Bill Gates','Elon Musk','Jeff Bezos'],diff:'easy'},
+{cat:'Trivia',q:'What year was the first iPhone released?',a:'2007',opts:['2005','2007','2009','2010'],diff:'medium'},
+{cat:'Trivia',q:"What does the 'C' in CPU stand for?",a:'Central',opts:['Computer','Central','Core','Control'],diff:'easy'},
+{cat:'Trivia',q:'Which company makes the Ryzen processor?',a:'AMD',opts:['Intel','AMD','Nvidia','Qualcomm'],diff:'easy'},
+{cat:'Trivia',q:'What color is a Cat6 cable typically?',a:'Blue',opts:['Red','Blue','Green','Yellow'],diff:'medium'},
+{cat:'Trivia',q:'USB stands for?',a:'Universal Serial Bus',opts:['Universal Serial Bus','Ultra Speed Bridge','Unified System Board','Universal System Byte'],diff:'easy'},
+{cat:'Trivia',q:'How many pins on a standard ATX power connector?',a:'24',opts:['20','24','28','32'],diff:'hard'},
+{cat:'Trivia',q:'What does Wi-Fi stand for?',a:'Wireless Fidelity',opts:['Wireless Fidelity','Wide Frequency','Web Interface','Wireless Field'],diff:'medium'},
+{cat:'Trivia',q:'Which OS has a penguin mascot?',a:'Linux',opts:['Windows','MacOS','Linux','Ubuntu'],diff:'easy'},
+{cat:'Trivia',q:"What's the maximum file size on FAT32?",a:'4GB',opts:['2GB','4GB','8GB','16GB'],diff:'hard'}
+];
+
+// ===== QUESTION SYSTEM =====
+let questionActive = false, qTimerValue = 10, qTimerInterval = null;
+let lastQuestionTime = 0;
+
+function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function triggerQuestion() {
+    if (questionActive || gameOver) return;
+    questionActive = true;
+    gamePaused = true;
+    const q = questions[Math.floor(Math.random() * questions.length)];
+    const overlay = document.getElementById('question-overlay');
+    const badge = document.getElementById('difficulty-badge');
+    badge.textContent = q.diff.toUpperCase();
+    badge.className = 'diff-' + q.diff;
+    document.getElementById('q-category').textContent = q.cat.toUpperCase();
+    document.getElementById('question-text').textContent = q.q;
+    const container = document.getElementById('answers-container');
+    container.innerHTML = '';
+    const shuffled = shuffleArray(q.opts);
+    shuffled.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.textContent = opt;
+        btn.onclick = () => answerQuestion(opt, q);
+        container.appendChild(btn);
+    });
+    overlay.classList.add('active');
+    qTimerValue = 10;
+    document.getElementById('question-timer').textContent = '⏱ 10s';
+    qTimerInterval = setInterval(() => {
+        qTimerValue--;
+        document.getElementById('question-timer').textContent = '⏱ ' + qTimerValue + 's';
+        if (qTimerValue <= 0) {
+            clearInterval(qTimerInterval);
+            handleTimeout();
+        }
+    }, 1000);
+    lastQuestionTime = Date.now();
+}
+
+function answerQuestion(selected, q) {
+    clearInterval(qTimerInterval);
+    const btns = document.querySelectorAll('.answer-btn');
+    btns.forEach(btn => {
+        btn.onclick = null;
+        if (btn.textContent === q.a) btn.classList.add('correct');
+        if (btn.textContent === selected && selected !== q.a) btn.classList.add('wrong');
+    });
+    totalQuestions++;
+    if (selected === q.a) {
+        totalCorrect++;
+        streak++;
+        score += 50 * streak;
+        let rowsToClear = q.diff === 'easy' ? 1 : q.diff === 'medium' ? 2 : 3;
+        setTimeout(() => {
+            clearRows(rowsToClear);
+            closeQuestion();
+            checkPowerUps();
+            checkLevelUp();
+        }, 800);
+    } else {
+        streak = 0;
+        score = Math.max(0, score - 50);
+        setTimeout(() => {
+            addRandomBlocks(2);
+            closeQuestion();
+        }, 800);
+    }
+    updateUI();
+}
+
+function handleTimeout() {
+    totalQuestions++;
+    streak = 0;
+    addRandomBlocks(1);
+    frozen = true;
+    freezeTimer = Date.now();
+    setTimeout(() => { frozen = false; }, 2000);
+    closeQuestion();
+    updateUI();
+}
+
+function closeQuestion() {
+    document.getElementById('question-overlay').classList.remove('active');
+    questionActive = false;
+    gamePaused = false;
+}
+
+// ===== POWER-UPS =====
+function checkPowerUps() {
+    if (streak === 3) activatePowerUp('DEFRAG', 'Removing single-block gaps!');
+    else if (streak === 5) activatePowerUp('COMPRESS', 'Compressing memory!');
+    else if (streak === 7) activatePowerUp('FLUSH', 'Flushing bottom 3 rows!');
+}
+
+function activatePowerUp(type, msg) {
+    score += 200;
+    const notif = document.getElementById('powerup-notification');
+    notif.textContent = '⚡ ' + type + ': ' + msg;
+    notif.style.display = 'block';
+    setTimeout(() => { notif.style.display = 'none'; }, 2000);
+
+    if (type === 'DEFRAG') {
+        // Remove isolated single blocks (cells with no neighbors)
+        for (let r = ROWS - 1; r >= 0; r--) {
+            for (let c = 0; c < COLS; c++) {
+                if (!board[r][c]) continue;
+                const hasNeighbor = (c > 0 && board[r][c-1]) || (c < COLS-1 && board[r][c+1]) ||
+                    (r > 0 && board[r-1][c]) || (r < ROWS-1 && board[r+1][c]);
+                if (!hasNeighbor) board[r][c] = 0;
+            }
+        }
+    } else if (type === 'COMPRESS') {
+        // Move all blocks down by 1 row
+        for (let r = ROWS - 2; r >= 0; r--) {
+            for (let c = 0; c < COLS; c++) {
+                if (board[r][c] && !board[r+1][c]) {
+                    board[r+1][c] = board[r][c];
+                    board[r][c] = 0;
+                }
+            }
+        }
+    } else if (type === 'FLUSH') {
+        // Clear bottom 3 rows
+        for (let i = 0; i < 3; i++) {
+            board.pop();
+            board.unshift(Array(COLS).fill(0));
+        }
+        linesCleared += 3;
+    }
+    pendingRows = [];
+    checkCompletedRows();
+    updateUI();
+}
+
+// ===== LEVEL SYSTEM =====
+function checkLevelUp() {
+    const newLevel = Math.min(15, Math.floor(totalCorrect / 10) + 1);
+    if (newLevel > level) {
+        level = newLevel;
+        dropInterval = 1500 * Math.pow(0.92, level - 1);
+        updateUI();
+    }
+}
+
+// ===== GAME LOOP =====
+function gameLoop(timestamp) {
+    if (!gameRunning || gameOver) return;
+    if (!lastTime) lastTime = timestamp;
+    const delta = timestamp - lastTime;
+    lastTime = timestamp;
+
+    if (!gamePaused && !frozen) {
+        dropTimer += delta;
+        if (dropTimer >= dropInterval) {
+            dropTimer = 0;
+            if (currentPiece) {
+                if (!collides(currentPiece, 0, 1)) {
+                    currentPiece.y++;
+                } else {
+                    lockPiece();
+                }
+            }
+        }
+        // Timed question trigger (every 30 seconds)
+        if (Date.now() - lastQuestionTime > 30000 && !questionActive) {
+            triggerQuestion();
+        }
+    }
+
+    draw();
+    updateMeters();
+    requestAnimationFrame(gameLoop);
+}
+
+function updateMeters() {
+    let filled = 0;
+    for (let r = 0; r < ROWS; r++)
+        for (let c = 0; c < COLS; c++)
+            if (board[r][c]) filled++;
+    const memPct = Math.round((filled / (ROWS * COLS)) * 100);
+    document.getElementById('memory-meter').style.width = memPct + '%';
+    document.getElementById('memory-pct').textContent = memPct + '%';
+    const cpuPct = Math.min(100, Math.round((level / 15) * 100));
+    document.getElementById('cpu-meter').style.width = cpuPct + '%';
+    document.getElementById('cpu-pct').textContent = cpuPct + '%';
+}
+
+function updateUI() {
+    document.getElementById('score-display').textContent = score;
+    document.getElementById('level-display').textContent = level;
+    document.getElementById('lines-display').textContent = linesCleared;
+    document.getElementById('streak-display').textContent = streak;
+}
+
+// ===== GAME OVER =====
+function triggerGameOver() {
+    gameOver = true;
+    gameRunning = false;
+    document.getElementById('gameover-screen').style.display = 'flex';
+    document.getElementById('final-score').textContent = score;
+    document.getElementById('go-level').textContent = 'Level: ' + level;
+    document.getElementById('go-questions').textContent = 'Questions: ' + totalQuestions;
+    const acc = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+    document.getElementById('go-accuracy').textContent = 'Accuracy: ' + acc + '%';
+    document.getElementById('restore-btn').style.display = usedBackup ? 'none' : 'inline-block';
+    saveHighScore(score);
+}
+
+function restoreBackup() {
+    if (usedBackup) return;
+    usedBackup = true;
+    // Clear top 5 rows
+    for (let r = 0; r < 5; r++) board[r] = Array(COLS).fill(0);
+    document.getElementById('gameover-screen').style.display = 'none';
+    gameOver = false;
+    gameRunning = true;
+    currentPiece = nextPiece;
+    nextPiece = randomPiece();
+    lastTime = 0;
+    requestAnimationFrame(gameLoop);
+}
+
+// ===== HIGH SCORES =====
+function getHighScores() {
+    try { return JSON.parse(localStorage.getItem('memoryOverflowScores')) || []; }
+    catch(e) { return []; }
+}
+function saveHighScore(s) {
+    const scores = getHighScores();
+    scores.push({ score: s, level: level, date: new Date().toLocaleDateString() });
+    scores.sort((a, b) => b.score - a.score);
+    if (scores.length > 5) scores.length = 5;
+    localStorage.setItem('memoryOverflowScores', JSON.stringify(scores));
+    renderHighScores();
+}
+function renderHighScores() {
+    const scores = getHighScores();
+    const list = document.getElementById('hs-list');
+    if (scores.length === 0) {
+        list.innerHTML = '<div style="color:#555;font-size:10px;text-align:center;">No scores yet</div>';
+        return;
+    }
+    list.innerHTML = scores.map((s, i) => 
+        `<div class="hs-entry"><span>${i+1}. Lvl ${s.level}</span><span>${s.score}</span></div>`
+    ).join('');
+}
+
+// ===== START / PAUSE =====
+function startGame() {
+    board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+    score = 0; level = 1; linesCleared = 0; streak = 0;
+    totalCorrect = 0; totalQuestions = 0;
+    pendingRows = []; usedBackup = false; gameOver = false;
+    dropInterval = 1500; dropTimer = 0; lastTime = 0;
+    frozen = false; freezeTimer = 0;
+    currentPiece = randomPiece();
+    nextPiece = randomPiece();
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('gameover-screen').style.display = 'none';
+    gameRunning = true;
+    gamePaused = false;
+    lastQuestionTime = Date.now();
+    updateUI();
+    drawNextPiece();
+    requestAnimationFrame(gameLoop);
+}
+
+function togglePause() {
+    if (gameOver || questionActive) return;
+    gamePaused = !gamePaused;
+    document.getElementById('pause-btn').textContent = gamePaused ? '▶' : '⏸';
+    if (!gamePaused) { lastTime = 0; requestAnimationFrame(gameLoop); }
+}
+
+function toggleMute() {
+    muted = !muted;
+    document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+    if (typeof bgMusic !== 'undefined' && bgMusic) {
+        if (muted) bgMusic.pause(); else bgMusic.play().catch(()=>{});
+    }
+}
+
+// ===== KEYBOARD CONTROLS =====
+document.addEventListener('keydown', (e) => {
+    // Admin mode detection
+    typedKeys += e.key;
+    if (typedKeys.length > 20) typedKeys = typedKeys.slice(-20);
+    if (typedKeys.includes('IamTesting')) {
+        adminMode = true;
+        document.getElementById('admin-panel').style.display = 'block';
+        typedKeys = '';
+    }
+    if (!gameRunning || gamePaused || questionActive || gameOver) return;
+    switch(e.key) {
+        case 'ArrowLeft': case 'a': moveLeft(); break;
+        case 'ArrowRight': case 'd': moveRight(); break;
+        case 'ArrowUp': case 'w': rotatePiece(); break;
+        case 'ArrowDown': case 's': softDrop(); break;
+        case ' ': e.preventDefault(); hardDrop(); break;
+    }
+});
+
+// ===== TOUCH CONTROLS =====
+let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+const boardEl = document.getElementById('board-wrapper');
+boardEl.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
+}, { passive: true });
+boardEl.addEventListener('touchend', (e) => {
+    if (questionActive || gamePaused || !gameRunning) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const dt = Date.now() - touchStartTime;
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && dt < 200) {
+        hardDrop(); return;
+    }
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) moveRight();
+        else if (dx < -30) moveLeft();
+    } else {
+        if (dy > 30) softDrop();
+        else if (dy < -30) rotatePiece();
+    }
+}, { passive: true });
+
+// ===== ADMIN FUNCTIONS =====
+function adminSetLevel(v) {
+    level = parseInt(v);
+    dropInterval = 1500 * Math.pow(0.92, level - 1);
+    updateUI();
+}
+function adminSetScore() {
+    score = parseInt(document.getElementById('admin-score').value) || 0;
+    updateUI();
+}
+function adminToggleInvincible() {
+    invincible = !invincible;
+    alert('Invincibility: ' + (invincible ? 'ON' : 'OFF'));
+}
+function adminClearBoard() {
+    board = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+    pendingRows = [];
+}
+
+// ===== MUSIC LOADER =====
+let bgMusic = null;
+try {
+    const script = document.createElement('script');
+    script.src = '../js/music/Memory-Overflow-music.js';
+    script.onerror = () => {}; // Silent fail
+    script.onload = () => {
+        if (typeof MemoryOverflowMusic !== 'undefined') {
+            bgMusic = MemoryOverflowMusic;
+        }
+    };
+    document.head.appendChild(script);
+} catch(e) {}
+
+// ===== INIT =====
+renderHighScores();
+
+// Mobile detection - show touch controls
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    document.getElementById('mobile-controls').style.display = 'flex';
+}
+</script>
+</body>
+</html>

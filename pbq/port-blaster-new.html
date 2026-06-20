@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Port Blaster - Space Shooter</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:'Courier New',monospace;overflow:hidden}
+#game-wrapper{display:flex;gap:0;border:2px solid #00f0ff;border-radius:8px;box-shadow:0 0 30px rgba(0,240,255,0.3)}
+canvas{display:block;border-radius:6px 0 0 6px}
+#panel{width:180px;background:#0d0d2a;padding:15px;display:flex;flex-direction:column;gap:10px;border-left:2px solid #00f0ff;border-radius:0 6px 6px 0}
+.panel-title{color:#00f0ff;font-size:14px;text-align:center;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 10px #00f0ff}
+.stat{color:#fff;font-size:11px;padding:5px 8px;background:rgba(0,240,255,0.05);border:1px solid rgba(0,240,255,0.2);border-radius:4px}
+.stat span{color:#0f0;font-size:13px;float:right}
+.btn{background:rgba(0,240,255,0.1);color:#00f0ff;border:1px solid #00f0ff;padding:8px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:10px;text-transform:uppercase;transition:all 0.2s}
+.btn:hover{background:rgba(0,240,255,0.3);box-shadow:0 0 10px #00f0ff}
+#high-scores{margin-top:auto;border-top:1px solid rgba(0,240,255,0.3);padding-top:8px}
+#high-scores h3{color:#ffd700;font-size:10px;margin-bottom:5px;text-shadow:0 0 5px #ffd700}
+.hs-entry{color:#aaa;font-size:9px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.hs-entry:first-child{color:#ffd700}
+#game-over-overlay,#start-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100}
+.overlay-box{background:#0d0d2a;border:2px solid #00f0ff;border-radius:12px;padding:30px;text-align:center;box-shadow:0 0 40px rgba(0,240,255,0.4);max-width:400px}
+.overlay-box h1{color:#00f0ff;font-size:24px;margin-bottom:15px;text-shadow:0 0 15px #00f0ff}
+.overlay-box p{color:#fff;margin:8px 0;font-size:13px}
+.overlay-box .score-big{color:#0f0;font-size:28px;margin:10px 0}
+.start-btn{background:linear-gradient(135deg,#00f0ff,#b300ff);color:#fff;border:none;padding:12px 30px;border-radius:6px;font-size:16px;cursor:pointer;font-family:inherit;margin-top:15px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 10px #00f0ff}50%{box-shadow:0 0 25px #00f0ff,0 0 50px #b300ff}}
+#admin-input{position:fixed;top:-100px;left:-100px;opacity:0}
+</style>
+</head>
+<body>
+<div id="start-overlay">
+<div class="overlay-box">
+<h1>PORT BLASTER</h1>
+<p style="color:#0f0">Shoot the REAL port numbers!</p>
+<p style="color:#aaa;font-size:11px">Real ports = +10 | Decoys = -5 | Missed ports = -3</p>
+<p style="color:#aaa;font-size:11px">Arrow keys/mouse to move | Space to fire</p>
+<button class="start-btn" onclick="startGame()">LAUNCH</button>
+</div>
+</div>
+<div id="game-over-overlay" style="display:none">
+<div class="overlay-box">
+<h1>GAME OVER</h1>
+<p class="score-big" id="final-score">0</p>
+<p id="final-level">Level 1</p>
+<p id="final-accuracy">Accuracy: 0%</p>
+<p id="final-time">Time: 0:00</p>
+<button class="start-btn" onclick="startGame()">PLAY AGAIN</button>
+<button class="btn" style="margin-top:10px" onclick="showStart()">MENU</button>
+</div>
+</div>
+<div id="game-wrapper" style="display:none">
+<canvas id="gc" width="400" height="600"></canvas>
+<div id="panel">
+<div class="panel-title">PORT BLASTER</div>
+<div class="stat">Score: <span id="s-score">0</span></div>
+<div class="stat">Level: <span id="s-level">1</span></div>
+<div class="stat">Lives: <span id="s-lives">3</span></div>
+<div class="stat">Time: <span id="s-time">0:00</span></div>
+<div class="stat">Accuracy: <span id="s-acc">0%</span></div>
+<div class="stat">Streak: <span id="s-streak">0</span></div>
+<button class="btn" onclick="togglePause()">PAUSE</button>
+<button class="btn" onclick="toggleMute()">MUTE</button>
+<button class="btn" onclick="showStart()">RETURN</button>
+<div id="high-scores">
+<h3>HIGH SCORES</h3>
+<div id="hs-list"></div>
+</div>
+</div>
+</div>
+<input id="admin-input" type="text">
+<script>
+const canvas=document.getElementById('gc'),ctx=canvas.getContext('2d');
+const W=400,H=600;
+const REAL_PORTS=[22,25,53,67,68,80,110,123,143,161,389,443,445,587,636,993,995,3389,5060,5900];
+const PORT_SET=new Set(REAL_PORTS);
+let ship,bullets,numbers,particles,powerups,stars;
+let score=0,level=1,lives=3,paused=false,muted=false,gameOver=false,gameRunning=false;
+let startTime=0,shots=0,hits=0,streak=0,bestStreak=0;
+let scoreMultiplier=1,slowMotion=false,rapidFire=false;
+let powerupTimers={slow:0,rapid:0,multi:0};
+let adminBuffer='',adminMode=false;
+let lastFrame=0,spawnTimer=0,powerupSpawnTimer=0;
+let isMobile=/Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent);
+let autoFire=isMobile,autoFireTimer=0;
+// Audio
+let audioCtx,gainNode;
+function initAudio(){if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();gainNode=audioCtx.createGain();gainNode.connect(audioCtx.destination);gainNode.gain.value=muted?0:0.3}}
+function playSound(type){if(muted||!audioCtx)return;let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(gainNode);let t=audioCtx.currentTime;
+if(type==='shoot'){o.type='square';o.frequency.setValueAtTime(800,t);o.frequency.exponentialRampToValueAtTime(200,t+0.1);g.gain.setValueAtTime(0.2,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.1);o.start(t);o.stop(t+0.1)}
+else if(type==='hit'){o.type='sine';o.frequency.setValueAtTime(400,t);o.frequency.exponentialRampToValueAtTime(800,t+0.15);g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.2);o.start(t);o.stop(t+0.2)}
+else if(type==='miss'){o.type='sawtooth';o.frequency.setValueAtTime(300,t);o.frequency.exponentialRampToValueAtTime(100,t+0.2);g.gain.setValueAtTime(0.2,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.25);o.start(t);o.stop(t+0.25)}
+else if(type==='powerup'){o.type='sine';o.frequency.setValueAtTime(500,t);o.frequency.exponentialRampToValueAtTime(1200,t+0.3);g.gain.setValueAtTime(0.25,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.35);o.start(t);o.stop(t+0.35)}
+else if(type==='life'){o.type='sawtooth';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(80,t+0.3);g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.3);o.start(t);o.stop(t+0.3)}}
+// Music loader
+try{let ms=document.createElement('script');ms.src='../js/music/Port-Blaster-music.js';document.head.appendChild(ms)}catch(e){}
+// Stars
+function initStars(){stars=[];for(let i=0;i<80;i++)stars.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*2+0.5,sp:Math.random()*0.5+0.2})}
+function drawStars(){ctx.fillStyle='#fff';stars.forEach(s=>{ctx.globalAlpha=s.s/2.5;ctx.fillRect(s.x,s.y,s.s,s.s);s.y+=s.sp;if(s.y>H){s.y=0;s.x=Math.random()*W}});ctx.globalAlpha=1}
+// Ship
+function createShip(){return{x:W/2,y:H-50,w:30,h:30,targetX:W/2}}
+function drawShip(){let s=ship;ctx.save();ctx.shadowColor='#00f0ff';ctx.shadowBlur=15;ctx.fillStyle='#00f0ff';ctx.beginPath();ctx.moveTo(s.x,s.y-15);ctx.lineTo(s.x-12,s.y+12);ctx.lineTo(s.x+12,s.y+12);ctx.closePath();ctx.fill();
+ctx.fillStyle='#ff6600';ctx.shadowColor='#ff6600';ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(s.x-5,s.y+12);ctx.lineTo(s.x,s.y+18+Math.random()*4);ctx.lineTo(s.x+5,s.y+12);ctx.closePath();ctx.fill();ctx.restore();
+// Engine particles
+for(let i=0;i<2;i++)particles.push({x:s.x+Math.random()*6-3,y:s.y+15,vx:Math.random()*2-1,vy:Math.random()*2+1,life:15,color:'#ff6600',size:2})}
+// Bullets
+function fireBullet(){if(gameOver||paused)return;initAudio();playSound('shoot');shots++;
+bullets.push({x:ship.x,y:ship.y-15,vy:-10})}
+function drawBullets(){ctx.fillStyle='#0f0';ctx.shadowColor='#0f0';ctx.shadowBlur=8;
+bullets=bullets.filter(b=>{b.y+=b.vy;if(b.y<-10)return false;ctx.fillRect(b.x-1.5,b.y,3,12);return true});ctx.shadowBlur=0}
+// Numbers
+function spawnNumber(){let isReal=Math.random()<0.4;let num;
+if(isReal){num=REAL_PORTS[Math.floor(Math.random()*REAL_PORTS.length)]}
+else{do{num=Math.floor(Math.random()*9999)+1}while(PORT_SET.has(num))}
+let speed=(1.5+level*0.3)*(slowMotion?0.4:1);
+numbers.push({x:Math.random()*(W-60)+30,y:-20,num:num,isReal:isReal,speed:speed,size:16+Math.random()*4,rot:0})}
+function drawNumbers(){ctx.font='bold 16px Courier New';ctx.textAlign='center';
+numbers=numbers.filter(n=>{n.y+=n.speed;n.rot+=0.02;
+if(n.y>H+20){if(n.isReal){score-=3;lives--;playSound('life');spawnExplosion(n.x,H,8,'#ff0000');if(lives<=0){endGame()}}return false}
+ctx.save();ctx.translate(n.x,n.y);
+ctx.fillStyle='#ffffff';ctx.shadowColor='#ffffff';ctx.shadowBlur=5;
+ctx.font=`bold ${n.size}px Courier New`;ctx.fillText(n.num,0,0);ctx.restore();return true})}
+// Powerups
+const POWERUP_TYPES=['2x','SLOW','RAPID'];
+const POWERUP_COLORS={'2x':'#ffd700','SLOW':'#00ffcc','RAPID':'#ff00aa'};
+function spawnPowerup(){let type=POWERUP_TYPES[Math.floor(Math.random()*3)];
+powerups.push({x:Math.random()*(W-40)+20,y:-20,type:type,speed:1.5,size:20,pulse:0})}
+function drawPowerups(){powerups=powerups.filter(p=>{p.y+=p.speed;p.pulse+=0.1;if(p.y>H+20)return false;
+ctx.save();ctx.translate(p.x,p.y);let glow=Math.sin(p.pulse)*3+8;
+ctx.shadowColor=POWERUP_COLORS[p.type];ctx.shadowBlur=glow;ctx.strokeStyle=POWERUP_COLORS[p.type];ctx.lineWidth=2;
+ctx.beginPath();ctx.arc(0,0,p.size,0,Math.PI*2);ctx.stroke();
+ctx.fillStyle=POWERUP_COLORS[p.type];ctx.font='bold 10px Courier New';ctx.textAlign='center';ctx.fillText(p.type,0,4);ctx.restore();return true})}
+// Particles
+function spawnExplosion(x,y,count,color){for(let i=0;i<count;i++){let angle=Math.random()*Math.PI*2;let speed=Math.random()*4+1;
+particles.push({x:x,y:y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:30+Math.random()*20,color:color,size:Math.random()*4+1})}}
+function drawParticles(){particles=particles.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.life--;p.size*=0.97;
+if(p.life<=0)return false;ctx.globalAlpha=p.life/50;ctx.fillStyle=p.color;ctx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size);return true});ctx.globalAlpha=1}
+// Collision
+function checkCollisions(){for(let bi=bullets.length-1;bi>=0;bi--){let b=bullets[bi];
+// Check powerups
+for(let pi=powerups.length-1;pi>=0;pi--){let p=powerups[pi];
+if(Math.abs(b.x-p.x)<p.size&&Math.abs(b.y-p.y)<p.size){bullets.splice(bi,1);powerups.splice(pi,1);activatePowerup(p.type);playSound('powerup');spawnExplosion(p.x,p.y,15,POWERUP_COLORS[p.type]);break}}
+if(!bullets[bi])continue;
+// Check numbers
+for(let ni=numbers.length-1;ni>=0;ni--){let n=numbers[ni];
+let dx=Math.abs(b.x-n.x),dy=Math.abs(b.y-n.y);
+if(dx<25&&dy<15){bullets.splice(bi,1);numbers.splice(ni,1);hits++;
+if(n.isReal){let pts=10*scoreMultiplier;score+=pts;streak++;if(streak>bestStreak)bestStreak=streak;
+playSound('hit');spawnExplosion(n.x,n.y,20,'#00ff00')}
+else{score-=5;streak=0;playSound('miss');spawnExplosion(n.x,n.y,12,'#ff0000')}break}}}
+// Ship collision with powerups
+for(let pi=powerups.length-1;pi>=0;pi--){let p=powerups[pi];
+if(Math.abs(ship.x-p.x)<25&&Math.abs(ship.y-p.y)<25){powerups.splice(pi,1);activatePowerup(p.type);playSound('powerup');spawnExplosion(p.x,p.y,15,POWERUP_COLORS[p.type])}}}
+function activatePowerup(type){if(type==='2x'){scoreMultiplier=2;powerupTimers.multi=300}
+else if(type==='SLOW'){slowMotion=true;powerupTimers.slow=300}
+else if(type==='RAPID'){rapidFire=true;powerupTimers.rapid=300}}
+function updatePowerupTimers(){if(powerupTimers.multi>0){powerupTimers.multi--;if(powerupTimers.multi<=0)scoreMultiplier=1}
+if(powerupTimers.slow>0){powerupTimers.slow--;if(powerupTimers.slow<=0)slowMotion=false}
+if(powerupTimers.rapid>0){powerupTimers.rapid--;if(powerupTimers.rapid<=0)rapidFire=false}}
+// Level
+function checkLevel(){let newLevel=Math.floor(score/100)+1;if(newLevel<1)newLevel=1;if(newLevel>level&&newLevel<=20){level=newLevel}}
+// UI
+function updatePanel(){document.getElementById('s-score').textContent=score;
+document.getElementById('s-level').textContent=level;
+document.getElementById('s-lives').textContent='♥'.repeat(Math.max(0,lives));
+let elapsed=Math.floor((Date.now()-startTime)/1000);let m=Math.floor(elapsed/60),s=elapsed%60;
+document.getElementById('s-time').textContent=`${m}:${s.toString().padStart(2,'0')}`;
+document.getElementById('s-acc').textContent=shots>0?Math.round(hits/shots*100)+'%':'0%';
+document.getElementById('s-streak').textContent=streak}
+// Powerup indicators on canvas
+function drawPowerupIndicators(){let y=15;ctx.font='10px Courier New';ctx.textAlign='left';
+if(powerupTimers.multi>0){ctx.fillStyle='#ffd700';ctx.fillText(`2x SCORE: ${Math.ceil(powerupTimers.multi/60)}s`,5,y);y+=14}
+if(powerupTimers.slow>0){ctx.fillStyle='#00ffcc';ctx.fillText(`SLOW MO: ${Math.ceil(powerupTimers.slow/60)}s`,5,y);y+=14}
+if(powerupTimers.rapid>0){ctx.fillStyle='#ff00aa';ctx.fillText(`RAPID: ${Math.ceil(powerupTimers.rapid/60)}s`,5,y)}}
+// Game loop
+function gameLoop(ts){if(!gameRunning)return;requestAnimationFrame(gameLoop);
+if(paused)return;let dt=ts-lastFrame;lastFrame=ts;
+ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,W,H);
+drawStars();drawParticles();drawShip();drawBullets();drawNumbers();drawPowerups();drawPowerupIndicators();
+checkCollisions();checkLevel();updatePowerupTimers();updatePanel();
+// Spawn logic
+spawnTimer++;let spawnRate=Math.max(20,60-level*5);
+if(spawnTimer>=spawnRate){spawnTimer=0;spawnNumber()}
+// Powerup spawn
+powerupSpawnTimer++;if(powerupSpawnTimer>400+Math.random()*200){powerupSpawnTimer=0;spawnPowerup()}
+// Auto fire
+if(autoFire||rapidFire){autoFireTimer++;let fireRate=rapidFire?8:20;if(autoFireTimer>=fireRate){autoFireTimer=0;fireBullet()}}
+// Ship smooth move
+ship.x+=(ship.targetX-ship.x)*0.12;ship.x=Math.max(15,Math.min(W-15,ship.x));
+// Admin mode indicator
+if(adminMode){ctx.fillStyle='#ff0';ctx.font='10px Courier New';ctx.textAlign='right';ctx.fillText('ADMIN',W-5,H-5)}}
+// Controls
+let keys={};
+document.addEventListener('keydown',e=>{keys[e.key]=true;
+if(e.key===' '&&gameRunning&&!paused){e.preventDefault();fireBullet()}
+// Admin code detection
+adminBuffer+=e.key;if(adminBuffer.length>10)adminBuffer=adminBuffer.slice(-10);
+if(adminBuffer.includes('IamTesting')){adminMode=true;lives=99;score+=500;adminBuffer=''}});
+document.addEventListener('keyup',e=>{keys[e.key]=false});
+// Mouse/touch
+canvas.addEventListener('mousemove',e=>{let rect=canvas.getBoundingClientRect();ship.targetX=(e.clientX-rect.left)*(W/rect.width)});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();let rect=canvas.getBoundingClientRect();let touch=e.touches[0];ship.targetX=(touch.clientX-rect.left)*(W/rect.width)},{passive:false});
+canvas.addEventListener('click',()=>{if(gameRunning&&!paused)fireBullet()});
+// Keyboard movement
+setInterval(()=>{if(!gameRunning||paused)return;
+if(keys['ArrowLeft']||keys['a'])ship.targetX-=8;
+if(keys['ArrowRight']||keys['d'])ship.targetX+=8},16);
+// High scores
+function getHighScores(){try{return JSON.parse(localStorage.getItem('portBlasterShooterScores'))||[]}catch(e){return[]}}
+function saveHighScore(s){let scores=getHighScores();scores.push({score:s,level:level,date:new Date().toLocaleDateString()});scores.sort((a,b)=>b.score-a.score);scores=scores.slice(0,10);localStorage.setItem('portBlasterShooterScores',JSON.stringify(scores))}
+function displayHighScores(){let scores=getHighScores();let list=document.getElementById('hs-list');list.innerHTML='';
+scores.slice(0,5).forEach((s,i)=>{let d=document.createElement('div');d.className='hs-entry';d.textContent=`${i+1}. ${s.score} pts (L${s.level})`;list.appendChild(d)});
+if(scores.length===0){list.innerHTML='<div class="hs-entry">No scores yet</div>'}}
+// Game state
+function startGame(){document.getElementById('start-overlay').style.display='none';
+document.getElementById('game-over-overlay').style.display='none';
+document.getElementById('game-wrapper').style.display='flex';
+initAudio();ship=createShip();bullets=[];numbers=[];particles=[];powerups=[];
+score=0;level=1;lives=3;paused=false;gameOver=false;gameRunning=true;
+shots=0;hits=0;streak=0;bestStreak=0;spawnTimer=0;powerupSpawnTimer=0;
+scoreMultiplier=1;slowMotion=false;rapidFire=false;adminMode=false;adminBuffer='';
+powerupTimers={slow:0,rapid:0,multi:0};startTime=Date.now();autoFireTimer=0;
+initStars();displayHighScores();lastFrame=performance.now();requestAnimationFrame(gameLoop)}
+function endGame(){gameOver=true;gameRunning=false;saveHighScore(score);
+let elapsed=Math.floor((Date.now()-startTime)/1000);let m=Math.floor(elapsed/60),s=elapsed%60;
+document.getElementById('final-score').textContent=score+' pts';
+document.getElementById('final-level').textContent=`Level ${level} reached`;
+document.getElementById('final-accuracy').textContent=`Accuracy: ${shots>0?Math.round(hits/shots*100):0}%`;
+document.getElementById('final-time').textContent=`Time: ${m}:${s.toString().padStart(2,'0')}`;
+document.getElementById('game-over-overlay').style.display='flex';displayHighScores()}
+function showStart(){gameRunning=false;document.getElementById('game-wrapper').style.display='none';
+document.getElementById('game-over-overlay').style.display='none';
+document.getElementById('start-overlay').style.display='flex';displayHighScores()}
+function togglePause(){paused=!paused}
+function toggleMute(){muted=!muted;if(gainNode)gainNode.gain.value=muted?0:0.3}
+window.startGame=startGame;window.showStart=showStart;window.togglePause=togglePause;window.toggleMute=toggleMute;
+displayHighScores();
+</script>
+</body>
+</html>
