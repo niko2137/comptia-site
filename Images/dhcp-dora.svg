@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 575.2 499.2" style="enable-background:new 0 0 575.2 499.2;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#1F497D;stroke-width:3;stroke-miterlimit:10;}
+	.st1{fill:#27AE60;}
+	.st2{fill:#8E44AD;}
+	.st3{fill:none;}
+	.st4{fill:#1F497D;}
+	.st5{font-family:'SegoeUI-Bold';}
+	.st6{font-size:22px;}
+	.st7{enable-background:new    ;}
+	.st8{fill:#7F8C8D;}
+	.st9{font-family:'SegoeUI';}
+	.st10{font-size:14px;}
+	.st11{fill:#FFFFFF;stroke:#2980B9;stroke-width:2;}
+	.st12{fill:#2980B9;}
+	.st13{font-size:11px;}
+	.st14{fill:#666666;}
+	.st15{font-family:'SegoeUI-SemiboldItalic';}
+	.st16{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
+	.st17{fill:none;stroke:#2980B9;stroke-width:2;stroke-dasharray:4,4;}
+	.st18{fill:none;stroke:#27AE60;stroke-width:2;stroke-dasharray:4,4;}
+	.st19{fill:#C6D9F0;stroke:#366092;}
+	.st20{font-size:13px;}
+	.st21{fill:#333333;}
+	.st22{font-size:10px;}
+	.st23{fill:#E67E22;}
+	.st24{fill:#FFFFFF;}
+	.st25{font-size:12px;}
+	.st26{font-family:'SegoeUI-Semibold';}
+	.st27{fill:#E7FFEC;stroke:#27AE60;}
+	.st28{fill:#DBE5F1;stroke:#548DD4;}
+	.st29{fill:#548DD4;}
+	.st30{fill:#E8DAEF;stroke:#8E44AD;}
+	.st31{fill:#FFE5E9;stroke:#C0392B;}
+</style>
+<line class="st0" x1="66.1" y1="136.2" x2="483.1" y2="129.2"/>
+<line class="st0" x1="89.2" y1="204.2" x2="509.1" y2="205.2"/>
+<line class="st0" x1="66.1" y1="279.2" x2="475.8" y2="279.2"/>
+<line class="st0" x1="97.8" y1="355.2" x2="509.1" y2="355.2"/>
+<circle class="st1" cx="543.2" cy="204" r="14"/>
+<circle class="st2" cx="542.4" cy="354.8" r="14"/>
+<rect x="126.1" y="13.5" class="st3" width="323" height="28.2"/>
+<text transform="matrix(1 0 0 1 178.2422 32.2174)" class="st4 st5 st6">DHCP Process: DORA</text>
+<rect x="133.1" y="42" class="st3" width="300" height="37.5"/>
+<text transform="matrix(1 0 0 1 154.9644 53.9176)" class="st7"><tspan x="0" y="0" class="st8 st9 st10">How a device automatically receives an IP </tspan><tspan x="47" y="16.8" class="st8 st9 st10">address (UDP Ports 67/68)</tspan></text>
+<path class="st11" d="M14.1,27.6h104c4.4,0,8,2.8,8,6.2v49.3c0,3.4-3.6,6.2-8,6.2h-104c-4.4,0-8-2.8-8-6.2V33.8
+	C6.1,30.4,9.7,27.6,14.1,27.6z"/>
+<text transform="matrix(1 0 0 1 47.6048 44.2174)" class="st12 st5 st13">CLIENT</text>
+<text transform="matrix(1 0 0 1 43.1683 64.2174)" class="st14 st15 st13">No IP yet</text>
+<text transform="matrix(1 0 0 1 31.7066 79.2174)" class="st14 st15 st13">Port 68 (UDP)</text>
+<path class="st16" d="M457.1,27.6h104c4.4,0,8,2.8,8,6.2v49.3c0,3.4-3.6,6.2-8,6.2h-104c-4.4,0-8-2.8-8-6.2V33.8
+	C449.1,30.4,452.7,27.6,457.1,27.6z"/>
+<text transform="matrix(1 0 0 1 472.6228 44.2174)" class="st1 st5 st13">DHCP SERVER</text>
+<text transform="matrix(1 0 0 1 480.8513 64.2174)" class="st14 st15 st13">Has IP pool</text>
+<text transform="matrix(1 0 0 1 475.0159 79.2174)" class="st14 st15 st13">Port 67 (UDP)</text>
+<line class="st17" x1="66.1" y1="89.2" x2="66.1" y2="419.2"/>
+<line class="st18" x1="509.1" y1="89.2" x2="509.1" y2="419.2"/>
+<polygon class="st4" points="469.1,122.2 489.1,129.2 469.1,136.2 "/>
+<path marker-end="url(#arr)" class="st4" d="M489.1,129.2"/>
+<path class="st19" d="M139.1,109.2h288c3.3,0,6,2.7,6,6v30c0,3.3-2.7,6-6,6h-288c-3.3,0-6-2.7-6-6v-30
+	C133.1,111.9,135.8,109.2,139.1,109.2z"/>
+<text transform="matrix(1 0 0 1 240.6402 126.2174)" class="st4 st5 st20">D - DISCOVER</text>
+<text transform="matrix(1 0 0 1 171.0313 143.2174)" class="st21 st9 st22">Client BROADCASTS: &quot;Any DHCP server out there?&quot;</text>
+<circle class="st23" cx="32.5" cy="129.9" r="14"/>
+<text transform="matrix(1 0 0 1 29.0149 134.4105)" class="st24 st5 st25">1</text>
+<text transform="matrix(1 0 0 1 5.0616 155.2174)" class="st23 st26 st22">BROADCAST</text>
+<polygon class="st4" points="102.1,197.2 82.1,204.2 102.1,211.2 "/>
+<path marker-end="url(#arrback)" class="st4" d="M86.1,204.2"/>
+<path class="st27" d="M139.1,184.2h288c3.3,0,6,2.7,6,6v30c0,3.3-2.7,6-6,6h-288c-3.3,0-6-2.7-6-6v-30
+	C133.1,186.9,135.8,184.2,139.1,184.2z"/>
+<text transform="matrix(1 0 0 1 252.5516 201.2174)" class="st1 st5 st20">O - OFFER</text>
+<text transform="matrix(1 0 0 1 186.6929 218.2174)" class="st21 st9 st22">Server responds: &quot;Here&apos;s an IP you can use.&quot;</text>
+<text transform="matrix(1 0 0 1 539.773 208.4757)" class="st24 st5 st25">2</text>
+<text transform="matrix(1 0 0 1 524.253 230.2174)" class="st1 st26 st22">UNICAST</text>
+<polygon class="st4" points="469.1,272.2 489.1,279.2 469.1,286.2 "/>
+<path marker-end="url(#arr)" class="st4" d="M489.1,279.2"/>
+<path class="st28" d="M139.1,259.2h288c3.3,0,6,2.7,6,6v30c0,3.3-2.7,6-6,6h-288c-3.3,0-6-2.7-6-6v-30
+	C133.1,261.9,135.8,259.2,139.1,259.2z"/>
+<text transform="matrix(1 0 0 1 244.3853 276.2174)" class="st29 st5 st20">R - REQUEST</text>
+<text transform="matrix(1 0 0 1 184.813 293.2174)" class="st21 st9 st22">Client BROADCASTS: &quot;I&apos;d like that IP, please.&quot;</text>
+<circle class="st29" cx="31.2" cy="277.3" r="14"/>
+<text transform="matrix(1 0 0 1 27.7146 281.8177)" class="st24 st5 st25">3</text>
+<text transform="matrix(1 0 0 1 5.0616 304.2174)" class="st29 st26 st22">BROADCAST</text>
+<polygon class="st4" points="102.1,347.2 82.1,354.2 102.1,361.2 "/>
+<path marker-end="url(#arrback)" class="st4" d="M86.1,354.2"/>
+<path class="st30" d="M139.1,334.2h288c3.3,0,6,2.7,6,6v30c0,3.3-2.7,6-6,6h-288c-3.3,0-6-2.7-6-6v-30
+	C133.1,336.9,135.8,334.2,139.1,334.2z"/>
+<text transform="matrix(1 0 0 1 223.3047 351.2174)" class="st2 st5 st20">A - ACKNOWLEDGE</text>
+<text transform="matrix(1 0 0 1 178.5997 368.2174)" class="st21 st9 st22">Server confirms: &quot;It&apos;s yours for [lease duration].&quot;</text>
+<text transform="matrix(1 0 0 1 538.9102 359.2833)" class="st24 st5 st25">4</text>
+<text transform="matrix(1 0 0 1 524.253 380.2174)" class="st2 st26 st22">UNICAST</text>
+<path class="st1" d="M89.1,394.2h388c3.3,0,6,2.7,6,6v18c0,3.3-2.7,6-6,6h-388c-3.3,0-6-2.7-6-6v-18
+	C83.1,396.9,85.8,394.2,89.1,394.2z"/>
+<text transform="matrix(1 0 0 1 113.2207 414.2174)" class="st24 st5 st25">Client now has a valid IP address + subnet + gateway + DNS</text>
+<path class="st31" d="M35.4,439.2h499.3c2.3,0,4.2,2.7,4.2,6v38c0,3.3-1.9,6-4.2,6H35.4c-2.3,0-4.2-2.7-4.2-6v-38
+	C31.2,441.9,33.1,439.2,35.4,439.2z"/>
+<text transform="matrix(1 0 0 1 76.9712 459.2174)" class="st21 st9 st22">DORA uses UDP (not TCP). Server = port 67, Client = port 68. Steps 1 and 3 are BROADCASTS.</text>
+<text transform="matrix(1 0 0 1 54.5723 477.2174)" class="st21 st9 st22">If DHCP fails, the client gets an APIPA address (169.254.x.x). This ALWAYS means &quot;DHCP server unreachable.&quot;</text>
+</svg>

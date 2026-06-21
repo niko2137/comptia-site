@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 741.6 580" style="enable-background:new 0 0 741.6 580;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#1F497D;}
+	.st1{font-family:'SegoeUI-Bold';}
+	.st2{font-size:22px;}
+	.st3{font-family:'Arial-BoldMT';}
+	.st4{font-size:12px;}
+	.st5{fill:#FFFFFF;stroke:#95A5A6;stroke-width:2;}
+	.st6{fill:#95A5A6;}
+	.st7{fill:#FFFFFF;}
+	.st8{font-size:18px;}
+	.st9{fill:#333333;}
+	.st10{font-family:'ArialMT';}
+	.st11{font-size:13px;}
+	.st12{fill:#FFE5E9;}
+	.st13{fill:#C0392B;}
+	.st14{font-size:14px;}
+	.st15{fill:#FFFFFF;stroke:#2980B9;stroke-width:2;}
+	.st16{fill:#2980B9;}
+	.st17{fill:#DBE5F1;}
+	.st18{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
+	.st19{fill:#8E44AD;}
+	.st20{fill:#2ECC71;}
+	.st21{font-family:'ArialNarrow-BoldItalic';}
+	.st22{font-size:15px;}
+	.st23{fill:#3498DB;}
+	.st24{fill:#9B59B6;}
+	.st25{fill:#E8DAEF;}
+	.st26{fill:#FFFFFF;stroke:#1F497D;stroke-width:2;}
+	.st27{fill:#3498DB;stroke:#2980B9;}
+	.st28{fill:#9B59B6;stroke:#8E44AD;}
+	.st29{fill:#2ECC71;stroke:#27AE60;}
+	.st30{fill:#27AE60;}
+</style>
+<g>
+	<text transform="matrix(1 0 0 1 124.8617 35)" class="st0 st1 st2">DDR RAM Comparison: DDR3 vs DDR4 vs DDR5</text>
+	<text transform="matrix(1 0 0 1 142.5954 55)" class="st0 st3 st4">Each generation has a different notch position - NOT physically interchangeable</text>
+	<path class="st5" d="M18.8,75h214c4.4,0,8,3.6,8,8v294c0,4.4-3.6,8-8,8h-214c-4.4,0-8-3.6-8-8V83C10.8,78.6,14.4,75,18.8,75z"/>
+	<path class="st6" d="M18.8,75h214c4.4,0,8,3.6,8,8v24c0,4.4-3.6,8-8,8h-214c-4.4,0-8-3.6-8-8V83C10.8,78.6,14.4,75,18.8,75z"/>
+	<text transform="matrix(1 0 0 1 101.4589 100)" class="st7 st1 st8">DDR3</text>
+	<g>
+		<text transform="matrix(1 0 0 1 40.7826 202)" class="st9 st10 st4">Speed: 1066-1866 MHz</text>
+		<text transform="matrix(1 0 0 1 40.7826 222)" class="st9 st10 st4">Voltage: 1.35-1.5V</text>
+		<text transform="matrix(1 0 0 1 40.7826 242)" class="st9 st10 st4">Pins: 240 (DIMM)</text>
+		<text transform="matrix(1 0 0 1 40.7826 262)" class="st9 st10 st4">Pins: 204 (SO-DIMM)</text>
+		<text transform="matrix(1 0 0 1 40.7826 285)" class="st6 st3 st11">Status:</text>
+		<text transform="matrix(1 0 0 1 40.7826 305)" class="st9 st10 st4">Found in older systems.</text>
+		<text transform="matrix(1 0 0 1 40.7826 325)" class="st9 st10 st4">NOT compatible with</text>
+		<text transform="matrix(1 0 0 1 40.7826 345)" class="st9 st10 st4">DDR4 or DDR5 slots.</text>
+	</g>
+	<g>
+		<path class="st12" d="M29.8,359h192c2.2,0,4,1.8,4,4v12c0,2.2-1.8,4-4,4h-192c-2.2,0-4-1.8-4-4v-12C25.8,360.8,27.6,359,29.8,359z
+			"/>
+		<text transform="matrix(1 0 0 1 86.3187 374.6667)" class="st13 st3 st14">End of Life</text>
+	</g>
+	<path class="st15" d="M263.8,75h214c4.4,0,8,3.6,8,8v294c0,4.4-3.6,8-8,8h-214c-4.4,0-8-3.6-8-8V83C255.8,78.6,259.4,75,263.8,75z"
+		/>
+	<path class="st16" d="M263.8,75h214c4.4,0,8,3.6,8,8v24c0,4.4-3.6,8-8,8h-214c-4.4,0-8-3.6-8-8V83C255.8,78.6,259.4,75,263.8,75z"
+		/>
+	<text transform="matrix(1 0 0 1 346.4586 100)" class="st7 st1 st8">DDR4</text>
+	<g>
+		<text transform="matrix(1 0 0 1 298.8558 202)" class="st9 st10 st4">Speed: 2133-3200+ MHz</text>
+		<text transform="matrix(1 0 0 1 298.8558 222)" class="st9 st10 st4">Voltage: 1.2V</text>
+		<text transform="matrix(1 0 0 1 298.8558 242)" class="st9 st10 st4">Pins: 288 (DIMM)</text>
+		<text transform="matrix(1 0 0 1 298.8558 262)" class="st9 st10 st4">Pins: 260 (SO-DIMM)</text>
+		<text transform="matrix(1 0 0 1 298.8558 285)" class="st16 st3 st11">Status:</text>
+		<text transform="matrix(1 0 0 1 298.8558 305)" class="st9 st10 st4">Most systems 2016-2023.</text>
+		<text transform="matrix(1 0 0 1 298.8558 325)" class="st9 st10 st4">Still widely available.</text>
+		<text transform="matrix(1 0 0 1 298.8558 345)" class="st9 st10 st4">Different notch than DDR5!</text>
+	</g>
+	<g>
+		<path class="st17" d="M274.8,358h192c2.2,0,4,1.8,4,4v12c0,2.2-1.8,4-4,4h-192c-2.2,0-4-1.8-4-4v-12
+			C270.8,359.8,272.6,358,274.8,358z"/>
+		<text transform="matrix(1 0 0 1 298.9313 374.6667)" class="st16 st3 st14">Most Common Today</text>
+	</g>
+	<path class="st18" d="M508.8,75h214c4.4,0,8,3.6,8,8v294c0,4.4-3.6,8-8,8h-214c-4.4,0-8-3.6-8-8V83C500.8,78.6,504.4,75,508.8,75z"
+		/>
+	<path class="st19" d="M508.8,75h214c4.4,0,8,3.6,8,8v24c0,4.4-3.6,8-8,8h-214c-4.4,0-8-3.6-8-8V83C500.8,78.6,504.4,75,508.8,75z"
+		/>
+	<text transform="matrix(1 0 0 1 591.4592 100)" class="st7 st1 st8">DDR5</text>
+	<text transform="matrix(1 0 0 1 100.0624 132)" class="st6 st1 st14">LEGACY</text>
+	<text transform="matrix(1 0 0 1 289.5138 132)" class="st16 st1 st14">CURRENT MAINSTREAM</text>
+	<text transform="matrix(1 0 0 1 544.573 132)" class="st19 st1 st14">HIGH PERFORMANCE</text>
+	<text transform="matrix(0.7 0 0 0.7 70.8302 145.2172)" class="st20 st21 st22">notch</text>
+	<text transform="matrix(1 0 0 1 101.4328 145.2172)" class="st20 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 104.8537 145.2172)" class="st20 st21 st22">left</text>
+	<text transform="matrix(1 0 0 1 126.3761 145.2172)" class="st20 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 129.797 145.2172)" class="st20 st21 st22">of</text>
+	<text transform="matrix(1 0 0 1 141.7579 145.2172)" class="st20 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 145.1784 145.2172)" class="st20 st21 st22">center</text>
+	<text transform="matrix(0.7 0 0 0.7 290.6848 145.2172)" class="st23 st21 st22">notch</text>
+	<text transform="matrix(1 0 0 1 321.2874 145.2172)" class="st23 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 324.7083 145.2172)" class="st23 st21 st22">slightly</text>
+	<text transform="matrix(1 0 0 1 367.2825 145.2172)" class="st23 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 370.7024 145.2172)" class="st23 st21 st22">right</text>
+	<text transform="matrix(1 0 0 1 397.4856 145.2172)" class="st23 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 400.9065 145.2172)" class="st23 st21 st22">of</text>
+	<text transform="matrix(1 0 0 1 412.8674 145.2172)" class="st23 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 416.2878 145.2172)" class="st23 st21 st22">center</text>
+	<text transform="matrix(0.7 0 0 0.7 573.9351 145.2174)" class="st24 st21 st22">notch</text>
+	<text transform="matrix(1 0 0 1 604.5376 145.2174)" class="st24 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 607.9585 145.2174)" class="st24 st21 st22">at</text>
+	<text transform="matrix(1 0 0 1 619.4321 145.2174)" class="st24 st21 st22"> </text>
+	<text transform="matrix(0.7 0 0 0.7 622.853 145.2174)" class="st24 st21 st22">center</text>
+	<g>
+		<text transform="matrix(1 0 0 1 539.9188 202)" class="st9 st10 st4">Speed: 4800-7200+ MHz</text>
+		<text transform="matrix(1 0 0 1 539.9188 222)" class="st9 st10 st4">Voltage: 1.1V</text>
+		<text transform="matrix(1 0 0 1 539.9188 242)" class="st9 st10 st4">Pins: 288 (DIMM)</text>
+		<text transform="matrix(1 0 0 1 539.9188 262)" class="st9 st10 st4">Pins: 262 (SO-DIMM)</text>
+		<text transform="matrix(1 0 0 1 539.9188 285)" class="st19 st3 st11">Status:</text>
+		<text transform="matrix(1 0 0 1 539.9188 305)" class="st9 st10 st4">Intel 12th gen+ required.</text>
+		<text transform="matrix(1 0 0 1 539.9188 325)" class="st9 st10 st4">AMD Ryzen 7000+ required.</text>
+		<text transform="matrix(1 0 0 1 539.9188 345)" class="st9 st10 st4">On-DIMM power regulation.</text>
+	</g>
+	<g>
+		<path class="st25" d="M519.8,358h192c2.2,0,4,1.8,4,4v12c0,2.2-1.8,4-4,4h-192c-2.2,0-4-1.8-4-4v-12
+			C515.8,359.8,517.6,358,519.8,358z"/>
+		<text transform="matrix(1 0 0 1 555.5101 374.6667)" class="st19 st3 st14">Future Standard</text>
+	</g>
+	<path class="st26" d="M18.8,400h704c4.4,0,8,3.6,8,8v154c0,4.4-3.6,8-8,8h-704c-4.4,0-8-3.6-8-8V408C10.8,403.6,14.4,400,18.8,400z
+		"/>
+	<path class="st0" d="M18.8,400h704c4.4,0,8,3.6,8,8v16c0,4.4-3.6,8-8,8h-704c-4.4,0-8-3.6-8-8v-16C10.8,403.6,14.4,400,18.8,400z"
+		/>
+	<text transform="matrix(1 0 0 1 314.1456 421)" class="st7 st1 st11">Critical Exam Facts</text>
+	<text transform="matrix(1 0 0 1 30.7826 455)" class="st13 st10 st14">1.</text>
+	<text transform="matrix(1 0 0 1 50.7826 455)" class="st9 st10 st14">DDR3, DDR4, DDR5 are NOT interchangeable. Different notch positions prevent wrong insertion.</text>
+	<text transform="matrix(1 0 0 1 30.7826 480)" class="st13 st10 st14">2.</text>
+	<text transform="matrix(1 0 0 1 50.7826 480)" class="st9 st10 st14">Dual-channel requires matched pairs in correct slots (A1+B1 or A2+B2). Check motherboard manual.</text>
+	<text transform="matrix(1 0 0 1 30.7826 505)" class="st13 st10 st14">3.</text>
+	<text transform="matrix(1 0 0 1 50.7826 505)" class="st9 st10 st14">DDR5 has same 288 pin count as DDR4 but DIFFERENT notch. They will NOT physically fit.</text>
+	<text transform="matrix(1 0 0 1 30.7826 530)" class="st13 st10 st14">4.</text>
+	<text transform="matrix(1 0 0 1 50.7826 530)" class="st9 st10 st14">Each generation: LOWER voltage (1.5V &gt; 1.2V &gt; 1.1V) and HIGHER speed. More efficient over time.</text>
+	<text transform="matrix(1 0 0 1 30.7826 555)" class="st13 st10 st14">5.</text>
+	<text transform="matrix(1 0 0 1 50.7826 555)" class="st9 st10 st14">SO-DIMM = laptop. DIMM = desktop. Same DDR generation compatibility rules apply to both.</text>
+	<g>
+		<path class="st27" d="M278.8,158h184c1.7,0,3,1.3,3,3v16c0,1.7-1.3,3-3,3h-184c-1.7,0-3-1.3-3-3v-16
+			C275.8,159.3,277.1,158,278.8,158z"/>
+		<rect x="358.1" y="158" class="st9" width="3" height="22"/>
+		<path class="st7" d="M359.6,183.3L359.6,183.3c-1,0-1.8-0.8-1.8-1.8v-3.1c0-1,0.8-1.8,1.8-1.8h0c1,0,1.8,0.8,1.8,1.8v3.1
+			C361.4,182.5,360.6,183.3,359.6,183.3z"/>
+	</g>
+	<g>
+		<path class="st28" d="M523.8,158h184c1.7,0,3,1.3,3,3v16c0,1.7-1.3,3-3,3h-184c-1.7,0-3-1.3-3-3v-16
+			C520.8,159.3,522.1,158,523.8,158z"/>
+		<rect x="614.6" y="158" class="st9" width="3" height="22"/>
+		<path class="st7" d="M616.1,183.3L616.1,183.3c-1,0-1.8-0.8-1.8-1.8v-3.1c0-1,0.8-1.8,1.8-1.8l0,0c1,0,1.8,0.8,1.8,1.8v3.1
+			C617.9,182.5,617.1,183.3,616.1,183.3z"/>
+	</g>
+	<g>
+		<path class="st29" d="M33.8,158h184c1.7,0,3,1.3,3,3v16c0,1.7-1.3,3-3,3h-184c-1.7,0-3-1.3-3-3v-16C30.8,159.3,32.1,158,33.8,158z
+			"/>
+		<rect x="94" y="158" class="st9" width="3" height="22"/>
+		<path class="st7" d="M95.5,183.3L95.5,183.3c-1,0-1.8-0.8-1.8-1.8v-3.1c0-1,0.8-1.8,1.8-1.8l0,0c1,0,1.8,0.8,1.8,1.8v3.1
+			C97.2,182.5,96.4,183.3,95.5,183.3z"/>
+	</g>
+	<g>
+		<line class="st23" x1="359.6" y1="149.3" x2="359.6" y2="155"/>
+		<g>
+			<path class="st16" d="M359.6,155c-1.1-2.8-2.9-6.4-4.8-8.5l4.8,1.7l4.8-1.7C362.5,148.6,360.7,152.2,359.6,155z"/>
+		</g>
+	</g>
+	<g>
+		<line class="st20" x1="95.6" y1="149.3" x2="95.6" y2="155"/>
+		<g>
+			<path class="st30" d="M95.6,155c-1.1-2.8-2.9-6.4-4.8-8.5l4.8,1.7l4.8-1.7C98.5,148.6,96.7,152.2,95.6,155z"/>
+		</g>
+	</g>
+	<g>
+		<line class="st24" x1="615.6" y1="149.3" x2="615.6" y2="155"/>
+		<g>
+			<path class="st19" d="M615.6,155c-1.1-2.8-2.9-6.4-4.8-8.5l4.8,1.7l4.8-1.7C618.5,148.6,616.7,152.2,615.6,155z"/>
+		</g>
+	</g>
+</g>
+</svg>
