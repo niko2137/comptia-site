@@ -1,79 +1,79 @@
 <svg viewBox="0 0 720 820" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <style>
-      .title { font: bold 18px Arial, sans-serif; fill: #1a1a2e; }
-      .subtitle { font: 13px Arial, sans-serif; fill: #555; }
-      .axis-label { font: bold 14px Arial, sans-serif; fill: #1a1a2e; }
-      .axis-sub { font: 12px Arial, sans-serif; fill: #444; }
-      .header-text { font: bold 13px Arial, sans-serif; fill: #fff; }
+      .title { font: bold 18px Arial, sans-serif; fill: #2C3E50; }
+      .subtitle { font: 13px Arial, sans-serif; fill: #7F8C8D; }
+      .axis-label { font: bold 14px Arial, sans-serif; fill: #2C3E50; }
+      .axis-sub { font: 12px Arial, sans-serif; fill: #333333; }
+      .header-text { font: bold 13px Arial, sans-serif; fill: #FFFFFF; }
       .cell-priority { font: bold 16px Arial, sans-serif; }
       .cell-label { font: 11px Arial, sans-serif; }
-      .formula-box { font: bold 14px Arial, sans-serif; fill: #1a1a2e; }
-      .formula-text { font: 12px Arial, sans-serif; fill: #333; }
-      .note-text { font: italic 11px Arial, sans-serif; fill: #666; }
-      .col-head { font: bold 14px Arial, sans-serif; fill: #fff; }
-      .col-level { font: bold 12px Arial, sans-serif; }
-      .col-desc { font: 11px Arial, sans-serif; fill: #353534; }
+      .formula-box { font: bold 14px Arial, sans-serif; fill: #2C3E50; }
+      .formula-text { font: 12px Arial, sans-serif; fill: #333333; }
+      .note-text { font: italic 11px Arial, sans-serif; fill: #7F8C8D; }
+      .col-head { font: bold 14px Arial, sans-serif; fill: #FFFFFF; }
+      .col-level { font: bold 12px Arial, sans-serif; fill: #FFFFFF; }
+      .col-desc { font: 11px Arial, sans-serif; fill: #333333; }
     </style>
   </defs>
 
   <!-- ===== TITLE ===== -->
   <text x="360" y="28" text-anchor="middle" class="title">TICKET PRIORITIZATION</text>
 
-  <!-- ===== TOP SECTION: Three-Column Breakdown (from original) ===== -->
+  <!-- ===== TOP SECTION: Three-Column Breakdown ===== -->
   <!-- Severity Column -->
-  <rect x="20" y="48" width="220" height="40" rx="8" fill="#3C3489" stroke="#AFA9EC" stroke-width="0.5"/>
+  <rect x="20" y="48" width="220" height="40" rx="8" fill="#8E44AD"/>
   <text x="130" y="73" text-anchor="middle" class="col-head">Severity — How?</text>
   <text x="130" y="103" text-anchor="middle" class="col-desc">How badly is the system broken?</text>
 
-  <rect x="28" y="115" width="204" height="32" rx="5" fill="#4A3FA0"/>
-  <text x="130" y="136" text-anchor="middle" class="col-level" fill="#CECBF6">Critical — System completely unusable</text>
+  <rect x="28" y="115" width="204" height="32" rx="5" fill="#9B59B6"/>
+  <text x="130" y="136" text-anchor="middle" class="col-level">Critical — System completely unusable</text>
 
-  <rect x="28" y="152" width="204" height="32" rx="5" fill="#5A4FB0"/>
-  <text x="130" y="173" text-anchor="middle" class="col-level" fill="#CECBF6">High — Major function unavailable</text>
+  <rect x="28" y="152" width="204" height="32" rx="5" fill="#A569BD"/>
+  <text x="130" y="173" text-anchor="middle" class="col-level">High — Major function unavailable</text>
 
-  <rect x="28" y="189" width="204" height="32" rx="5" fill="#6A5FC0"/>
-  <text x="130" y="210" text-anchor="middle" class="col-level" fill="#CECBF6">Medium — Workaround exists</text>
+  <rect x="28" y="189" width="204" height="32" rx="5" fill="#AF7AC5"/>
+  <text x="130" y="210" text-anchor="middle" class="col-level">Medium — Workaround exists</text>
 
-  <rect x="28" y="226" width="204" height="32" rx="5" fill="#7A6FD0"/>
-  <text x="130" y="247" text-anchor="middle" class="col-level" fill="#CECBF6">Low — Minor or cosmetic</text>
+  <rect x="28" y="226" width="204" height="32" rx="5" fill="#BB8FCE"/>
+  <text x="130" y="247" text-anchor="middle" class="col-level">Low — Minor or cosmetic</text>
 
   <!-- Impact Column -->
-  <rect x="250" y="48" width="220" height="40" rx="8" fill="#085041" stroke="#5DCAA5" stroke-width="0.5"/>
+  <rect x="250" y="48" width="220" height="40" rx="8" fill="#2980B9"/>
   <text x="360" y="73" text-anchor="middle" class="col-head">Impact — Who?</text>
   <text x="360" y="103" text-anchor="middle" class="col-desc">Who and how many are affected?</text>
 
-  <rect x="258" y="115" width="204" height="32" rx="5" fill="#0A6050"/>
-  <text x="360" y="136" text-anchor="middle" class="col-level" fill="#9FE1CB">Enterprise — All/most users</text>
+  <rect x="258" y="115" width="204" height="32" rx="5" fill="#3498DB"/>
+  <text x="360" y="136" text-anchor="middle" class="col-level">Enterprise — All/most users</text>
 
-  <rect x="258" y="152" width="204" height="32" rx="5" fill="#0D7060"/>
-  <text x="360" y="173" text-anchor="middle" class="col-level" fill="#9FE1CB">Department — Team or unit</text>
+  <rect x="258" y="152" width="204" height="32" rx="5" fill="#5DADE2"/>
+  <text x="360" y="173" text-anchor="middle" class="col-level">Department — Team or unit</text>
 
-  <rect x="258" y="189" width="204" height="32" rx="5" fill="#108070"/>
-  <text x="360" y="210" text-anchor="middle" class="col-level" fill="#9FE1CB">Single User — One person</text>
+  <rect x="258" y="189" width="204" height="32" rx="5" fill="#85C1E9"/>
+  <text x="360" y="210" text-anchor="middle" class="col-level" fill="#2C3E50">Single User — One person</text>
 
-  <rect x="258" y="226" width="204" height="32" rx="5" fill="#139080"/>
-  <text x="360" y="247" text-anchor="middle" class="col-level" fill="#9FE1CB">Non-production — Dev/test only</text>
+  <rect x="258" y="226" width="204" height="32" rx="5" fill="#AED6F1"/>
+  <text x="360" y="247" text-anchor="middle" class="col-level" fill="#2C3E50">Non-production — Dev/test only</text>
 
   <!-- Urgency Column -->
-  <rect x="480" y="48" width="220" height="40" rx="8" fill="#712B13" stroke="#F0997B" stroke-width="0.5"/>
+  <rect x="480" y="48" width="220" height="40" rx="8" fill="#D35400"/>
   <text x="590" y="73" text-anchor="middle" class="col-head">Urgency — When?</text>
   <text x="590" y="103" text-anchor="middle" class="col-desc">When must this be resolved?</text>
 
-  <rect x="488" y="115" width="204" height="32" rx="5" fill="#8B3515"/>
-  <text x="590" y="136" text-anchor="middle" class="col-level" fill="#F5C4B3">Immediate — SLA at risk</text>
+  <rect x="488" y="115" width="204" height="32" rx="5" fill="#E67E22"/>
+  <text x="590" y="136" text-anchor="middle" class="col-level">Immediate — SLA at risk</text>
 
-  <rect x="488" y="152" width="204" height="32" rx="5" fill="#9B4520"/>
-  <text x="590" y="173" text-anchor="middle" class="col-level" fill="#F5C4B3">Same Day — Within business hours</text>
+  <rect x="488" y="152" width="204" height="32" rx="5" fill="#EB984E"/>
+  <text x="590" y="173" text-anchor="middle" class="col-level" fill="#2C3E50">Same Day — Within business hours</text>
 
-  <rect x="488" y="189" width="204" height="32" rx="5" fill="#AB5530"/>
-  <text x="590" y="210" text-anchor="middle" class="col-level" fill="#F5C4B3">Scheduled — Next window</text>
+  <rect x="488" y="189" width="204" height="32" rx="5" fill="#F0B27A"/>
+  <text x="590" y="210" text-anchor="middle" class="col-level" fill="#2C3E50">Scheduled — Next window</text>
 
-  <rect x="488" y="226" width="204" height="32" rx="5" fill="#BB6540"/>
-  <text x="590" y="247" text-anchor="middle" class="col-level" fill="#F5C4B3">Deferred — No time pressure</text>
+  <rect x="488" y="226" width="204" height="32" rx="5" fill="#F5CBA7"/>
+  <text x="590" y="247" text-anchor="middle" class="col-level" fill="#2C3E50">Deferred — No time pressure</text>
 
   <!-- ===== DIVIDER ===== -->
-  <line x1="20" y1="275" x2="700" y2="275" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="20" y1="275" x2="700" y2="275" stroke="#DEE2E6" stroke-width="1.5"/>
 
   <!-- ===== MIDDLE SECTION: Priority Matrix Grid ===== -->
   <text x="360" y="302" text-anchor="middle" class="title">PRIORITY MATRIX</text>
@@ -82,110 +82,110 @@
   <!-- Urgency headers (top) -->
   <text x="420" y="345" text-anchor="middle" class="axis-label">URGENCY →</text>
 
-  <rect x="245" y="355" width="130" height="36" rx="4" fill="#712B13"/>
+  <rect x="245" y="355" width="130" height="36" rx="4" fill="#D35400"/>
   <text x="310" y="378" text-anchor="middle" class="header-text">Immediate</text>
 
-  <rect x="380" y="355" width="130" height="36" rx="4" fill="#8B4513"/>
+  <rect x="380" y="355" width="130" height="36" rx="4" fill="#E67E22"/>
   <text x="445" y="378" text-anchor="middle" class="header-text">Same Day</text>
 
-  <rect x="515" y="355" width="130" height="36" rx="4" fill="#A0522D"/>
+  <rect x="515" y="355" width="130" height="36" rx="4" fill="#F39C12"/>
   <text x="580" y="378" text-anchor="middle" class="header-text">Scheduled</text>
 
   <!-- Impact headers (left) -->
   <text x="45" y="430" text-anchor="middle" class="axis-label" transform="rotate(-90, 45, 450)">IMPACT →</text>
 
-  <rect x="70" y="396" width="170" height="50" rx="4" fill="#085041"/>
+  <rect x="70" y="396" width="170" height="50" rx="4" fill="#1A5276"/>
   <text x="155" y="418" text-anchor="middle" class="header-text">Enterprise-wide</text>
-  <text x="155" y="434" text-anchor="middle" font-size="10" fill="#9FE1CB">All users affected</text>
+  <text x="155" y="434" text-anchor="middle" font-size="10" fill="#D6EAF8">All users affected</text>
 
-  <rect x="70" y="451" width="170" height="50" rx="4" fill="#0A6B56"/>
+  <rect x="70" y="451" width="170" height="50" rx="4" fill="#2980B9"/>
   <text x="155" y="473" text-anchor="middle" class="header-text">Department</text>
-  <text x="155" y="489" text-anchor="middle" font-size="10" fill="#9FE1CB">Team or business unit</text>
+  <text x="155" y="489" text-anchor="middle" font-size="10" fill="#D6EAF8">Team or business unit</text>
 
-  <rect x="70" y="506" width="170" height="50" rx="4" fill="#0D8268"/>
+  <rect x="70" y="506" width="170" height="50" rx="4" fill="#3498DB"/>
   <text x="155" y="528" text-anchor="middle" class="header-text">Single User</text>
-  <text x="155" y="544" text-anchor="middle" font-size="10" fill="#9FE1CB">One person affected</text>
+  <text x="155" y="544" text-anchor="middle" font-size="10" fill="#D6EAF8">One person affected</text>
 
   <!-- Matrix Cells -->
   <!-- Row 1: Enterprise -->
   <rect x="245" y="396" width="130" height="50" rx="4" fill="#C0392B"/>
-  <text x="310" y="418" text-anchor="middle" class="cell-priority" fill="#fff">P1</text>
-  <text x="310" y="436" text-anchor="middle" class="cell-label" fill="#FFDDD9">Critical</text>
+  <text x="310" y="418" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P1</text>
+  <text x="310" y="436" text-anchor="middle" class="cell-label" fill="#ffe0e0">Critical</text>
 
   <rect x="380" y="396" width="130" height="50" rx="4" fill="#C0392B"/>
-  <text x="445" y="418" text-anchor="middle" class="cell-priority" fill="#fff">P1</text>
-  <text x="445" y="436" text-anchor="middle" class="cell-label" fill="#FFDDD9">Critical</text>
+  <text x="445" y="418" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P1</text>
+  <text x="445" y="436" text-anchor="middle" class="cell-label" fill="#ffe0e0">Critical</text>
 
   <rect x="515" y="396" width="130" height="50" rx="4" fill="#E67E22"/>
-  <text x="580" y="418" text-anchor="middle" class="cell-priority" fill="#fff">P2</text>
-  <text x="580" y="436" text-anchor="middle" class="cell-label" fill="#FDEBD0">High</text>
+  <text x="580" y="418" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P2</text>
+  <text x="580" y="436" text-anchor="middle" class="cell-label" fill="#fff3e0">High</text>
 
   <!-- Row 2: Department -->
   <rect x="245" y="451" width="130" height="50" rx="4" fill="#C0392B"/>
-  <text x="310" y="473" text-anchor="middle" class="cell-priority" fill="#fff">P1</text>
-  <text x="310" y="491" text-anchor="middle" class="cell-label" fill="#FFDDD9">Critical</text>
+  <text x="310" y="473" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P1</text>
+  <text x="310" y="491" text-anchor="middle" class="cell-label" fill="#ffe0e0">Critical</text>
 
   <rect x="380" y="451" width="130" height="50" rx="4" fill="#E67E22"/>
-  <text x="445" y="473" text-anchor="middle" class="cell-priority" fill="#fff">P2</text>
-  <text x="445" y="491" text-anchor="middle" class="cell-label" fill="#FDEBD0">High</text>
+  <text x="445" y="473" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P2</text>
+  <text x="445" y="491" text-anchor="middle" class="cell-label" fill="#fff3e0">High</text>
 
-  <rect x="515" y="451" width="130" height="50" rx="4" fill="#F1C40F"/>
-  <text x="580" y="473" text-anchor="middle" class="cell-priority" fill="#333">P3</text>
-  <text x="580" y="491" text-anchor="middle" class="cell-label" fill="#555">Medium</text>
+  <rect x="515" y="451" width="130" height="50" rx="4" fill="#F39C12"/>
+  <text x="580" y="473" text-anchor="middle" class="cell-priority" fill="#2C3E50">P3</text>
+  <text x="580" y="491" text-anchor="middle" class="cell-label" fill="#333333">Medium</text>
 
   <!-- Row 3: Single User -->
   <rect x="245" y="506" width="130" height="50" rx="4" fill="#E67E22"/>
-  <text x="310" y="528" text-anchor="middle" class="cell-priority" fill="#fff">P2</text>
-  <text x="310" y="546" text-anchor="middle" class="cell-label" fill="#FDEBD0">High</text>
+  <text x="310" y="528" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P2</text>
+  <text x="310" y="546" text-anchor="middle" class="cell-label" fill="#fff3e0">High</text>
 
-  <rect x="380" y="506" width="130" height="50" rx="4" fill="#F1C40F"/>
-  <text x="445" y="528" text-anchor="middle" class="cell-priority" fill="#333">P3</text>
-  <text x="445" y="546" text-anchor="middle" class="cell-label" fill="#555">Medium</text>
+  <rect x="380" y="506" width="130" height="50" rx="4" fill="#F39C12"/>
+  <text x="445" y="528" text-anchor="middle" class="cell-priority" fill="#2C3E50">P3</text>
+  <text x="445" y="546" text-anchor="middle" class="cell-label" fill="#333333">Medium</text>
 
   <rect x="515" y="506" width="130" height="50" rx="4" fill="#27AE60"/>
-  <text x="580" y="528" text-anchor="middle" class="cell-priority" fill="#fff">P4</text>
-  <text x="580" y="546" text-anchor="middle" class="cell-label" fill="#D5F5E3">Low</text>
+  <text x="580" y="528" text-anchor="middle" class="cell-priority" fill="#FFFFFF">P4</text>
+  <text x="580" y="546" text-anchor="middle" class="cell-label" fill="#e8f5e9">Low</text>
 
   <!-- ===== DIVIDER ===== -->
-  <line x1="20" y1="575" x2="700" y2="575" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="20" y1="575" x2="700" y2="575" stroke="#DEE2E6" stroke-width="1.5"/>
 
-  <!-- ===== BOTTOM SECTION: Priority Levels + Formula (from original) ===== -->
+  <!-- ===== BOTTOM SECTION: Priority Levels + Formula ===== -->
   <text x="360" y="602" text-anchor="middle" class="title">COMBINED PRIORITY LEVELS</text>
 
   <!-- P1 -->
-  <rect x="30" y="618" width="56" height="36" rx="6" fill="#C0392B" stroke="#F09595" stroke-width="0.5"/>
-  <text x="58" y="641" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">P1</text>
+  <rect x="30" y="618" width="56" height="36" rx="6" fill="#C0392B"/>
+  <text x="58" y="641" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">P1</text>
   <text x="98" y="632" class="axis-sub" font-weight="bold" fill="#C0392B">Critical</text>
   <text x="98" y="648" class="col-desc">High impact + immediate urgency — full outage, all users down</text>
 
   <!-- P2 -->
-  <rect x="30" y="664" width="56" height="36" rx="6" fill="#E67E22" stroke="#F0997B" stroke-width="0.5"/>
-  <text x="58" y="687" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">P2</text>
+  <rect x="30" y="664" width="56" height="36" rx="6" fill="#E67E22"/>
+  <text x="58" y="687" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">P2</text>
   <text x="98" y="678" class="axis-sub" font-weight="bold" fill="#E67E22">High</text>
   <text x="98" y="694" class="col-desc">Major function impaired, department-level, same-day fix needed</text>
 
   <!-- P3 -->
-  <rect x="30" y="710" width="56" height="36" rx="6" fill="#F1C40F" stroke="#D4AC0D" stroke-width="0.5"/>
-  <text x="58" y="733" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">P3</text>
-  <text x="98" y="724" class="axis-sub" font-weight="bold" fill="#B7950B">Medium</text>
+  <rect x="30" y="710" width="56" height="36" rx="6" fill="#F39C12"/>
+  <text x="58" y="733" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">P3</text>
+  <text x="98" y="724" class="axis-sub" font-weight="bold" fill="#F39C12">Medium</text>
   <text x="98" y="740" class="col-desc">Non-critical issue, workaround exists, scheduled resolution</text>
 
   <!-- P4 -->
-  <rect x="30" y="756" width="56" height="36" rx="6" fill="#27AE60" stroke="#5DCAA5" stroke-width="0.5"/>
-  <text x="58" y="779" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">P4</text>
+  <rect x="30" y="756" width="56" height="36" rx="6" fill="#27AE60"/>
+  <text x="58" y="779" text-anchor="middle" font-size="14" font-weight="bold" fill="#FFFFFF">P4</text>
   <text x="98" y="770" class="axis-sub" font-weight="bold" fill="#27AE60">Low</text>
   <text x="98" y="786" class="col-desc">Cosmetic issue, no immediate time pressure, deferred</text>
 
-  <!-- Formula Box (right side) -->
-  <rect x="460" y="620" width="235" height="90" rx="10" fill="#f0f0ff" stroke="#3C3489" stroke-width="2"/>
+  <!-- Formula Box -->
+  <rect x="460" y="620" width="235" height="90" rx="10" fill="#e3f2fd" stroke="#2980B9" stroke-width="2"/>
   <text x="577" y="648" text-anchor="middle" class="formula-box" font-size="16">I + U = P</text>
   <text x="577" y="670" text-anchor="middle" class="formula-text">Impact + Urgency = Priority</text>
   <text x="577" y="695" text-anchor="middle" class="note-text">Severity describes technical damage</text>
   <text x="577" y="709" text-anchor="middle" class="note-text">but does NOT calculate priority.</text>
 
   <!-- Exam Trap Box -->
-  <rect x="460" y="725" width="235" height="68" rx="10" fill="#FFF3E0" stroke="#E67E22" stroke-width="2"/>
-  <text x="577" y="749" text-anchor="middle" font-size="12" font-weight="bold" fill="#E67E22">⚠ EXAM TRAP</text>
+  <rect x="460" y="725" width="235" height="68" rx="10" fill="#ffe0e0" stroke="#C0392B" stroke-width="2"/>
+  <text x="577" y="749" text-anchor="middle" font-size="12" font-weight="bold" fill="#C0392B">⚠ EXAM TRAP</text>
   <text x="577" y="767" text-anchor="middle" class="col-desc">High severity ≠ high priority.</text>
   <text x="577" y="783" text-anchor="middle" class="col-desc">A destroyed spare laptop no one</text>
   <text x="577" y="797" text-anchor="middle" class="col-desc" font-style="italic">needs = low priority (low I + low U).</text>
