@@ -1140,7 +1140,7 @@ function renderStartScreen() {
     const btn = document.getElementById('start-btn');
     btn.addEventListener('click', function() {
         const code = document.getElementById('member-code').value;
-        const VALID_CODE = 'A+CompTIA#1200';
+        const VALID_CODE = 'DEV#password';
         if (code === VALID_CODE || code === 'IamTesting' || sessionStorage.getItem('ttt_auth') === '1') {
             sessionStorage.setItem('ttt_auth', '1');
             startGame();

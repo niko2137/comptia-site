@@ -2,7 +2,7 @@
  * encrypt-content.js
  * 
  * Encrypts the protected HTML content using XOR + Base64 encoding.
- * Password: A+CompTIA#1200
+ * Password: DEV#password
  * 
  * Usage: node encrypt-content.js
  * 
@@ -21,7 +21,7 @@
 
 const crypto = require('crypto');
 
-const PASSWORD = 'A+CompTIA#1200';
+const PASSWORD = 'DEV#password';
 
 // The marker that proves decryption succeeded
 const MARKER = '<!--VERIFIED-->';
