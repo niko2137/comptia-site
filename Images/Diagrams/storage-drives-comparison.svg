@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 800 635.7" style="enable-background:new 0 0 800 635.7;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#2980B9;}
+	.st1{font-family:'SegoeUI-Bold';}
+	.st2{font-size:20px;}
+	.st3{fill:#FFFFFF;stroke:#95A5A6;stroke-width:2;}
+	.st4{fill:#95A5A6;}
+	.st5{fill:#FFFFFF;}
+	.st6{font-size:14px;}
+	.st7{fill:#DDDDDD;stroke:#999999;stroke-width:2;}
+	.st8{fill:#EEEEEE;stroke:#AAAAAA;}
+	.st9{fill:#666666;}
+	.st10{fill:none;stroke:#666666;stroke-width:2;}
+	.st11{font-size:12px;}
+	.st12{fill:#333333;}
+	.st13{font-family:'SegoeUI';}
+	.st14{fill:#C0392B;}
+	.st15{fill:#F2F2F2;}
+	.st16{font-size:11px;}
+	.st17{fill:#FFE5E9;}
+	.st18{fill:#FFFFFF;stroke:#2980B9;stroke-width:2;}
+	.st19{fill:#2C3E50;}
+	.st20{fill:#3498DB;}
+	.st21{fill:#27AE60;}
+	.st22{fill:#DBE5F1;}
+	.st23{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
+	.st24{fill:#8E44AD;}
+	.st25{fill:#9B59B6;}
+	.st26{fill:#E8DAEF;}
+	.st27{fill:#FFFFFF;stroke:#1F497D;stroke-width:2;}
+	.st28{fill:#1F497D;}
+	.st29{font-size:13px;}
+</style>
+<g>
+	<text transform="matrix(1 0 0 1 149.3359 55.8488)" class="st0 st1 st2">Storage Drive Comparison: HDD vs SSD vs M.2 NVMe</text>
+	<g>
+		<g>
+			<g>
+				<path class="st3" d="M29.2,85.4h229c4.4,0,8,3.8,8,8.4V465c0,4.6-3.6,8.4-8,8.4h-229c-4.4,0-8-3.8-8-8.4V93.8
+					C21.2,89.1,24.7,85.4,29.2,85.4z"/>
+				<path class="st4" d="M29.2,85.4h229c4.4,0,8,3.6,8,8v24c0,4.4-3.6,8-8,8h-229c-4.4,0-8-3.6-8-8v-24C21.2,89,24.7,85.4,29.2,85.4
+					z"/>
+			</g>
+			<text transform="matrix(1 0 0 1 88.6525 111.3241)" class="st5 st1 st6">SATA HDD (3.5&quot;)</text>
+			<g>
+				<circle class="st7" cx="143.7" cy="165.3" r="30"/>
+				<circle class="st8" cx="143.7" cy="165.3" r="20"/>
+				<circle class="st9" cx="143.7" cy="165.3" r="5"/>
+				<line class="st10" x1="143.7" y1="165.3" x2="166.7" y2="152.3"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 50.77 218.8487)" class="st4 st1 st11">MECHANICAL (spinning platters)</text>
+				<g>
+					<g>
+						<text transform="matrix(1 0 0 1 30.3313 243.8487)" class="st12 st1 st11">Speed:</text>
+						<text transform="matrix(1 0 0 1 30.3313 263.8487)" class="st12 st1 st11">Interface:</text>
+						<text transform="matrix(1 0 0 1 30.3313 283.8487)" class="st12 st1 st11">Connector:</text>
+						<text transform="matrix(1 0 0 1 30.3313 303.8488)" class="st12 st1 st11">Size:</text>
+						<text transform="matrix(1 0 0 1 30.3313 323.8488)" class="st12 st1 st11">Cost:</text>
+						<text transform="matrix(1 0 0 1 30.3313 343.8488)" class="st12 st1 st11">Durability:</text>
+						<text transform="matrix(1 0 0 1 30.3313 363.8488)" class="st12 st1 st11">Noise:</text>
+					</g>
+					<g>
+						<text transform="matrix(1 0 0 1 100.8976 243.8487)" class="st12 st13 st11">Up to 200 MB/s</text>
+						<text transform="matrix(1 0 0 1 100.8976 263.8487)" class="st12 st13 st11">SATA III (6 Gb/s)</text>
+						<text transform="matrix(1 0 0 1 100.8976 283.8487)" class="st12 st13 st11">7-pin data + 15-pin power</text>
+						<text transform="matrix(1 0 0 1 100.8976 303.8488)" class="st12 st13 st11">3.5&quot; (desktop) or 2.5&quot; (laptop)</text>
+						<text transform="matrix(1 0 0 1 100.8976 323.8488)" class="st12 st13 st11">Cheapest per GB</text>
+						<text transform="matrix(1 0 0 1 100.8976 343.8488)" class="st14 st13 st11">Low (moving parts, fragile)</text>
+						<text transform="matrix(1 0 0 1 100.8976 363.8488)" class="st12 st13 st11">Audible (clicking = failure!)</text>
+					</g>
+				</g>
+				<g>
+					<path class="st15" d="M40.2,383.8h207c2.2,0,4,1.8,4,4v27c0,2.2-1.8,4-4,4h-207c-2.2,0-4-1.8-4-4v-27
+						C36.2,385.6,38,383.8,40.2,383.8z"/>
+					<text transform="matrix(1 0 0 1 121.7124 398.8488)" class="st12 st1 st16">Best for:</text>
+					<text transform="matrix(1 0 0 1 39.1857 413.8488)" class="st12 st13 st16">Mass storage, backups, NAS, budget builds</text>
+				</g>
+				<g>
+					<path class="st17" d="M40.2,428.8h207c2.2,0,4,1.8,4,4v17c0,2.2-1.8,4-4,4h-207c-2.2,0-4-1.8-4-4v-17
+						C36.2,430.6,38,428.8,40.2,428.8z"/>
+					<text transform="matrix(1 0 0 1 45.0804 445.8488)" class="st14 st1 st16">Click sounds = imminent drive failure!</text>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path class="st18" d="M285.5,85.4h229c4.4,0,8,3.8,8,8.4V465c0,4.6-3.6,8.4-8,8.4h-229c-4.4,0-8-3.8-8-8.4V93.8
+					C277.5,89.1,281.1,85.4,285.5,85.4z"/>
+				<path class="st0" d="M285.5,85.4h229c4.4,0,8,3.6,8,8v24c0,4.4-3.6,8-8,8h-229c-4.4,0-8-3.6-8-8v-24
+					C277.5,89,281.1,85.4,285.5,85.4z"/>
+			</g>
+			<text transform="matrix(1 0 0 1 352.8357 111.3241)" class="st5 st1 st6">2.5&quot; SATA SSD</text>
+			<g>
+				<path class="st19" d="M374,145.3h52c2.2,0,4,1.8,4,4v32c0,2.2-1.8,4-4,4h-52c-2.2,0-4-1.8-4-4v-32
+					C370,147.1,371.8,145.3,374,145.3z"/>
+				<path class="st20" d="M379,151.3h10c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-10c-0.6,0-1-0.4-1-1v-6
+					C378,151.8,378.4,151.3,379,151.3z"/>
+				<path class="st20" d="M395,151.3h10c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-10c-0.6,0-1-0.4-1-1v-6
+					C394,151.8,394.4,151.3,395,151.3z"/>
+				<path class="st20" d="M411,151.3h10c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-10c-0.6,0-1-0.4-1-1v-6
+					C410,151.8,410.4,151.3,411,151.3z"/>
+				<path class="st20" d="M379,167.3h10c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-10c-0.6,0-1-0.4-1-1v-6
+					C378,167.8,378.4,167.3,379,167.3z"/>
+				<path class="st20" d="M395,167.3h10c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-10c-0.6,0-1-0.4-1-1v-6
+					C394,167.8,394.4,167.3,395,167.3z"/>
+				<path class="st20" d="M411,167.3h10c0.6,0,1,0.4,1,1v6c0,0.6-0.4,1-1,1h-10c-0.6,0-1-0.4-1-1v-6
+					C410,167.8,410.4,167.3,411,167.3z"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 312.6985 218.8487)" class="st0 st1 st11">FLASH MEMORY (NAND chips)</text>
+				<g>
+					<g>
+						<text transform="matrix(1 0 0 1 299.5195 243.8487)" class="st12 st1 st11">Speed:</text>
+						<text transform="matrix(1 0 0 1 299.5195 263.8487)" class="st12 st1 st11">Interface:</text>
+						<text transform="matrix(1 0 0 1 299.5195 283.8487)" class="st12 st1 st11">Connector:</text>
+						<text transform="matrix(1 0 0 1 299.5195 303.8488)" class="st12 st1 st11">Size:</text>
+						<text transform="matrix(1 0 0 1 299.5195 323.8488)" class="st12 st1 st11">Cost:</text>
+						<text transform="matrix(1 0 0 1 299.5195 343.8488)" class="st12 st1 st11">Durability:</text>
+						<text transform="matrix(1 0 0 1 299.5195 363.8488)" class="st12 st1 st11">Noise:</text>
+					</g>
+					<g>
+						<text transform="matrix(1 0 0 1 370.0859 243.8487)" class="st12 st13 st11">Up to 550 MB/s</text>
+						<text transform="matrix(1 0 0 1 370.0859 263.8487)" class="st12 st13 st11">SATA III (6 Gb/s)</text>
+						<text transform="matrix(1 0 0 1 370.0859 283.8487)" class="st12 st13 st11">Same as HDD (7+15 pin)</text>
+						<text transform="matrix(1 0 0 1 370.0859 303.8488)" class="st12 st13 st11">2.5&quot; form factor</text>
+						<text transform="matrix(1 0 0 1 370.0859 323.8488)" class="st12 st13 st11">Moderate</text>
+						<text transform="matrix(1 0 0 1 370.0859 343.8488)" class="st21 st13 st11">High (no moving parts)</text>
+						<text transform="matrix(1 0 0 1 370.0859 363.8488)" class="st12 st13 st11">Silent</text>
+					</g>
+				</g>
+				<g>
+					<path class="st22" d="M296.5,383.8h207c2.2,0,4,1.8,4,4v27c0,2.2-1.8,4-4,4h-207c-2.2,0-4-1.8-4-4v-27
+						C292.5,385.6,294.3,383.8,296.5,383.8z"/>
+					<text transform="matrix(1 0 0 1 378.051 398.8488)" class="st12 st1 st16">Best for:</text>
+					<text transform="matrix(1 0 0 1 306.124 413.8488)" class="st12 st13 st16">OS drive upgrade, general use, laptops</text>
+				</g>
+				<g>
+					<path class="st22" d="M296.5,428.8h207c2.2,0,4,1.8,4,4v17c0,2.2-1.8,4-4,4h-207c-2.2,0-4-1.8-4-4v-17
+						C292.5,430.6,294.3,428.8,296.5,428.8z"/>
+					<text transform="matrix(1 0 0 1 307.5554 445.8488)" class="st0 st1 st16">HDD replacement (same connector)</text>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path class="st23" d="M541.8,85.4h229c4.4,0,8,3.7,8,8.3v366.8c0,4.6-3.6,8.3-8,8.3h-229c-4.4,0-8-3.7-8-8.3V93.7
+					C533.8,89.1,537.4,85.4,541.8,85.4z"/>
+				<path class="st24" d="M541.8,85.4h229c4.4,0,8,3.6,8,8v24c0,4.4-3.6,8-8,8h-229c-4.4,0-8-3.6-8-8v-24
+					C533.8,89,537.4,85.4,541.8,85.4z"/>
+			</g>
+			<text transform="matrix(1 0 0 1 606.1594 111.3241)" class="st5 st1 st6">M.2 NVMe SSD</text>
+			<g>
+				<path class="st19" d="M626.8,155.3h59c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-59c-1.7,0-3-1.3-3-3v-9
+					C623.8,156.7,625.2,155.3,626.8,155.3z"/>
+				<path class="st25" d="M629.8,158.3h6c0.6,0,1,0.4,1,1v7c0,0.6-0.4,1-1,1h-6c-0.6,0-1-0.4-1-1v-7
+					C628.8,158.8,629.3,158.3,629.8,158.3z"/>
+				<path class="st25" d="M641.8,158.3h6c0.6,0,1,0.4,1,1v7c0,0.6-0.4,1-1,1h-6c-0.6,0-1-0.4-1-1v-7
+					C640.8,158.8,641.3,158.3,641.8,158.3z"/>
+				<path class="st25" d="M653.8,158.3h6c0.6,0,1,0.4,1,1v7c0,0.6-0.4,1-1,1h-6c-0.6,0-1-0.4-1-1v-7
+					C652.8,158.8,653.3,158.3,653.8,158.3z"/>
+				<path class="st25" d="M665.8,158.3h6c0.6,0,1,0.4,1,1v7c0,0.6-0.4,1-1,1h-6c-0.6,0-1-0.4-1-1v-7
+					C664.8,158.8,665.3,158.3,665.8,158.3z"/>
+				<path class="st25" d="M677.8,158.3h6c0.6,0,1,0.4,1,1v7c0,0.6-0.4,1-1,1h-6c-0.6,0-1-0.4-1-1v-7
+					C676.8,158.8,677.3,158.3,677.8,158.3z"/>
+				<rect x="623.8" y="170.3" class="st5" width="8" height="5"/>
+			</g>
+			<g>
+				<text transform="matrix(1 0 0 1 570.4866 218.8487)" class="st24 st1 st11">FLASH + PCIe (bypasses SATA)</text>
+				<g>
+					<g>
+						<text transform="matrix(1 0 0 1 559.7663 243.8487)" class="st12 st1 st11">Speed:</text>
+						<text transform="matrix(1 0 0 1 559.7663 263.8487)" class="st12 st1 st11">Interface:</text>
+						<text transform="matrix(1 0 0 1 559.7663 283.8487)" class="st12 st1 st11">Connector:</text>
+						<text transform="matrix(1 0 0 1 559.7663 303.8488)" class="st12 st1 st11">Size:</text>
+						<text transform="matrix(1 0 0 1 559.7663 323.8488)" class="st12 st1 st11">Cost:</text>
+						<text transform="matrix(1 0 0 1 559.7663 343.8488)" class="st12 st1 st11">Durability:</text>
+						<text transform="matrix(1 0 0 1 559.7663 363.8488)" class="st12 st1 st11">Noise:</text>
+					</g>
+					<g>
+						<text transform="matrix(1 0 0 1 630.3328 243.8487)" class="st21 st1 st11">3,500 - 7,000+ MB/s</text>
+						<text transform="matrix(1 0 0 1 630.3328 263.8487)" class="st12 st13 st11">PCIe (Gen 3/4/5)</text>
+						<text transform="matrix(1 0 0 1 630.3328 283.8487)" class="st12 st13 st11">M.2 slot (M-key)</text>
+						<text transform="matrix(1 0 0 1 630.3328 303.8488)" class="st12 st13 st11">22mm x 80mm (2280)</text>
+						<text transform="matrix(1 0 0 1 630.3328 323.8488)" class="st12 st13 st11">Most expensive per GB</text>
+						<text transform="matrix(1 0 0 1 630.3328 343.8488)" class="st21 st13 st11">High (no moving parts)</text>
+						<text transform="matrix(1 0 0 1 630.3328 363.8488)" class="st12 st13 st11">Silent</text>
+					</g>
+				</g>
+				<g>
+					<path class="st26" d="M552.8,383.8h207c2.2,0,4,1.8,4,4v27c0,2.2-1.8,4-4,4h-207c-2.2,0-4-1.8-4-4v-27
+						C548.8,385.6,550.6,383.8,552.8,383.8z"/>
+					<text transform="matrix(1 0 0 1 634.3896 398.8488)" class="st12 st1 st16">Best for:</text>
+					<text transform="matrix(1 0 0 1 567.1731 413.8488)" class="st12 st13 st16">OS boot, gaming, video editing, VMs</text>
+				</g>
+				<g>
+					<path class="st26" d="M552.8,428.8h207c2.2,0,4,1.8,4,4v17c0,2.2-1.8,4-4,4h-207c-2.2,0-4-1.8-4-4v-17
+						C548.8,430.6,550.6,428.8,552.8,428.8z"/>
+					<text transform="matrix(1 0 0 1 580.5525 445.8488)" class="st24 st1 st16">10-35x faster than SATA SSD!</text>
+				</g>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path class="st27" d="M26,491.8h748c3.3,0,6,2.7,6,6v93c0,3.3-2.7,6-6,6H26c-3.3,0-6-2.7-6-6v-93C20,494.5,22.7,491.8,26,491.8z"
+				/>
+			<path class="st28" d="M26,491.8h748c3.3,0,6,2.7,6,6v10c0,3.3-2.7,6-6,6H26c-3.3,0-6-2.7-6-6v-10C20,494.5,22.7,491.8,26,491.8z"
+				/>
+		</g>
+		<text transform="matrix(1 0 0 1 353.551 506.8487)" class="st5 st1 st29">Exam Key Facts</text>
+		<g>
+			<text transform="matrix(1 0 0 1 105.7285 529.8488)" class="st14 st1 st11">1.</text>
+			<text transform="matrix(1 0 0 1 118.7285 529.8488)" class="st12 st13 st11">M.2 NVMe uses PCIe lanes (not SATA). That&apos;s why it&apos;s so much faster. BIOS may need NVMe support enabled.</text>
+			<text transform="matrix(1 0 0 1 105.7285 547.8488)" class="st14 st1 st11">2.</text>
+			<text transform="matrix(1 0 0 1 118.7285 547.8488)" class="st12 st13 st11">M.2 SATA SSDs exist too (same M.2 slot, but capped at 600 MB/s like regular SATA). Check the key notch!</text>
+			<text transform="matrix(1 0 0 1 105.7285 565.8488)" class="st14 st1 st11">3.</text>
+			<text transform="matrix(1 0 0 1 118.7285 565.8488)" class="st12 st13 st11">2.5&quot; SATA SSDs use the same cables as HDDs. Direct drop-in upgrade (fastest way to speed up old PCs).</text>
+			<text transform="matrix(1 0 0 1 105.7285 583.8488)" class="st14 st1 st11">4.</text>
+			<text transform="matrix(1 0 0 1 118.7285 583.8488)" class="st12 st13 st11">HDD clicking = head crash = back up immediately. SSD failure is silent with no warning sounds.</text>
+		</g>
+	</g>
+</g>
+</svg>

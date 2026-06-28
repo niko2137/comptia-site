@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 692.9 771" style="enable-background:new 0 0 692.9 771;" xml:space="preserve">
+<style type="text/css">
+	.st0{font-family:'MyriadPro-Regular';}
+	.st1{font-size:12px;}
+	.st2{fill:#2980B9;}
+	.st3{font-family:'SegoeUI-Bold';}
+	.st4{font-size:20px;}
+	.st5{fill:none;}
+	.st6{fill:#888888;}
+	.st7{font-family:'SegoeUI';}
+	.st8{font-size:13px;}
+	.st9{fill:#FFFFFF;stroke:#C0392B;stroke-width:2;}
+	.st10{fill:#C0392B;}
+	.st11{fill:#FFFFFF;}
+	.st12{fill:#1E1E1E;}
+	.st13{fill:#F44336;}
+	.st14{font-family:'Consolas';}
+	.st15{font-size:11px;}
+	.st16{fill:#FDEDEC;}
+	.st17{font-family:'ArialNarrow';}
+	.st18{fill:#333333;}
+	.st19{fill:#FFFFFF;stroke:#E67E22;stroke-width:2;}
+	.st20{fill:#E67E22;}
+	.st21{fill:#FEF5E7;}
+	.st22{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
+	.st23{fill:#8E44AD;}
+	.st24{fill:#F4ECF7;}
+	.st25{fill:#FFFFFF;stroke:#2980B9;stroke-width:2;}
+	.st26{fill:#4FC3F7;}
+	.st27{fill:#999999;}
+	.st28{fill:#D6EAF8;}
+	.st29{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
+	.st30{fill:#27AE60;}
+	.st31{fill:#EAFAF1;}
+	.st32{fill:#FFE5E9;stroke:#C0392B;}
+</style>
+<g>
+	<text transform="matrix(1 0 0 1 396 315.5)" class="st0 st1">2980b9</text>
+	<text transform="matrix(1 0 0 1 112.6917 55.501)" class="st2 st3 st4">Common Scripting Errors - Quick Diagnosis Guide</text>
+	<rect x="14.7" y="64.5" class="st5" width="663.5" height="16.4"/>
+	<text transform="matrix(1 0 0 1 124.4279 75.501)" class="st6 st7 st8">Match the error message to the fix. Frequently tested on CompTIA A+ Core 2.</text>
+	<path class="st9" d="M21.9,114.5H671c4,0,7.2,3.6,7.2,8v89c0,4.4-3.2,8-7.2,8H21.9c-4,0-7.2-3.6-7.2-8v-89
+		C14.7,118.1,17.9,114.5,21.9,114.5z"/>
+	<path class="st10" d="M22.7,114.5h34c4.4,0,8,3.6,8,8v89c0,4.4-3.6,8-8,8h-34c-4.4,0-8-3.6-8-8v-89
+		C14.7,118.1,18.3,114.5,22.7,114.5z"/>
+	<text transform="matrix(0 -1 1 0 42.2166 189.9932)" class="st11 st3 st1">SYNTAX</text>
+	<text transform="matrix(1 0 0 1 84.7 136.501)" class="st10 st3 st1">Syntax Error</text>
+	<path class="st12" d="M88.7,142.5h312c2.2,0,4,1.8,4,4v47c0,2.2-1.8,4-4,4h-312c-2.2,0-4-1.8-4-4v-47
+		C84.7,144.3,86.5,142.5,88.7,142.5z"/>
+	<text transform="matrix(1 0 0 1 94.7 159.501)" class="st13 st14 st15">PS C:\&gt; .\backup.ps1</text>
+	<text transform="matrix(1 0 0 1 94.7 174.501)" class="st13 st14 st15">ParserError: Missing closing &apos;}&apos; in</text>
+	<text transform="matrix(1 0 0 1 94.7 189.501)" class="st13 st14 st15">statement block at line 12.</text>
+	<path class="st16" d="M418.4,127.5h244.8c1.8,0,3.2,1.8,3.2,4v67c0,2.2-1.4,4-3.2,4H418.4c-1.8,0-3.2-1.8-3.2-4v-67
+		C415.2,129.3,416.6,127.5,418.4,127.5z"/>
+	<g>
+		<text transform="matrix(1 0 0 1 425.7 145.501)" class="st10 st17 st15">FIX:</text>
+		<text transform="matrix(1 0 0 1 425.7 162.501)" class="st18 st17 st15">- Check flagged line for missing quotes, brackets, operators</text>
+		<text transform="matrix(1 0 0 1 425.7 177.501)" class="st18 st17 st15">- Python: python -m py_compile script.py</text>
+		<text transform="matrix(1 0 0 1 425.7 192.501)" class="st18 st17 st15">- PowerShell: Check for unmatched { } or ( )</text>
+	</g>
+	<path class="st19" d="M21.9,229.5H671c4,0,7.2,3.6,7.2,8v89c0,4.4-3.2,8-7.2,8H21.9c-4,0-7.2-3.6-7.2-8v-89
+		C14.7,233.1,17.9,229.5,21.9,229.5z"/>
+	<path class="st20" d="M22.7,229.5h34c4.4,0,8,3.6,8,8v89c0,4.4-3.6,8-8,8h-34c-4.4,0-8-3.6-8-8v-89
+		C14.7,233.1,18.3,229.5,22.7,229.5z"/>
+	<text transform="matrix(0 -1 1 0 42.2166 318.3584)" class="st11 st3 st1">PERMISSION</text>
+	<text transform="matrix(1 0 0 1 84.7 251.501)" class="st20 st3 st1">Permission / Execution Policy Error</text>
+	<path class="st12" d="M88.7,257.5h312c2.2,0,4,1.8,4,4v47c0,2.2-1.8,4-4,4h-312c-2.2,0-4-1.8-4-4v-47
+		C84.7,259.3,86.5,257.5,88.7,257.5z"/>
+	<text transform="matrix(1 0 0 1 94.7 274.501)" class="st13 st14 st15">PS C:\&gt; .\deploy.ps1</text>
+	<text transform="matrix(1 0 0 1 94.7 289.501)" class="st13 st14 st15">File cannot be loaded. The execution</text>
+	<text transform="matrix(1 0 0 1 94.7 304.501)" class="st13 st14 st15">policy on this system is Restricted.</text>
+	<path class="st21" d="M418.4,242.5h244.8c1.8,0,3.2,1.8,3.2,4v67c0,2.2-1.4,4-3.2,4H418.4c-1.8,0-3.2-1.8-3.2-4v-67
+		C415.2,244.3,416.6,242.5,418.4,242.5z"/>
+	<g>
+		<text transform="matrix(1 0 0 1 425.7 260.501)" class="st20 st17 st15">FIX:</text>
+		<text transform="matrix(1 0 0 1 425.7 277.501)" class="st18 st17 st15">- Windows: Set-ExecutionPolicy RemoteSigned</text>
+		<text transform="matrix(1 0 0 1 425.7 292.501)" class="st18 st17 st15">- Linux/macOS: chmod +x script.sh</text>
+		<text transform="matrix(1 0 0 1 425.7 307.501)" class="st18 st17 st15">- Run as Administrator / use sudo</text>
+	</g>
+	<path class="st22" d="M21.9,344.5H671c4,0,7.2,3.6,7.2,8v89c0,4.4-3.2,8-7.2,8H21.9c-4,0-7.2-3.6-7.2-8v-89
+		C14.7,348.1,17.9,344.5,21.9,344.5z"/>
+	<path class="st23" d="M22.7,344.5h34c4.4,0,8,3.6,8,8v89c0,4.4-3.6,8-8,8h-34c-4.4,0-8-3.6-8-8v-89
+		C14.7,348.1,18.3,344.5,22.7,344.5z"/>
+	<text transform="matrix(0 -1 1 0 42.2166 422.3164)" class="st11 st3 st1">MODULE</text>
+	<text transform="matrix(1 0 0 1 84.7 366.501)" class="st23 st3 st1">Missing Module / Not Found</text>
+	<path class="st12" d="M88.7,372.5h312c2.2,0,4,1.8,4,4v47c0,2.2-1.8,4-4,4h-312c-2.2,0-4-1.8-4-4v-47
+		C84.7,374.3,86.5,372.5,88.7,372.5z"/>
+	<text transform="matrix(1 0 0 1 94.7 389.501)" class="st13 st14 st15">$ python3 report.py</text>
+	<text transform="matrix(1 0 0 1 94.7 404.501)" class="st13 st14 st15">ModuleNotFoundError: No module named</text>
+	<text transform="matrix(1 0 0 1 94.7 419.501)" class="st13 st14 st15">&apos;requests&apos;</text>
+	<path class="st24" d="M418.4,357.5h244.8c1.8,0,3.2,1.8,3.2,4v67c0,2.2-1.4,4-3.2,4H418.4c-1.8,0-3.2-1.8-3.2-4v-67
+		C415.2,359.3,416.6,357.5,418.4,357.5z"/>
+	<g>
+		<text transform="matrix(1 0 0 1 425.7 375.501)" class="st23 st17 st15">FIX:</text>
+		<text transform="matrix(1 0 0 1 425.7 392.501)" class="st18 st17 st15">- Python: pip install requests</text>
+		<text transform="matrix(1 0 0 1 425.7 407.501)" class="st18 st17 st15">- PowerShell: Install-Module module-name</text>
+		<text transform="matrix(1 0 0 1 425.7 422.501)" class="st18 st17 st15">- Linux: apt-get install pkg or yum install pkg</text>
+	</g>
+	<path class="st25" d="M21.9,459.5H671c4,0,7.2,3.6,7.2,8v89c0,4.4-3.2,8-7.2,8H21.9c-4,0-7.2-3.6-7.2-8v-89
+		C14.7,463.1,17.9,459.5,21.9,459.5z"/>
+	<path class="st2" d="M22.7,459.5h34c4.4,0,8,3.6,8,8v89c0,4.4-3.6,8-8,8h-34c-4.4,0-8-3.6-8-8v-89
+		C14.7,463.1,18.3,459.5,22.7,459.5z"/>
+	<text transform="matrix(0 -1 1 0 42.2166 550.8311)" class="st11 st3 st1">INTERPRETER</text>
+	<text transform="matrix(1 0 0 1 84.7 481.501)" class="st2 st3 st1">Wrong Interpreter</text>
+	<path class="st12" d="M88.7,487.5h312c2.2,0,4,1.8,4,4v47c0,2.2-1.8,4-4,4h-312c-2.2,0-4-1.8-4-4v-47
+		C84.7,489.3,86.5,487.5,88.7,487.5z"/>
+	<text transform="matrix(1 0 0 1 94.7 504.501)" class="st26 st14 st15">$ ./backup.sh</text>
+	<text transform="matrix(1 0 0 1 94.7 519.501)" class="st13 st14 st15">line 1: import: command not found</text>
+	<text transform="matrix(1 0 0 1 94.7 534.501)" class="st27 st14 st15"># Python code ran in Bash interpreter!</text>
+	<path class="st28" d="M418.4,472.5h244.8c1.8,0,3.2,1.8,3.2,4v67c0,2.2-1.4,4-3.2,4H418.4c-1.8,0-3.2-1.8-3.2-4v-67
+		C415.2,474.3,416.6,472.5,418.4,472.5z"/>
+	<g>
+		<text transform="matrix(1 0 0 1 425.7 490.501)" class="st2 st17 st15">FIX:</text>
+		<text transform="matrix(1 0 0 1 425.7 507.501)" class="st18 st17 st15">- Check shebang: #!/bin/bash or #!/usr/bin/env python3</text>
+		<text transform="matrix(1 0 0 1 425.7 522.501)" class="st18 st17 st15">- Verify interpreter installed and in system PATH</text>
+		<text transform="matrix(1 0 0 1 425.7 537.501)" class="st18 st17 st15">- Use correct extension: .sh .py .ps1 .vbs .js</text>
+	</g>
+	<path class="st29" d="M21.9,574.5H671c4,0,7.2,3.6,7.2,8v89c0,4.4-3.2,8-7.2,8H21.9c-4,0-7.2-3.6-7.2-8v-89
+		C14.7,578.1,17.9,574.5,21.9,574.5z"/>
+	<path class="st30" d="M22.7,574.5h34c4.4,0,8,3.6,8,8v89c0,4.4-3.6,8-8,8h-34c-4.4,0-8-3.6-8-8v-89
+		C14.7,578.1,18.3,574.5,22.7,574.5z"/>
+	<text transform="matrix(0 -1 1 0 42.2166 642.2441)" class="st11 st3 st1">PATH</text>
+	<text transform="matrix(1 0 0 1 84.7 596.501)" class="st30 st3 st1">Path / File Not Found Error</text>
+	<path class="st12" d="M88.7,602.5h312c2.2,0,4,1.8,4,4v47c0,2.2-1.8,4-4,4h-312c-2.2,0-4-1.8-4-4v-47
+		C84.7,604.3,86.5,602.5,88.7,602.5z"/>
+	<text transform="matrix(1 0 0 1 94.7 619.501)" class="st26 st14 st15">PS C:\Users\Admin&gt; python log_parser.py</text>
+	<text transform="matrix(1 0 0 1 94.7 634.501)" class="st13 st14 st15">FileNotFoundError: [Errno 2] No such</text>
+	<text transform="matrix(1 0 0 1 94.7 649.501)" class="st13 st14 st15">file: &apos;data/logs.csv&apos;</text>
+	<path class="st31" d="M418.4,587.5h244.8c1.8,0,3.2,1.8,3.2,4v67c0,2.2-1.4,4-3.2,4H418.4c-1.8,0-3.2-1.8-3.2-4v-67
+		C415.2,589.3,416.6,587.5,418.4,587.5z"/>
+	<g>
+		<text transform="matrix(1 0 0 1 425.7 605.501)" class="st30 st17 st1">FIX:</text>
+		<text transform="matrix(1 0 0 1 425.7 622.501)" class="st18 st17 st1">- Use absolute path: C:\Scripts\data\logs.csv</text>
+		<text transform="matrix(1 0 0 1 425.7 637.501)" class="st18 st17 st1">- Verify working directory: pwd (Linux) or cd (Win)</text>
+		<text transform="matrix(1 0 0 1 425.7 652.501)" class="st18 st17 st1">- Check typos in filename and path separators (\ vs /)</text>
+	</g>
+	<path class="st32" d="M20.1,692.5h652.7c3,0,5.4,2.7,5.4,6v28c0,3.3-2.4,6-5.4,6H20.1c-3,0-5.4-2.7-5.4-6v-28
+		C14.7,695.2,17.1,692.5,20.1,692.5z"/>
+	<text transform="matrix(1 0 0 1 34.7 710.501)" class="st10 st17 st1">Exam Focus:</text>
+	<text transform="matrix(1 0 0 1 97.7 710.501)" class="st18 st17 st1">Execution Policy error = permission issue (Set-ExecutionPolicy RemoteSigned). Module error = missing dependency (pip install).</text>
+	<text transform="matrix(1 0 0 1 34.7 725.501)" class="st18 st17 st1">PowerShell default = &quot;Restricted&quot; (blocks ALL scripts). chmod +x = Linux permission fix. Shebang = interpreter declaration.</text>
+</g>
+</svg>
