@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompTIA A+ Core 2 (220-1202) Mock Exam</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.top-bar{position:sticky;top:0;z-index:100;background:#1e293b;border-bottom:1px solid #334155;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.back-link{color:#3b82f6;text-decoration:none;font-size:14px;display:flex;align-items:center;gap:6px}
+.back-link:hover{color:#60a5fa}
+.timer{font-size:20px;font-weight:700;color:#f8fafc;background:#0f172a;padding:8px 16px;border-radius:8px;border:1px solid #334155}
+.timer.warning{color:#f59e0b;border-color:#f59e0b}
+.timer.danger{color:#ef4444;border-color:#ef4444;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.progress-container{width:100%;background:#334155;border-radius:4px;height:6px;margin-top:8px}
+.progress-bar{height:100%;background:#3b82f6;border-radius:4px;transition:width .3s}
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="../members.html" class="back-link">← Back to Members</a>
+<div class="timer" id="timer">90:00</div>
+<div style="font-size:14px;color:#94a3b8" id="questionIndicator">Question 1 of 90</div>
+</div>
+<div class="progress-container"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+
+
+<style>
+.main-container{display:flex;max-width:1400px;margin:0 auto;padding:20px;gap:20px}
+.question-area{flex:1;min-width:0}
+.nav-panel{width:280px;flex-shrink:0}
+.card{background:#1e293b;border-radius:12px;border:1px solid #334155;padding:24px;margin-bottom:16px}
+.question-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.domain-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:#3b82f620;color:#3b82f6;border:1px solid #3b82f640}
+.flag-btn{background:none;border:1px solid #475569;border-radius:8px;padding:8px 12px;cursor:pointer;color:#94a3b8;font-size:14px;display:flex;align-items:center;gap:6px;transition:all .2s}
+.flag-btn:hover{border-color:#f59e0b;color:#f59e0b}
+.flag-btn.flagged{background:#f59e0b20;border-color:#f59e0b;color:#f59e0b}
+.question-text{font-size:17px;line-height:1.6;color:#f1f5f9;margin-bottom:24px}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{padding:14px 18px;border-radius:10px;border:2px solid #334155;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px}
+.choice:hover{border-color:#3b82f6;background:#3b82f610}
+.choice.selected{border-color:#3b82f6;background:#3b82f620}
+.choice-letter{font-weight:700;color:#3b82f6;min-width:20px}
+.choice-text{flex:1;line-height:1.4}
+.nav-buttons{display:flex;gap:12px;margin-top:20px}
+.nav-btn{flex:1;padding:12px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.nav-btn.prev{background:#334155;color:#e2e8f0}
+.nav-btn.next{background:#3b82f6;color:white}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.submit-btn{width:100%;padding:14px;border-radius:8px;border:none;background:#10b981;color:white;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;transition:all .2s}
+.submit-btn:hover{background:#059669;transform:translateY(-1px)}
+</style>
+
+
+<style>
+.nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.nav-grid-btn{width:36px;height:36px;border-radius:6px;border:1px solid #475569;background:#0f172a;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.nav-grid-btn:hover{border-color:#3b82f6}
+.nav-grid-btn.current{border-color:#3b82f6;background:#3b82f6;color:white}
+.nav-grid-btn.answered{background:#3b82f620;border-color:#3b82f6;color:#3b82f6}
+.nav-grid-btn.flagged{background:#f59e0b20;border-color:#f59e0b;color:#f59e0b}
+.nav-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:11px;color:#94a3b8}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.review-screen,.results-screen{display:none;max-width:800px;margin:40px auto;padding:20px}
+.review-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:#1e293b;border:1px solid #334155;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.review-item:hover{border-color:#3b82f6}
+.review-badge{font-size:11px;padding:3px 8px;border-radius:6px}
+.badge-flagged{background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b40}
+.badge-unanswered{background:#ef444420;color:#ef4444;border:1px solid #ef444440}
+.results-header{text-align:center;margin-bottom:32px}
+.score-circle{width:180px;height:180px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:20px auto;border:6px solid}
+.score-circle.pass{border-color:#10b981;background:#10b98110}
+.score-circle.fail{border-color:#ef4444;background:#ef444410}
+.score-number{font-size:42px;font-weight:800}
+.domain-table{width:100%;border-collapse:collapse;margin-top:24px}
+.domain-table th,.domain-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #334155}
+.domain-table th{color:#94a3b8;font-size:13px;font-weight:600}
+.domain-bar{height:8px;border-radius:4px;background:#334155;overflow:hidden;min-width:100px}
+.domain-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+.confetti{position:absolute;width:10px;height:10px;top:-10px;animation:confettiFall 3s linear forwards}
+@keyframes confettiFall{to{top:110vh;transform:rotateZ(720deg)}}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+.modal{background:#1e293b;border-radius:12px;padding:32px;max-width:400px;width:90%;text-align:center;border:1px solid #334155}
+.modal h3{margin-bottom:12px;font-size:20px}
+.modal p{color:#94a3b8;margin-bottom:24px}
+.modal-btns{display:flex;gap:12px;justify-content:center}
+.modal-btn{padding:10px 24px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:14px}
+.modal-btn.cancel{background:#334155;color:#e2e8f0}
+.modal-btn.confirm{background:#ef4444;color:white}
+.review-incorrect-btn{padding:12px 24px;border-radius:8px;border:none;background:#3b82f6;color:white;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px}
+.incorrect-list{margin-top:24px}
+.incorrect-item{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:20px;margin-bottom:12px}
+.incorrect-item .q-text{font-weight:600;margin-bottom:10px}
+.incorrect-item .your-answer{color:#ef4444}
+.incorrect-item .correct-answer{color:#10b981}
+.incorrect-item .explanation{color:#94a3b8;font-size:13px;margin-top:8px;font-style:italic}
+@media(max-width:900px){.main-container{flex-direction:column}.nav-panel{width:100%;order:-1}}
+</style>
+
+
+<div class="main-container" id="examContainer">
+<div class="question-area" id="questionArea">
+<div class="card">
+<div class="question-header">
+<span class="domain-badge" id="domainBadge"></span>
+<button class="flag-btn" id="flagBtn" onclick="toggleFlag()">⚑ Flag</button>
+</div>
+<div class="question-text" id="questionText"></div>
+<div class="choices" id="choicesContainer"></div>
+</div>
+<div class="nav-buttons">
+<button class="nav-btn prev" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+<button class="nav-btn next" id="nextBtn" onclick="nextQuestion()">Next →</button>
+</div>
+<button class="submit-btn" id="submitBtn" onclick="showSubmitConfirm()">Submit Exam</button>
+</div>
+<div class="nav-panel">
+<div class="card">
+<h4 style="margin-bottom:12px;color:#f1f5f9;font-size:14px">Question Navigator</h4>
+<div class="nav-grid" id="navGrid"></div>
+<div class="nav-legend">
+<div class="legend-item"><div class="legend-dot" style="background:#0f172a;border:1px solid #475569"></div>Unanswered</div>
+<div class="legend-item"><div class="legend-dot" style="background:#3b82f620;border:1px solid #3b82f6"></div>Answered</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f59e0b20;border:1px solid #f59e0b"></div>Flagged</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="review-screen" id="reviewScreen">
+<div class="card">
+<h2 style="margin-bottom:8px">Review Before Submitting</h2>
+<p style="color:#94a3b8;margin-bottom:20px">These questions are either flagged or unanswered. Click any to return to it.</p>
+<div id="reviewList"></div>
+<div style="display:flex;gap:12px;margin-top:20px">
+<button class="nav-btn prev" onclick="backToExam()">← Back to Exam</button>
+<button class="submit-btn" style="margin-top:0" onclick="submitExam()">Submit Exam</button>
+</div>
+</div>
+</div>
+
+<div class="results-screen" id="resultsScreen"></div>
+
+<div class="modal-overlay" id="submitModal">
+<div class="modal">
+<h3>Submit Exam?</h3>
+<p id="modalMsg">Are you sure you want to submit? You cannot change answers after submission.</p>
+<div class="modal-btns">
+<button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+<button class="modal-btn confirm" onclick="confirmSubmit()">Submit</button>
+</div>
+</div>
+</div>
+
+
+<script>
+const questions = [
+{id:1,domain:"Operating Systems",q:"Which Windows edition supports BitLocker?",choices:["Home","Pro","S Mode","Education only"],correct:1,explanation:"Windows Pro (and Enterprise/Education) supports BitLocker drive encryption. Home edition does not."},
+{id:2,domain:"Operating Systems",q:"What command repairs corrupted Windows system files?",choices:["chkdsk","sfc /scannow","diskpart","format"],correct:1,explanation:"SFC (System File Checker) with /scannow scans and repairs corrupted Windows system files."},
+{id:3,domain:"Operating Systems",q:"In Windows, gpupdate /force does what?",choices:["Updates drivers","Forces Group Policy refresh","Updates Windows","Resets password"],correct:1,explanation:"gpupdate /force immediately reapplies all Group Policy settings without waiting for the normal refresh cycle."},
+{id:4,domain:"Operating Systems",q:"Which file system supports file permissions and encryption?",choices:["FAT32","exFAT","NTFS","ext4"],correct:2,explanation:"NTFS supports file/folder permissions (ACLs) and built-in encryption (EFS) on Windows systems."},
+{id:5,domain:"Operating Systems",q:"The Task Manager shortcut is?",choices:["Ctrl+Alt+Delete","Ctrl+Shift+Esc","Alt+F4","Win+R"],correct:1,explanation:"Ctrl+Shift+Esc opens Task Manager directly without going through the security screen."},
+{id:6,domain:"Operating Systems",q:"System Restore affects which of the following?",choices:["Personal documents","System files, drivers, and registry","External drives","Network settings only"],correct:1,explanation:"System Restore reverts system files, installed drivers, and registry settings to a previous state without affecting personal files."},
+{id:7,domain:"Operating Systems",q:"What is the maximum partition count for GPT?",choices:["4","16","64","128"],correct:3,explanation:"GPT (GUID Partition Table) supports up to 128 partitions by default on Windows systems."},
+{id:8,domain:"Operating Systems",q:"Which tool manages Windows services?",choices:["Task Manager","services.msc","msconfig","regedit"],correct:1,explanation:"services.msc is the Services Management Console used to start, stop, and configure Windows services."},
+{id:9,domain:"Operating Systems",q:"What does msconfig's Boot tab allow?",choices:["Installing updates","Selecting Safe Mode options","Managing users","Network settings"],correct:1,explanation:"The Boot tab in msconfig allows you to select Safe Mode boot options and other startup configurations."},
+{id:10,domain:"Operating Systems",q:"The Linux command to change file permissions is?",choices:["chown","chmod","ls","sudo"],correct:1,explanation:"chmod (change mode) modifies file and directory permissions in Linux/Unix systems."},
+
+{id:11,domain:"Operating Systems",q:"Which macOS feature provides full-disk encryption?",choices:["Time Machine","FileVault","Gatekeeper","Disk Utility"],correct:1,explanation:"FileVault is macOS's built-in full-disk encryption feature that protects all data on the startup disk."},
+{id:12,domain:"Operating Systems",q:"In Linux, which command shows running processes in real-time?",choices:["ps","top","ls","chmod"],correct:1,explanation:"The top command displays a real-time, dynamic view of running processes and system resource usage."},
+{id:13,domain:"Operating Systems",q:"Windows Disk Management is accessed via?",choices:["taskmgr","diskmgmt.msc","services.msc","devmgmt.msc"],correct:1,explanation:"diskmgmt.msc opens Disk Management for managing partitions, volumes, and drive letters."},
+{id:14,domain:"Operating Systems",q:"The FAT32 file system has a max file size of?",choices:["2 GB","4 GB","16 TB","256 TB"],correct:1,explanation:"FAT32 has a maximum individual file size limit of 4 GB (4,294,967,295 bytes)."},
+{id:15,domain:"Operating Systems",q:"Which command shows all network connections and listening ports?",choices:["ipconfig","ping","netstat -an","nslookup"],correct:2,explanation:"netstat -an displays all active connections and listening ports with numeric addresses."},
+{id:16,domain:"Operating Systems",q:"What is the PowerShell script extension?",choices:[".bat",".sh",".ps1",".cmd"],correct:2,explanation:"PowerShell scripts use the .ps1 file extension."},
+{id:17,domain:"Operating Systems",q:"Windows Safe Mode loads what?",choices:["All services","Minimal drivers and services","Network drivers only","Last known good config"],correct:1,explanation:"Safe Mode starts Windows with only minimal drivers and services needed for basic operation."},
+{id:18,domain:"Operating Systems",q:"convert X: /fs:ntfs does what?",choices:["Formats the drive","Converts FAT32 to NTFS without data loss","Creates a partition","Defragments"],correct:1,explanation:"The convert command converts a FAT32 volume to NTFS without destroying existing data."},
+{id:19,domain:"Operating Systems",q:"Which registry hive stores user-specific settings?",choices:["HKEY_LOCAL_MACHINE","HKEY_CURRENT_USER","HKEY_CLASSES_ROOT","HKEY_USERS"],correct:1,explanation:"HKEY_CURRENT_USER (HKCU) contains configuration settings for the currently logged-in user."},
+{id:20,domain:"Operating Systems",q:"The macOS equivalent of Task Manager is?",choices:["Finder","Activity Monitor","Disk Utility","Terminal"],correct:1,explanation:"Activity Monitor in macOS shows running processes, CPU, memory, disk, and network usage."},
+
+{id:21,domain:"Operating Systems",q:"Which tool creates a system image backup in Windows?",choices:["File History","Backup and Restore","System Restore","Reset this PC"],correct:1,explanation:"Backup and Restore (Windows 7) in Control Panel can create a full system image backup."},
+{id:22,domain:"Operating Systems",q:"UAC (User Account Control) does what?",choices:["Encrypts files","Prompts before system changes","Manages users","Blocks malware"],correct:1,explanation:"UAC prompts the user for confirmation before allowing changes that require administrator privileges."},
+{id:23,domain:"Operating Systems",q:"robocopy is used for?",choices:["Disk repair","Robust file copy with resume","Network testing","Registry backup"],correct:1,explanation:"robocopy (Robust File Copy) is a command-line tool for reliable file copying with resume capability."},
+{id:24,domain:"Operating Systems",q:"What happens when you Reset This PC with 'Keep my files'?",choices:["Nothing changes","Reinstalls Windows, keeps personal files, removes apps","Factory reset","Deletes everything"],correct:1,explanation:"Reset This PC with 'Keep my files' reinstalls Windows and removes apps but preserves personal documents."},
+{id:25,domain:"Operating Systems",q:"Event Viewer logs are found where?",choices:["System, Application, Security","Only System","Task Manager","Resource Monitor"],correct:0,explanation:"Event Viewer organizes logs into System, Application, and Security categories (plus others)."},
+
+{id:26,domain:"Security",q:"Ransomware does what?",choices:["Steals passwords","Encrypts data and demands payment","Sends spam","Mines cryptocurrency"],correct:1,explanation:"Ransomware encrypts the victim's files and demands payment (ransom) for the decryption key."},
+{id:27,domain:"Security",q:"MFA requires at least two of what?",choices:["Passwords","Different factor categories (know/have/are)","Devices","Accounts"],correct:1,explanation:"MFA requires authentication from at least two different categories: something you know, have, or are."},
+{id:28,domain:"Security",q:"The first step in the 7-step malware removal is?",choices:["Quarantine","Identify symptoms","Scan","Disable System Restore"],correct:1,explanation:"The first step in CompTIA's malware removal process is to investigate and verify malware symptoms."},
+{id:29,domain:"Security",q:"WPA3 is more secure than WPA2 because it uses?",choices:["Longer passwords","SAE (Simultaneous Authentication of Equals)","WEP keys","MAC filtering"],correct:1,explanation:"WPA3 uses SAE which provides stronger key exchange and protects against offline dictionary attacks."},
+{id:30,domain:"Security",q:"Phishing specifically targets senior executives. This is called?",choices:["Spear phishing","Whaling","Vishing","Smishing"],correct:1,explanation:"Whaling is a phishing attack specifically targeting high-level executives (the 'big fish')."},
+{id:31,domain:"Security",q:"A mantrap (Access Control Vestibule) prevents?",choices:["Hacking","Tailgating/piggybacking","Phishing","Malware"],correct:1,explanation:"A mantrap/access control vestibule is a physical security control that prevents tailgating/piggybacking."},
+{id:32,domain:"Security",q:"BitLocker requires what hardware component?",choices:["GPU","TPM chip","NIC","SSD"],correct:1,explanation:"BitLocker requires a TPM (Trusted Platform Module) chip to store encryption keys securely."},
+{id:33,domain:"Security",q:"What type of malware hides in the kernel and is extremely hard to detect?",choices:["Trojan","Worm","Rootkit","Adware"],correct:2,explanation:"Rootkits embed themselves in the OS kernel, making them extremely difficult to detect and remove."},
+{id:34,domain:"Security",q:"The BEST way to destroy data on an SSD is?",choices:["Degaussing","Secure Erase (ATA command)","Standard format","Defragmentation"],correct:1,explanation:"Secure Erase using the ATA command is the recommended method for SSDs since degaussing doesn't work on flash storage."},
+{id:35,domain:"Security",q:"An evil twin attack involves?",choices:["Password cracking","Rogue Wi-Fi AP with same SSID","Email spoofing","USB malware"],correct:1,explanation:"An evil twin is a rogue wireless access point that mimics a legitimate AP's SSID to intercept traffic."},
+
+{id:36,domain:"Security",q:"Social engineering manipulates what?",choices:["Software","Hardware","People","Networks"],correct:2,explanation:"Social engineering exploits human psychology to manipulate people into divulging information or performing actions."},
+{id:37,domain:"Security",q:"The principle of least privilege means?",choices:["No passwords","Minimum access needed for job function","Admin for everyone","No network access"],correct:1,explanation:"Least privilege means granting users only the minimum permissions necessary to perform their job duties."},
+{id:38,domain:"Security",q:"A VPN provides?",choices:["Antivirus","Encrypted tunnel for remote access","Firewall","Email filtering"],correct:1,explanation:"A VPN creates an encrypted tunnel over public networks for secure remote access to private resources."},
+{id:39,domain:"Security",q:"Class C fire extinguisher is for?",choices:["Paper fires","Grease fires","Electrical fires","Chemical fires"],correct:2,explanation:"Class C fire extinguishers are rated for electrical fires involving energized electrical equipment."},
+{id:40,domain:"Security",q:"ESD can damage components at as little as?",choices:["1000V","100V","10,000V","50V"],correct:1,explanation:"Electrostatic discharge as low as 100V can damage sensitive electronic components, though humans typically don't feel it below 3000V."},
+{id:41,domain:"Security",q:"An antistatic wrist strap connects to?",choices:["Power outlet","Unpainted metal chassis ground","Carpet","Monitor"],correct:1,explanation:"An antistatic wrist strap must be connected to an unpainted metal surface on the chassis to ground static charge."},
+{id:42,domain:"Security",q:"Shoulder surfing is?",choices:["Surfing the web","Observing someone's screen to steal info","Email attack","Network sniffing"],correct:1,explanation:"Shoulder surfing is looking over someone's shoulder to observe passwords, PINs, or sensitive information."},
+{id:43,domain:"Security",q:"Which encryption is used by HTTPS?",choices:["WEP","TLS/SSL","BitLocker","EFS"],correct:1,explanation:"HTTPS uses TLS (Transport Layer Security, successor to SSL) to encrypt web traffic between browser and server."},
+{id:44,domain:"Security",q:"Degaussing works on which media type?",choices:["SSDs","HDDs and magnetic tape","USB flash drives","Optical discs"],correct:1,explanation:"Degaussing uses strong magnetic fields to destroy data on magnetic media like HDDs and tape. It does not work on SSDs or flash."},
+{id:45,domain:"Security",q:"What document proves proper media destruction?",choices:["SLA","Certificate of Destruction","NDA","Incident report"],correct:1,explanation:"A Certificate of Destruction provides documented proof that media was properly destroyed according to standards."},
+
+{id:46,domain:"Security",q:"Zero Trust security means?",choices:["Trust internal users","Verify every request regardless of location","No passwords","Block all traffic"],correct:1,explanation:"Zero Trust assumes no implicit trust; every access request must be verified regardless of network location."},
+{id:47,domain:"Security",q:"DLP (Data Loss Prevention) does what?",choices:["Prevents hackers","Detects/prevents sensitive data from leaving organization","Backs up data","Encrypts drives"],correct:1,explanation:"DLP systems monitor and prevent sensitive data from being transmitted outside the organization."},
+{id:48,domain:"Security",q:"After malware removal, what's the LAST step?",choices:["Scan again","Update OS","Educate the user","Enable System Restore"],correct:2,explanation:"The final step in malware removal is educating the user on how to avoid future infections."},
+{id:49,domain:"Security",q:"WPS should be disabled because?",choices:["It's slow","The 8-digit PIN can be brute-forced","It uses WEP","It blocks connections"],correct:1,explanation:"WPS uses an 8-digit PIN that can be brute-forced relatively quickly, making it a security vulnerability."},
+{id:50,domain:"Security",q:"RADIUS is used for?",choices:["File sharing","Centralized network authentication","Encryption","Malware scanning"],correct:1,explanation:"RADIUS provides centralized authentication, authorization, and accounting for network access."},
+
+{id:51,domain:"Software Troubleshooting",q:"A user gets 'This site's security certificate is not trusted.' What's wrong?",choices:["Malware","Expired or invalid SSL certificate","DNS failure","Firewall blocking"],correct:1,explanation:"Certificate trust warnings indicate the SSL/TLS certificate is expired, self-signed, or issued by an untrusted CA."},
+{id:52,domain:"Software Troubleshooting",q:"Windows boots to a blue screen after a driver update. First action?",choices:["Reinstall Windows","Boot to Safe Mode and roll back driver","Replace hardware","Run chkdsk"],correct:1,explanation:"Safe Mode loads minimal drivers, allowing you to roll back the problematic driver that caused the BSOD."},
+{id:53,domain:"Software Troubleshooting",q:"An application freezes. How to force-close it?",choices:["Restart computer","End task in Task Manager","Uninstall it","Wait indefinitely"],correct:1,explanation:"Task Manager (Ctrl+Shift+Esc) allows you to end an unresponsive task without restarting the entire system."},
+{id:54,domain:"Software Troubleshooting",q:"A browser's homepage keeps changing to an unknown site. This is?",choices:["Virus","Browser hijacker","Ransomware","Rootkit"],correct:1,explanation:"Browser hijackers modify browser settings like the homepage, search engine, and new tab page without consent."},
+{id:55,domain:"Software Troubleshooting",q:"DISM /Online /Cleanup-Image /RestoreHealth is used when?",choices:["SFC fails to repair files","Drive is full","Network is down","Need to install drivers"],correct:0,explanation:"DISM RestoreHealth repairs the Windows component store, which is needed when SFC cannot fix corruption on its own."},
+{id:56,domain:"Software Troubleshooting",q:"A user reports pop-ups appearing even when browser is closed. Likely cause?",choices:["Hardware failure","Adware/PUP installed","DNS issue","Corrupted OS"],correct:1,explanation:"Pop-ups appearing outside the browser indicate adware or a potentially unwanted program is installed on the system."},
+{id:57,domain:"Software Troubleshooting",q:"chkdsk /r does what?",choices:["Formats drive","Finds bad sectors and recovers data","Defragments","Checks network"],correct:1,explanation:"chkdsk /r locates bad sectors on the disk and attempts to recover readable information from them."},
+{id:58,domain:"Software Troubleshooting",q:"Windows Update fails repeatedly. What to try first?",choices:["Reinstall Windows","Run Windows Update Troubleshooter","Replace hard drive","Disable firewall"],correct:1,explanation:"The built-in Windows Update Troubleshooter automatically diagnoses and fixes common update problems."},
+{id:59,domain:"Software Troubleshooting",q:"An app worked yesterday but crashes today after an update. Best fix?",choices:["Reinstall app","Uninstall the update","Replace computer","Run defrag"],correct:1,explanation:"If an app broke after an update, uninstalling that specific update is the most targeted fix."},
+{id:60,domain:"Software Troubleshooting",q:"A mobile app continuously crashes on iOS. First step?",choices:["Factory reset","Force-close and restart the app","Replace phone","Remove SIM"],correct:1,explanation:"Force-closing and restarting the app clears its runtime state and often resolves crashes."},
+
+{id:61,domain:"Software Troubleshooting",q:"Private/Incognito browsing does what?",choices:["Hides from ISP","Doesn't save local history or cookies","Provides VPN","Blocks tracking completely"],correct:1,explanation:"Private/Incognito mode prevents the browser from saving history, cookies, and form data locally."},
+{id:62,domain:"Software Troubleshooting",q:"A user cannot open .xlsx files. What's the likely issue?",choices:["File is too large","No associated application installed","Network down","Drive full"],correct:1,explanation:"If a file type won't open, the most likely cause is that no application is associated with or installed for that extension."},
+{id:63,domain:"Software Troubleshooting",q:"Windows shows 'Low Disk Space' warning. First action?",choices:["Buy new drive","Run Disk Cleanup","Reinstall Windows","Ignore it"],correct:1,explanation:"Disk Cleanup removes temporary files, cache, and other unnecessary data to free up space quickly."},
+{id:64,domain:"Software Troubleshooting",q:"An Android phone is extremely slow. Best first step?",choices:["Factory reset","Close background apps and restart","Replace battery","Flash new ROM"],correct:1,explanation:"Closing background apps and restarting frees memory and clears temporary issues causing slowness."},
+{id:65,domain:"Software Troubleshooting",q:"System Restore does NOT affect what?",choices:["Drivers","Applications","Personal documents/files","Registry"],correct:2,explanation:"System Restore reverts system files, drivers, and registry but leaves personal documents and files untouched."},
+{id:66,domain:"Software Troubleshooting",q:"A user's email client repeatedly asks for password. What to check?",choices:["Screen brightness","Account credentials/password may have changed","Battery level","Airplane mode"],correct:1,explanation:"Repeated password prompts usually mean the saved credentials are invalid, often due to a password change."},
+{id:67,domain:"Software Troubleshooting",q:"Compatibility mode in Windows is used for?",choices:["Testing security","Running older programs on newer Windows","Network compatibility","Hardware testing"],correct:1,explanation:"Compatibility mode emulates older Windows versions to allow legacy applications to run on newer systems."},
+{id:68,domain:"Software Troubleshooting",q:"Blue screen KERNEL_DATA_INPAGE_ERROR usually means?",choices:["Bad driver","Disk/storage read failure","Network issue","GPU failure"],correct:1,explanation:"KERNEL_DATA_INPAGE_ERROR indicates the system couldn't read data from disk, pointing to storage failure."},
+{id:69,domain:"Software Troubleshooting",q:"bootrec /rebuildbcd is used when?",choices:["Defragmenting","Windows boot configuration is corrupted","Formatting","Network repair"],correct:1,explanation:"bootrec /rebuildbcd rebuilds the Boot Configuration Data when Windows cannot start due to boot corruption."},
+{id:70,domain:"Software Troubleshooting",q:"A phone shows 'Storage almost full' but user sees few files. Likely cause?",choices:["Malware","App cache/data consuming space","SIM full","Wrong file system"],correct:1,explanation:"App caches and data can consume significant storage that isn't visible as user files."},
+{id:71,domain:"Software Troubleshooting",q:"tracert is used to?",choices:["Test DNS","Trace the path to a destination showing each hop","Show open ports","Flush DNS"],correct:1,explanation:"tracert (traceroute) displays the path packets take to a destination, showing each router hop along the way."},
+
+{id:72,domain:"Operational Procedures",q:"The CompTIA troubleshooting step after 'Test the theory' is?",choices:["Document findings","Establish a plan of action","Identify the problem","Verify functionality"],correct:1,explanation:"After testing confirms the theory, the next step is to establish a plan of action to resolve the problem."},
+{id:73,domain:"Operational Procedures",q:"If testing a theory fails, what should the technician do?",choices:["Escalate immediately","Go back and establish a new theory","Give up","Document and close"],correct:1,explanation:"If a theory is disproven, the technician should return to step 2 and establish a new theory of probable cause."},
+{id:74,domain:"Operational Procedures",q:"Documentation should include what?",choices:["Only the fix","Symptoms, root cause, steps taken, and preventive measures","User's name only","Date only"],correct:1,explanation:"Complete documentation includes symptoms, root cause, steps taken, outcome, and lessons learned/preventive measures."},
+{id:75,domain:"Operational Procedures",q:"An SLA defines?",choices:["Hardware specs","Expected response times and uptime guarantees","Password policy","Backup schedule"],correct:1,explanation:"A Service Level Agreement defines expected service levels including response times, uptime guarantees, and penalties."},
+{id:76,domain:"Operational Procedures",q:"Change management ensures what?",choices:["No changes ever","All changes are requested, approved, and documented","Faster changes","Only managers make changes"],correct:1,explanation:"Change management is a formal process ensuring all changes are properly requested, evaluated, approved, and documented."},
+{id:77,domain:"Operational Procedures",q:"What is the FIRST thing to do before making any changes to a system?",choices:["Document","Backup data","Notify user","Test theory"],correct:1,explanation:"Always back up data before making system changes to ensure you can recover if something goes wrong."},
+{id:78,domain:"Operational Procedures",q:"P1 (Critical) priority means?",choices:["Low impact","Complete outage affecting entire business","Minor issue","Routine maintenance"],correct:1,explanation:"P1/Critical priority indicates a complete system outage or issue affecting the entire business with no workaround."},
+{id:79,domain:"Operational Procedures",q:"A ticket should be closed ONLY after?",choices:["Fix is applied","User confirms the fix works","24 hours pass","Manager approves"],correct:1,explanation:"Best practice is to close a ticket only after the user verifies and confirms the issue is resolved."},
+{id:80,domain:"Operational Procedures",q:"Proper disposal of batteries requires?",choices:["Regular trash","Recycling through certified e-waste facility","Incineration","Flushing"],correct:1,explanation:"Batteries contain hazardous materials and must be recycled through certified e-waste/recycling facilities."},
+
+{id:81,domain:"Operational Procedures",q:"Which backup type copies only changes since the LAST backup of any type?",choices:["Full","Differential","Incremental","Mirror"],correct:2,explanation:"Incremental backups copy only data that changed since the last backup of any type (full or incremental)."},
+{id:82,domain:"Operational Procedures",q:"The 3-2-1 backup rule means?",choices:["3 passwords, 2 accounts, 1 device","3 copies, 2 media types, 1 offsite","3 days, 2 hours, 1 minute","3 servers, 2 networks, 1 cloud"],correct:1,explanation:"The 3-2-1 rule: keep 3 copies of data, on 2 different media types, with 1 copy stored offsite."},
+{id:83,domain:"Operational Procedures",q:"RTO (Recovery Time Objective) measures?",choices:["Data loss tolerance","Maximum acceptable downtime","Backup frequency","Network speed"],correct:1,explanation:"RTO defines the maximum acceptable time to restore systems after a disruption before business impact is critical."},
+{id:84,domain:"Operational Procedures",q:"Chain of custody is required for?",choices:["Routine maintenance","Legal/forensic evidence handling","Password resets","Software updates"],correct:1,explanation:"Chain of custody documents who handled evidence, when, and how, ensuring its integrity for legal proceedings."},
+{id:85,domain:"Operational Procedures",q:"The PASS method for fire extinguishers stands for?",choices:["Push, Aim, Spray, Sweep","Pull, Aim, Squeeze, Sweep","Point, Activate, Spray, Stop","Pull, Activate, Sweep, Stop"],correct:1,explanation:"PASS: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep side to side."},
+{id:86,domain:"Operational Procedures",q:"Regulated data (PHI, PII) requires what before disposal?",choices:["Nothing special","Documented destruction with certificate","Simple formatting","Rename files"],correct:1,explanation:"Regulated data must be properly destroyed with documented proof (certificate of destruction) to comply with regulations."},
+{id:87,domain:"Operational Procedures",q:"Which is NOT an example of PII?",choices:["Social Security Number","Email address","Company stock price","Phone number"],correct:2,explanation:"Company stock price is public financial information, not Personally Identifiable Information (PII)."},
+{id:88,domain:"Operational Procedures",q:"HIPAA protects what type of information?",choices:["Financial data","Protected Health Information (PHI)","Trade secrets","Military data"],correct:1,explanation:"HIPAA (Health Insurance Portability and Accountability Act) specifically protects Protected Health Information (PHI)."},
+{id:89,domain:"Operational Procedures",q:"Differential backup copies changes since?",choices:["Last backup of any type","Last FULL backup","Last incremental","Beginning of time"],correct:1,explanation:"Differential backups copy all changes since the last full backup, growing larger each day until the next full."},
+{id:90,domain:"Operational Procedures",q:"A technician verifies a fix works. What is the FINAL step?",choices:["Establish a theory","Test again","Document findings, actions, and outcomes","Identify the problem"],correct:2,explanation:"The final step in the CompTIA troubleshooting methodology is to document findings, actions, and outcomes."},
+];
+
+
+
+const domains = ["Operating Systems","Security","Software Troubleshooting","Operational Procedures"];
+const domainColors = {"Operating Systems":"#3b82f6","Security":"#ef4444","Software Troubleshooting":"#f59e0b","Operational Procedures":"#10b981"};
+
+let currentQ = 0;
+let answers = new Array(90).fill(-1);
+let flags = new Array(90).fill(false);
+let timeLeft = 90 * 60;
+let timerInterval = null;
+let examSubmitted = false;
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) { timeLeft = 0; clearInterval(timerInterval); submitExam(); }
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        const el = document.getElementById('timer');
+        el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        if (timeLeft <= 300) el.className = 'timer danger';
+        else if (timeLeft <= 600) el.className = 'timer warning';
+    }, 1000);
+}
+
+function buildNavGrid() {
+    const grid = document.getElementById('navGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < 90; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'nav-grid-btn';
+        btn.textContent = i + 1;
+        btn.onclick = () => goToQuestion(i);
+        grid.appendChild(btn);
+    }
+    updateNavGrid();
+}
+
+function updateNavGrid() {
+    const btns = document.querySelectorAll('.nav-grid-btn');
+    btns.forEach((btn, i) => {
+        btn.className = 'nav-grid-btn';
+        if (i === currentQ) btn.classList.add('current');
+        else if (flags[i]) btn.classList.add('flagged');
+        else if (answers[i] !== -1) btn.classList.add('answered');
+    });
+}
+
+
+function updateProgress() {
+    const answered = answers.filter(a => a !== -1).length;
+    document.getElementById('progressBar').style.width = `${(answered / 90) * 100}%`;
+}
+
+function renderQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('questionIndicator').textContent = `Question ${currentQ + 1} of 90`;
+    document.getElementById('domainBadge').textContent = q.domain;
+    document.getElementById('domainBadge').style.borderColor = domainColors[q.domain] + '60';
+    document.getElementById('domainBadge').style.color = domainColors[q.domain];
+    document.getElementById('domainBadge').style.background = domainColors[q.domain] + '15';
+    document.getElementById('questionText').textContent = `${currentQ + 1}. ${q.q}`;
+    const flagBtn = document.getElementById('flagBtn');
+    flagBtn.className = flags[currentQ] ? 'flag-btn flagged' : 'flag-btn';
+    const container = document.getElementById('choicesContainer');
+    container.innerHTML = '';
+    const letters = ['A','B','C','D'];
+    q.choices.forEach((choice, i) => {
+        const div = document.createElement('div');
+        div.className = 'choice' + (answers[currentQ] === i ? ' selected' : '');
+        div.onclick = () => selectAnswer(i);
+        div.innerHTML = `<span class="choice-letter">${letters[i]}.</span><span class="choice-text">${choice}</span>`;
+        container.appendChild(div);
+    });
+    document.getElementById('prevBtn').disabled = currentQ === 0;
+    document.getElementById('nextBtn').textContent = currentQ === 89 ? 'Review →' : 'Next →';
+    updateNavGrid();
+    updateProgress();
+}
+
+function selectAnswer(i) {
+    if (examSubmitted) return;
+    answers[currentQ] = i;
+    renderQuestion();
+}
+
+function toggleFlag() {
+    flags[currentQ] = !flags[currentQ];
+    renderQuestion();
+}
+
+function nextQuestion() {
+    if (currentQ < 89) { currentQ++; renderQuestion(); }
+    else showReviewScreen();
+}
+
+function prevQuestion() {
+    if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function goToQuestion(i) {
+    currentQ = i;
+    renderQuestion();
+    document.getElementById('examContainer').style.display = 'flex';
+    document.getElementById('reviewScreen').style.display = 'none';
+}
+
+
+function showReviewScreen() {
+    document.getElementById('examContainer').style.display = 'none';
+    document.getElementById('reviewScreen').style.display = 'block';
+    const list = document.getElementById('reviewList');
+    list.innerHTML = '';
+    let hasItems = false;
+    for (let i = 0; i < 90; i++) {
+        if (flags[i] || answers[i] === -1) {
+            hasItems = true;
+            const div = document.createElement('div');
+            div.className = 'review-item';
+            div.onclick = () => goToQuestion(i);
+            let badges = '';
+            if (flags[i]) badges += '<span class="review-badge badge-flagged">Flagged</span> ';
+            if (answers[i] === -1) badges += '<span class="review-badge badge-unanswered">Unanswered</span>';
+            div.innerHTML = `<span>Question ${i+1}: ${questions[i].q.substring(0,50)}...</span><div>${badges}</div>`;
+            list.appendChild(div);
+        }
+    }
+    if (!hasItems) list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px">All questions answered and none flagged. Ready to submit!</p>';
+}
+
+function backToExam() {
+    document.getElementById('examContainer').style.display = 'flex';
+    document.getElementById('reviewScreen').style.display = 'none';
+}
+
+function showSubmitConfirm() {
+    const unanswered = answers.filter(a => a === -1).length;
+    const flagged = flags.filter(f => f).length;
+    let msg = 'Are you sure you want to submit your exam?';
+    if (unanswered > 0) msg += ` You have ${unanswered} unanswered question${unanswered>1?'s':''}.`;
+    if (flagged > 0) msg += ` You have ${flagged} flagged question${flagged>1?'s':''}.`;
+    document.getElementById('modalMsg').textContent = msg;
+    document.getElementById('submitModal').style.display = 'flex';
+}
+
+function closeModal() { document.getElementById('submitModal').style.display = 'none'; }
+
+function confirmSubmit() {
+    closeModal();
+    submitExam();
+}
+
+
+function submitExam() {
+    examSubmitted = true;
+    clearInterval(timerInterval);
+    document.getElementById('examContainer').style.display = 'none';
+    document.getElementById('reviewScreen').style.display = 'none';
+    document.getElementById('resultsScreen').style.display = 'block';
+    document.querySelector('.top-bar').style.display = 'none';
+    document.querySelector('.progress-container').style.display = 'none';
+
+    let totalCorrect = 0;
+    const domainScores = {};
+    const domainTotals = {};
+    domains.forEach(d => { domainScores[d] = 0; domainTotals[d] = 0; });
+
+    questions.forEach((q, i) => {
+        domainTotals[q.domain]++;
+        if (answers[i] === q.correct) {
+            totalCorrect++;
+            domainScores[q.domain]++;
+        }
+    });
+
+    const percentage = Math.round((totalCorrect / 90) * 100);
+    const scaledScore = Math.round((totalCorrect / 90) * 900);
+    const passed = scaledScore >= 700;
+
+    let html = `<div class="card results-header">
+        <h2 style="margin-bottom:4px">Exam Complete</h2>
+        <p style="color:#94a3b8">CompTIA A+ Core 2 (220-1202) Practice Exam</p>
+        <div class="score-circle ${passed ? 'pass' : 'fail'}">
+            <div class="score-number" style="color:${passed ? '#10b981' : '#ef4444'}">${scaledScore}</div>
+            <div style="font-size:13px;color:#94a3b8">out of 900</div>
+        </div>
+        <div style="font-size:22px;font-weight:700;color:${passed ? '#10b981' : '#ef4444'};margin-top:12px">
+            ${passed ? '🎉 PASSED!' : '❌ DID NOT PASS'}
+        </div>
+        <p style="color:#94a3b8;margin-top:8px">${totalCorrect}/90 correct (${percentage}%) • Passing: 700/900 (78%)</p>
+        <p style="color:#64748b;margin-top:4px;font-size:13px">Time used: ${formatTimeUsed()}</p>
+    </div>
+    <div class="card">
+        <h3 style="margin-bottom:16px">Score Breakdown by Domain</h3>
+        <table class="domain-table">
+            <thead><tr><th>Domain</th><th>Score</th><th>Performance</th></tr></thead>
+            <tbody>`;
+
+    domains.forEach(d => {
+        const pct = domainTotals[d] > 0 ? Math.round((domainScores[d] / domainTotals[d]) * 100) : 0;
+        const color = pct >= 78 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+        html += `<tr>
+            <td style="color:#e2e8f0;font-size:14px">${d}</td>
+            <td style="color:${color};font-weight:600">${domainScores[d]}/${domainTotals[d]} (${pct}%)</td>
+            <td><div class="domain-bar"><div class="domain-bar-fill" style="width:${pct}%;background:${color}"></div></div></td>
+        </tr>`;
+    });
+
+    html += `</tbody></table></div>
+    <div style="text-align:center;margin-top:20px">
+        <button class="review-incorrect-btn" onclick="showIncorrect()">Review Incorrect Answers</button>
+        <button class="review-incorrect-btn" style="background:#334155;margin-left:12px" onclick="restartExam()">Retake Exam</button>
+    </div>
+    <div class="incorrect-list" id="incorrectList"></div>`;
+
+    document.getElementById('resultsScreen').innerHTML = html;
+
+    if (passed) launchConfetti();
+}
+
+
+function formatTimeUsed() {
+    const used = (90 * 60) - timeLeft;
+    const m = Math.floor(used / 60);
+    const s = used % 60;
+    return `${m}m ${s}s`;
+}
+
+function showIncorrect() {
+    const list = document.getElementById('incorrectList');
+    if (list.children.length > 0) { list.innerHTML = ''; return; }
+    const letters = ['A','B','C','D'];
+    let html = '';
+    questions.forEach((q, i) => {
+        if (answers[i] !== q.correct) {
+            const yourAns = answers[i] === -1 ? 'Not answered' : `${letters[answers[i]]}. ${q.choices[answers[i]]}`;
+            html += `<div class="incorrect-item">
+                <div class="q-text">${i+1}. ${q.q}</div>
+                <div class="your-answer">Your answer: ${yourAns}</div>
+                <div class="correct-answer">Correct answer: ${letters[q.correct]}. ${q.choices[q.correct]}</div>
+                <div class="explanation">${q.explanation}</div>
+            </div>`;
+        }
+    });
+    if (!html) html = '<p style="text-align:center;color:#10b981;padding:20px;font-weight:600">Perfect score! All answers correct! 🎉</p>';
+    list.innerHTML = html;
+}
+
+function restartExam() {
+    currentQ = 0;
+    answers = new Array(90).fill(-1);
+    flags = new Array(90).fill(false);
+    timeLeft = 90 * 60;
+    examSubmitted = false;
+    document.getElementById('resultsScreen').style.display = 'none';
+    document.getElementById('examContainer').style.display = 'flex';
+    document.querySelector('.top-bar').style.display = 'flex';
+    document.querySelector('.progress-container').style.display = 'block';
+    document.getElementById('timer').textContent = '90:00';
+    document.getElementById('timer').className = 'timer';
+    renderQuestion();
+    startTimer();
+}
+
+function launchConfetti() {
+    const container = document.createElement('div');
+    container.className = 'confetti-container';
+    document.body.appendChild(container);
+    const colors = ['#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
+    for (let i = 0; i < 150; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + '%';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDelay = Math.random() * 2 + 's';
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        c.style.width = (6 + Math.random() * 8) + 'px';
+        c.style.height = (6 + Math.random() * 8) + 'px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        container.appendChild(c);
+    }
+    setTimeout(() => container.remove(), 5000);
+}
+
+// Initialize
+buildNavGrid();
+renderQuestion();
+startTimer();
+</script>
+</body>
+</html>
