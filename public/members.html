@@ -123,8 +123,13 @@
             <div class="gate-icon">&#128274;</div>
             <h2>Members Area</h2>
             <p class="gate-sub">Enter the access code from the last page of your<br><em>CompTIA A+ Complete Study Guide</em></p>
+            <p style="font-size:0.75rem;color:#f59e0b;margin-bottom:16px;">&#9888; Code is CASE SENSITIVE</p>
             <input type="text" id="codeInput" class="gate-input" placeholder="Enter access code..." autocomplete="off" autofocus>
             <p class="gate-error" id="gateError"></p>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:center;">
+                <input type="checkbox" id="rememberMe" checked style="width:16px;height:16px;accent-color:#366092;">
+                <label for="rememberMe" style="font-size:0.82rem;color:#666;cursor:pointer;">Remember me on this device</label>
+            </div>
             <button class="gate-btn" id="unlockBtn">Unlock Content</button>
             <a href="index.html" class="gate-back">&larr; Back to free resources</a>
         </div>
@@ -369,6 +374,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const navItems = document.getElementById('navItems');
+    const rememberMe = document.getElementById('rememberMe');
 
     function unlock() {
         gate.style.display = 'none';
@@ -380,17 +386,19 @@
         gate.style.display = 'flex';
         input.value = '';
         error.textContent = '';
-        sessionStorage.removeItem('comptia_member');
+        localStorage.removeItem('comptia_member');
     }
 
     unlockBtn.addEventListener('click', () => {
         const code = input.value.trim();
         if (!code) { input.focus(); return; }
         if (code === VALID_CODE) {
-            sessionStorage.setItem('comptia_member', '1');
+            if (rememberMe.checked) {
+                localStorage.setItem('comptia_member', '1');
+            }
             unlock();
         } else {
-            error.textContent = 'Invalid code. Check the last page of your book.';
+            error.textContent = 'Invalid code. Remember: code is CASE SENSITIVE. Check the last page of your book.';
             input.style.borderColor = 'var(--red)';
             input.style.animation = 'shake 0.4s ease';
             setTimeout(() => { input.style.borderColor = ''; input.style.animation = ''; }, 2000);
@@ -401,8 +409,8 @@
     logoutBtn.addEventListener('click', e => { e.preventDefault(); lock(); });
     hamburgerBtn.addEventListener('click', () => { navItems.classList.toggle('open'); });
 
-    // Auto-restore session
-    if (sessionStorage.getItem('comptia_member') === '1') { unlock(); }
+    // Auto-restore from localStorage (remembered login)
+    if (localStorage.getItem('comptia_member') === '1') { unlock(); }
     </script>
 </body>
 </html>
