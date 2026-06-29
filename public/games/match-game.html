@@ -574,5 +574,72 @@ function closeAdmin() {
 // Init
 showMenu();
 </script>
+<!-- LOFI MUSIC + MUTE CONTROL -->
+<div id="puzzleMuteBtn" style="position:fixed;bottom:16px;right:16px;z-index:9999;">
+    <button onclick="togglePuzzleMute()" id="pmute-btn" style="padding:10px 18px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:0.85rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;gap:6px;">
+        <span id="pmute-icon">🔊</span> <span id="pmute-text">Sound ON</span>
+    </button>
+</div>
+<script>
+// Lofi puzzle music - auto-starts, single mute controls both music + SFX
+let _puzzleMuted = false;
+let _lofiInstance = null;
+
+function _lofiLoop() {
+    if (_puzzleMuted || !_lofiInstance) return;
+    _lofiInstance.start(() => { _lofiLoop(); });
+}
+
+function togglePuzzleMute() {
+    _puzzleMuted = !_puzzleMuted;
+    document.getElementById('pmute-icon').textContent = _puzzleMuted ? '🔇' : '🔊';
+    document.getElementById('pmute-text').textContent = _puzzleMuted ? 'Sound OFF' : 'Sound ON';
+    document.getElementById('pmute-btn').style.opacity = _puzzleMuted ? '0.5' : '1';
+    if (_puzzleMuted) {
+        if (_lofiInstance) _lofiInstance.stop();
+    } else {
+        _lofiLoop();
+    }
+}
+
+// Override any existing sound functions to respect mute
+const _origPlaySound = window.playSound;
+if (typeof _origPlaySound === 'function') {
+    window.playSound = function() { if (!_puzzleMuted) _origPlaySound.apply(this, arguments); };
+}
+const _origPlayCorrectSound = window.playCorrectSound;
+if (typeof _origPlayCorrectSound === 'function') {
+    window.playCorrectSound = function() { if (!_puzzleMuted) _origPlayCorrectSound.apply(this, arguments); };
+}
+const _origPlayWrongSound = window.playWrongSound;
+if (typeof _origPlayWrongSound === 'function') {
+    window.playWrongSound = function() { if (!_puzzleMuted) _origPlayWrongSound.apply(this, arguments); };
+}
+if (window.GameSounds) {
+    const _origClick = GameSounds.click;
+    const _origCorrect = GameSounds.correct;
+    const _origWrong = GameSounds.wrong;
+    const _origComplete = GameSounds.complete;
+    if (_origClick) GameSounds.click = function() { if (!_puzzleMuted) _origClick.call(GameSounds); };
+    if (_origCorrect) GameSounds.correct = function() { if (!_puzzleMuted) _origCorrect.call(GameSounds); };
+    if (_origWrong) GameSounds.wrong = function() { if (!_puzzleMuted) _origWrong.call(GameSounds); };
+    if (_origComplete) GameSounds.complete = function() { if (!_puzzleMuted) _origComplete.call(GameSounds); };
+}
+
+// Load and auto-start lofi music
+(function(){
+    const s = document.createElement('script');
+    s.src = '../audio/games/Lofi-Chill-Music.js';
+    s.onload = () => {
+        if (typeof LofiChillMusic !== 'undefined') {
+            _lofiInstance = new LofiChillMusic();
+            // Auto-start music
+            _lofiLoop();
+        }
+    };
+    s.onerror = () => {};
+    document.head.appendChild(s);
+})();
+</script>
 </body>
 </html>

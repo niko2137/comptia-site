@@ -79,6 +79,8 @@
         .m-card p { font-size: 0.8rem; color: #94a3b8; margin-bottom: 12px; }
         .m-link { display: inline-block; padding: 7px 18px; background: var(--blue-pale); color: #93c5fd; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
         .m-link:hover { background: var(--blue); color: #fff; }
+        .badge-free { display: inline-block; padding: 2px 7px; background: rgba(39,174,96,0.15); color: #27ae60; border-radius: 10px; font-size: 0.65rem; font-weight: 700; margin-left: 5px; }
+        .badge-members { display: inline-block; padding: 2px 7px; background: rgba(245,158,11,0.15); color: #f59e0b; border-radius: 10px; font-size: 0.65rem; font-weight: 700; margin-left: 5px; }
 
         /* TOOLS */
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
@@ -191,19 +193,19 @@
                 <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
                     <div class="m-card">
                         <div class="icon">&#127183;</div>
-                        <h4>Full 500 Flash Cards</h4>
+                        <h4>Full 500 Flash Cards <span class="badge-members">MEMBERS</span></h4>
                         <p>Complete deck with shuffle, progress tracking, and priority filtering.</p>
                         <a href="flashcards.html" class="m-link">Launch Cards</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128214;</div>
-                        <h4>Searchable Glossary</h4>
+                        <h4>Searchable Glossary <span class="badge-members">MEMBERS</span></h4>
                         <p>500-term glossary with search, priority filtering, and color-coded cards.</p>
                         <a href="glossary.html" class="m-link">Open Glossary</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128230;</div>
-                        <h4>Resource Center</h4>
+                        <h4>Resource Center <span class="badge-members">MEMBERS</span></h4>
                         <p>48+ free tools, video training, learning platforms, and utilities.</p>
                         <a href="reference/resources.html" class="m-link">Browse</a>
                     </div>
@@ -212,42 +214,78 @@
 
             <!-- ARCADE GAMES -->
             <div class="section" id="arcade">
-                <h3>&#127918; Arcade Games</h3>
-                <p class="section-desc">Members-only games — learn CompTIA concepts through play.</p>
+                <h3>&#127918; All Games</h3>
+                <p class="section-desc">All games available to members — including free ones.</p>
                 <div class="grid">
                     <div class="m-card">
+                        <div class="icon">&#128163;</div>
+                        <h4>Speed Match <span class="badge-free">FREE</span></h4>
+                        <p>Match ports to protocols against the clock</p>
+                        <a href="games/speed-match.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128126;</div>
+                        <h4>Port Blaster <span class="badge-free">FREE</span></h4>
+                        <p>Space shooter — blast port numbers, dodge decoys</p>
+                        <a href="games/port-blaster.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#127942;</div>
+                        <h4>CompTIA Jeopardy <span class="badge-free">FREE</span></h4>
+                        <p>Quiz game with 5 categories and Daily Doubles</p>
+                        <a href="games/jeopardy.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#9968;</div>
+                        <h4>OSI Layer Climb <span class="badge-free">FREE</span></h4>
+                        <p>Climb the mountain with OSI knowledge</p>
+                        <a href="games/osi-climb.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#129513;</div>
+                        <h4>Tech Wordle <span class="badge-free">FREE</span></h4>
+                        <p>Guess the IT term letter by letter</p>
+                        <a href="games/wordle-tech.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#127183;</div>
+                        <h4>Port Match <span class="badge-free">FREE</span></h4>
+                        <p>Draw connections between ports and protocols</p>
+                        <a href="games/port-match.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
                         <div class="icon">&#128640;</div>
-                        <h4>Neon Circuit Dash</h4>
+                        <h4>Neon Circuit Dash <span class="badge-members">MEMBERS</span></h4>
                         <p>Dodge obstacles, answer questions, survive 8 levels</p>
                         <a href="games/neon-circuit-dash.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128268;</div>
-                        <h4>Cable Match</h4>
+                        <h4>Cable Match <span class="badge-members">MEMBERS</span></h4>
                         <p>Sort falling cables into speed categories</p>
                         <a href="games/cable-match.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#127959;</div>
-                        <h4>Troubleshooting Tower</h4>
+                        <h4>Troubleshooting Tower <span class="badge-members">MEMBERS</span></h4>
                         <p>Stack troubleshooting steps in correct order</p>
                         <a href="games/troubleshoot-tower.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128126;</div>
-                        <h4>Maze Runner</h4>
+                        <h4>Maze Runner <span class="badge-members">MEMBERS</span></h4>
                         <p>Pac-Man style maze with IT threats and questions</p>
                         <a href="games/maze-runner.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128737;</div>
-                        <h4>Terminal Takedown</h4>
+                        <h4>Terminal Takedown <span class="badge-members">MEMBERS</span></h4>
                         <p>Tetris-style defense with IT threat blocks</p>
                         <a href="games/terminal-takedown.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128171;</div>
-                        <h4>Memory Overflow</h4>
+                        <h4>Memory Overflow <span class="badge-members">MEMBERS</span></h4>
                         <p>Memory management challenge game</p>
                         <a href="games/memory-overflow.html" class="m-link">Play</a>
                     </div>
@@ -261,19 +299,19 @@
                 <div class="grid">
                     <div class="m-card">
                         <div class="icon">&#127183;</div>
-                        <h4>Memory Match</h4>
+                        <h4>Memory Match <span class="badge-members">MEMBERS</span></h4>
                         <p>Flip cards to find matching pairs</p>
                         <a href="games/match-game.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128260;</div>
-                        <h4>Tech Scramble</h4>
+                        <h4>Tech Scramble <span class="badge-members">MEMBERS</span></h4>
                         <p>Fill in blanks from jumbled letters</p>
                         <a href="games/scramble.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128221;</div>
-                        <h4>Tech Tile Time</h4>
+                        <h4>Tech Tile Time <span class="badge-members">MEMBERS</span></h4>
                         <p>10-clue crossword puzzle</p>
                         <a href="games/crossword.html" class="m-link">Play</a>
                     </div>
@@ -287,55 +325,73 @@
                 <div class="grid">
                     <div class="m-card">
                         <div class="icon">&#128187;</div>
-                        <h4>Hardware</h4>
+                        <h4>Hardware <span class="badge-free">FREE</span></h4>
                         <p>Components, connectors, troubleshooting</p>
                         <a href="pbqs/hardware.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#127760;</div>
-                        <h4>Networking</h4>
+                        <h4>Networking <span class="badge-free">FREE</span></h4>
                         <p>Protocols, configuration, connectivity</p>
                         <a href="pbqs/networking.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128421;</div>
-                        <h4>Operating Systems</h4>
+                        <h4>Operating Systems <span class="badge-members">MEMBERS</span></h4>
                         <p>Windows, Linux, macOS management</p>
                         <a href="pbqs/os.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128274;</div>
-                        <h4>Security</h4>
+                        <h4>Security <span class="badge-members">MEMBERS</span></h4>
                         <p>Threats, mitigation, best practices</p>
                         <a href="pbqs/security.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128241;</div>
-                        <h4>Mobile Devices</h4>
+                        <h4>Mobile Devices <span class="badge-members">MEMBERS</span></h4>
                         <p>Configuration, sync, troubleshooting</p>
                         <a href="pbqs/mobile.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#9881;</div>
-                        <h4>Motherboard</h4>
+                        <h4>Motherboard <span class="badge-free">FREE</span></h4>
                         <p>Interactive component identification</p>
                         <a href="pbqs/motherboard.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
+                        <div class="icon">&#128190;</div>
+                        <h4>RAID Config <span class="badge-free">FREE</span></h4>
+                        <p>Match RAID levels to descriptions and scenarios</p>
+                        <a href="pbqs/raid-config.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128295;</div>
+                        <h4>Troubleshooting <span class="badge-free">FREE</span></h4>
+                        <p>6-step methodology ordering + scenarios</p>
+                        <a href="pbqs/troubleshooting.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128225;</div>
+                        <h4>Network Ports <span class="badge-free">FREE</span></h4>
+                        <p>Drag 19 port numbers to protocols</p>
+                        <a href="pbqs/network-ports.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
                         <div class="icon">&#128424;</div>
-                        <h4>Laser Printer</h4>
+                        <h4>Laser Printer <span class="badge-members">MEMBERS</span></h4>
                         <p>Order the 7 printing steps + troubleshoot</p>
                         <a href="pbqs/laser-printer.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128225;</div>
-                        <h4>SOHO Router Security</h4>
+                        <h4>SOHO Router Security <span class="badge-members">MEMBERS</span></h4>
                         <p>Secure a vulnerable router configuration</p>
                         <a href="pbqs/soho-security.html" class="m-link">Start</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128736;</div>
-                        <h4>Windows Recovery</h4>
+                        <h4>Windows Recovery <span class="badge-members">MEMBERS</span></h4>
                         <p>Match recovery tools to boot failure scenarios</p>
                         <a href="pbqs/windows-recovery.html" class="m-link">Start</a>
                     </div>
