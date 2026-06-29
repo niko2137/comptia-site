@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acronym Decoder - CompTIA A+ Study Hub</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #1e293b; border-bottom: 1px solid #334155; }
+.top-bar a { color: #5b9bd5; text-decoration: none; font-size: 0.95rem; }
+.top-bar a:hover { text-decoration: underline; }
+.score-display { font-size: 0.95rem; color: #94a3b8; }
+.score-display span { color: #5b9bd5; font-weight: bold; }
+.container { max-width: 640px; margin: 0 auto; padding: 20px; }
+.splash-screen { text-align: center; padding: 60px 20px; }
+.splash-screen h1 { font-size: 2.4rem; color: #5b9bd5; margin-bottom: 12px; }
+.splash-screen p { font-size: 1.2rem; color: #94a3b8; margin-bottom: 40px; }
+.start-btn { background: #5b9bd5; color: white; border: none; padding: 16px 48px; border-radius: 12px; font-size: 1.2rem; cursor: pointer; transition: background 0.2s; }
+.start-btn:hover { background: #4a8bc4; }
+.progress-bar { width: 100%; height: 6px; background: #334155; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+.progress-fill { height: 100%; background: #5b9bd5; border-radius: 3px; transition: width 0.3s; }
+.progress-text { text-align: center; color: #94a3b8; margin-bottom: 16px; font-size: 0.9rem; }
+.acronym-card { background: #1e293b; border-radius: 16px; padding: 40px 24px; text-align: center; margin-bottom: 20px; }
+.acronym-card h2 { font-size: 3rem; color: #5b9bd5; letter-spacing: 4px; margin-bottom: 8px; }
+.acronym-card p { color: #64748b; font-size: 0.9rem; }
+.options-grid { display: grid; gap: 12px; margin-top: 20px; }
+.option-btn { background: #1e293b; border: 2px solid #334155; border-radius: 12px; padding: 16px; cursor: pointer; text-align: left; transition: all 0.2s; font-size: 1rem; color: #e2e8f0; width: 100%; }
+.option-btn:hover:not(.disabled) { border-color: #5b9bd5; }
+.option-btn.correct { border-color: #27ae60; background: rgba(39,174,96,0.1); }
+.option-btn.incorrect { border-color: #e74c3c; background: rgba(231,76,60,0.1); }
+.option-btn.show-correct { border-color: #27ae60; background: rgba(39,174,96,0.15); }
+.option-btn.disabled { cursor: default; opacity: 0.7; }
+.feedback { margin-top: 16px; padding: 16px; border-radius: 12px; }
+.feedback.correct { background: rgba(39,174,96,0.1); border-left: 4px solid #27ae60; }
+.feedback.incorrect { background: rgba(231,76,60,0.1); border-left: 4px solid #e74c3c; }
+.feedback h4 { margin-bottom: 6px; }
+.feedback p { color: #94a3b8; font-size: 0.9rem; line-height: 1.5; }
+.feedback .study-ref { margin-top: 8px; color: #5b9bd5; font-size: 0.85rem; }
+.next-btn { background: #5b9bd5; color: white; border: none; padding: 14px 32px; border-radius: 10px; font-size: 1.05rem; cursor: pointer; margin-top: 20px; display: block; margin-left: auto; margin-right: auto; transition: background 0.2s; }
+.next-btn:hover { background: #4a8bc4; }
+.results-screen { text-align: center; padding: 20px 0; }
+.results-screen h2 { font-size: 2rem; color: #5b9bd5; margin-bottom: 8px; }
+.results-score { font-size: 3rem; font-weight: bold; margin: 20px 0; }
+.results-score.great { color: #27ae60; }
+.results-score.ok { color: #f39c12; }
+.results-score.poor { color: #e74c3c; }
+.wrong-list { text-align: left; margin-top: 24px; }
+.wrong-list h3 { color: #94a3b8; margin-bottom: 12px; font-size: 1rem; }
+.wrong-item { background: #1e293b; border-radius: 10px; padding: 14px; margin-bottom: 10px; border-left: 3px solid #e74c3c; }
+.wrong-item .acronym { color: #5b9bd5; font-weight: bold; }
+.wrong-item .answer { color: #94a3b8; font-size: 0.9rem; margin-top: 4px; }
+.play-again-btn { background: #5b9bd5; color: white; border: none; padding: 16px 48px; border-radius: 12px; font-size: 1.1rem; cursor: pointer; margin-top: 30px; transition: background 0.2s; }
+.play-again-btn:hover { background: #4a8bc4; }
+.mute-btn { position: fixed; bottom: 16px; right: 16px; z-index: 9999; background: rgba(30,41,59,0.95); border: 1px solid #334155; border-radius: 50%; width: 48px; height: 48px; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #e2e8f0; transition: border-color 0.2s; }
+.mute-btn:hover { border-color: #5b9bd5; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="../index.html">&#8592; Back to Study Hub</a>
+<div class="score-display" id="scoreDisplay"></div>
+</div>
+<div class="container" id="gameContainer"></div>
+<button class="mute-btn" id="muteBtn" title="Toggle Audio">&#128266;</button>
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script>
+const acronyms = [
+{acronym:"TCP",correct:"Transmission Control Protocol",wrong:["Transfer Communication Protocol","Total Connection Process","Temporary Cache Protocol"],category:"networking",explanation:"Reliable connection-oriented protocol ensuring data delivery"},
+{acronym:"UDP",correct:"User Datagram Protocol",wrong:["Universal Data Protocol","Unified Delivery Process","User Download Protocol"],category:"networking",explanation:"Fast connectionless protocol for streaming and real-time data"},
+{acronym:"DHCP",correct:"Dynamic Host Configuration Protocol",wrong:["Direct Host Control Protocol","Dynamic Hardware Configuration Process","Data Host Communication Protocol"],category:"networking",explanation:"Automatically assigns IP addresses to network devices"},
+{acronym:"DNS",correct:"Domain Name System",wrong:["Dynamic Network Service","Direct Name Server","Domain Network Structure"],category:"networking",explanation:"Translates domain names to IP addresses"},
+{acronym:"HTTP",correct:"Hypertext Transfer Protocol",wrong:["High-speed Text Transfer Protocol","Hyper Terminal Transport Protocol","Host Text Transfer Process"],category:"networking",explanation:"Foundation protocol for web communication"},
+{acronym:"HTTPS",correct:"Hypertext Transfer Protocol Secure",wrong:["Hosted Transfer Protocol System","Hyper Text Transaction Secure","High Transfer Protocol Standard"],category:"networking",explanation:"Encrypted version of HTTP using TLS/SSL"},
+{acronym:"FTP",correct:"File Transfer Protocol",wrong:["Fast Transport Protocol","File Transaction Process","Formatted Transfer Protocol"],category:"networking",explanation:"Used to transfer files between client and server"},
+{acronym:"SSH",correct:"Secure Shell",wrong:["System Security Host","Secure System Handler","Safe Socket Handler"],category:"networking",explanation:"Encrypted remote command-line access to systems"},
+{acronym:"SMTP",correct:"Simple Mail Transfer Protocol",wrong:["Secure Mail Transport Protocol","Standard Message Transfer Process","System Mail Transfer Protocol"],category:"networking",explanation:"Sends outgoing email between mail servers"},
+{acronym:"IMAP",correct:"Internet Message Access Protocol",wrong:["Internal Mail Access Protocol","Integrated Message Application Process","Internet Mail Application Protocol"],category:"networking",explanation:"Retrieves email while keeping messages on the server"},
+{acronym:"POP3",correct:"Post Office Protocol version 3",wrong:["Personal Online Protocol 3","Point of Presence 3","Post Output Protocol 3"],category:"networking",explanation:"Downloads email from server and removes from server"},
+{acronym:"NTP",correct:"Network Time Protocol",wrong:["New Transfer Protocol","Network Transport Process","Node Timing Protocol"],category:"networking",explanation:"Synchronizes clocks across network devices"},
+{acronym:"SNMP",correct:"Simple Network Management Protocol",wrong:["Secure Network Monitoring Protocol","System Network Management Process","Standard Network Messaging Protocol"],category:"networking",explanation:"Monitors and manages network devices"},
+{acronym:"RDP",correct:"Remote Desktop Protocol",wrong:["Rapid Data Protocol","Remote Device Process","Real-time Display Protocol"],category:"networking",explanation:"Microsoft protocol for remote graphical desktop access"},
+{acronym:"VPN",correct:"Virtual Private Network",wrong:["Visual Protocol Network","Verified Private Node","Virtual Protected Network"],category:"networking",explanation:"Creates encrypted tunnel over public network"},
+{acronym:"VLAN",correct:"Virtual Local Area Network",wrong:["Variable LAN Access Node","Virtual Link Area Network","Verified Local Access Network"],category:"networking",explanation:"Segments a physical network into logical groups"},
+{acronym:"NAT",correct:"Network Address Translation",wrong:["Network Access Terminal","Node Address Transfer","Network Authentication Token"],category:"networking",explanation:"Maps private IP addresses to public addresses"},
+{acronym:"ARP",correct:"Address Resolution Protocol",wrong:["Automatic Routing Protocol","Advanced Recovery Process","Access Resource Protocol"],category:"networking",explanation:"Resolves IP addresses to MAC addresses"},
+{acronym:"ICMP",correct:"Internet Control Message Protocol",wrong:["Internal Communication Management Protocol","Internet Connection Monitoring Process","Integrated Control Message Process"],category:"networking",explanation:"Used for network diagnostics like ping"},
+{acronym:"SSD",correct:"Solid State Drive",wrong:["System Storage Device","Standard Serial Drive","Secure Storage Disk"],category:"hardware",explanation:"Fast storage with no moving parts using flash memory"},
+{acronym:"HDD",correct:"Hard Disk Drive",wrong:["High Density Data","Hardware Display Device","Host Data Drive"],category:"hardware",explanation:"Traditional storage using spinning magnetic platters"},
+{acronym:"NVMe",correct:"Non-Volatile Memory Express",wrong:["Network Volume Memory Extension","New Virtual Memory Engine","Node Volatile Memory Express"],category:"hardware",explanation:"High-speed storage interface faster than SATA"},
+{acronym:"RAID",correct:"Redundant Array of Independent Disks",wrong:["Rapid Access Independent Data","Random Array of Integrated Disks","Redundant Access of Internal Data"],category:"hardware",explanation:"Combines multiple disks for performance or redundancy"},
+{acronym:"BIOS",correct:"Basic Input/Output System",wrong:["Binary Integrated Operating System","Boot Initialization Operating Software","Base Internal Output System"],category:"hardware",explanation:"Legacy firmware that initializes hardware at boot"},
+{acronym:"UEFI",correct:"Unified Extensible Firmware Interface",wrong:["Universal Extended Firmware Integration","Unified External Firmware Input","Universal Extensible File Interface"],category:"hardware",explanation:"Modern firmware replacement for BIOS"},
+{acronym:"TPM",correct:"Trusted Platform Module",wrong:["Total Protection Module","Temporary Processing Memory","Transfer Protocol Module"],category:"hardware",explanation:"Hardware chip for encryption keys and secure boot"},
+{acronym:"ESD",correct:"Electrostatic Discharge",wrong:["Electronic System Damage","Electrical Safety Device","External Storage Device"],category:"hardware",explanation:"Static electricity that can damage components"},
+{acronym:"PSU",correct:"Power Supply Unit",wrong:["Processor System Unit","Primary Storage Utility","Power Service Utility"],category:"hardware",explanation:"Converts AC power to DC for computer components"},
+{acronym:"GPU",correct:"Graphics Processing Unit",wrong:["General Purpose Utility","Global Processing Unit","Graphics Protocol Unit"],category:"hardware",explanation:"Dedicated processor for rendering graphics"},
+{acronym:"CPU",correct:"Central Processing Unit",wrong:["Core Program Utility","Computer Processing Utility","Central Protocol Unit"],category:"hardware",explanation:"Main processor that executes program instructions"},
+{acronym:"RAM",correct:"Random Access Memory",wrong:["Read Access Memory","Rapid Application Memory","Runtime Access Module"],category:"hardware",explanation:"Volatile memory for active programs and data"},
+{acronym:"ROM",correct:"Read-Only Memory",wrong:["Random Output Memory","Runtime Operating Module","Rewritable Optical Memory"],category:"hardware",explanation:"Non-volatile memory with permanent data"},
+{acronym:"NIC",correct:"Network Interface Card",wrong:["Network Integration Controller","Node Interface Chip","Network Internal Component"],category:"hardware",explanation:"Hardware that connects a device to a network"},
+{acronym:"WAP",correct:"Wireless Access Point",wrong:["Wide Area Protocol","Wireless Application Protocol","Web Access Portal"],category:"networking",explanation:"Device that allows wireless devices to connect to a network"},
+{acronym:"PoE",correct:"Power over Ethernet",wrong:["Point of Entry","Protocol of Exchange","Port of Egress"],category:"networking",explanation:"Delivers electrical power through Ethernet cables"},
+{acronym:"UPS",correct:"Uninterruptible Power Supply",wrong:["Universal Power System","Utility Protection Service","Unified Power Source"],category:"hardware",explanation:"Battery backup that prevents power loss disruptions"},
+{acronym:"MFA",correct:"Multi-Factor Authentication",wrong:["Master File Access","Main Firewall Application","Managed Folder Archive"],category:"security",explanation:"Requires multiple verification methods to log in"},
+{acronym:"DLP",correct:"Data Loss Prevention",wrong:["Digital Lock Protection","Domain Level Policy","Direct Link Protocol"],category:"security",explanation:"Prevents sensitive data from leaving the network"},
+{acronym:"IDS",correct:"Intrusion Detection System",wrong:["Internal Data Service","Integrated Defense System","Internet Distribution Service"],category:"security",explanation:"Monitors network traffic for suspicious activity"},
+{acronym:"IPS",correct:"Intrusion Prevention System",wrong:["Internet Protocol Service","Integrated Protection Software","Internal Processing System"],category:"security",explanation:"Detects and blocks malicious network activity"},
+{acronym:"NTFS",correct:"New Technology File System",wrong:["Network Transfer File System","Node Technology Format System","New Terminal File Structure"],category:"storage",explanation:"Windows file system supporting permissions and encryption"},
+{acronym:"GPT",correct:"GUID Partition Table",wrong:["General Purpose Terminal","Global Partition Technology","Graphics Processing Table"],category:"storage",explanation:"Modern partition scheme supporting large disks"},
+{acronym:"MBR",correct:"Master Boot Record",wrong:["Main BIOS Registry","Memory Buffer Record","Managed Boot Resource"],category:"storage",explanation:"Legacy partition scheme limited to 2TB disks"},
+{acronym:"OSI",correct:"Open Systems Interconnection",wrong:["Operating System Interface","Online Service Integration","Open Source Infrastructure"],category:"networking",explanation:"Seven-layer model for network communication"},
+{acronym:"SaaS",correct:"Software as a Service",wrong:["Storage as a Service","System as a Solution","Server as a Standard"],category:"cloud",explanation:"Cloud-delivered software accessed via browser"},
+{acronym:"PaaS",correct:"Platform as a Service",wrong:["Protocol as a Service","Processing as a Solution","Program as a Standard"],category:"cloud",explanation:"Cloud platform for developing and deploying apps"},
+{acronym:"IaaS",correct:"Infrastructure as a Service",wrong:["Internet as a Service","Integration as a Solution","Interface as a Standard"],category:"cloud",explanation:"Cloud-based virtual computing resources"},
+{acronym:"MDM",correct:"Mobile Device Management",wrong:["Master Data Module","Media Distribution Manager","Memory Diagnostic Monitor"],category:"security",explanation:"Software to manage and secure mobile devices"},
+{acronym:"WPA",correct:"Wi-Fi Protected Access",wrong:["Wireless Protocol Authentication","Web Protection Algorithm","Wide Protected Area"],category:"security",explanation:"Security protocol for wireless networks"},
+{acronym:"ACL",correct:"Access Control List",wrong:["Advanced Configuration Layer","Application Control Logic","Automated Command List"],category:"security",explanation:"Rules defining who can access resources"}
+];
+
+const studyRefs = {
+  networking: "\u{1F4D6} Study: Module - Networking Fundamentals",
+  hardware: "\u{1F4D6} Study: Module - Desktop PC Hardware",
+  security: "\u{1F4D6} Study: Module - Security",
+  cloud: "\u{1F4D6} Study: Module - Virtualization & Cloud",
+  storage: "\u{1F4D6} Study: Module - Hard Drives & Storage"
+};
+
+let currentIndex = 0;
+let score = 0;
+let shuffled = [];
+let wrongAnswers = [];
+let isMuted = localStorage.getItem('gameAudioMuted') === 'true';
+let music = null;
+let audioCtx = null;
+
+const container = document.getElementById('gameContainer');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const muteBtn = document.getElementById('muteBtn');
+
+function updateMuteBtn() {
+  muteBtn.textContent = isMuted ? '\u{1F507}' : '\u{1F50A}';
+}
+updateMuteBtn();
+
+muteBtn.addEventListener('click', function() {
+  isMuted = !isMuted;
+  localStorage.setItem('gameAudioMuted', isMuted);
+  updateMuteBtn();
+  if (music) {
+    if (isMuted) { music.stop(); }
+    else { startMusic(); }
+  }
+});
+
+function startMusic() {
+  if (isMuted) return;
+  if (!music) {
+    try { music = new LofiChillMusic(); } catch(e) { return; }
+  }
+  if (!music.isPlaying) {
+    music.start(function() { startMusic(); });
+  }
+}
+
+function stopMusic() {
+  if (music && music.isPlaying) { music.stop(); }
+}
+
+function playCorrectSound() {
+  if (isMuted) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = audioCtx.currentTime;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0.15, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+    g.connect(audioCtx.destination);
+    const o1 = audioCtx.createOscillator();
+    o1.type = 'sine'; o1.frequency.value = 523;
+    o1.connect(g); o1.start(now); o1.stop(now + 0.2);
+    const o2 = audioCtx.createOscillator();
+    o2.type = 'sine'; o2.frequency.value = 659;
+    o2.connect(g); o2.start(now + 0.15); o2.stop(now + 0.4);
+  } catch(e) {}
+}
+
+function playWrongSound() {
+  if (isMuted) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = audioCtx.currentTime;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0.12, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+    g.connect(audioCtx.destination);
+    const o1 = audioCtx.createOscillator();
+    o1.type = 'square'; o1.frequency.value = 330;
+    o1.connect(g); o1.start(now); o1.stop(now + 0.2);
+    const o2 = audioCtx.createOscillator();
+    o2.type = 'square'; o2.frequency.value = 220;
+    o2.connect(g); o2.start(now + 0.15); o2.stop(now + 0.4);
+  } catch(e) {}
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showSplash() {
+  scoreDisplay.textContent = '';
+  container.innerHTML = `
+    <div class="splash-screen">
+      <h1>Acronym Decoder</h1>
+      <p>50 IT Terms &bull; CompTIA A+ Study</p>
+      <button class="start-btn" id="startBtn">Start Game</button>
+    </div>`;
+  document.getElementById('startBtn').addEventListener('click', function() {
+    startMusic();
+    startGame();
+  });
+}
+
+function startGame() {
+  currentIndex = 0;
+  score = 0;
+  wrongAnswers = [];
+  shuffled = shuffle(acronyms);
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = shuffled[currentIndex];
+  const options = shuffle([q.correct, ...q.wrong]);
+  const progress = ((currentIndex) / shuffled.length) * 100;
+  scoreDisplay.innerHTML = 'Score: <span>' + score + ' / ' + (currentIndex) + '</span>';
+  container.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="progress-text">${currentIndex + 1} / ${shuffled.length}</div>
+    <div class="acronym-card">
+      <h2>${q.acronym}</h2>
+      <p>What does this stand for?</p>
+    </div>
+    <div class="options-grid" id="optionsGrid">
+      ${options.map((opt, i) => `<button class="option-btn" data-answer="${opt.replace(/"/g, '&quot;')}">${opt}</button>`).join('')}
+    </div>
+    <div id="feedbackArea"></div>
+    <div id="nextArea"></div>`;
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', function() { handleAnswer(this, q, btns); });
+  });
+}
+
+function handleAnswer(selected, q, allBtns) {
+  const answer = selected.getAttribute('data-answer');
+  const isCorrect = answer === q.correct;
+  allBtns.forEach(btn => {
+    btn.classList.add('disabled');
+    btn.style.pointerEvents = 'none';
+    if (btn.getAttribute('data-answer') === q.correct) {
+      btn.classList.add(isCorrect ? 'correct' : 'show-correct');
+    }
+  });
+  if (isCorrect) {
+    selected.classList.add('correct');
+    score++;
+    playCorrectSound();
+    document.getElementById('feedbackArea').innerHTML = `
+      <div class="feedback correct">
+        <h4>\u2705 Correct!</h4>
+        <p>${q.explanation}</p>
+      </div>`;
+  } else {
+    selected.classList.add('incorrect');
+    playWrongSound();
+    wrongAnswers.push({ acronym: q.acronym, correct: q.correct, category: q.category });
+    document.getElementById('feedbackArea').innerHTML = `
+      <div class="feedback incorrect">
+        <h4>\u274C Incorrect</h4>
+        <p><strong>Correct answer:</strong> ${q.correct}</p>
+        <p>${q.explanation}</p>
+        <p class="study-ref">${studyRefs[q.category]}</p>
+      </div>`;
+  }
+  scoreDisplay.innerHTML = 'Score: <span>' + score + ' / ' + (currentIndex + 1) + '</span>';
+  document.getElementById('nextArea').innerHTML = `<button class="next-btn" id="nextBtn">${currentIndex < shuffled.length - 1 ? 'Next \u2192' : 'See Results'}</button>`;
+  document.getElementById('nextBtn').addEventListener('click', function() {
+    currentIndex++;
+    if (currentIndex < shuffled.length) { showQuestion(); }
+    else { showResults(); }
+  });
+}
+
+function showResults() {
+  stopMusic();
+  const pct = Math.round((score / shuffled.length) * 100);
+  let scoreClass = 'great';
+  if (pct < 70) scoreClass = 'poor';
+  else if (pct < 85) scoreClass = 'ok';
+  scoreDisplay.innerHTML = 'Final Score: <span>' + score + ' / ' + shuffled.length + '</span>';
+  let wrongHTML = '';
+  if (wrongAnswers.length > 0) {
+    wrongHTML = `<div class="wrong-list"><h3>Review These (${wrongAnswers.length}):</h3>`;
+    wrongAnswers.forEach(w => {
+      wrongHTML += `<div class="wrong-item"><div class="acronym">${w.acronym}</div><div class="answer">${w.correct}</div><div class="answer" style="color:#5b9bd5;margin-top:2px;">${studyRefs[w.category]}</div></div>`;
+    });
+    wrongHTML += '</div>';
+  }
+  container.innerHTML = `
+    <div class="results-screen">
+      <h2>Game Complete!</h2>
+      <div class="results-score ${scoreClass}">${pct}%</div>
+      <p style="color:#94a3b8;">${score} correct out of ${shuffled.length}</p>
+      ${wrongHTML}
+      <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+    </div>`;
+  document.getElementById('playAgainBtn').addEventListener('click', function() {
+    startMusic();
+    startGame();
+  });
+}
+
+showSplash();
+</script>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Build-a-PC Puzzle — CompTIA A+ Study Hub</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+.top-bar {
+    background: #1e293b;
+    padding: 12px 20px;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.top-bar a {
+    color: #5b9bd5;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+.top-bar a:hover { text-decoration: underline; }
+.top-bar h1 {
+    font-size: 18px;
+    color: #f1f5f9;
+    font-weight: 600;
+}
+.game-container {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - 53px);
+}
+.pc-case {
+    flex: 1;
+    background: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-content: start;
+    position: relative;
+}
+.pc-case::before {
+    content: "🖥️ PC Case — Motherboard Layout";
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: #0f172a;
+    padding: 0 10px;
+    font-size: 13px;
+    color: #5b9bd5;
+    font-weight: 600;
+}
+.slot {
+    background: #0f172a;
+    border: 2px dashed #475569;
+    border-radius: 8px;
+    padding: 14px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s;
+    position: relative;
+}
+.slot .slot-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+.slot .slot-name {
+    font-size: 13px;
+    color: #94a3b8;
+}
+.slot.drag-over {
+    border-color: #5b9bd5;
+    background: #1e3a5f;
+    box-shadow: 0 0 12px #5b9bd533;
+}
+.slot.filled {
+    border-color: #27ae60;
+    border-style: solid;
+    background: #27ae6015;
+}
+.slot.filled .slot-name {
+    color: #27ae60;
+    font-weight: 600;
+}
+.slot.filled .slot-label { color: #27ae60; }
+.component-bank {
+    width: 320px;
+    min-width: 280px;
+    background: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 100px);
+    position: sticky;
+    top: 77px;
+}
+.bank-title {
+    font-size: 16px;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+}
+.bank-subtitle {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+.bank-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+}
+.component-item {
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: grab;
+    font-size: 13px;
+    color: #e2e8f0;
+    transition: all 0.2s;
+    user-select: none;
+    touch-action: none;
+}
+.component-item:hover {
+    border-color: #5b9bd5;
+    background: #1e3a5f;
+    transform: translateX(-2px);
+}
+.component-item:active, .component-item.dragging {
+    cursor: grabbing;
+    opacity: 0.6;
+    transform: scale(0.95);
+}
+.component-item.used {
+    opacity: 0.3;
+    pointer-events: none;
+    border-color: #27ae60;
+    text-decoration: line-through;
+}
+#toast-container {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+.toast {
+    background: #1e293b;
+    border: 1px solid #475569;
+    border-radius: 10px;
+    padding: 16px 20px;
+    max-width: 440px;
+    min-width: 300px;
+    box-shadow: 0 8px 32px #0008;
+    animation: toastIn 0.3s ease;
+    pointer-events: auto;
+}
+.toast.correct { border-color: #27ae60; }
+.toast.incorrect { border-color: #e74c3c; }
+.toast-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.toast.correct .toast-title { color: #27ae60; }
+.toast.incorrect .toast-title { color: #e74c3c; }
+.toast-body {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+#mute-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #475569;
+    background: #1e293b;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+#mute-btn:hover { border-color: #5b9bd5; background: #1e3a5f; }
+.completion-hidden { display: none; }
+.completion-screen {
+    position: fixed;
+    inset: 0;
+    background: #0f172aee;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease;
+}
+.completion-card {
+    background: #1e293b;
+    border: 2px solid #27ae60;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 60px #27ae6033;
+}
+.completion-card h2 { font-size: 28px; color: #27ae60; margin-bottom: 12px; }
+.completion-card .specs { text-align: left; margin: 20px 0; padding: 16px; background: #0f172a; border-radius: 8px; font-size: 13px; line-height: 1.8; color: #94a3b8; }
+.completion-card .score-line { font-size: 18px; color: #5b9bd5; margin: 16px 0; font-weight: 600; }
+.completion-card button {
+    background: #5b9bd5;
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.completion-card button:hover { background: #4a8bc4; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@media (max-width: 768px) {
+    .game-container { flex-direction: column; padding: 12px; gap: 16px; }
+    .pc-case { grid-template-columns: 1fr; }
+    .component-bank { width: 100%; min-width: unset; max-height: none; position: static; }
+    .top-bar h1 { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="../index.html">← Back to Study Hub</a>
+    <h1>🖥️ Build-a-PC Puzzle</h1>
+    <span id="score-display" style="margin-left:auto;font-size:14px;color:#94a3b8;">Score: 0/12</span>
+</div>
+<div class="game-container">
+    <div class="pc-case" id="pc-case"></div>
+    <div class="component-bank" id="component-bank">
+        <h3 class="bank-title">🧩 Components</h3>
+        <p class="bank-subtitle">Drag components into the correct slots</p>
+        <div class="bank-items" id="bank-items"></div>
+    </div>
+</div>
+<div id="toast-container"></div>
+<div id="completion-screen" class="completion-hidden"></div>
+<button id="mute-btn" title="Toggle Sound">🔊</button>
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script>
+(function() {
+"use strict";
+
+const SLOTS = [
+    { id: "cpu-socket", label: "Slot 1", name: "CPU Socket", correct: "Intel Core i5 (LGA 1700)", fact: "LGA 1700 has 1700 contact points and supports 12th-14th gen Intel CPUs!" },
+    { id: "cpu-cooler", label: "Slot 2", name: "CPU Cooler", correct: "Tower Air Cooler (4-pin PWM)", fact: "PWM (Pulse Width Modulation) allows the motherboard to control fan speed dynamically." },
+    { id: "ram-a2", label: "Slot 3", name: "RAM Slot 1 (A2)", correct: "DDR5-5600 16GB DIMM", fact: "A2 + B2 placement enables dual-channel mode for double the memory bandwidth!" },
+    { id: "ram-b2", label: "Slot 4", name: "RAM Slot 2 (B2)", correct: "DDR5-5600 16GB DIMM", fact: "DDR5 starts at 4800 MT/s and can reach 8000+ MT/s with overclocking." },
+    { id: "gpu-slot", label: "Slot 5", name: "GPU Slot (PCIe x16)", correct: "RTX 4070 Graphics Card", fact: "PCIe x16 provides 16 lanes — enough bandwidth for the fastest GPUs." },
+    { id: "m2-slot", label: "Slot 6", name: "M.2 Slot", correct: "1TB NVMe SSD (PCIe 4.0)", fact: "NVMe SSDs can reach 7000 MB/s — 14x faster than SATA SSDs!" },
+    { id: "sata-port", label: "Slot 7", name: "SATA Port", correct: "2TB HDD (SATA III)", fact: "SATA III runs at 6 Gb/s — great for mass storage HDDs." },
+    { id: "atx-24pin", label: "Slot 8", name: "24-Pin ATX", correct: "24-Pin Main Power Cable", fact: "The 24-pin connector powers the motherboard's chipset, RAM slots, and PCIe slots." },
+    { id: "eps-8pin", label: "Slot 9", name: "8-Pin EPS", correct: "8-Pin CPU Power Cable", fact: "EPS provides dedicated 12V power directly to the CPU voltage regulators." },
+    { id: "fan-header", label: "Slot 10", name: "Case Fan Header", correct: "120mm Case Fan (3-pin)", fact: "3-pin fans use voltage control while 4-pin fans use PWM for speed regulation." },
+    { id: "front-panel", label: "Slot 11", name: "Front Panel Header", correct: "Power Button / LED Cables", fact: "These tiny connectors have polarity — LEDs won't light if reversed!" },
+    { id: "cmos-battery", label: "Slot 12", name: "CMOS Battery Slot", correct: "CR2032 Battery", fact: "The CR2032 keeps BIOS settings and the real-time clock running when powered off." }
+];
+
+const DISTRACTORS = [
+    { name: "DDR4-3200 8GB", feedback: "DDR4 and DDR5 are NOT interchangeable — different notch positions. This motherboard uses DDR5 slots only.", study: "Module - Desktop PC Hardware → RAM" },
+    { name: "IDE Ribbon Cable", feedback: "IDE is obsolete. Modern motherboards use SATA III (6 Gb/s) and M.2 NVMe slots.", study: "Module - Hard Drives & Storage" },
+    { name: "Molex to SATA Adapter", feedback: "Molex-to-SATA adapters are a known fire hazard. Always use native SATA power cables from the PSU.", study: "Module - Desktop PC Hardware → PSU" },
+    { name: "AMD Ryzen 7 (AM5)", feedback: "This is an LGA 1700 socket (Intel). AMD Ryzen uses AM5 socket. CPU and socket MUST match exactly.", study: "Module - Desktop PC Hardware → CPU" }
+];
+
+const WRONG_SLOT_FEEDBACK = {
+    "DDR4-3200 8GB": { msg: "DDR4 and DDR5 are NOT interchangeable — different notch positions. This motherboard uses DDR5 slots only.", study: "Module - Desktop PC Hardware → RAM" },
+    "IDE Ribbon Cable": { msg: "IDE is obsolete. Modern motherboards use SATA III (6 Gb/s) and M.2 NVMe slots.", study: "Module - Hard Drives & Storage" },
+    "Molex to SATA Adapter": { msg: "Molex-to-SATA adapters are a known fire hazard. Always use native SATA power cables from the PSU.", study: "Module - Desktop PC Hardware → PSU" },
+    "AMD Ryzen 7 (AM5)": { msg: "This is an LGA 1700 socket (Intel). AMD Ryzen uses AM5 socket. CPU and socket MUST match exactly.", study: "Module - Desktop PC Hardware → CPU" }
+};
+
+let score = 0;
+let firstTryCorrect = 0;
+let attemptedSlots = new Set();
+let filledSlots = new Set();
+let muted = false;
+let music = null;
+let draggedItem = null;
+let touchDragEl = null;
+let touchOffsetX = 0, touchOffsetY = 0;
+
+// --- Build UI ---
+function buildCase() {
+    const caseEl = document.getElementById("pc-case");
+    caseEl.innerHTML = "";
+    SLOTS.forEach(slot => {
+        const div = document.createElement("div");
+        div.className = "slot";
+        div.dataset.slotId = slot.id;
+        div.innerHTML = `<div class="slot-label">${slot.label} — ${slot.name}</div><div class="slot-name">Drop component here</div>`;
+        div.addEventListener("dragover", handleDragOver);
+        div.addEventListener("dragenter", handleDragEnter);
+        div.addEventListener("dragleave", handleDragLeave);
+        div.addEventListener("drop", handleDrop);
+        caseEl.appendChild(div);
+    });
+}
+
+function buildBank() {
+    const bankEl = document.getElementById("bank-items");
+    bankEl.innerHTML = "";
+    const items = [];
+    SLOTS.forEach(slot => {
+        if (!items.find(i => i.name === slot.correct)) {
+            items.push({ name: slot.correct, isDistractor: false });
+        } else {
+            items.push({ name: slot.correct, isDistractor: false, duplicate: true });
+        }
+    });
+    DISTRACTORS.forEach(d => items.push({ name: d.name, isDistractor: true }));
+    shuffle(items);
+    items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "component-item";
+        div.textContent = item.name;
+        div.dataset.componentName = item.name;
+        div.draggable = true;
+        div.addEventListener("dragstart", handleDragStart);
+        div.addEventListener("dragend", handleDragEnd);
+        div.addEventListener("touchstart", handleTouchStart, { passive: false });
+        div.addEventListener("touchmove", handleTouchMove, { passive: false });
+        div.addEventListener("touchend", handleTouchEnd);
+        bankEl.appendChild(div);
+    });
+}
+
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
+
+// --- Drag & Drop (Desktop) ---
+function handleDragStart(e) {
+    draggedItem = e.target.dataset.componentName;
+    e.target.classList.add("dragging");
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", draggedItem);
+}
+
+function handleDragEnd(e) {
+    e.target.classList.remove("dragging");
+    draggedItem = null;
+}
+
+function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }
+function handleDragEnter(e) { e.preventDefault(); e.currentTarget.classList.add("drag-over"); }
+function handleDragLeave(e) { e.currentTarget.classList.remove("drag-over"); }
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove("drag-over");
+    const slotId = e.currentTarget.dataset.slotId;
+    const componentName = e.dataTransfer.getData("text/plain") || draggedItem;
+    if (componentName && slotId) processPlacement(slotId, componentName);
+}
+
+// --- Touch Drag (Mobile) ---
+function handleTouchStart(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const target = e.currentTarget;
+    draggedItem = target.dataset.componentName;
+    const rect = target.getBoundingClientRect();
+    touchOffsetX = touch.clientX - rect.left;
+    touchOffsetY = touch.clientY - rect.top;
+    touchDragEl = document.createElement("div");
+    touchDragEl.className = "component-item";
+    touchDragEl.textContent = draggedItem;
+    touchDragEl.style.cssText = `position:fixed;z-index:9999;width:${rect.width}px;pointer-events:none;opacity:0.9;transform:scale(1.05);`;
+    touchDragEl.style.left = (touch.clientX - touchOffsetX) + "px";
+    touchDragEl.style.top = (touch.clientY - touchOffsetY) + "px";
+    document.body.appendChild(touchDragEl);
+    target.classList.add("dragging");
+}
+
+function handleTouchMove(e) {
+    e.preventDefault();
+    if (!touchDragEl) return;
+    const touch = e.touches[0];
+    touchDragEl.style.left = (touch.clientX - touchOffsetX) + "px";
+    touchDragEl.style.top = (touch.clientY - touchOffsetY) + "px";
+    document.querySelectorAll(".slot").forEach(s => s.classList.remove("drag-over"));
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    const slot = el && (el.closest ? el.closest(".slot") : null);
+    if (slot && !slot.classList.contains("filled")) slot.classList.add("drag-over");
+}
+
+function handleTouchEnd(e) {
+    if (touchDragEl) { touchDragEl.remove(); touchDragEl = null; }
+    document.querySelectorAll(".component-item.dragging").forEach(el => el.classList.remove("dragging"));
+    document.querySelectorAll(".slot.drag-over").forEach(s => s.classList.remove("drag-over"));
+    if (!draggedItem) return;
+    const touch = e.changedTouches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    const slot = el && (el.closest ? el.closest(".slot") : null);
+    if (slot && slot.dataset.slotId) {
+        processPlacement(slot.dataset.slotId, draggedItem);
+    }
+    draggedItem = null;
+}
+
+// --- Game Logic ---
+function processPlacement(slotId, componentName) {
+    if (filledSlots.has(slotId)) return;
+    const slot = SLOTS.find(s => s.id === slotId);
+    if (!slot) return;
+
+    const isFirstAttempt = !attemptedSlots.has(slotId);
+    attemptedSlots.add(slotId);
+
+    if (componentName === slot.correct) {
+        filledSlots.add(slotId);
+        score++;
+        if (isFirstAttempt) firstTryCorrect++;
+        updateSlotUI(slotId, componentName);
+        markComponentUsed(componentName);
+        showToast(true, "✅ Correct!", slot.fact);
+        playSFX("correct");
+        updateScore();
+        if (filledSlots.size === 12) setTimeout(showCompletion, 800);
+    } else {
+        let feedback = "";
+        let study = "";
+        if (WRONG_SLOT_FEEDBACK[componentName]) {
+            feedback = WRONG_SLOT_FEEDBACK[componentName].msg;
+            study = WRONG_SLOT_FEEDBACK[componentName].study;
+        } else {
+            feedback = `"${componentName}" doesn't belong in the ${slot.name}. Think about what connector/form factor this slot requires.`;
+            study = "Module - Desktop PC Hardware";
+        }
+        showToast(false, "❌ Incorrect!", feedback + (study ? `\n📖 Study: ${study}` : ""));
+        playSFX("wrong");
+    }
+}
+
+function updateSlotUI(slotId, componentName) {
+    const slotEl = document.querySelector(`.slot[data-slot-id="${slotId}"]`);
+    if (slotEl) {
+        slotEl.classList.add("filled");
+        slotEl.querySelector(".slot-name").textContent = componentName;
+    }
+}
+
+function markComponentUsed(componentName) {
+    const items = document.querySelectorAll(".component-item");
+    for (const item of items) {
+        if (item.dataset.componentName === componentName && !item.classList.contains("used")) {
+            item.classList.add("used");
+            item.draggable = false;
+            break;
+        }
+    }
+}
+
+function updateScore() {
+    document.getElementById("score-display").textContent = `Score: ${score}/12`;
+}
+
+// --- Toast ---
+function showToast(isCorrect, title, body) {
+    const container = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    toast.className = `toast ${isCorrect ? "correct" : "incorrect"}`;
+    toast.innerHTML = `<div class="toast-title">${title}</div><div class="toast-body">${body.replace(/\n/g, "<br>")}</div>`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = "0"; toast.style.transition = "opacity 0.3s"; setTimeout(() => toast.remove(), 300); }, isCorrect ? 2500 : 4000);
+}
+
+// --- Completion ---
+function showCompletion() {
+    const screen = document.getElementById("completion-screen");
+    screen.className = "completion-screen";
+    screen.innerHTML = `
+        <div class="completion-card">
+            <h2>🎉 PC Build Complete!</h2>
+            <p style="color:#94a3b8;">You've successfully assembled a modern gaming PC!</p>
+            <div class="specs">
+                <strong style="color:#5b9bd5;">Build Specs:</strong><br>
+                • CPU: Intel Core i5 (LGA 1700)<br>
+                • Cooler: Tower Air Cooler (4-pin PWM)<br>
+                • RAM: 32GB DDR5-5600 (2×16GB, Dual Channel)<br>
+                • GPU: RTX 4070 Graphics Card<br>
+                • Storage: 1TB NVMe SSD + 2TB HDD<br>
+                • PSU: Properly cabled (24-pin + 8-pin EPS)<br>
+                • Extras: 120mm fan, front panel I/O, CMOS battery
+            </div>
+            <div class="score-line">First-Try Accuracy: ${firstTryCorrect}/12</div>
+            <button onclick="resetGame()">🔄 Build Again</button>
+        </div>
+    `;
+}
+
+window.resetGame = function() {
+    score = 0;
+    firstTryCorrect = 0;
+    attemptedSlots.clear();
+    filledSlots.clear();
+    document.getElementById("completion-screen").className = "completion-hidden";
+    updateScore();
+    buildCase();
+    buildBank();
+};
+
+// --- Audio ---
+function initMusic() {
+    try {
+        music = new LofiChillMusic();
+        music.start(() => { if (!muted && music) music.start(); });
+    } catch(e) { console.warn("Music init failed", e); }
+}
+
+function playSFX(type) {
+    if (muted) return;
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        if (type === "correct") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.4);
+        } else {
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(200, ctx.currentTime);
+            osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.3);
+        }
+    } catch(e) {}
+}
+
+document.getElementById("mute-btn").addEventListener("click", () => {
+    muted = !muted;
+    document.getElementById("mute-btn").textContent = muted ? "🔇" : "🔊";
+    if (muted && music) { music.stop(); }
+    else if (!muted) { initMusic(); }
+});
+
+// Auto-start music on first interaction
+let musicStarted = false;
+document.addEventListener("click", function startMusicOnce() {
+    if (!musicStarted && !muted) { initMusic(); musicStarted = true; }
+}, { once: true });
+document.addEventListener("touchstart", function startMusicOnceTouch() {
+    if (!musicStarted && !muted) { initMusic(); musicStarted = true; }
+}, { once: true });
+
+// --- Init ---
+buildCase();
+buildBank();
+})();
+</script>
+</body>
+</html>

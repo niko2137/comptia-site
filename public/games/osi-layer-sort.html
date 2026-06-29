@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>OSI Layer Sort - CompTIA A+ Study Game</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0f172a;font-family:system-ui,-apple-system,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
+a{color:#5b9bd5;text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* Top bar */
+.top-bar{background:#1e293b;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #334155;position:sticky;top:0;z-index:100;}
+.top-bar a{font-size:14px;font-weight:500;}
+.top-bar .title{font-size:16px;font-weight:700;color:#5b9bd5;}
+.top-bar .progress{font-size:13px;color:#94a3b8;}
+
+/* Main game area */
+.game-container{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px;max-width:800px;width:100%;margin:0 auto;gap:14px;}
+
+/* Current item card */
+.item-card{background:#1e293b;border:2px solid #5b9bd5;border-radius:12px;padding:20px 28px;text-align:center;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(91,155,213,0.15);transition:all 0.3s ease;}
+.item-card.correct{border-color:#27ae60;box-shadow:0 4px 24px rgba(39,174,96,0.3);}
+.item-card.incorrect{border-color:#e74c3c;box-shadow:0 4px 24px rgba(231,76,60,0.3);animation:shake 0.4s ease;}
+.item-card .item-name{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;}
+.item-card .item-hint{font-size:14px;color:#94a3b8;font-style:italic;}
+.item-card .item-instruction{font-size:12px;color:#64748b;margin-top:10px;}
+
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+/* Score display */
+.score-bar{display:flex;gap:20px;font-size:14px;color:#94a3b8;align-items:center;}
+.score-bar span{font-weight:600;color:#5b9bd5;}
+
+/* Layer buckets */
+.layers-container{width:100%;display:flex;flex-direction:column;gap:6px;}
+.layer-bucket{border-radius:8px;padding:10px 14px;cursor:pointer;transition:all 0.15s ease;border:2px solid transparent;min-height:48px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.layer-bucket:hover{transform:scale(1.01);border-color:rgba(255,255,255,0.3);filter:brightness(1.2);}
+.layer-bucket:active{transform:scale(0.99);}
+.layer-bucket .layer-label{font-size:13px;font-weight:700;white-space:nowrap;min-width:160px;line-height:26px;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+.layer-bucket .placed-items{display:flex;flex-wrap:wrap;gap:4px;}
+.layer-bucket .placed-item{background:rgba(0,0,0,0.3);padding:3px 8px;border-radius:4px;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,0.2);}
+
+/* Feedback overlay */
+.feedback{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1e293b;border-radius:16px;padding:28px 32px;text-align:center;max-width:400px;width:90%;z-index:200;box-shadow:0 8px 40px rgba(0,0,0,0.6);animation:fadeIn 0.2s ease;}
+.feedback.correct-fb{border:2px solid #27ae60;}
+.feedback.incorrect-fb{border:2px solid #e74c3c;}
+.feedback h3{font-size:18px;margin-bottom:10px;}
+.feedback p{font-size:14px;color:#cbd5e1;line-height:1.5;margin-bottom:8px;}
+.feedback .study-ref{font-size:12px;color:#94a3b8;margin-top:10px;}
+.feedback button{margin-top:14px;padding:10px 24px;background:#5b9bd5;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+.feedback button:hover{background:#4a8bc4;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-50%) scale(0.95);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+
+/* Results screen */
+.results{background:#1e293b;border-radius:16px;padding:30px;width:100%;max-width:600px;margin:20px auto;text-align:center;}
+.results h2{font-size:26px;color:#5b9bd5;margin-bottom:6px;}
+.results .big-score{font-size:48px;font-weight:800;color:#27ae60;margin:10px 0;}
+.results .mnemonic{background:#0f172a;border-radius:8px;padding:14px;margin:16px 0;font-size:13px;color:#94a3b8;line-height:1.6;}
+.results .mnemonic strong{color:#5b9bd5;}
+.results .layer-breakdown{text-align:left;margin:16px 0;}
+.results .layer-breakdown .row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:4px;margin-bottom:4px;font-size:13px;}
+.results .mistakes{text-align:left;margin:16px 0;max-height:200px;overflow-y:auto;}
+.results .mistake-item{background:#0f172a;border-radius:6px;padding:10px;margin-bottom:6px;font-size:12px;color:#cbd5e1;border-left:3px solid #e74c3c;}
+.results button{margin-top:16px;padding:12px 32px;background:#5b9bd5;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;}
+.results button:hover{background:#4a8bc4;}
+
+/* Mute button */
+.mute-btn{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#1e293b;border:2px solid #334155;color:#fff;font-size:20px;cursor:pointer;z-index:300;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.mute-btn:hover{border-color:#5b9bd5;background:#2d3a4f;}
+
+/* Start screen */
+.start-screen{text-align:center;padding:40px 20px;}
+.start-screen h1{font-size:28px;color:#5b9bd5;margin-bottom:12px;}
+.start-screen p{color:#94a3b8;font-size:15px;line-height:1.6;max-width:500px;margin:0 auto 24px;}
+.start-screen button{padding:14px 40px;background:#5b9bd5;color:#fff;border:none;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer;}
+.start-screen button:hover{background:#4a8bc4;}
+
+/* Responsive */
+@media(max-width:600px){
+  .layer-bucket .layer-label{min-width:120px;font-size:11px;}
+  .item-card .item-name{font-size:18px;}
+  .item-card{padding:16px 20px;}
+  .game-container{padding:10px;}
+  .layers-container{gap:4px;}
+  .layer-bucket{padding:8px 10px;min-height:40px;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html">← Back to Study Hub</a>
+  <span class="title">OSI Layer Sort</span>
+  <span class="progress" id="progress-text"></span>
+</div>
+
+<div class="game-container" id="game-container">
+  <div class="start-screen" id="start-screen">
+    <h1>🧩 OSI Layer Sort</h1>
+    <p>Sort networking protocols, devices, and data units into the correct OSI model layer. 35 items to place — take your time and learn!</p>
+    <p style="font-size:13px;color:#64748b;">Tap the correct layer bucket to place each item.</p>
+    <button onclick="startGame()">Start Puzzle</button>
+  </div>
+</div>
+
+<button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Toggle sound">🔊</button>
+
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script>
+// ===== GAME DATA =====
+const LAYERS = [
+  {num:7, name:'Application', color:'#8b5cf6'},
+  {num:6, name:'Presentation', color:'#6366f1'},
+  {num:5, name:'Session', color:'#3b82f6'},
+  {num:4, name:'Transport', color:'#06b6d4'},
+  {num:3, name:'Network', color:'#10b981'},
+  {num:2, name:'Data Link', color:'#f59e0b'},
+  {num:1, name:'Physical', color:'#ef4444'}
+];
+
+const ITEMS = [
+  {name:'HTTP', hint:'Web browsing protocol', layer:7, explain:'HTTP operates at the Application layer, providing web page transfer between browsers and servers.'},
+  {name:'HTTPS', hint:'Encrypted web browsing', layer:7, explain:'HTTPS is Application layer — it\'s HTTP with encryption for secure web communication.'},
+  {name:'FTP', hint:'File transfer', layer:7, explain:'FTP is an Application layer protocol used for transferring files between systems.'},
+  {name:'SSH', hint:'Encrypted remote access', layer:7, explain:'SSH provides encrypted terminal access at the Application layer.'},
+  {name:'DNS', hint:'Name resolution', layer:7, explain:'DNS resolves domain names to IP addresses at the Application layer.'},
+  {name:'SMTP', hint:'Email sending', layer:7, explain:'SMTP is an Application layer protocol for sending email messages.'},
+  {name:'DHCP', hint:'IP address assignment', layer:7, explain:'DHCP automatically assigns IP addresses and operates at the Application layer.'},
+  {name:'TLS/SSL encryption', hint:'Encrypts data for transmission', layer:6, explain:'TLS/SSL handles encryption and decryption at the Presentation layer.'},
+  {name:'JPEG compression', hint:'Image format/compression', layer:6, explain:'JPEG is a data format/compression handled at the Presentation layer.'},
+  {name:'ASCII encoding', hint:'Text character encoding', layer:6, explain:'ASCII encoding translates characters into data formats at the Presentation layer.'},
+  {name:'NetBIOS', hint:'Network naming/sessions', layer:5, explain:'NetBIOS manages network sessions and naming at the Session layer.'},
+  {name:'RPC (Remote Procedure Call)', hint:'Remote program execution', layer:5, explain:'RPC establishes and manages sessions for remote program execution at the Session layer.'},
+  {name:'SMB sessions', hint:'File sharing sessions', layer:5, explain:'SMB manages file sharing sessions between computers at the Session layer.'},
+  {name:'TCP', hint:'Reliable, connection-oriented', layer:4, explain:'TCP provides reliable, ordered delivery at the Transport layer using connection-oriented communication.'},
+  {name:'UDP', hint:'Fast, connectionless', layer:4, explain:'UDP provides fast, connectionless delivery at the Transport layer without guaranteeing delivery.'},
+  {name:'Port Numbers', hint:'Identifies applications', layer:4, explain:'Port numbers identify specific applications/services and are a Transport layer concept.'},
+  {name:'Segments', hint:'Layer 4 data unit', layer:4, explain:'Segments are the Protocol Data Unit (PDU) at the Transport layer.'},
+  {name:'IP Addresses', hint:'Logical addressing', layer:3, explain:'IP addresses provide logical addressing for routing at the Network layer.'},
+  {name:'Router', hint:'Routes between networks', layer:3, explain:'Routers operate at the Network layer, forwarding packets between different networks using IP addresses.'},
+  {name:'ICMP (ping)', hint:'Diagnostics/error reporting', layer:3, explain:'ICMP provides diagnostic and error reporting (like ping) at the Network layer.'},
+  {name:'Packets', hint:'Layer 3 data unit', layer:3, explain:'Packets are the Protocol Data Unit (PDU) at the Network layer.'},
+  {name:'ARP', hint:'IP to MAC resolution', layer:3, explain:'ARP resolves IP addresses to MAC addresses and operates at the Network layer boundary.'},
+  {name:'Switch', hint:'Forwards using MAC addresses', layer:2, explain:'Switches forward frames using MAC addresses at the Data Link layer.'},
+  {name:'MAC Addresses', hint:'Physical addressing', layer:2, explain:'MAC addresses are physical/hardware addresses used at the Data Link layer.'},
+  {name:'Frames', hint:'Layer 2 data unit', layer:2, explain:'Frames are the Protocol Data Unit (PDU) at the Data Link layer.'},
+  {name:'Ethernet (802.3)', hint:'Wired LAN standard', layer:2, explain:'Ethernet (IEEE 802.3) is a Data Link layer standard for wired LANs.'},
+  {name:'Wi-Fi (802.11)', hint:'Wireless LAN standard', layer:2, explain:'Wi-Fi (IEEE 802.11) defines wireless Data Link layer standards.'},
+  {name:'Hub', hint:'Broadcasts to all ports', layer:1, explain:'Hubs operate at the Physical layer — they simply repeat electrical signals to all ports.'},
+  {name:'Cables (Cat 6, fiber)', hint:'Physical transmission media', layer:1, explain:'Cables are Physical layer media that carry electrical or light signals.'},
+  {name:'Patch Panel', hint:'Cable termination point', layer:1, explain:'Patch panels are Physical layer infrastructure for cable management and termination.'},
+  {name:'Bits', hint:'Layer 1 data unit (1s and 0s)', layer:1, explain:'Bits (1s and 0s) are the data unit at the Physical layer.'},
+  {name:'Repeater', hint:'Regenerates signal', layer:1, explain:'Repeaters regenerate electrical signals at the Physical layer to extend transmission distance.'},
+  {name:'Radio Frequencies', hint:'Wireless transmission', layer:1, explain:'Radio frequencies are Physical layer transmission media for wireless communication.'},
+  {name:'Voltages/Signals', hint:'Electrical signaling', layer:1, explain:'Voltages and electrical signals define how bits are represented at the Physical layer.'},
+  {name:'NIC (physical)', hint:'Hardware network interface', layer:1, explain:'The physical NIC hardware interfaces with the transmission medium at the Physical layer.'}
+];
+
+// ===== GAME STATE =====
+let shuffledItems = [];
+let currentIndex = 0;
+let score = 0;
+let results = [];
+let placedInLayers = {7:[],6:[],5:[],4:[],3:[],2:[],1:[]};
+let gameActive = false;
+let feedbackVisible = false;
+
+// ===== AUDIO =====
+let music = null;
+let muted = false;
+let musicLooping = false;
+let audioCtx = null;
+
+function initMusic() {
+  music = new LofiChillMusic();
+  loopMusic();
+}
+
+function loopMusic() {
+  if (muted || !gameActive) { musicLooping = false; return; }
+  musicLooping = true;
+  music.start(() => { if (!muted && gameActive) loopMusic(); else musicLooping = false; });
+}
+
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+  if (muted) { if (music) music.stop(); musicLooping = false; }
+  else if (gameActive && !musicLooping) loopMusic();
+}
+
+function playSFX(type) {
+  if (muted) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if (type === 'correct') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start(); osc.stop(ctx.currentTime + 0.4);
+    } else {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.start(); osc.stop(ctx.currentTime + 0.35);
+    }
+    setTimeout(() => ctx.close(), 500);
+  } catch(e) {}
+}
+
+// ===== GAME LOGIC =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function startGame() {
+  shuffledItems = shuffle(ITEMS);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  placedInLayers = {7:[],6:[],5:[],4:[],3:[],2:[],1:[]};
+  gameActive = true;
+  feedbackVisible = false;
+  initMusic();
+  renderGame();
+}
+
+function renderGame() {
+  const container = document.getElementById('game-container');
+  container.innerHTML = '';
+
+  // Score bar
+  const scoreBar = document.createElement('div');
+  scoreBar.className = 'score-bar';
+  scoreBar.innerHTML = `Score: <span id="score-display">${score}/${shuffledItems.length}</span>`;
+  container.appendChild(scoreBar);
+
+  // Item card
+  const card = document.createElement('div');
+  card.className = 'item-card';
+  card.id = 'item-card';
+  if (currentIndex < shuffledItems.length) {
+    const item = shuffledItems[currentIndex];
+    card.innerHTML = `<div class="item-name">${item.name}</div><div class="item-hint">"${item.hint}"</div><div class="item-instruction">👆 Tap the correct layer below</div>`;
+  }
+  container.appendChild(card);
+
+  // Layers
+  const layersDiv = document.createElement('div');
+  layersDiv.className = 'layers-container';
+  LAYERS.forEach(layer => {
+    const bucket = document.createElement('div');
+    bucket.className = 'layer-bucket';
+    bucket.style.background = layer.color + '22';
+    bucket.style.borderColor = layer.color + '44';
+    bucket.onclick = () => handleLayerClick(layer.num);
+
+    let placedHTML = '';
+    if (placedInLayers[layer.num].length > 0) {
+      placedHTML = `<div class="placed-items">${placedInLayers[layer.num].map(n => `<span class="placed-item">${n}</span>`).join('')}</div>`;
+    }
+
+    bucket.innerHTML = `<div class="layer-label" style="color:${layer.color}">Layer ${layer.num} – ${layer.name}</div>${placedHTML}`;
+    layersDiv.appendChild(bucket);
+  });
+  container.appendChild(layersDiv);
+
+  updateProgress();
+}
+
+function updateProgress() {
+  document.getElementById('progress-text').textContent = currentIndex < shuffledItems.length ? `Item ${currentIndex + 1} of ${shuffledItems.length}` : 'Complete!';
+}
+
+function handleLayerClick(chosenLayer) {
+  if (!gameActive || feedbackVisible || currentIndex >= shuffledItems.length) return;
+
+  const item = shuffledItems[currentIndex];
+  const correct = item.layer === chosenLayer;
+
+  if (correct) {
+    score++;
+    playSFX('correct');
+    placedInLayers[item.layer].push(item.name);
+    results.push({item: item.name, correct: true, chosen: chosenLayer, actual: item.layer});
+    showCorrectFeedback(item);
+  } else {
+    playSFX('wrong');
+    placedInLayers[item.layer].push(item.name);
+    results.push({item: item.name, correct: false, chosen: chosenLayer, actual: item.layer});
+    showIncorrectFeedback(item, chosenLayer);
+  }
+}
+
+function showCorrectFeedback(item) {
+  feedbackVisible = true;
+  const card = document.getElementById('item-card');
+  card.classList.add('correct');
+
+  const layerInfo = LAYERS.find(l => l.num === item.layer);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'fb-overlay';
+  document.body.appendChild(overlay);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback correct-fb';
+  fb.id = 'fb-box';
+  fb.innerHTML = `<h3 style="color:#27ae60">✅ Correct!</h3><p><strong>${item.name}</strong> → Layer ${item.layer} (${layerInfo.name})</p><p style="font-size:13px;color:#94a3b8;">${item.explain}</p><button onclick="nextItem()">Continue</button>`;
+  document.body.appendChild(fb);
+}
+
+function showIncorrectFeedback(item, chosenLayer) {
+  feedbackVisible = true;
+  const card = document.getElementById('item-card');
+  card.classList.add('incorrect');
+
+  const correctLayer = LAYERS.find(l => l.num === item.layer);
+  const chosenLayerInfo = LAYERS.find(l => l.num === chosenLayer);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'fb-overlay';
+  document.body.appendChild(overlay);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback incorrect-fb';
+  fb.id = 'fb-box';
+  fb.innerHTML = `<h3 style="color:#e74c3c">❌ Not Quite</h3><p><strong>${item.name}</strong> belongs at <span style="color:${correctLayer.color}">Layer ${item.layer} (${correctLayer.name})</span>, not Layer ${chosenLayer} (${chosenLayerInfo.name})</p><p style="font-size:13px;color:#cbd5e1;">${item.explain}</p><p class="study-ref">📖 Study: Networking Fundamentals → The OSI Model</p><button onclick="nextItem()">Continue</button>`;
+  document.body.appendChild(fb);
+}
+
+function nextItem() {
+  feedbackVisible = false;
+  const overlay = document.getElementById('fb-overlay');
+  const fb = document.getElementById('fb-box');
+  if (overlay) overlay.remove();
+  if (fb) fb.remove();
+
+  currentIndex++;
+  if (currentIndex >= shuffledItems.length) {
+    showResults();
+  } else {
+    renderGame();
+  }
+}
+
+function showResults() {
+  gameActive = false;
+  if (music) music.stop();
+  musicLooping = false;
+
+  const container = document.getElementById('game-container');
+  document.getElementById('progress-text').textContent = 'Complete!';
+
+  // Per-layer stats
+  let layerStats = {};
+  LAYERS.forEach(l => { layerStats[l.num] = {total: 0, correct: 0}; });
+  results.forEach(r => {
+    layerStats[r.actual].total++;
+    if (r.correct) layerStats[r.actual].correct++;
+  });
+
+  const mistakes = results.filter(r => !r.correct);
+  const pct = Math.round((score / shuffledItems.length) * 100);
+
+  let breakdownHTML = '';
+  LAYERS.forEach(l => {
+    const s = layerStats[l.num];
+    const lpct = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+    const barColor = lpct === 100 ? '#27ae60' : lpct >= 50 ? '#f59e0b' : '#e74c3c';
+    breakdownHTML += `<div class="row" style="background:${l.color}15"><span style="color:${l.color}">L${l.num} ${l.name}</span><span style="color:${barColor}">${s.correct}/${s.total} (${lpct}%)</span></div>`;
+  });
+
+  let mistakesHTML = '';
+  if (mistakes.length > 0) {
+    mistakesHTML = '<h4 style="color:#e74c3c;margin:12px 0 8px;font-size:14px;">Incorrect Placements:</h4><div class="mistakes">';
+    mistakes.forEach(m => {
+      const correctL = LAYERS.find(l => l.num === m.actual);
+      const chosenL = LAYERS.find(l => l.num === m.chosen);
+      mistakesHTML += `<div class="mistake-item"><strong>${m.item}</strong> — You chose Layer ${m.chosen} (${chosenL.name}), correct is <span style="color:${correctL.color}">Layer ${m.actual} (${correctL.name})</span></div>`;
+    });
+    mistakesHTML += '</div>';
+  }
+
+  container.innerHTML = `
+    <div class="results">
+      <h2>🎉 Puzzle Complete!</h2>
+      <div class="big-score">${score}/${shuffledItems.length}</div>
+      <p style="color:#94a3b8;font-size:15px;">${pct}% Accuracy</p>
+      <div class="mnemonic">
+        <strong>Remember the layers (7→1):</strong><br>
+        "<strong>A</strong>ll <strong>P</strong>eople <strong>S</strong>eem <strong>T</strong>o <strong>N</strong>eed <strong>D</strong>ata <strong>P</strong>rocessing"<br>
+        <span style="font-size:11px;color:#64748b;">Application · Presentation · Session · Transport · Network · Data Link · Physical</span>
+      </div>
+      <div class="layer-breakdown">
+        <h4 style="color:#5b9bd5;margin-bottom:8px;font-size:14px;">Per-Layer Breakdown:</h4>
+        ${breakdownHTML}
+      </div>
+      ${mistakesHTML}
+      <button onclick="startGame()">🔄 Play Again</button>
+    </div>`;
+}
+
+// Keyboard shortcut: numbers 1-7 to select layers
+document.addEventListener('keydown', (e) => {
+  if (!gameActive || feedbackVisible) {
+    if (feedbackVisible && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); nextItem(); }
+    return;
+  }
+  const num = parseInt(e.key);
+  if (num >= 1 && num <= 7) handleLayerClick(num);
+});
+</script>
+</body>
+</html>
