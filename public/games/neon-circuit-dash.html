@@ -1734,48 +1734,52 @@ function devMaxStats() {
 }
 
 // ========== SIDE PANEL & AUDIO CONTROLS ==========
-let ncdMusicMuted = false;
-let ncdSfxMuted = false;
+let ncdMusicMuted = true;  // Music starts OFF
+let ncdSfxMuted = false;   // SFX starts ON
+let _ncdMusicInstance = null;
 
 function ncdTogglePause() {
     if (gameState === 'playing') { pauseGame(); document.getElementById('ncd-pause').textContent = '▶ RESUME'; }
     else if (gameState === 'paused') { resumeGame(); document.getElementById('ncd-pause').textContent = '⏸ PAUSE'; }
 }
 
+function startMusicLoop() {
+    if (ncdMusicMuted || !_ncdMusicInstance) return;
+    _ncdMusicInstance.start(() => { startMusicLoop(); }); // Loop
+}
+
 function ncdToggleMusic() {
     ncdMusicMuted = !ncdMusicMuted;
-    document.getElementById('ncd-music').textContent = ncdMusicMuted ? '🎵 MUSIC OFF' : '🎵 MUSIC';
+    document.getElementById('ncd-music').textContent = ncdMusicMuted ? '🎵 MUSIC OFF' : '🎵 MUSIC ON';
     document.getElementById('ncd-music').style.opacity = ncdMusicMuted ? '0.5' : '1';
-    if (ncdMusicMuted) { stopNcdMusic(); }
-    else { startNcdMusic(); }
+    if (ncdMusicMuted) { if (_ncdMusicInstance) _ncdMusicInstance.stop(); }
+    else { startMusicLoop(); }
 }
 
 function ncdToggleSfx() {
     ncdSfxMuted = !ncdSfxMuted;
-    document.getElementById('ncd-sfx').textContent = ncdSfxMuted ? '🔇 SFX OFF' : '🔊 SFX';
+    document.getElementById('ncd-sfx').textContent = ncdSfxMuted ? '🔇 SFX OFF' : '🔊 SFX ON';
     document.getElementById('ncd-sfx').style.opacity = ncdSfxMuted ? '0.5' : '1';
 }
 
 function ncdMuteAll() {
     const allMuted = ncdMusicMuted && ncdSfxMuted;
     if (allMuted) {
-        // Unmute both
         ncdMusicMuted = false; ncdSfxMuted = false;
-        document.getElementById('ncd-music').textContent = '🎵 MUSIC';
+        document.getElementById('ncd-music').textContent = '🎵 MUSIC ON';
         document.getElementById('ncd-music').style.opacity = '1';
-        document.getElementById('ncd-sfx').textContent = '🔊 SFX';
+        document.getElementById('ncd-sfx').textContent = '🔊 SFX ON';
         document.getElementById('ncd-sfx').style.opacity = '1';
         document.getElementById('ncd-muteall').textContent = '🔇 MUTE ALL';
-        startNcdMusic();
+        startMusicLoop();
     } else {
-        // Mute both
         ncdMusicMuted = true; ncdSfxMuted = true;
         document.getElementById('ncd-music').textContent = '🎵 MUSIC OFF';
         document.getElementById('ncd-music').style.opacity = '0.5';
         document.getElementById('ncd-sfx').textContent = '🔇 SFX OFF';
         document.getElementById('ncd-sfx').style.opacity = '0.5';
         document.getElementById('ncd-muteall').textContent = '🔊 UNMUTE ALL';
-        stopNcdMusic();
+        if (_ncdMusicInstance) _ncdMusicInstance.stop();
     }
 }
 function updateNcdPanel() {
@@ -1790,111 +1794,24 @@ function updateNcdPanel() {
 }
 setInterval(updateNcdPanel, 500);
 
-// Retro arcade music - Web Audio API direct synthesis (no CPlayer needed)
-let _ncdMusicCtx = null;
-let _ncdMusicNodes = [];
-let _ncdMusicInterval = null;
-
-function startNcdMusic() {
-    if (_ncdMusicCtx || ncdMusicMuted) return;
-    try {
-        _ncdMusicCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const master = _ncdMusicCtx.createGain();
-        master.gain.value = 0.25;
-        master.connect(_ncdMusicCtx.destination);
-
-        // Bass pattern (driving 8th notes, ~140 BPM)
-        const bpm = 140;
-        const eighth = 60 / bpm / 2;
-        const bassNotes = [55, 55, 55, 55, 55, 55, 55, 65.41, 49, 49, 49, 49, 49, 49, 49, 55];
-        const leadNotes = [
-            220, 277, 330, 220, 277, 330, 392, 330,
-            196, 247, 294, 196, 247, 294, 330, 294
-        ];
-
-        let step = 0;
-        function playStep() {
-            if (!_ncdMusicCtx || ncdMusicMuted) return;
-            const now = _ncdMusicCtx.currentTime;
-
-            // Bass (square wave)
-            const bassOsc = _ncdMusicCtx.createOscillator();
-            const bassGain = _ncdMusicCtx.createGain();
-            bassOsc.type = 'square';
-            bassOsc.frequency.setValueAtTime(bassNotes[step % bassNotes.length], now);
-            bassGain.gain.setValueAtTime(0.15, now);
-            bassGain.gain.exponentialRampToValueAtTime(0.001, now + eighth * 0.8);
-            bassOsc.connect(bassGain);
-            bassGain.connect(master);
-            bassOsc.start(now);
-            bassOsc.stop(now + eighth * 0.9);
-
-            // Lead arpeggio (sawtooth)
-            const leadOsc = _ncdMusicCtx.createOscillator();
-            const leadGain = _ncdMusicCtx.createGain();
-            leadOsc.type = 'sawtooth';
-            leadOsc.frequency.setValueAtTime(leadNotes[step % leadNotes.length], now);
-            leadGain.gain.setValueAtTime(0.08, now);
-            leadGain.gain.exponentialRampToValueAtTime(0.001, now + eighth * 0.6);
-            leadOsc.connect(leadGain);
-            leadGain.connect(master);
-            leadOsc.start(now);
-            leadOsc.stop(now + eighth * 0.7);
-
-            // Kick on beats 0, 4, 8, 12
-            if (step % 4 === 0) {
-                const kickOsc = _ncdMusicCtx.createOscillator();
-                const kickGain = _ncdMusicCtx.createGain();
-                kickOsc.type = 'sine';
-                kickOsc.frequency.setValueAtTime(150, now);
-                kickOsc.frequency.exponentialRampToValueAtTime(30, now + 0.1);
-                kickGain.gain.setValueAtTime(0.3, now);
-                kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-                kickOsc.connect(kickGain);
-                kickGain.connect(master);
-                kickOsc.start(now);
-                kickOsc.stop(now + 0.15);
-            }
-
-            // Hi-hat on off-beats
-            if (step % 2 === 1) {
-                const bufSize = _ncdMusicCtx.sampleRate * 0.05;
-                const buf = _ncdMusicCtx.createBuffer(1, bufSize, _ncdMusicCtx.sampleRate);
-                const data = buf.getChannelData(0);
-                for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-                const noise = _ncdMusicCtx.createBufferSource();
-                const noiseGain = _ncdMusicCtx.createGain();
-                const noiseFilter = _ncdMusicCtx.createBiquadFilter();
-                noise.buffer = buf;
-                noiseFilter.type = 'highpass';
-                noiseFilter.frequency.value = 8000;
-                noiseGain.gain.setValueAtTime(0.06, now);
-                noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-                noise.connect(noiseFilter);
-                noiseFilter.connect(noiseGain);
-                noiseGain.connect(master);
-                noise.start(now);
-                noise.stop(now + 0.05);
-            }
-
-            step++;
+// Load music class from external file
+(function(){
+    const s = document.createElement('script');
+    s.src = '../audio/games/Neon-Circuit-Dash-Music.js';
+    s.onload = () => {
+        if (typeof NeonCircuitMusic !== 'undefined') {
+            _ncdMusicInstance = new NeonCircuitMusic();
+            // Music starts OFF - user must click 🎵 MUSIC button to enable
         }
+    };
+    s.onerror = () => {};
+    document.head.appendChild(s);
+})();
 
-        _ncdMusicInterval = setInterval(playStep, eighth * 1000);
-        playStep(); // Start immediately
-    } catch(e) { console.warn('Music failed:', e); }
-}
-
-function stopNcdMusic() {
-    if (_ncdMusicInterval) { clearInterval(_ncdMusicInterval); _ncdMusicInterval = null; }
-    if (_ncdMusicCtx) { _ncdMusicCtx.close().catch(()=>{}); _ncdMusicCtx = null; }
-}
-
-// Start music on first user click
-document.addEventListener('click', function startMusicOnce() {
-    if (!ncdMusicMuted) startNcdMusic();
-    document.removeEventListener('click', startMusicOnce);
-}, { once: true });
+// Set initial button states (music OFF, SFX ON)
+document.getElementById('ncd-music').textContent = '🎵 MUSIC OFF';
+document.getElementById('ncd-music').style.opacity = '0.5';
+document.getElementById('ncd-sfx').textContent = '🔊 SFX ON';
 
 // ========== INIT ==========
 initBgParticles();

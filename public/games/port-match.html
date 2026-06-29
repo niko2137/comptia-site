@@ -846,6 +846,58 @@
         document.body.insertAdjacentHTML('beforeend', GameSounds.createControlsUI());
         GameSounds.initControls();
     });
+
+    // ===== MUSIC SYSTEM =====
+    let _pmMusicInstance = null;
+    let _pmMusicMuted = true; // Music starts OFF
+
+    function startPmMusicLoop() {
+        if (_pmMusicMuted || !_pmMusicInstance) return;
+        _pmMusicInstance.start(() => { startPmMusicLoop(); });
+    }
+
+    // Load music
+    (function(){
+        const s = document.createElement('script');
+        s.src = '../audio/games/Port-Match-Music.js';
+        s.onload = () => {
+            if (typeof PortMatchMusic !== 'undefined') {
+                _pmMusicInstance = new PortMatchMusic();
+            }
+        };
+        s.onerror = () => {};
+        document.head.appendChild(s);
+    })();
+
+    // Add music/sfx control panel
+    document.addEventListener('DOMContentLoaded', () => {
+        const panel = document.createElement('div');
+        panel.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:9999;display:flex;gap:8px;';
+        panel.innerHTML = `
+            <button id="pm-music-btn" onclick="togglePmMusic()" style="padding:8px 14px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:0.8rem;cursor:pointer;opacity:0.5;">🎵 Music OFF</button>
+            <button id="pm-sfx-btn" onclick="togglePmSfx()" style="padding:8px 14px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:0.8rem;cursor:pointer;">🔊 SFX ON</button>
+        `;
+        document.body.appendChild(panel);
+    });
+
+    function togglePmMusic() {
+        _pmMusicMuted = !_pmMusicMuted;
+        const btn = document.getElementById('pm-music-btn');
+        btn.textContent = _pmMusicMuted ? '🎵 Music OFF' : '🎵 Music ON';
+        btn.style.opacity = _pmMusicMuted ? '0.5' : '1';
+        btn.style.color = _pmMusicMuted ? '#94a3b8' : '#e2e8f0';
+        if (_pmMusicMuted) { if (_pmMusicInstance) _pmMusicInstance.stop(); }
+        else { startPmMusicLoop(); }
+    }
+
+    function togglePmSfx() {
+        if (window.GameSounds) GameSounds.enabled = !GameSounds.enabled;
+        const btn = document.getElementById('pm-sfx-btn');
+        const on = window.GameSounds ? GameSounds.enabled : true;
+        btn.textContent = on ? '🔊 SFX ON' : '🔇 SFX OFF';
+        btn.style.opacity = on ? '1' : '0.5';
+        btn.style.color = on ? '#e2e8f0' : '#94a3b8';
+    }
     </script>
 </body>
 </html>
