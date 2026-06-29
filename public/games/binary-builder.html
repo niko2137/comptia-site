@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Builder | CompTIA Study Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; }
+        .top-bar { background: #1e293b; padding: 12px 20px; display: flex; align-items: center; border-bottom: 1px solid #334155; }
+        .top-bar a { color: #5b9bd5; text-decoration: none; font-size: 14px; }
+        .top-bar a:hover { text-decoration: underline; }
+        .container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: #1e293b; border-radius: 16px; padding: 40px; max-width: 700px; width: 100%; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+        h1 { color: #5b9bd5; font-size: 2rem; margin-bottom: 16px; }
+        h2 { color: #5b9bd5; font-size: 1.4rem; margin-bottom: 12px; }
+        p { color: #94a3b8; line-height: 1.6; margin-bottom: 12px; }
+        .powers { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+        .power-box { background: #334155; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #cbd5e1; }
+        .btn { background: #5b9bd5; color: #fff; border: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #4a8bc4; }
+        .progress-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+        .question-text { font-size: 1.3rem; color: #e2e8f0; margin-bottom: 24px; }
+        .question-text span { color: #5b9bd5; font-weight: bold; font-size: 1.5rem; }
+        .toggle-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+        .bit-toggle { width: 60px; height: 70px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #334155; background: #0f172a; transition: all 0.2s; user-select: none; }
+        .bit-toggle.on { background: #5b9bd5; border-color: #5b9bd5; }
+        .bit-toggle .bit-value { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+        .bit-toggle.on .bit-value { color: #e2e8f0; }
+        .bit-toggle .bit-digit { font-size: 22px; font-weight: bold; color: #475569; }
+        .bit-toggle.on .bit-digit { color: #fff; }
+        .running-total { font-size: 1.1rem; color: #94a3b8; margin: 16px 0; }
+        .running-total span { color: #5b9bd5; font-weight: bold; }
+        .text-input { background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 14px 20px; font-size: 1.2rem; color: #e2e8f0; text-align: center; width: 200px; outline: none; }
+        .text-input:focus { border-color: #5b9bd5; }
+        .input-row { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 12px; text-align: left; }
+        .feedback.correct { background: rgba(39,174,96,0.15); border: 1px solid #27ae60; }
+        .feedback.incorrect { background: rgba(231,76,60,0.15); border: 1px solid #e74c3c; }
+        .feedback h3 { margin-bottom: 8px; }
+        .feedback.correct h3 { color: #27ae60; }
+        .feedback.incorrect h3 { color: #e74c3c; }
+        .feedback pre { color: #cbd5e1; font-size: 13px; white-space: pre-wrap; font-family: monospace; margin-top: 8px; line-height: 1.5; }
+        .feedback .study-tip { color: #5b9bd5; font-size: 13px; margin-top: 10px; }
+        .next-btn { margin-top: 16px; }
+        .results h1 { font-size: 2.2rem; }
+        .score-display { font-size: 3rem; color: #5b9bd5; font-weight: bold; margin: 20px 0; }
+        .score-msg { font-size: 1.1rem; margin-bottom: 24px; }
+        .mute-btn { position: fixed; bottom: 20px; right: 20px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .mute-btn:hover { border-color: #5b9bd5; color: #5b9bd5; }
+        @media (max-width: 600px) {
+            .card { padding: 24px 16px; }
+            .bit-toggle { width: 42px; height: 56px; }
+            .bit-toggle .bit-value { font-size: 10px; }
+            .bit-toggle .bit-digit { font-size: 18px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"><a href="../index.html">← Back to Study Hub</a></div>
+    <div class="container" id="app"></div>
+    <button class="mute-btn" id="muteBtn" title="Toggle Music">🔊</button>
+
+    <script src="../audio/games/Lofi-Chill-Music.js"></script>
+    <script>
+    (() => {
+        const app = document.getElementById('app');
+        const muteBtn = document.getElementById('muteBtn');
+        let music = null;
+        let muted = false;
+
+        // Init music
+        try {
+            music = new LofiChillMusic();
+            music.play();
+            music.onfinish = () => music.play();
+        } catch(e) { console.log('Music not available'); }
+
+        muteBtn.addEventListener('click', () => {
+            muted = !muted;
+            if (music) { muted ? music.pause() : music.play(); }
+            muteBtn.textContent = muted ? '🔇' : '🔊';
+        });
+
+        // Questions data
+        const decToBin = [192, 128, 255, 10, 172, 64, 240, 15, 200, 100];
+        const binToDec = ['11000000','10000000','11111111','00001010','10101100','01000000','11110000','00001111','11001000','01100100'];
+        const powers = [128, 64, 32, 16, 8, 4, 2, 1];
+
+        let questions = [];
+        let currentQ = 0;
+        let score = 0;
+        let bits = [0,0,0,0,0,0,0,0];
+        let answered = false;
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function buildQuestions() {
+            const qs = [];
+            decToBin.forEach(n => qs.push({ type: 'dec2bin', value: n, answer: n.toString(2).padStart(8,'0') }));
+            binToDec.forEach(b => qs.push({ type: 'bin2dec', value: b, answer: parseInt(b, 2) }));
+            return shuffle(qs);
+        }
+
+        function getBreakdown(decimal) {
+            const bin = decimal.toString(2).padStart(8, '0');
+            const parts = [];
+            const bitLabels = [];
+            for (let i = 0; i < 8; i++) {
+                bitLabels.push(`${powers[i]}(${bin[i]})`);
+                if (bin[i] === '1') parts.push(powers[i]);
+            }
+            const sum = parts.length > 0 ? parts.join(' + ') : '0';
+            return `${decimal} = ${sum} = ${bin}\nBreakdown: ${bitLabels.join(' + ')}`;
+        }
+
+        function renderStart() {
+            app.innerHTML = `
+                <div class="card">
+                    <h1>🔢 Binary Builder</h1>
+                    <p>Master binary-to-decimal and decimal-to-binary conversions! Each position in an 8-bit binary number represents a power of 2:</p>
+                    <div class="powers">
+                        ${powers.map(p => `<div class="power-box">${p}</div>`).join('')}
+                    </div>
+                    <p>Toggle bits ON to add their value. For example, turning on 128 and 64 gives you <strong style="color:#5b9bd5">192</strong> (11000000 in binary).</p>
+                    <p style="color:#cbd5e1; font-size:14px; margin-top:8px;">20 questions • No timer • Learn at your pace</p>
+                    <br>
+                    <button class="btn" id="startBtn">Start Game</button>
+                </div>`;
+            document.getElementById('startBtn').addEventListener('click', startGame);
+        }
+
+        function startGame() {
+            questions = buildQuestions();
+            currentQ = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            answered = false;
+            bits = [0,0,0,0,0,0,0,0];
+            const q = questions[currentQ];
+
+            if (q.type === 'dec2bin') {
+                app.innerHTML = `
+                    <div class="card">
+                        <div class="progress-bar">
+                            <span>Question ${currentQ + 1} of 20</span>
+                            <span>Score: ${score}/20</span>
+                        </div>
+                        <p class="question-text">Convert <span>${q.value}</span> to binary</p>
+                        <div class="toggle-row" id="toggleRow">
+                            ${powers.map((p, i) => `
+                                <div class="bit-toggle" data-index="${i}">
+                                    <div class="bit-value">${p}</div>
+                                    <div class="bit-digit">0</div>
+                                </div>`).join('')}
+                        </div>
+                        <div class="running-total">Current value: <span id="runTotal">0</span></div>
+                        <button class="btn" id="submitBtn">Submit</button>
+                        <div id="feedbackArea"></div>
+                    </div>`;
+                document.querySelectorAll('.bit-toggle').forEach(el => {
+                    el.addEventListener('click', () => {
+                        if (answered) return;
+                        const idx = parseInt(el.dataset.index);
+                        bits[idx] = bits[idx] ? 0 : 1;
+                        el.classList.toggle('on', bits[idx] === 1);
+                        el.querySelector('.bit-digit').textContent = bits[idx];
+                        updateRunningTotal();
+                    });
+                });
+                document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+            } else {
+                app.innerHTML = `
+                    <div class="card">
+                        <div class="progress-bar">
+                            <span>Question ${currentQ + 1} of 20</span>
+                            <span>Score: ${score}/20</span>
+                        </div>
+                        <p class="question-text">Convert <span>${q.value}</span> to decimal</p>
+                        <div class="input-row">
+                            <input type="number" class="text-input" id="decInput" placeholder="Enter decimal" autocomplete="off">
+                            <button class="btn" id="submitBtn">Submit</button>
+                        </div>
+                        <div id="feedbackArea"></div>
+                    </div>`;
+                const input = document.getElementById('decInput');
+                input.addEventListener('keydown', e => { if (e.key === 'Enter') submitAnswer(); });
+                document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+                input.focus();
+            }
+        }
+
+        function updateRunningTotal() {
+            let total = 0;
+            for (let i = 0; i < 8; i++) total += bits[i] * powers[i];
+            document.getElementById('runTotal').textContent = total;
+        }
+
+        function submitAnswer() {
+            if (answered) return;
+            answered = true;
+            const q = questions[currentQ];
+            let userAnswer, correct;
+
+            if (q.type === 'dec2bin') {
+                userAnswer = bits.join('');
+                correct = userAnswer === q.answer;
+            } else {
+                const input = document.getElementById('decInput');
+                userAnswer = parseInt(input.value);
+                correct = userAnswer === q.answer;
+            }
+
+            if (correct) score++;
+
+            const decimal = q.type === 'dec2bin' ? q.value : parseInt(q.value, 2);
+            const breakdown = getBreakdown(decimal);
+            const area = document.getElementById('feedbackArea');
+
+            area.innerHTML = `
+                <div class="feedback ${correct ? 'correct' : 'incorrect'}">
+                    <h3>${correct ? '✅ Correct!' : '❌ Incorrect'}</h3>
+                    ${!correct && q.type === 'dec2bin' ? `<p style="color:#94a3b8;">Your answer: ${userAnswer} | Correct: ${q.answer}</p>` : ''}
+                    ${!correct && q.type === 'bin2dec' ? `<p style="color:#94a3b8;">Your answer: ${isNaN(userAnswer) ? 'empty' : userAnswer} | Correct: ${q.answer}</p>` : ''}
+                    <pre>${breakdown}</pre>
+                    <div class="study-tip">📖 Study: Networking Fundamentals → IP Addressing & Subnetting</div>
+                </div>
+                <button class="btn next-btn" id="nextBtn">${currentQ < 19 ? 'Next Question →' : 'See Results'}</button>`;
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                currentQ++;
+                if (currentQ >= 20) renderResults();
+                else renderQuestion();
+            });
+        }
+
+        function renderResults() {
+            const pct = Math.round((score / 20) * 100);
+            let msg = '';
+            if (pct === 100) msg = 'Perfect score! You\'re a binary master! 🏆';
+            else if (pct >= 80) msg = 'Great job! You have a strong grasp of binary! 🌟';
+            else if (pct >= 60) msg = 'Good effort! Keep practicing to solidify your skills. 💪';
+            else msg = 'Keep studying! Binary takes practice. Review the power-of-2 positions. 📚';
+
+            app.innerHTML = `
+                <div class="card results">
+                    <h1>🏁 Results</h1>
+                    <div class="score-display">${score} / 20</div>
+                    <p class="score-msg">${pct}% — ${msg}</p>
+                    <button class="btn" id="playAgainBtn">Play Again</button>
+                </div>`;
+            document.getElementById('playAgainBtn').addEventListener('click', startGame);
+        }
+
+        renderStart();
+    })();
+    </script>
+</body>
+</html>

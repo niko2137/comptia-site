@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Threat Identifier | CompTIA A+ Study Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-bar {
+            background: #1e293b;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+        .top-bar a {
+            color: #5b9bd5;
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        .top-bar a:hover { text-decoration: underline; }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Start Screen */
+        .start-screen { text-align: center; }
+        .start-screen h1 {
+            font-size: 2.2em;
+            color: #5b9bd5;
+            margin-bottom: 12px;
+        }
+        .start-screen p {
+            color: #94a3b8;
+            margin-bottom: 24px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        .start-btn {
+            background: #5b9bd5;
+            color: #0f172a;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .start-btn:hover { background: #7ab3e6; transform: translateY(-2px); }
+        .start-btn:active { transform: translateY(0); }
+
+        /* Progress */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #5b9bd5;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            color: #94a3b8;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            text-align: right;
+        }
+
+        /* Scenario Card */
+        .scenario-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .scenario-label {
+            color: #5b9bd5;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .scenario-text {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #e2e8f0;
+        }
+
+        /* Options */
+        .options { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+        .option-btn {
+            background: #1e293b;
+            border: 2px solid #334155;
+            color: #e2e8f0;
+            padding: 14px 20px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: border-color 0.2s, background 0.2s, transform 0.1s;
+        }
+        .option-btn:hover:not(:disabled) {
+            border-color: #5b9bd5;
+            background: #253349;
+            transform: translateX(4px);
+        }
+        .option-btn:disabled { cursor: default; opacity: 0.7; }
+        .option-btn.correct {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.15);
+            color: #27ae60;
+            font-weight: 600;
+        }
+        .option-btn.incorrect {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        /* Feedback */
+        .feedback {
+            width: 100%;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+        .feedback.correct-fb {
+            background: rgba(39, 174, 96, 0.12);
+            border: 1px solid #27ae60;
+        }
+        .feedback.incorrect-fb {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+        }
+        .feedback h3 { margin-bottom: 8px; font-size: 1.05em; }
+        .feedback p { font-size: 0.92em; line-height: 1.6; color: #cbd5e1; margin-bottom: 6px; }
+        .feedback .study-ref {
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #5b9bd5;
+            font-style: italic;
+        }
+        .next-btn {
+            margin-top: 18px;
+            background: #5b9bd5;
+            color: #0f172a;
+            border: none;
+            padding: 12px 32px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .next-btn:hover { background: #7ab3e6; }
+
+        /* Results */
+        .results { text-align: center; width: 100%; }
+        .results h1 { color: #5b9bd5; margin-bottom: 8px; font-size: 2em; }
+        .results .score {
+            font-size: 3em;
+            font-weight: 700;
+            color: #27ae60;
+            margin: 16px 0;
+        }
+        .results .score-label { color: #94a3b8; font-size: 0.95em; margin-bottom: 24px; }
+        .missed-list {
+            text-align: left;
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #334155;
+        }
+        .missed-list h3 { color: #e74c3c; margin-bottom: 12px; font-size: 1em; }
+        .missed-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #334155;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .missed-item:last-child { border-bottom: none; }
+        .missed-item strong { color: #5b9bd5; }
+        .missed-item .study { color: #94a3b8; font-size: 0.85em; font-style: italic; }
+
+        /* Mute Button */
+        #muteBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            font-size: 1.4em;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            transition: background 0.2s;
+        }
+        #muteBtn:hover { background: #334155; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .container { padding: 14px; }
+            .scenario-card { padding: 20px 16px; }
+            .start-screen h1 { font-size: 1.6em; }
+            .results .score { font-size: 2.4em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../members.html">← Back to Members</a>
+    </div>
+    <div class="container" id="app"></div>
+    <button id="muteBtn" title="Toggle Music">🔊</button>
+
+    <script src="../audio/games/Lofi-Chill-Music.js"></script>
+    <script>
+    const scenarios = [
+        {
+            scenario: "An employee receives an email that appears to be from their bank asking them to verify their account by clicking a link. The link leads to a fake login page.",
+            answer: "Phishing",
+            options: ["Phishing", "Vishing", "Whaling", "Pharming"],
+            explanation: "Phishing uses fraudulent emails with fake links to steal credentials. Unlike vishing (phone-based) or pharming (DNS redirection), phishing relies on deceptive emails with malicious links.",
+            study: "Module - Security → Social Engineering Attacks"
+        },
+        {
+            scenario: "A CEO receives a carefully crafted email referencing their recent board meeting, asking them to approve an urgent wire transfer.",
+            answer: "Whaling",
+            options: ["Whaling", "Spear phishing", "Phishing", "Pretexting"],
+            explanation: "Whaling specifically targets high-level executives (the 'big fish') with highly personalized attacks. Unlike general spear phishing, whaling focuses on C-suite executives and uses company-specific details.",
+            study: "Module - Security → Social Engineering Attacks"
+        },
+        {
+            scenario: "All files on a company server now have .encrypted extensions and a text file demands 2 Bitcoin for the decryption key.",
+            answer: "Ransomware",
+            options: ["Ransomware", "Virus", "Trojan", "Spyware"],
+            explanation: "Ransomware encrypts files and demands payment for decryption. The key indicator is the ransom demand—viruses replicate, trojans disguise themselves, and spyware steals data silently.",
+            study: "Module - Security → Malware Types"
+        },
+
+        {
+            scenario: "A user downloaded what appeared to be a free PDF reader. Now their computer has a backdoor allowing remote access.",
+            answer: "Trojan",
+            options: ["Trojan", "Worm", "Virus", "Ransomware"],
+            explanation: "A Trojan disguises itself as legitimate software but contains hidden malicious functionality. The key is that the user willingly installed it thinking it was safe—unlike worms which spread automatically.",
+            study: "Module - Security → Malware Types"
+        },
+        {
+            scenario: "Multiple computers on the network are infected without any user action. The malware spread itself through a network vulnerability.",
+            answer: "Worm",
+            options: ["Worm", "Virus", "Trojan", "Ransomware"],
+            explanation: "Worms self-replicate across networks without user interaction, exploiting vulnerabilities. Unlike viruses (which need a host file) or trojans (which require user download), worms spread autonomously.",
+            study: "Module - Security → Malware Types"
+        },
+        {
+            scenario: "A user's computer is running slowly. Task Manager shows an unknown process using 90% CPU mining cryptocurrency.",
+            answer: "Cryptominer/Cryptojacking",
+            options: ["Cryptominer/Cryptojacking", "Ransomware", "Rootkit", "Adware"],
+            explanation: "Cryptojacking hijacks system resources to mine cryptocurrency. The telltale sign is extremely high CPU usage from an unknown process—unlike ransomware (demands payment) or rootkits (hide deep in the OS).",
+            study: "Module - Security → Malware Types"
+        },
+
+        {
+            scenario: "An attacker sets up a Wi-Fi hotspot called 'Company_WiFi_Free' in the parking lot to intercept employee connections.",
+            answer: "Evil Twin",
+            options: ["Evil Twin", "Man-in-the-Middle", "Phishing", "Spoofing"],
+            explanation: "An Evil Twin is a rogue wireless access point that mimics a legitimate network name. While it enables MitM attacks, the specific act of creating a fake Wi-Fi hotspot is the Evil Twin attack itself.",
+            study: "Module - Security → Network Attacks"
+        },
+        {
+            scenario: "Someone follows an authorized employee through a secure door without badging in.",
+            answer: "Tailgating",
+            options: ["Tailgating", "Shoulder surfing", "Social engineering", "Piggybacking"],
+            explanation: "Tailgating is gaining physical access by following an authorized person through a secured entry without their knowledge. Piggybacking is similar but with the person's consent.",
+            study: "Module - Security → Physical Security"
+        },
+        {
+            scenario: "A caller claims to be from IT support and convinces an employee to reveal their password over the phone.",
+            answer: "Vishing",
+            options: ["Vishing", "Phishing", "Smishing", "Pretexting"],
+            explanation: "Vishing (voice phishing) uses phone calls to extract sensitive information. The phone/voice element distinguishes it from phishing (email) and smishing (text messages).",
+            study: "Module - Security → Social Engineering Attacks"
+        },
+        {
+            scenario: "A user receives a text message claiming their package delivery failed with a link to reschedule.",
+            answer: "Smishing",
+            options: ["Smishing", "Phishing", "Vishing", "Spam"],
+            explanation: "Smishing (SMS phishing) uses text messages with malicious links. The SMS/text delivery method is the key differentiator from phishing (email) and vishing (voice calls).",
+            study: "Module - Security → Social Engineering Attacks"
+        },
+
+        {
+            scenario: "After visiting a compromised website, malware was installed on a user's computer without them clicking anything.",
+            answer: "Drive-by download",
+            options: ["Drive-by download", "Phishing", "Trojan", "Adware"],
+            explanation: "Drive-by downloads install malware simply by visiting a compromised website—no clicks or downloads needed. Unlike trojans (user must install) or phishing (requires clicking a link), drive-bys exploit browser vulnerabilities automatically.",
+            study: "Module - Security → Malware Types"
+        },
+        {
+            scenario: "A program is recording every keystroke including passwords and credit card numbers, sending them to an attacker.",
+            answer: "Keylogger",
+            options: ["Keylogger", "Spyware", "Trojan", "Rootkit"],
+            explanation: "A keylogger specifically captures keystrokes to steal typed information. While it's a form of spyware, the specific behavior of recording keystrokes makes it a keylogger. Rootkits hide in the OS kernel instead.",
+            study: "Module - Security → Malware Types"
+        },
+        {
+            scenario: "Antivirus can't detect the malware because it has embedded itself in the operating system kernel.",
+            answer: "Rootkit",
+            options: ["Rootkit", "Virus", "Worm", "Trojan"],
+            explanation: "Rootkits embed deep in the OS kernel to hide from detection tools. Their defining characteristic is stealth through kernel-level access, making them nearly invisible to standard antivirus software.",
+            study: "Module - Security → Malware Types"
+        },
+        {
+            scenario: "A user's browser shows constant pop-up ads and their homepage changed to an unknown search engine.",
+            answer: "Adware/Browser hijacker",
+            options: ["Adware/Browser hijacker", "Virus", "Ransomware", "Spyware"],
+            explanation: "Adware and browser hijackers modify browser settings and display unwanted advertisements. Unlike ransomware (locks files) or spyware (steals data secretly), adware's goal is forcing ads on the user.",
+            study: "Module - Security → Malware Types"
+        },
+
+        {
+            scenario: "An attacker intercepts communication between a user and their bank by positioning themselves between them on the network.",
+            answer: "Man-in-the-Middle (MitM)",
+            options: ["Man-in-the-Middle (MitM)", "Evil Twin", "Replay attack", "Session hijacking"],
+            explanation: "A Man-in-the-Middle attack intercepts and potentially alters communications between two parties. Unlike an Evil Twin (fake Wi-Fi), MitM is the broader technique of intercepting any network communication.",
+            study: "Module - Security → Network Attacks"
+        },
+        {
+            scenario: "An attacker is systematically trying every possible password combination to gain access to an account.",
+            answer: "Brute force attack",
+            options: ["Brute force attack", "Dictionary attack", "Rainbow table", "Credential stuffing"],
+            explanation: "Brute force tries every possible combination systematically. Dictionary attacks use common words, rainbow tables use precomputed hashes, and credential stuffing uses stolen credentials from breaches.",
+            study: "Module - Security → Authentication Attacks"
+        },
+        {
+            scenario: "Stolen username/password pairs from a data breach are being used to try logging into other services.",
+            answer: "Credential stuffing",
+            options: ["Credential stuffing", "Brute force", "Dictionary attack", "Password spraying"],
+            explanation: "Credential stuffing reuses stolen credentials across multiple services, exploiting password reuse. Unlike brute force (guessing) or dictionary attacks (common words), it uses actual leaked credentials.",
+            study: "Module - Security → Authentication Attacks"
+        },
+        {
+            scenario: "An attacker calls the help desk pretending to be the CFO, claiming they're locked out and need an immediate password reset.",
+            answer: "Pretexting",
+            options: ["Pretexting", "Vishing", "Phishing", "Impersonation"],
+            explanation: "Pretexting creates a fabricated scenario (pretext) to manipulate the target. While it uses the phone (like vishing), the core technique is the invented story and assumed identity to build trust.",
+            study: "Module - Security → Social Engineering Attacks"
+        },
+
+        {
+            scenario: "A disgruntled IT administrator who still has system access deletes critical databases before their account is disabled.",
+            answer: "Insider threat",
+            options: ["Insider threat", "Sabotage", "Ransomware", "APT"],
+            explanation: "An insider threat comes from someone with legitimate access who acts maliciously. The key differentiator is the trusted position—unlike external attackers, insiders already have authorized system access.",
+            study: "Module - Security → Threat Actors"
+        },
+        {
+            scenario: "The company's web application accepts user input directly into SQL queries, allowing an attacker to access the database.",
+            answer: "SQL injection",
+            options: ["SQL injection", "XSS", "CSRF", "Buffer overflow"],
+            explanation: "SQL injection inserts malicious SQL code through user input fields to manipulate databases. Unlike XSS (injects scripts into web pages) or CSRF (forces unwanted actions), SQLi targets the database directly.",
+            study: "Module - Security → Application Attacks"
+        },
+        {
+            scenario: "A software update from a trusted vendor contained hidden malware that was distributed to all customers.",
+            answer: "Supply chain attack",
+            options: ["Supply chain attack", "Trojan", "Zero-day", "Insider threat"],
+            explanation: "Supply chain attacks compromise trusted software distribution channels to spread malware widely. The attack targets the vendor's update process, not individual users directly.",
+            study: "Module - Security → Threat Actors"
+        },
+        {
+            scenario: "An attacker exploits a vulnerability in software before the vendor has released a patch for it.",
+            answer: "Zero-day exploit",
+            options: ["Zero-day exploit", "Supply chain attack", "APT", "Buffer overflow"],
+            explanation: "A zero-day exploits a vulnerability unknown to the vendor—there have been 'zero days' to fix it. Unlike supply chain attacks (compromise distribution) or APTs (persistent campaigns), zero-days target unpatched flaws.",
+            study: "Module - Security → Vulnerabilities"
+        },
+
+        {
+            scenario: "Someone is looking over an employee's shoulder at a coffee shop to see their laptop password.",
+            answer: "Shoulder surfing",
+            options: ["Shoulder surfing", "Tailgating", "Social engineering", "Piggybacking"],
+            explanation: "Shoulder surfing is visually observing someone's screen or keyboard to steal information. Unlike tailgating (physical access through doors), shoulder surfing targets visual information in public spaces.",
+            study: "Module - Security → Physical Security"
+        },
+        {
+            scenario: "A rogue DHCP server on the network is assigning incorrect gateway addresses to redirect traffic.",
+            answer: "Rogue DHCP/On-path attack",
+            options: ["Rogue DHCP/On-path attack", "DNS poisoning", "Evil Twin", "ARP spoofing"],
+            explanation: "A rogue DHCP server distributes false network configuration to redirect traffic. Unlike DNS poisoning (corrupts name resolution) or ARP spoofing (links IP to wrong MAC), rogue DHCP targets IP assignment.",
+            study: "Module - Security → Network Attacks"
+        },
+        {
+            scenario: "An attacker searches through the company's trash bins outside looking for documents with passwords or account info.",
+            answer: "Dumpster diving",
+            options: ["Dumpster diving", "Shoulder surfing", "Social engineering", "Tailgating"],
+            explanation: "Dumpster diving searches through discarded materials for sensitive information. Unlike shoulder surfing (watching screens) or tailgating (following through doors), it targets improperly disposed documents.",
+            study: "Module - Security → Physical Security"
+        }
+    ];
+
+
+    // Game State
+    let currentIndex = 0;
+    let score = 0;
+    let shuffled = [];
+    let missed = [];
+    let musicPlayer = null;
+    let isMuted = false;
+    let musicLooping = true;
+
+    const app = document.getElementById('app');
+    const muteBtn = document.getElementById('muteBtn');
+
+    // Shuffle array
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    // Music controls
+    function startMusic() {
+        if (isMuted) return;
+        musicPlayer = new LofiChillMusic();
+        musicPlayer.start(() => {
+            if (musicLooping && !isMuted) startMusic();
+        });
+    }
+
+    function stopMusic() {
+        musicLooping = false;
+        if (musicPlayer) { musicPlayer.stop(); musicPlayer = null; }
+    }
+
+    muteBtn.addEventListener('click', () => {
+        isMuted = !isMuted;
+        muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        if (isMuted) { stopMusic(); }
+        else { musicLooping = true; startMusic(); }
+    });
+
+
+    // Render Start Screen
+    function renderStart() {
+        app.innerHTML = `
+            <div class="start-screen">
+                <h1>🛡️ Security Threat Identifier</h1>
+                <p>Read each scenario describing a security incident and identify the correct threat type. Learn to distinguish between similar attacks through detailed feedback.</p>
+                <p style="color:#64748b; font-size:0.9em;">25 scenarios • Shuffled each play • No timer</p>
+                <button class="start-btn" onclick="startGame()">Start Challenge</button>
+            </div>
+        `;
+    }
+
+    // Start Game
+    function startGame() {
+        currentIndex = 0;
+        score = 0;
+        missed = [];
+        shuffled = shuffle(scenarios);
+        musicLooping = true;
+        startMusic();
+        renderQuestion();
+    }
+
+    // Render Question
+    function renderQuestion() {
+        const q = shuffled[currentIndex];
+        const opts = shuffle(q.options);
+        app.innerHTML = `
+            <div class="progress-text">Question ${currentIndex + 1} of ${shuffled.length}</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${(currentIndex / shuffled.length) * 100}%"></div></div>
+            <div class="scenario-card">
+                <div class="scenario-label">🔍 Identify the Threat</div>
+                <div class="scenario-text">${q.scenario}</div>
+            </div>
+            <div class="options" id="options">
+                ${opts.map((o, i) => `<button class="option-btn" onclick="selectAnswer(this, '${o.replace(/'/g, "\\'")}')"> ${o}</button>`).join('')}
+            </div>
+            <div id="feedback"></div>
+        `;
+    }
+
+
+    // Handle Answer Selection
+    function selectAnswer(btn, selected) {
+        const q = shuffled[currentIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(b => {
+            b.disabled = true;
+            if (b.textContent.trim() === q.answer) b.classList.add('correct');
+        });
+
+        const feedbackDiv = document.getElementById('feedback');
+        const isCorrect = selected === q.answer;
+
+        if (isCorrect) {
+            score++;
+            btn.classList.add('correct');
+            feedbackDiv.innerHTML = `
+                <div class="feedback correct-fb">
+                    <h3>✅ Correct!</h3>
+                    <p>${q.explanation}</p>
+                    <button class="next-btn" onclick="nextQuestion()">
+                        ${currentIndex < shuffled.length - 1 ? 'Next Scenario →' : 'View Results →'}
+                    </button>
+                </div>
+            `;
+        } else {
+            btn.classList.add('incorrect');
+            missed.push({ scenario: q.scenario, correct: q.answer, chosen: selected, explanation: q.explanation, study: q.study });
+            feedbackDiv.innerHTML = `
+                <div class="feedback incorrect-fb">
+                    <h3>❌ This is actually <strong>${q.answer}</strong></h3>
+                    <p>${q.explanation}</p>
+                    <p class="study-ref">📖 Study: ${q.study}</p>
+                    <button class="next-btn" onclick="nextQuestion()">
+                        ${currentIndex < shuffled.length - 1 ? 'Next Scenario →' : 'View Results →'}
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    // Next Question
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < shuffled.length) {
+            renderQuestion();
+        } else {
+            renderResults();
+        }
+    }
+
+
+    // Render Results
+    function renderResults() {
+        stopMusic();
+        const pct = Math.round((score / shuffled.length) * 100);
+        let grade = '';
+        if (pct === 100) grade = '🏆 Perfect Score! Security Expert!';
+        else if (pct >= 80) grade = '🌟 Excellent! Strong security knowledge!';
+        else if (pct >= 60) grade = '👍 Good effort! Review the missed threats.';
+        else grade = '📚 Keep studying! Review the security module.';
+
+        let missedHTML = '';
+        if (missed.length > 0) {
+            missedHTML = `
+                <div class="missed-list">
+                    <h3>⚠️ Threats to Review (${missed.length})</h3>
+                    ${missed.map(m => `
+                        <div class="missed-item">
+                            <strong>${m.correct}</strong> — You chose: ${m.chosen}<br>
+                            ${m.explanation}<br>
+                            <span class="study">📖 ${m.study}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        app.innerHTML = `
+            <div class="results">
+                <h1>🛡️ Results</h1>
+                <div class="score">${score}/${shuffled.length}</div>
+                <div class="score-label">${pct}% — ${grade}</div>
+                ${missedHTML}
+                <button class="start-btn" onclick="startGame()" style="margin-top:20px;">Play Again</button>
+            </div>
+        `;
+    }
+
+    // Initialize
+    renderStart();
+    </script>
+</body>
+</html>

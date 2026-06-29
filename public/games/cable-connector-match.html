@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cable Connector Match | CompTIA A+ Study</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .top-bar {
+            width: 100%;
+            padding: 12px 20px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+        }
+        .top-bar a {
+            color: #5b9bd5;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .top-bar a:hover { text-decoration: underline; }
+        .container {
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #5b9bd5;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .btn {
+            background: #5b9bd5;
+            color: #0f172a;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:hover { background: #7db4e6; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #5b9bd5;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .question-counter {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            align-self: flex-start;
+        }
+        .cable-card {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .cable-label { color: #94a3b8; font-size: 0.85rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+        .cable-name { font-size: 1.6rem; font-weight: 700; color: #5b9bd5; }
+        .options { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .option-btn {
+            background: #1e293b;
+            border: 2px solid #334155;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .option-btn:hover:not(.disabled) { border-color: #5b9bd5; background: #253347; }
+        .option-btn.correct { border-color: #27ae60; background: #1a3a2a; color: #6ee7a0; }
+        .option-btn.incorrect { border-color: #e74c3c; background: #3a1a1a; color: #fca5a5; }
+        .option-btn.disabled { cursor: default; opacity: 0.7; }
+        .option-btn.show-correct { border-color: #27ae60; background: #1a3a2a; color: #6ee7a0; }
+        .feedback {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-top: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: none;
+        }
+        .feedback.wrong {
+            background: #3a1a1a;
+            border: 1px solid #e74c3c;
+            color: #fca5a5;
+            display: block;
+        }
+        .feedback.right {
+            background: #1a3a2a;
+            border: 1px solid #27ae60;
+            color: #6ee7a0;
+            display: block;
+        }
+        .next-btn {
+            margin-top: 20px;
+            background: #5b9bd5;
+            color: #0f172a;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+        }
+        .next-btn:hover { background: #7db4e6; }
+        .results {
+            width: 100%;
+            text-align: center;
+        }
+        .results h2 { font-size: 1.6rem; color: #5b9bd5; margin-bottom: 10px; }
+        .score-display { font-size: 2.5rem; font-weight: 700; margin: 16px 0; }
+        .score-display.great { color: #27ae60; }
+        .score-display.ok { color: #f59e0b; }
+        .score-display.low { color: #e74c3c; }
+        .missed-section { margin-top: 24px; text-align: left; width: 100%; }
+        .missed-section h3 { color: #f59e0b; margin-bottom: 12px; font-size: 1.1rem; }
+        .missed-item {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+        }
+        .missed-item .cable { color: #5b9bd5; font-weight: 600; }
+        .missed-item .answer { color: #6ee7a0; font-size: 0.9rem; margin-top: 4px; }
+        .mute-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            color: #94a3b8;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .mute-btn:hover { border-color: #5b9bd5; color: #5b9bd5; }
+        .hidden { display: none !important; }
+        @media (max-width: 600px) {
+            .container { padding: 14px; }
+            h1 { font-size: 1.4rem; }
+            .cable-name { font-size: 1.3rem; }
+            .cable-card { padding: 20px; }
+            .option-btn { padding: 14px 16px; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../index.html">← Back to Study Hub</a>
+    </div>
+
+    <div class="container" id="app">
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <h1>🔌 Cable Connector Match</h1>
+            <p class="subtitle">Match each cable or connector to its correct specification.<br>25 questions — no timer, learn at your pace!</p>
+            <button class="btn" onclick="startGame()">Start Quiz</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden" style="width:100%;">
+            <div class="question-counter" id="counter">Question 1 of 25</div>
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <div class="cable-card">
+                <div class="cable-label">Identify the specification for:</div>
+                <div class="cable-name" id="cable-name"></div>
+            </div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next →</button>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden results">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="score-display"></div>
+            <p id="score-message" style="color:#94a3b8;margin-bottom:20px;"></p>
+            <div class="missed-section hidden" id="missed-section">
+                <h3>📋 Review Missed Questions:</h3>
+                <div id="missed-list"></div>
+            </div>
+            <button class="btn" style="margin-top:24px;" onclick="startGame()">Play Again</button>
+        </div>
+    </div>
+
+    <button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Toggle Music">🔊</button>
+
+    <script src="../audio/games/Lofi-Chill-Music.js"></script>
+    <script>
+        const questions = [
+            { cable: "Cat 5e", correct: "1 Gbps at 100m", wrong: ["10 Gbps at 100m", "100 Mbps at 100m", "1 Gbps at 55m"], explanation: "Cat 5e supports up to 1 Gbps over 100 meters, an improvement over Cat 5's 100 Mbps." },
+            { cable: "Cat 6", correct: "10 Gbps at 55m (or 1 Gbps at 100m)", wrong: ["10 Gbps at 100m", "1 Gbps at 55m", "25 Gbps at 30m"], explanation: "Cat 6 achieves 10 Gbps but only at shorter distances (55m); it still supports 1 Gbps at 100m." },
+            { cable: "Cat 6a", correct: "10 Gbps at 100m", wrong: ["10 Gbps at 55m", "25 Gbps at 100m", "1 Gbps at 100m"], explanation: "Cat 6a (augmented) extends 10 Gbps to the full 100m with better shielding." },
+            { cable: "Cat 8", correct: "25-40 Gbps at 30m (data center)", wrong: ["10 Gbps at 100m", "100 Gbps at 30m", "40 Gbps at 100m"], explanation: "Cat 8 is designed for data centers with speeds up to 40 Gbps but limited to 30m runs." },
+            { cable: "Single-mode fiber", correct: "Long distance, narrow core, one light path", wrong: ["Short distance, wide core", "Multiple light paths", "Copper-based"], explanation: "Single-mode fiber uses a narrow core (~9 µm) allowing one light beam for long-distance transmission." },
+            { cable: "Multimode fiber", correct: "Short distance, wider core, multiple light paths", wrong: ["Long distance, narrow core", "Copper-based", "Single light beam"], explanation: "Multimode fiber has a wider core (50-62.5 µm) allowing multiple light paths, used for shorter runs." },
+            { cable: "Coaxial (RG-6)", correct: "Cable TV and broadband internet", wrong: ["Ethernet networking", "Fiber optic alternative", "Telephone lines"], explanation: "RG-6 coaxial cable is the standard for cable TV and broadband internet connections." },
+            { cable: "USB 2.0", correct: "480 Mbps (black connector)", wrong: ["5 Gbps (blue)", "10 Gbps (red)", "40 Gbps (USB-C)"], explanation: "USB 2.0 maxes out at 480 Mbps and is identified by its black connector color." },
+            { cable: "USB 3.2 Gen 1", correct: "5 Gbps (blue connector, SuperSpeed)", wrong: ["480 Mbps", "10 Gbps", "20 Gbps"], explanation: "USB 3.2 Gen 1 (formerly USB 3.0) provides 5 Gbps SuperSpeed, identified by blue connectors." },
+            { cable: "USB 3.2 Gen 2", correct: "10 Gbps (red/teal connector)", wrong: ["5 Gbps", "20 Gbps", "40 Gbps"], explanation: "USB 3.2 Gen 2 doubles Gen 1 speed to 10 Gbps, often with red or teal colored ports." },
+            { cable: "USB-C", correct: "Reversible connector, supports multiple protocols", wrong: ["Only USB 3.0", "Only charging", "One-directional"], explanation: "USB-C is a reversible connector form factor that can carry USB, Thunderbolt, DisplayPort, and power." },
+            { cable: "Thunderbolt 3/4", correct: "40 Gbps via USB-C connector", wrong: ["20 Gbps via USB-A", "10 Gbps via Lightning", "80 Gbps via USB-C"], explanation: "Thunderbolt 3 and 4 both deliver 40 Gbps through the USB-C form factor." },
+            { cable: "HDMI", correct: "Audio + Video, 19-pin, most common display connector", wrong: ["Video only", "20-pin with latch", "Analog signal"], explanation: "HDMI carries both audio and video digitally through a 19-pin connector and is the most widely used display interface." },
+            { cable: "DisplayPort", correct: "20-pin with latch, supports daisy-chaining", wrong: ["19-pin no latch", "Audio only", "Analog video"], explanation: "DisplayPort has 20 pins with a locking latch and uniquely supports Multi-Stream Transport (daisy-chaining)." },
+            { cable: "VGA", correct: "15-pin analog video (DB-15), obsolete", wrong: ["Digital video", "19-pin", "Supports audio"], explanation: "VGA uses a 15-pin DB-15 connector for analog video only — it's a legacy standard being phased out." },
+            { cable: "DVI-D", correct: "Digital video only", wrong: ["Analog only", "Digital + Analog", "Audio + Video"], explanation: "DVI-D carries digital video only. DVI-I supports both digital and analog, but DVI-D is digital-only." },
+            { cable: "SATA III", correct: "6 Gb/s for storage drives", wrong: ["3 Gb/s", "12 Gb/s", "1 Gb/s"], explanation: "SATA III (SATA 6Gb/s) is the current SATA standard used for HDDs and SSDs." },
+            { cable: "Molex", correct: "Legacy 4-pin power for older drives/fans", wrong: ["Main motherboard power", "CPU power", "Modern SSD power"], explanation: "Molex is the older 4-pin power connector used for IDE drives, case fans, and older peripherals." },
+            { cable: "RJ-45", correct: "8-pin Ethernet connector", wrong: ["6-pin telephone", "4-pin serial", "15-pin video"], explanation: "RJ-45 is the 8-position 8-contact (8P8C) connector used for Ethernet networking." },
+            { cable: "RJ-11", correct: "6-pin telephone connector", wrong: ["8-pin Ethernet", "4-pin USB", "Serial data"], explanation: "RJ-11 is the smaller 6-position connector used for telephone lines (typically using 2 or 4 wires)." },
+            { cable: "LC fiber connector", correct: "Small form factor, most common in data centers", wrong: ["Large form", "Outdoor only", "Copper hybrid"], explanation: "LC (Lucent Connector) is a small form factor fiber connector that's the standard in modern data centers." },
+            { cable: "SC fiber connector", correct: "Square, push-pull, older standard", wrong: ["Circular, twist-lock", "Newest standard", "Copper hybrid"], explanation: "SC (Subscriber Connector) has a square shape with push-pull coupling, widely used but older than LC." },
+            { cable: "Plenum cable (CMP)", correct: "Fire-retardant for air-handling spaces", wrong: ["Outdoor burial", "Standard PVC", "Waterproof"], explanation: "Plenum-rated (CMP) cable uses fire-retardant jackets safe for air-handling spaces like drop ceilings." },
+            { cable: "Riser cable (CMR)", correct: "For vertical runs between floors", wrong: ["Horizontal ceiling runs", "Outdoor use", "Plenum spaces"], explanation: "Riser-rated (CMR) cable is designed for vertical runs between floors but not for plenum spaces." },
+            { cable: "Direct burial", correct: "Outdoor underground without conduit", wrong: ["Indoor plenum", "Between floors", "Air handling spaces"], explanation: "Direct burial cable has a waterproof jacket designed to be buried underground without needing conduit." }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let shuffled = [];
+        let missed = [];
+        let answered = false;
+        let music = null;
+        let isMuted = false;
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function initMusic() {
+            if (!music && typeof LofiChillMusic !== 'undefined') {
+                music = new LofiChillMusic();
+            }
+            if (music && !isMuted) {
+                try { music.play(); } catch(e) {}
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
+            if (music) {
+                isMuted ? music.pause() : music.play();
+            }
+        }
+
+        function startGame() {
+            initMusic();
+            currentQuestion = 0;
+            score = 0;
+            missed = [];
+            shuffled = shuffle(questions);
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            answered = false;
+            const q = shuffled[currentQuestion];
+            document.getElementById('counter').textContent = `Question ${currentQuestion + 1} of ${shuffled.length}`;
+            document.getElementById('progress').style.width = `${((currentQuestion) / shuffled.length) * 100}%`;
+            document.getElementById('cable-name').textContent = q.cable;
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+
+            const options = shuffle([q.correct, ...q.wrong]);
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(btn, opt, q);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(btn, selected, q) {
+            if (answered) return;
+            answered = true;
+
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.classList.add('disabled'));
+
+            const feedback = document.getElementById('feedback');
+
+            if (selected === q.correct) {
+                btn.classList.add('correct');
+                score++;
+                feedback.className = 'feedback right';
+                feedback.innerHTML = `✅ Correct! ${q.explanation}`;
+            } else {
+                btn.classList.add('incorrect');
+                allBtns.forEach(b => {
+                    if (b.textContent === q.correct) b.classList.add('show-correct');
+                });
+                feedback.className = 'feedback wrong';
+                feedback.innerHTML = `❌ <strong>${q.cable}</strong> is actually <em>${q.correct}</em>. ${q.explanation} 📖 Study: Module - Cables, Connectors & Adapters`;
+                missed.push({ cable: q.cable, correct: q.correct });
+            }
+
+            feedback.style.display = 'block';
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= shuffled.length) {
+                showResults();
+            } else {
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            const pct = Math.round((score / shuffled.length) * 100);
+            const scoreEl = document.getElementById('score-display');
+            scoreEl.textContent = `${score} / ${shuffled.length} (${pct}%)`;
+            scoreEl.className = 'score-display ' + (pct >= 80 ? 'great' : pct >= 60 ? 'ok' : 'low');
+
+            const msg = pct >= 90 ? "Outstanding! You know your cables!" :
+                        pct >= 80 ? "Great job! Almost perfect." :
+                        pct >= 60 ? "Good effort! Review the ones you missed." :
+                        "Keep studying — you'll get there!";
+            document.getElementById('score-message').textContent = msg;
+
+            const missedSection = document.getElementById('missed-section');
+            const missedList = document.getElementById('missed-list');
+            if (missed.length > 0) {
+                missedSection.classList.remove('hidden');
+                missedList.innerHTML = missed.map(m =>
+                    `<div class="missed-item"><div class="cable">${m.cable}</div><div class="answer">→ ${m.correct}</div></div>`
+                ).join('');
+            } else {
+                missedSection.classList.add('hidden');
+            }
+
+            document.getElementById('progress').style.width = '100%';
+        }
+
+        // Auto-start music on first interaction
+        document.addEventListener('click', function firstClick() {
+            initMusic();
+            document.removeEventListener('click', firstClick);
+        }, { once: true });
+    </script>
+</body>
+</html>

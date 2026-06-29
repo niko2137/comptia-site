@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Address Calculator | CompTIA A+ Study</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; }
+        .top-bar { background: #1e293b; padding: 12px 20px; display: flex; align-items: center; border-bottom: 1px solid #334155; }
+        .top-bar a { color: #5b9bd5; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+        .top-bar a:hover { text-decoration: underline; }
+        .top-bar .badge { margin-left: auto; background: #5b9bd5; color: #0f172a; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; }
+        .container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: #1e293b; border-radius: 16px; padding: 36px 32px; max-width: 640px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+        h1 { font-size: 1.8rem; text-align: center; margin-bottom: 8px; color: #f1f5f9; }
+        .subtitle { text-align: center; color: #94a3b8; margin-bottom: 24px; font-size: 0.95rem; }
+        .primer { background: #0f172a; border-radius: 10px; padding: 18px; margin-bottom: 24px; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; border: 1px solid #334155; }
+        .primer strong { color: #5b9bd5; }
+        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-primary { background: #5b9bd5; color: #0f172a; }
+        .btn-primary:hover { background: #7db3e0; transform: translateY(-1px); }
+        .btn-secondary { background: #334155; color: #e2e8f0; }
+        .btn-secondary:hover { background: #475569; }
+        .progress-bar { background: #334155; border-radius: 8px; height: 8px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #5b9bd5, #7db3e0); height: 100%; border-radius: 8px; transition: width 0.4s ease; }
+        .question-num { font-size: 0.8rem; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 24px; line-height: 1.5; color: #f1f5f9; }
+        .choices { display: flex; flex-direction: column; gap: 10px; }
+        .choice-btn { background: #0f172a; border: 2px solid #334155; border-radius: 10px; padding: 14px 18px; text-align: left; font-size: 0.95rem; color: #e2e8f0; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .choice-btn:hover:not(.disabled) { border-color: #5b9bd5; background: #1a2540; }
+        .choice-btn.correct { border-color: #27ae60; background: rgba(39,174,96,0.12); color: #27ae60; font-weight: 600; }
+        .choice-btn.incorrect { border-color: #e74c3c; background: rgba(231,76,60,0.12); color: #e74c3c; }
+        .choice-btn.disabled { cursor: default; opacity: 0.7; }
+        .choice-btn.show-correct { border-color: #27ae60; background: rgba(39,174,96,0.12); opacity: 1; }
+        .feedback { margin-top: 20px; padding: 16px; border-radius: 10px; font-size: 0.88rem; line-height: 1.6; display: none; }
+        .feedback.visible { display: block; }
+        .feedback.correct-fb { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.4); color: #6ee7a0; }
+        .feedback.incorrect-fb { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.4); color: #fca5a5; }
+        .feedback .study-ref { margin-top: 10px; color: #94a3b8; font-style: italic; font-size: 0.82rem; }
+        .btn-next { margin-top: 18px; display: none; }
+        .btn-next.visible { display: block; }
+        .results { text-align: center; }
+        .results .score { font-size: 3.2rem; font-weight: 700; color: #5b9bd5; margin: 20px 0 8px; }
+        .results .score-label { color: #94a3b8; font-size: 1rem; margin-bottom: 24px; }
+        .results .grade { font-size: 1.1rem; margin-bottom: 28px; padding: 14px; border-radius: 10px; line-height: 1.5; }
+        .grade.pass { background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.3); color: #6ee7a0; }
+        .grade.fail { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); color: #fca5a5; }
+        .btn-row { display: flex; gap: 12px; }
+        .btn-row .btn { flex: 1; }
+        .mute-btn { position: fixed; bottom: 20px; right: 20px; background: #1e293b; border: 2px solid #334155; color: #94a3b8; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 100; transition: all 0.2s; }
+        .mute-btn:hover { border-color: #5b9bd5; color: #5b9bd5; }
+        @media (max-width: 600px) {
+            .card { padding: 24px 16px; border-radius: 12px; }
+            h1 { font-size: 1.4rem; }
+            .question-text { font-size: 1rem; }
+            .choice-btn { padding: 12px 14px; font-size: 0.9rem; }
+            .btn-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../members.html">&#8592; Back to Members</a>
+        <span class="badge">Members Only</span>
+    </div>
+    <div class="container">
+        <div class="card" id="game-area"></div>
+    </div>
+    <button class="mute-btn" id="mute-btn" title="Toggle Music">&#x1F50A;</button>
+
+    <script src="../audio/games/Lofi-Chill-Music.js"></script>
+    <script>
+    (function() {
+        // All 15 questions with correct answer, wrong answers, and explanation
+        const questions = [
+            {
+                q: "A host has IP 192.168.1.100/24. What is the subnet mask?",
+                correct: "255.255.255.0",
+                wrong: ["255.255.0.0", "255.255.255.128", "255.0.0.0"],
+                explanation: "A /24 prefix means the first 24 bits are network bits. In decimal: 11111111.11111111.11111111.00000000 = 255.255.255.0"
+            },
+            {
+                q: "A /24 network provides how many usable host addresses?",
+                correct: "254",
+                wrong: ["256", "255", "252"],
+                explanation: "A /24 means 8 host bits. 2^8 = 256 total addresses, minus 2 (network ID + broadcast) = 254 usable hosts."
+            },
+            {
+                q: "A host has IP 192.168.1.100/24. What is the network ID?",
+                correct: "192.168.1.0",
+                wrong: ["192.168.1.1", "192.168.0.0", "192.168.1.100"],
+                explanation: "For a /24, the last octet is all host bits. Set them to 0 for the network ID: 192.168.1.100 \u2192 192.168.1.0"
+            },
+            {
+                q: "A host has IP 192.168.1.100/24. What is the broadcast address?",
+                correct: "192.168.1.255",
+                wrong: ["192.168.1.254", "192.168.255.255", "192.168.1.0"],
+                explanation: "For a /24, the broadcast has all host bits set to 1. Last octet = 11111111 = 255, so broadcast is 192.168.1.255"
+            },
+            {
+                q: "10.0.0.0/8 is what class of private network?",
+                correct: "Class A",
+                wrong: ["Class B", "Class C", "Class D"],
+                explanation: "10.0.0.0/8 is the Class A private range. Remember: Class A = 10.x.x.x, Class B = 172.16-31.x.x, Class C = 192.168.x.x"
+            },
+            {
+                q: "172.16.0.0/12 is what class of private network?",
+                correct: "Class B",
+                wrong: ["Class A", "Class C", "Class D"],
+                explanation: "172.16.0.0/12 is the Class B private range (172.16.0.0 \u2013 172.31.255.255). It falls within the Class B address space."
+            },
+            {
+                q: "192.168.0.0/16 is what class of private network?",
+                correct: "Class C",
+                wrong: ["Class A", "Class B", "Class D"],
+                explanation: "192.168.0.0/16 is the Class C private range. Although it uses a /16 mask here, the 192.168.x.x block is designated as Class C private addressing."
+            },
+            {
+                q: "A /26 subnet mask in decimal is?",
+                correct: "255.255.255.192",
+                wrong: ["255.255.255.128", "255.255.255.224", "255.255.255.240"],
+                explanation: "/26 = 26 network bits. Last octet: 11000000 in binary = 128 + 64 = 192. Full mask: 255.255.255.192"
+            },
+            {
+                q: "A /26 network provides how many usable hosts?",
+                correct: "62",
+                wrong: ["64", "30", "126"],
+                explanation: "/26 leaves 6 host bits. 2^6 = 64 total addresses, minus 2 (network + broadcast) = 62 usable hosts."
+            },
+            {
+                q: "169.254.x.x indicates what?",
+                correct: "DHCP failure (APIPA self-assigned)",
+                wrong: ["Private network", "Loopback", "Multicast"],
+                explanation: "169.254.x.x is APIPA (Automatic Private IP Addressing). It means the device couldn\u2019t reach a DHCP server and assigned itself a link-local address."
+            },
+            {
+                q: "127.0.0.1 is used for?",
+                correct: "Loopback/localhost testing",
+                wrong: ["Default gateway", "DHCP server", "DNS server"],
+                explanation: "127.0.0.1 is the loopback address. Traffic sent here never leaves the host \u2014 it\u2019s used to test the local TCP/IP stack."
+            },
+            {
+                q: "A host has IP 10.1.1.50/16. What is the network ID?",
+                correct: "10.1.0.0",
+                wrong: ["10.0.0.0", "10.1.1.0", "10.1.1.50"],
+                explanation: "A /16 means the first two octets are the network portion. Zero out host bits (last two octets): 10.1.1.50 \u2192 10.1.0.0"
+            },
+            {
+                q: "How many usable hosts in a /30 subnet?",
+                correct: "2",
+                wrong: ["4", "6", "0"],
+                explanation: "/30 leaves 2 host bits. 2^2 = 4 total addresses, minus 2 (network + broadcast) = 2 usable hosts."
+            },
+            {
+                q: "/30 subnets are commonly used for?",
+                correct: "Point-to-point links between routers",
+                wrong: ["Large LANs", "Wireless networks", "Server farms"],
+                explanation: "/30 subnets provide exactly 2 usable IPs \u2014 perfect for point-to-point links connecting two routers where only 2 addresses are needed."
+            },
+            {
+                q: "An IP of 224.0.0.0 to 239.255.255.255 is reserved for?",
+                correct: "Multicast",
+                wrong: ["Private addressing", "Broadcasting", "Loopback"],
+                explanation: "The range 224.0.0.0\u2013239.255.255.255 is Class D, reserved for multicast. Multicast sends data to a group of interested receivers simultaneously."
+            }
+        ];
+
+        let shuffled = [];
+        let current = 0;
+        let score = 0;
+        let answered = false;
+        let music = null;
+        let isMuted = false;
+
+        const gameArea = document.getElementById('game-area');
+        const muteBtn = document.getElementById('mute-btn');
+
+        // Fisher-Yates shuffle
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // Music control - loops the Lofi track continuously
+        function startMusic() {
+            if (isMuted || music) return;
+            music = new LofiChillMusic();
+            function loop() {
+                music.start(function() {
+                    if (!isMuted) {
+                        music = new LofiChillMusic();
+                        loop();
+                    }
+                });
+            }
+            loop();
+        }
+
+        function stopMusic() {
+            if (music) {
+                music.stop();
+                music = null;
+            }
+        }
+
+        muteBtn.addEventListener('click', function() {
+            isMuted = !isMuted;
+            muteBtn.textContent = isMuted ? '\u{1F507}' : '\u{1F50A}';
+            if (isMuted) {
+                stopMusic();
+            } else {
+                startMusic();
+            }
+        });
+
+        // Start screen with subnet primer
+        function showStart() {
+            gameArea.innerHTML = `
+                <h1>\u{1F310} IP Address Calculator</h1>
+                <p class="subtitle">Test your subnetting & IP addressing knowledge</p>
+                <div class="primer">
+                    <strong>Quick Subnet Primer:</strong><br><br>
+                    \u2022 The <strong>subnet mask</strong> separates network bits from host bits<br>
+                    \u2022 <strong>/24</strong> = 24 network bits, 8 host bits (255.255.255.0)<br>
+                    \u2022 <strong>Usable hosts</strong> = 2^(host bits) \u2212 2 (subtract network & broadcast)<br>
+                    \u2022 <strong>Network ID</strong> = all host bits set to 0<br>
+                    \u2022 <strong>Broadcast</strong> = all host bits set to 1<br><br>
+                    15 questions \u2022 Multiple choice \u2022 No timer
+                </div>
+                <button class="btn btn-primary" id="start-btn">Start Challenge</button>
+            `;
+            document.getElementById('start-btn').addEventListener('click', startGame);
+        }
+
+        // Begin the quiz
+        function startGame() {
+            shuffled = shuffle(questions);
+            current = 0;
+            score = 0;
+            startMusic();
+            showQuestion();
+        }
+
+        // Render current question
+        function showQuestion() {
+            answered = false;
+            const q = shuffled[current];
+            const choices = shuffle([q.correct, ...q.wrong]);
+
+            gameArea.innerHTML = `
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${(current / 15) * 100}%"></div>
+                </div>
+                <div class="question-num">Question ${current + 1} of 15</div>
+                <div class="question-text">${q.q}</div>
+                <div class="choices">
+                    ${choices.map(function(c) {
+                        return '<button class="choice-btn" data-value="' + c.replace(/"/g, '&quot;') + '">' + c + '</button>';
+                    }).join('')}
+                </div>
+                <div class="feedback" id="feedback"></div>
+                <button class="btn btn-primary btn-next" id="next-btn">${current < 14 ? 'Next Question \u2192' : 'See Results \u2192'}</button>
+            `;
+
+            document.querySelectorAll('.choice-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() { handleAnswer(btn, q); });
+            });
+
+            document.getElementById('next-btn').addEventListener('click', function() {
+                current++;
+                if (current < 15) showQuestion();
+                else showResults();
+            });
+        }
+
+        // Handle user's answer selection
+        function handleAnswer(btn, q) {
+            if (answered) return;
+            answered = true;
+
+            const chosen = btn.dataset.value;
+            const isCorrect = (chosen === q.correct);
+            const feedback = document.getElementById('feedback');
+            const nextBtn = document.getElementById('next-btn');
+
+            // Disable all choices and highlight correct/incorrect
+            document.querySelectorAll('.choice-btn').forEach(function(b) {
+                b.classList.add('disabled');
+                if (b.dataset.value === q.correct) {
+                    b.classList.add('correct', 'show-correct');
+                }
+                if (b === btn && !isCorrect) {
+                    b.classList.add('incorrect');
+                }
+            });
+
+            // Display feedback with explanation
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback correct-fb visible';
+                feedback.innerHTML = '<strong>\u2705 Correct!</strong> ' + q.explanation;
+            } else {
+                feedback.className = 'feedback incorrect-fb visible';
+                feedback.innerHTML = '<strong>\u274C Incorrect.</strong> ' + q.explanation +
+                    '<div class="study-ref">\u{1F4D6} Study: Networking Fundamentals \u2192 IP Addressing</div>';
+            }
+
+            nextBtn.classList.add('visible');
+        }
+
+        // Show final results
+        function showResults() {
+            stopMusic();
+            const pct = Math.round((score / 15) * 100);
+            const pass = pct >= 70;
+
+            let gradeMsg;
+            if (pct === 100) gradeMsg = '\u{1F3C6} Perfect score! You\u2019re a subnetting master!';
+            else if (pct >= 80) gradeMsg = '\u{1F389} Great job! You have a solid grasp of IP addressing concepts.';
+            else if (pct >= 70) gradeMsg = '\u{1F44D} Good work! A few more practice rounds and you\u2019ll ace it.';
+            else gradeMsg = '\u{1F4DA} Keep studying! Review subnet math, CIDR notation, and special IP ranges.';
+
+            gameArea.innerHTML = `
+                <div class="results">
+                    <h1>\u{1F310} Challenge Complete!</h1>
+                    <div class="score">${score}/15</div>
+                    <div class="score-label">${pct}% Correct</div>
+                    <div class="grade ${pass ? 'pass' : 'fail'}">${gradeMsg}</div>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" id="retry-btn">Try Again</button>
+                        <button class="btn btn-primary" id="back-btn">Back to Members</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('retry-btn').addEventListener('click', function() {
+                shuffled = shuffle(questions);
+                current = 0;
+                score = 0;
+                startMusic();
+                showQuestion();
+            });
+
+            document.getElementById('back-btn').addEventListener('click', function() {
+                window.location.href = '../members.html';
+            });
+        }
+
+        // Initialize the game
+        showStart();
+    })();
+    </script>
+</body>
+</html>
