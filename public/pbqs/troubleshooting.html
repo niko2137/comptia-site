@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting Methodology PBQ — CompTIA A+ Study Hub</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        a { color: #3b82f6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Top Bar */
+        .top-bar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-bar .back-link { font-size: 0.95em; }
+        .top-bar .score-display {
+            background: #334155;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .score-display .score-value { color: #10b981; }
+
+        /* Main Container */
+        .pbq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+        }
+
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .pbq-header h1 {
+            font-size: 1.8em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: #94a3b8;
+            font-size: 1em;
+        }
+
+        /* Exam Tip Box */
+        .exam-tip {
+            background: #1e293b;
+            border: 1px solid #3b82f6;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 32px;
+        }
+        .exam-tip .tip-label {
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .exam-tip p {
+            color: #cbd5e1;
+            font-size: 0.92em;
+            margin: 0;
+        }
+
+        /* Section Cards */
+        .exercise-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+        }
+        .exercise-section h2 {
+            color: #f1f5f9;
+            font-size: 1.3em;
+            margin-bottom: 6px;
+        }
+        .exercise-section .section-desc {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+
+        /* Drag & Drop Styles */
+        .drop-slots { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .drop-slot {
+            display: flex;
+            align-items: stretch;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px dashed #475569;
+            background: #0f172a;
+            min-height: 52px;
+            transition: all 0.2s;
+        }
+        .drop-slot.drag-over { border-color: #3b82f6; background: #1e3a5f; }
+        .drop-slot.correct { border-color: #10b981; border-style: solid; background: rgba(16,185,129,0.1); }
+        .drop-slot.incorrect { border-color: #ef4444; border-style: solid; background: rgba(239,68,68,0.1); }
+        .slot-number {
+            background: #334155;
+            color: #e2e8f0;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .slot-content {
+            flex: 1;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            color: #64748b;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+        .slot-content.has-item {
+            color: #e2e8f0;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* Drag Bank */
+        .drag-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 16px;
+            background: #0f172a;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            min-height: 60px;
+        }
+        .drag-item {
+            background: #3b82f6;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .drag-item:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .drag-item:active { cursor: grabbing; opacity: 0.8; }
+        .drag-item.placed { opacity: 0.3; pointer-events: none; }
+
+
+        /* Scenario Questions */
+        .scenario-list { display: flex; flex-direction: column; gap: 16px; }
+        .scenario-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 18px 20px;
+            transition: border-color 0.3s;
+        }
+        .scenario-item.correct { border-color: #10b981; }
+        .scenario-item.incorrect { border-color: #ef4444; }
+        .scenario-question {
+            color: #e2e8f0;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .scenario-question .q-number {
+            color: #3b82f6;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        .scenario-options { display: flex; flex-direction: column; gap: 8px; }
+        .scenario-option {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.88em;
+            color: #cbd5e1;
+            transition: all 0.2s;
+        }
+        .scenario-option:hover { border-color: #3b82f6; background: #253550; }
+        .scenario-option.selected { border-color: #3b82f6; background: #1e3a5f; color: #fff; font-weight: 500; }
+        .scenario-option.correct-answer { border-color: #10b981; background: rgba(16,185,129,0.15); color: #10b981; }
+        .scenario-option.wrong-answer { border-color: #ef4444; background: rgba(239,68,68,0.1); color: #ef4444; }
+        .scenario-feedback {
+            margin-top: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: none;
+        }
+        .scenario-feedback.show { display: block; }
+        .scenario-feedback.correct { color: #10b981; }
+        .scenario-feedback.incorrect { color: #ef4444; }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn:hover { transform: translateY(-2px); }
+        .pbq-btn-check { background: #10b981; color: #fff; }
+        .pbq-btn-check:hover { background: #059669; }
+        .pbq-btn-reset { background: #475569; color: #fff; }
+        .pbq-btn-reset:hover { background: #64748b; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .pbq-container { padding: 20px 12px 40px; }
+            .exercise-section { padding: 18px; }
+            .pbq-header h1 { font-size: 1.4em; }
+            .drag-item { font-size: 0.8em; padding: 8px 12px; }
+            .slot-number { min-width: 36px; }
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="../index.html" class="back-link">← Back to Study Hub</a>
+        <div class="score-display">Score: <span class="score-value" id="scoreDisplay">0</span> / 11</div>
+    </div>
+
+    <div class="pbq-container">
+        <!-- Header -->
+        <div class="pbq-header">
+            <h1>CompTIA Troubleshooting Methodology PBQ</h1>
+            <p class="subtitle">Performance-Based Question — The 6-Step Troubleshooting Process</p>
+        </div>
+
+        <!-- Exam Tip -->
+        <div class="exam-tip">
+            <div class="tip-label">💡 Exam Tip</div>
+            <p>Memorize this exact sequence! CompTIA will ask "What should the technician do NEXT?" — the answer is always the next step in order.</p>
+        </div>
+
+        <!-- Exercise 1: Drag & Drop Step Ordering -->
+        <div class="exercise-section">
+            <h2>Exercise 1: Step Ordering</h2>
+            <p class="section-desc">Drag each troubleshooting step into the correct position (1–6).</p>
+
+            <div class="drop-slots" id="dropSlots">
+                <div class="drop-slot" data-slot="1" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+                    <div class="slot-number">1</div>
+                    <div class="slot-content" id="slot-1">Drop step here...</div>
+                </div>
+                <div class="drop-slot" data-slot="2" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+                    <div class="slot-number">2</div>
+                    <div class="slot-content" id="slot-2">Drop step here...</div>
+                </div>
+                <div class="drop-slot" data-slot="3" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+                    <div class="slot-number">3</div>
+                    <div class="slot-content" id="slot-3">Drop step here...</div>
+                </div>
+                <div class="drop-slot" data-slot="4" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+                    <div class="slot-number">4</div>
+                    <div class="slot-content" id="slot-4">Drop step here...</div>
+                </div>
+                <div class="drop-slot" data-slot="5" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+                    <div class="slot-number">5</div>
+                    <div class="slot-content" id="slot-5">Drop step here...</div>
+                </div>
+                <div class="drop-slot" data-slot="6" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+                    <div class="slot-number">6</div>
+                    <div class="slot-content" id="slot-6">Drop step here...</div>
+                </div>
+            </div>
+
+            <div class="drag-bank" id="dragBank"></div>
+        </div>
+
+
+        <!-- Exercise 2: Scenario Questions -->
+        <div class="exercise-section">
+            <h2>Exercise 2: What Should the Tech Do Next?</h2>
+            <p class="section-desc">Select the correct next action for each troubleshooting scenario.</p>
+
+            <div class="scenario-list" id="scenarioList"></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pbq-actions">
+            <button class="pbq-btn pbq-btn-check" onclick="checkAll()">✓ Check Answers</button>
+            <button class="pbq-btn pbq-btn-reset" onclick="resetAll()">↺ Reset</button>
+        </div>
+    </div>
+
+    <script>
+    // === DATA ===
+    const correctOrder = [
+        { id: 1, short: "Identify the Problem", detail: "Question user, check logs, backup data first" },
+        { id: 2, short: "Establish a Theory of Probable Cause", detail: "Question the obvious, use OSI model" },
+        { id: 3, short: "Test the Theory to Determine Cause", detail: "Quick non-destructive test; if wrong go back to step 2; if out of depth, escalate" },
+        { id: 4, short: "Establish a Plan of Action & Implement", detail: "Write steps, consider impact, execute fix" },
+        { id: 5, short: "Verify Functionality & Implement Preventive Measures", detail: "Have user confirm, add preventive measures" },
+        { id: 6, short: "Document Findings, Actions, and Outcomes", detail: "Update ticket system, record symptoms/cause/fix" }
+    ];
+
+    const scenarios = [
+        {
+            question: "A tech just confirmed their theory was correct — the user's monitor was unplugged. What's the next step?",
+            options: [
+                "Document findings, actions, and outcomes",
+                "Establish a plan of action and implement the fix",
+                "Verify functionality with the user",
+                "Identify the problem"
+            ],
+            correct: 1
+        },
+        {
+            question: "A tech tested their theory but it didn't solve the problem. What should they do?",
+            options: [
+                "Document the failure and close the ticket",
+                "Go back to Step 2 and establish a new theory",
+                "Escalate immediately to management",
+                "Verify functionality with the user"
+            ],
+            correct: 1
+        },
+        {
+            question: "A tech just fixed a user's slow computer by removing malware. What should they do next?",
+            options: [
+                "Document findings, actions, and outcomes",
+                "Establish a new theory of probable cause",
+                "Verify functionality with the user and implement preventive measures",
+                "Close the ticket immediately"
+            ],
+            correct: 2
+        },
+        {
+            question: "A user reports their printer won't print. The tech hasn't done anything yet. What is the FIRST thing they should do?",
+            options: [
+                "Replace the printer toner",
+                "Establish a theory of probable cause",
+                "Test the theory to determine cause",
+                "Identify the problem (question the user, check logs)"
+            ],
+            correct: 3
+        },
+        {
+            question: "A tech verified the fix works and installed antivirus to prevent reinfection. What's the final step?",
+            options: [
+                "Establish a plan of action",
+                "Test another theory",
+                "Document findings, actions, and outcomes",
+                "Identify the problem"
+            ],
+            correct: 2
+        }
+    ];
+
+
+    // === STATE ===
+    let slotContents = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+    let scenarioSelections = [null, null, null, null, null];
+    let score = 0;
+    let checked = false;
+
+    // === INIT ===
+    function init() {
+        buildDragBank();
+        buildScenarios();
+    }
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function buildDragBank() {
+        const bank = document.getElementById('dragBank');
+        bank.innerHTML = '';
+        const shuffled = shuffle(correctOrder);
+        shuffled.forEach(step => {
+            const el = document.createElement('div');
+            el.className = 'drag-item';
+            el.draggable = true;
+            el.dataset.id = step.id;
+            el.textContent = step.short;
+            el.ondragstart = handleDragStart;
+            el.onclick = handleItemClick;
+            bank.appendChild(el);
+        });
+    }
+
+    function buildScenarios() {
+        const list = document.getElementById('scenarioList');
+        list.innerHTML = '';
+        scenarios.forEach((s, idx) => {
+            const item = document.createElement('div');
+            item.className = 'scenario-item';
+            item.id = `scenario-${idx}`;
+            let optionsHTML = s.options.map((opt, oi) =>
+                `<div class="scenario-option" data-scenario="${idx}" data-option="${oi}" onclick="selectOption(${idx}, ${oi})">${opt}</div>`
+            ).join('');
+            item.innerHTML = `
+                <div class="scenario-question"><span class="q-number">Q${idx+1}.</span>${s.question}</div>
+                <div class="scenario-options">${optionsHTML}</div>
+                <div class="scenario-feedback" id="feedback-${idx}"></div>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+
+    // === DRAG & DROP ===
+    let draggedId = null;
+    let selectedSlot = null;
+
+    function handleDragStart(e) {
+        draggedId = e.target.dataset.id;
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const slot = e.currentTarget;
+        slot.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const slot = e.currentTarget;
+        slot.classList.remove('drag-over');
+        const slotNum = parseInt(slot.dataset.slot);
+
+        if (checked) return;
+
+        // If slot already has an item, return it to bank
+        if (slotContents[slotNum] !== null) {
+            returnToBank(slotContents[slotNum]);
+        }
+
+        // Place item
+        placeItem(draggedId, slotNum);
+        draggedId = null;
+    }
+
+    function handleItemClick(e) {
+        if (checked) return;
+        const id = e.target.dataset.id;
+        // Find first empty slot
+        for (let i = 1; i <= 6; i++) {
+            if (slotContents[i] === null) {
+                placeItem(id, i);
+                return;
+            }
+        }
+    }
+
+    function placeItem(id, slotNum) {
+        const step = correctOrder.find(s => s.id === parseInt(id));
+        if (!step) return;
+
+        slotContents[slotNum] = parseInt(id);
+        const slotContent = document.getElementById(`slot-${slotNum}`);
+        slotContent.textContent = step.short;
+        slotContent.classList.add('has-item');
+
+        // Mark drag item as placed
+        const dragItem = document.querySelector(`.drag-item[data-id="${id}"]`);
+        if (dragItem) dragItem.classList.add('placed');
+    }
+
+    function returnToBank(id) {
+        const dragItem = document.querySelector(`.drag-item[data-id="${id}"]`);
+        if (dragItem) dragItem.classList.remove('placed');
+    }
+
+    // Click on a slot to remove its item
+    document.addEventListener('click', function(e) {
+        if (checked) return;
+        const slotContent = e.target.closest('.slot-content');
+        if (slotContent && slotContent.classList.contains('has-item')) {
+            const slotEl = slotContent.closest('.drop-slot');
+            const slotNum = parseInt(slotEl.dataset.slot);
+            const id = slotContents[slotNum];
+            returnToBank(id);
+            slotContents[slotNum] = null;
+            slotContent.textContent = 'Drop step here...';
+            slotContent.classList.remove('has-item');
+        }
+    });
+
+
+    // === SCENARIOS ===
+    function selectOption(scenarioIdx, optionIdx) {
+        if (checked) return;
+        scenarioSelections[scenarioIdx] = optionIdx;
+        // Update UI
+        const opts = document.querySelectorAll(`[data-scenario="${scenarioIdx}"]`);
+        opts.forEach(o => o.classList.remove('selected'));
+        opts[optionIdx].classList.add('selected');
+    }
+
+    // === CHECK & RESET ===
+    function checkAll() {
+        if (checked) return;
+        checked = true;
+        score = 0;
+
+        // Check Exercise 1
+        for (let i = 1; i <= 6; i++) {
+            const slot = document.querySelector(`.drop-slot[data-slot="${i}"]`);
+            if (slotContents[i] === i) {
+                slot.classList.add('correct');
+                score++;
+            } else {
+                slot.classList.add('incorrect');
+            }
+        }
+
+        // Check Exercise 2
+        scenarios.forEach((s, idx) => {
+            const item = document.getElementById(`scenario-${idx}`);
+            const feedback = document.getElementById(`feedback-${idx}`);
+            const opts = document.querySelectorAll(`[data-scenario="${idx}"]`);
+
+            if (scenarioSelections[idx] === s.correct) {
+                item.classList.add('correct');
+                opts[s.correct].classList.add('correct-answer');
+                feedback.textContent = '✓ Correct!';
+                feedback.className = 'scenario-feedback show correct';
+                score++;
+            } else {
+                item.classList.add('incorrect');
+                if (scenarioSelections[idx] !== null) {
+                    opts[scenarioSelections[idx]].classList.add('wrong-answer');
+                }
+                opts[s.correct].classList.add('correct-answer');
+                feedback.textContent = '✗ Incorrect — The correct answer is: ' + s.options[s.correct];
+                feedback.className = 'scenario-feedback show incorrect';
+            }
+        });
+
+        updateScore();
+    }
+
+    function resetAll() {
+        checked = false;
+        score = 0;
+        slotContents = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+        scenarioSelections = [null, null, null, null, null];
+
+        // Reset slots
+        for (let i = 1; i <= 6; i++) {
+            const slot = document.querySelector(`.drop-slot[data-slot="${i}"]`);
+            slot.classList.remove('correct', 'incorrect');
+            const content = document.getElementById(`slot-${i}`);
+            content.textContent = 'Drop step here...';
+            content.classList.remove('has-item');
+        }
+
+        // Rebuild
+        buildDragBank();
+        buildScenarios();
+        updateScore();
+    }
+
+    function updateScore() {
+        document.getElementById('scoreDisplay').textContent = score;
+    }
+
+    // Start
+    init();
+    </script>
+</body>
+</html>

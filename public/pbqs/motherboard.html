@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motherboard PBQ — CompTIA A+ Study Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+        .top-bar { background: #1e293b; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; }
+        .top-bar a { color: #94a3b8; font-size: 0.85rem; font-weight: 500; text-decoration: none; }
+        .top-bar a:hover { color: #fff; }
+        .top-bar .score { color: #3b82f6; font-weight: 700; font-size: 0.9rem; }
+        header { text-align: center; padding: 24px 16px 16px; }
+        header h1 { font-size: 1.4rem; color: #3b82f6; margin-bottom: 4px; }
+        header p { font-size: 0.85rem; color: #94a3b8; }
+
+        .instructions { max-width: 900px; margin: 0 auto 20px; background: #1e293b; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 14px 18px; font-size: 0.85rem; color: #94a3b8; }
+        .instructions strong { color: #e2e8f0; }
+        .layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; max-width: 1200px; margin: 0 auto; padding: 0 20px 40px; }
+        .board-area { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+        .board-area h3 { color: #3b82f6; font-size: 1rem; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #334155; }
+        .mb-image { width: 100%; max-width: 600px; margin: 0 auto 20px; display: block; border-radius: 8px; border: 2px solid #334155; }
+        .drop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+        .drop-zone { background: #0f172a; border: 2px dashed #475569; border-radius: 6px; padding: 8px 10px; min-height: 48px; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .drop-zone:hover { border-color: #3b82f6; }
+        .drop-zone.drag-over { border-color: #f59e0b; background: #1e293b; }
+        .drop-zone.correct { border-color: #10b981; background: rgba(16,185,129,0.1); border-style: solid; }
+        .drop-zone.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.1); border-style: solid; animation: shake 0.4s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+        .slot-num { font-size: 0.7rem; color: #64748b; font-weight: 700; min-width: 24px; }
+        .slot-num.high { color: #ef4444; }
+        .slot-num.med { color: #f59e0b; }
+        .slot-num.low { color: #10b981; }
+        .slot-hint { font-size: 0.7rem; color: #475569; font-style: italic; }
+        .dropped-name { font-size: 0.78rem; font-weight: 600; color: #3b82f6; }
+
+        /* DRAG PANEL */
+        .drag-panel { background: #1e293b; border-radius: 12px; padding: 16px; border: 1px solid #334155; position: sticky; top: 60px; max-height: calc(100vh - 80px); overflow-y: auto; }
+        .drag-panel h3 { color: #f59e0b; font-size: 0.9rem; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #334155; }
+        .drag-item { background: #0f172a; border: 1px solid #3b82f6; border-radius: 5px; padding: 7px 10px; margin-bottom: 5px; font-size: 0.75rem; cursor: grab; color: #e2e8f0; transition: all 0.2s; user-select: none; }
+        .drag-item:hover { background: #1e3a5f; border-color: #60a5fa; }
+        .drag-item:active { cursor: grabbing; }
+        .drag-item.placed { opacity: 0.3; pointer-events: none; border-color: #334155; }
+
+        /* CONTROLS */
+        .controls { max-width: 1200px; margin: 0 auto; padding: 0 20px 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .ctrl-btn { padding: 8px 18px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+        .ctrl-btn.check { background: #10b981; color: #fff; }
+        .ctrl-btn.check:hover { background: #059669; }
+        .ctrl-btn.reset { background: #475569; color: #fff; }
+        .ctrl-btn.reset:hover { background: #64748b; }
+        .ctrl-btn.reveal { background: #f59e0b; color: #000; }
+        .ctrl-btn.reveal:hover { background: #d97706; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .drag-panel { position: static; max-height: none; }
+            .drop-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 500px) { .drop-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="../index.html">&larr; Back to Study Hub</a>
+        <span class="score" id="scoreDisplay">0 / 33 correct</span>
+    </div>
+
+    <header>
+        <h1>Motherboard Component Identification</h1>
+        <p>Drag component labels to their correct numbered slots</p>
+    </header>
+
+    <div class="instructions">
+        <strong>Instructions:</strong> Study the motherboard diagram below. Drag each component label from the right panel to its correct numbered slot. Colors indicate exam priority: <span style="color:#ef4444">RED = High</span>, <span style="color:#f59e0b">AMBER = Medium</span>, <span style="color:#10b981">GREEN = Low</span>.
+    </div>
+
+    <div class="controls">
+        <button class="ctrl-btn check" onclick="checkAnswers()">Check Answers</button>
+        <button class="ctrl-btn reset" onclick="resetAll()">Reset All</button>
+        <button class="ctrl-btn reveal" onclick="revealAll()">Reveal Answers</button>
+    </div>
+
+    <div class="layout">
+        <div>
+            <!-- MOTHERBOARD IMAGE -->
+            <div class="board-area">
+                <h3>ASUS TUF Gaming Z590-PLUS WIFI — Reference Diagram</h3>
+                <img src="../Images/Diagrams/Motherboard.svg" alt="Motherboard diagram with numbered components" class="mb-image" onerror="this.src='../Images/Diagrams/Motherboard.png'">
+            </div>
+
+            <!-- BOARD COMPONENTS -->
+            <div class="board-area" style="margin-top:16px;">
+                <h3>Board Components (1-22)</h3>
+                <div class="drop-grid" id="boardGrid"></div>
+            </div>
+
+            <!-- REAR PANEL -->
+            <div class="board-area" style="margin-top:16px;">
+                <h3>Rear Panel Connectors (A-K)</h3>
+                <div class="drop-grid" id="rearGrid"></div>
+            </div>
+        </div>
+
+        <!-- DRAG PANEL -->
+        <div class="drag-panel">
+            <h3>Component Labels</h3>
+            <div id="dragItems"></div>
+        </div>
+    </div>
+
+    <script>
+    const boardComponents = [
+        {id:'1',name:'CPU Socket (LGA 1200)',hint:'Intel 10th/11th gen, pins on board',priority:'high'},
+        {id:'2',name:'DIMM Slots (DDR4)',hint:'4 slots, dual-channel matched pairs',priority:'high'},
+        {id:'3',name:'Expansion Slots (PCIe)',hint:'x16 for GPU, x1/x4 shorter slots',priority:'high'},
+        {id:'4',name:'8+4 Pin EPS (CPU Power)',hint:'Dedicated 12V CPU power',priority:'high'},
+        {id:'5',name:'24-Pin ATX (Main Power)',hint:'3.3V, 5V, 12V rails. No POST without it',priority:'high'},
+        {id:'6',name:'M.2 Slots (NVMe/SATA)',hint:'PCIe 4.0, up to 7000 MB/s',priority:'high'},
+        {id:'7',name:'SATA 6Gb/s Ports',hint:'HDDs, SSDs, optical. Clicking = HDD fail',priority:'high'},
+        {id:'8',name:'USB 3.2 Gen 1 Front Panel',hint:'19-pin internal header, 5 Gbps',priority:'med'},
+        {id:'9',name:'USB 3.2 Gen 1 Header',hint:'Additional internal USB 3.x header',priority:'med'},
+        {id:'10',name:'USB 2.0 Headers',hint:'9-pin internal, 480 Mbps',priority:'med'},
+        {id:'11',name:'AURA Addressable Gen2',hint:'ARGB, individually controllable LEDs',priority:'low'},
+        {id:'12',name:'AURA RGB Headers',hint:'Standard 4-pin RGB, all same color',priority:'low'},
+        {id:'13',name:'Clear CMOS Header',hint:'Resets BIOS to defaults',priority:'med'},
+        {id:'14',name:'COM Port Header',hint:'Legacy serial, industrial/POS',priority:'low'},
+        {id:'15',name:'Front Panel Audio Header',hint:'HD Audio, headphone/mic jacks',priority:'med'},
+        {id:'16',name:'System Panel Header',hint:'Power/reset buttons, LEDs from case',priority:'high'},
+        {id:'17',name:'Thunderbolt Header',hint:'TB5 = 80 Gbps, USB-C connector',priority:'low'},
+        {id:'18',name:'Q-LEDs (Diagnostic)',hint:'POST failure: CPU/DRAM/VGA/BOOT',priority:'med'},
+        {id:'19',name:'PCH Heatsink',hint:'Platform Controller Hub, replaced bridges',priority:'med'},
+        {id:'20',name:'CMOS Battery (CR2032)',hint:'Dead = clock resets, settings lost',priority:'high'},
+        {id:'21',name:'Fan & Pump Headers',hint:'CPU_FAN required, 4-pin = PWM',priority:'high'},
+        {id:'22',name:'Rear Panel I/O',hint:'All external ports on back',priority:'med'}
+    ];
+
+    const rearComponents = [
+        {id:'A',name:'USB 2.0 Type-A',hint:'480 Mbps, black, keyboards/mice',priority:'high'},
+        {id:'B',name:'HDMI Port',hint:'Video + audio, 19-pin, needs iGPU',priority:'high'},
+        {id:'C',name:'USB 3.2 Gen 2x2 Type-C',hint:'20 Gbps, USB-C, not Thunderbolt',priority:'med'},
+        {id:'D',name:'USB 3.2 Gen 2 Type-A',hint:'10 Gbps, usually red',priority:'med'},
+        {id:'E',name:'Wi-Fi 6 Module',hint:'802.11ax, Bluetooth, M.2 E-key',priority:'high'},
+        {id:'F',name:'Optical S/PDIF OUT',hint:'Digital audio, fiber optic, legacy',priority:'low'},
+        {id:'G',name:'PS/2 Combo Port',hint:'NOT hot-swappable, purple=KB',priority:'med'},
+        {id:'H',name:'DisplayPort',hint:'20-pin, latching, higher refresh',priority:'high'},
+        {id:'I',name:'USB 3.2 Gen 1 Type-A',hint:'5 Gbps, blue, SuperSpeed',priority:'high'},
+        {id:'J',name:'Ethernet RJ-45 (2.5G)',hint:'APIPA 169.254.x.x = DHCP fail',priority:'high'},
+        {id:'K',name:'Audio Jacks (3.5mm)',hint:'Green=out, pink=mic, blue=line in',priority:'med'}
+    ];
+
+    const allComponents = [...boardComponents, ...rearComponents];
+    let placed = {};
+
+    function buildDropZones() {
+        const boardGrid = document.getElementById('boardGrid');
+        const rearGrid = document.getElementById('rearGrid');
+        boardComponents.forEach(c => { boardGrid.innerHTML += createDropZone(c); });
+        rearComponents.forEach(c => { rearGrid.innerHTML += createDropZone(c); });
+    }
+
+    function createDropZone(c) {
+        return `<div class="drop-zone" data-id="${c.id}" data-correct="${c.name}" ondragover="dragOver(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">
+            <span class="slot-num ${c.priority}">#${c.id}</span>
+            <span class="slot-hint">${c.hint}</span>
+        </div>`;
+    }
+
+    function buildDragItems() {
+        const container = document.getElementById('dragItems');
+        const shuffled = [...allComponents].sort(() => Math.random() - 0.5);
+        container.innerHTML = '';
+        shuffled.forEach(c => {
+            container.innerHTML += `<div class="drag-item" draggable="true" data-name="${c.name}" ondragstart="dragStart(event)">${c.name}</div>`;
+        });
+    }
+
+    function dragStart(e) { e.dataTransfer.setData('text/plain', e.target.dataset.name); }
+    function dragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+    function drop(e) {
+        e.preventDefault();
+        const zone = e.currentTarget;
+        zone.classList.remove('drag-over');
+        const name = e.dataTransfer.getData('text/plain');
+        const zoneId = zone.dataset.id;
+
+        // Remove previous placement in this zone
+        if (placed[zoneId]) {
+            const prev = document.querySelector(`.drag-item[data-name="${placed[zoneId]}"]`);
+            if (prev) prev.classList.remove('placed');
+        }
+
+        placed[zoneId] = name;
+        zone.innerHTML = `<span class="slot-num">#${zoneId}</span><span class="dropped-name">${name}</span>`;
+        zone.classList.remove('correct','incorrect');
+
+        // Mark drag item as placed
+        const item = document.querySelector(`.drag-item[data-name="${name}"]`);
+        if (item) item.classList.add('placed');
+
+        updateScore();
+    }
+
+    function checkAnswers() {
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            const id = zone.dataset.id;
+            const correct = zone.dataset.correct;
+            if (placed[id]) {
+                zone.classList.remove('correct','incorrect');
+                if (placed[id] === correct) {
+                    zone.classList.add('correct');
+                } else {
+                    zone.classList.add('incorrect');
+                }
+            }
+        });
+        updateScore();
+    }
+
+    function updateScore() {
+        let score = 0;
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            if (placed[zone.dataset.id] === zone.dataset.correct) score++;
+        });
+        document.getElementById('scoreDisplay').textContent = `${score} / ${allComponents.length} correct`;
+    }
+
+    function resetAll() {
+        placed = {};
+        document.getElementById('boardGrid').innerHTML = '';
+        document.getElementById('rearGrid').innerHTML = '';
+        buildDropZones();
+        buildDragItems();
+        document.getElementById('scoreDisplay').textContent = `0 / ${allComponents.length} correct`;
+    }
+
+    function revealAll() {
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            const correct = zone.dataset.correct;
+            const id = zone.dataset.id;
+            placed[id] = correct;
+            zone.innerHTML = `<span class="slot-num">#${id}</span><span class="dropped-name">${correct}</span>`;
+            zone.classList.add('correct');
+            zone.classList.remove('incorrect');
+        });
+        document.querySelectorAll('.drag-item').forEach(item => item.classList.add('placed'));
+        updateScore();
+    }
+
+    // INIT
+    buildDropZones();
+    buildDragItems();
+    </script>
+</body>
+</html>
