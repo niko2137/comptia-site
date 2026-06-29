@@ -57,7 +57,9 @@ body{flex-direction:column;}
     <div class="sr"><span class="sl">Time</span><span class="sv" id="np-time" style="color:#0cf">0:00</span></div>
     <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;">
         <button onclick="ncdTogglePause()" id="ncd-pause" class="pb ps">⏸ PAUSE</button>
-        <button onclick="ncdToggleMute()" id="ncd-mute" class="pb mu">🔊 MUTE</button>
+        <button onclick="ncdToggleMusic()" id="ncd-music" class="pb mu">🎵 MUSIC</button>
+        <button onclick="ncdToggleSfx()" id="ncd-sfx" class="pb mu">🔊 SFX</button>
+        <button onclick="ncdMuteAll()" id="ncd-muteall" class="pb mu">🔇 MUTE ALL</button>
         <a href="../index.html" class="pb rt">← RETURN</a>
     </div>
 </div>
@@ -391,7 +393,7 @@ function initAudio() {
     }
 }
 function playTone(freq, duration, type='sine', volume=0.08) {
-    if (!audioCtx) return;
+    if (!audioCtx || ncdSfxMuted) return;
     try {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -1731,16 +1733,52 @@ function devMaxStats() {
     if (gameState === 'start') startGame();
 }
 
-// ========== SIDE PANEL & MUSIC ==========
-let ncdMuted = false;
+// ========== SIDE PANEL & AUDIO CONTROLS ==========
+let ncdMusicMuted = false;
+let ncdSfxMuted = false;
+
 function ncdTogglePause() {
     if (gameState === 'playing') { pauseGame(); document.getElementById('ncd-pause').textContent = '▶ RESUME'; }
     else if (gameState === 'paused') { resumeGame(); document.getElementById('ncd-pause').textContent = '⏸ PAUSE'; }
 }
-function ncdToggleMute() {
-    ncdMuted = !ncdMuted;
-    document.getElementById('ncd-mute').textContent = ncdMuted ? '🔇 UNMUTE' : '🔊 MUTE';
-    if (window._ncdMusic) { if (ncdMuted) window._ncdMusic.pause(); else window._ncdMusic.play().catch(()=>{}); }
+
+function ncdToggleMusic() {
+    ncdMusicMuted = !ncdMusicMuted;
+    document.getElementById('ncd-music').textContent = ncdMusicMuted ? '🎵 MUSIC OFF' : '🎵 MUSIC';
+    document.getElementById('ncd-music').style.opacity = ncdMusicMuted ? '0.5' : '1';
+    if (window._ncdMusic) {
+        if (ncdMusicMuted) window._ncdMusic.pause();
+        else window._ncdMusic.play().catch(()=>{});
+    }
+}
+
+function ncdToggleSfx() {
+    ncdSfxMuted = !ncdSfxMuted;
+    document.getElementById('ncd-sfx').textContent = ncdSfxMuted ? '🔇 SFX OFF' : '🔊 SFX';
+    document.getElementById('ncd-sfx').style.opacity = ncdSfxMuted ? '0.5' : '1';
+}
+
+function ncdMuteAll() {
+    const allMuted = ncdMusicMuted && ncdSfxMuted;
+    if (allMuted) {
+        // Unmute both
+        ncdMusicMuted = false; ncdSfxMuted = false;
+        document.getElementById('ncd-music').textContent = '🎵 MUSIC';
+        document.getElementById('ncd-music').style.opacity = '1';
+        document.getElementById('ncd-sfx').textContent = '🔊 SFX';
+        document.getElementById('ncd-sfx').style.opacity = '1';
+        document.getElementById('ncd-muteall').textContent = '🔇 MUTE ALL';
+        if (window._ncdMusic) window._ncdMusic.play().catch(()=>{});
+    } else {
+        // Mute both
+        ncdMusicMuted = true; ncdSfxMuted = true;
+        document.getElementById('ncd-music').textContent = '🎵 MUSIC OFF';
+        document.getElementById('ncd-music').style.opacity = '0.5';
+        document.getElementById('ncd-sfx').textContent = '🔇 SFX OFF';
+        document.getElementById('ncd-sfx').style.opacity = '0.5';
+        document.getElementById('ncd-muteall').textContent = '🔊 UNMUTE ALL';
+        if (window._ncdMusic) window._ncdMusic.pause();
+    }
 }
 function updateNcdPanel() {
     const el = document.getElementById('np-score'); if (!el) return;
@@ -1754,11 +1792,38 @@ function updateNcdPanel() {
 }
 setInterval(updateNcdPanel, 500);
 
-// Music loader
+// SoundBox player (CPlayer) - tiny music synth
+var CPlayer = function() { var f = function(a) { return a < 1 ? Math.pow(a, 3) : Math.pow(a - 2, 3) + 2 }; this.init = function(a) { this.song = a; this.mMixBuf = new Int32Array(a.rowLen * a.patternLen * (a.endPattern + 1) * 2); this.mNumWords = this.mMixBuf.length }; this.generate = function() { var a = this.song, e = this.mNumWords, b = this.mMixBuf, d, h, c, g, k, l, m, n, p, q, r, s, t, u, v, w, x; for (d = this.mNumWords; d--;) { h = a.songData.length; for (c = 0; c < h; c++) { var i = a.songData[c]; var j = a.rowLen; var A = a.patternLen; var B = a.endPattern; var C = d / (j * A * 2) | 0; var D = (d / (j * 2) | 0) % A; var E = i.p[C] - 1; if (E >= 0) { var F = i.c[E]; if (F) { var G = F.n[D]; if (G) { g = i.i; k = g[0]; l = g[1]; m = 0; if (g[3]) { m = g[3]; m = m * (1 + (d % (j * 2)) / (j * 2)) } n = g[4]; p = g[5]; q = 0; if (g[8]) { q = g[8]; q = q * (1 + (d % (j * 2)) / (j * 2)) } r = g[9]; s = g[10]; t = g[11]; u = g[12]; v = g[13]; w = 0.003959503758 * Math.pow(2, (G - 128) / 12); x = 0.003959503758 * Math.pow(2, ((G + g[6] - 128) / 12)); if (g[14]) { var arp = g[14]; var arpSpeed = g[15] || 1; } var lfoAmt = g[17]; var lfoFreq = Math.pow(2, g[18] - 9) / j; var lfoFxFreq = g[19]; var fxFilter = g[20]; var fxFreq = g[21] * 44.1 / 44100; var fxRes = g[22] / 255; var fxDist = g[23] * 1e-5; var fxDrive = g[24] / 32; var fxPanAmt = g[25] / 512; var fxPanFreq = 6.283184 * Math.pow(2, g[26] - 9) / j; var fxDelay = g[27] * j >> 1; var fxDelayAmt = g[28] / 255; var row = D; var env, lfo; for (var sample = d % (j * 2); sample < j * 2; sample += 2) { env = s ? Math.max(1 - (sample / (j * 2)) / (s / 255), 0) : 1; if (sample < t * j / 32) env *= sample / (t * j / 32); else if (sample >= (j * 2) - u * j / 32) env *= ((j * 2) - sample) / (u * j / 32); if (v) env = Math.pow(env, Math.max(v / 16, 1)); lfo = lfoAmt ? Math.sin(lfoFreq * sample * 6.283184) * lfoAmt / 512 : 0; var osc1 = 0, osc2 = 0; var t1 = w * sample + m * sample; var t2 = x * sample + q * sample; switch (k) { case 0: osc1 = Math.sin(t1 * 6.283184); break; case 1: osc1 = t1 % 1 < 0.5 ? 1 : -1; break; case 2: osc1 = 2 * (t1 % 1) - 1; break; case 3: osc1 = (4 * (t1 % 1)) - (4 * Math.floor(t1 % 1 + 0.5)); osc1 = osc1 < -1 ? -1 : osc1 > 1 ? 1 : osc1; break; } switch (n) { case 0: osc2 = Math.sin(t2 * 6.283184); break; case 1: osc2 = t2 % 1 < 0.5 ? 1 : -1; break; case 2: osc2 = 2 * (t2 % 1) - 1; break; case 3: osc2 = (4 * (t2 % 1)) - (4 * Math.floor(t2 % 1 + 0.5)); osc2 = osc2 < -1 ? -1 : osc2 > 1 ? 1 : osc2; break; } var out = (osc1 * l + osc2 * p) / 512; if (r) out += (Math.random() * 2 - 1) * r / 255; out *= env; b[d] += out * 32768 | 0; } } } } } } return 1 }; this.createWave = function() { var a = this.mNumWords, b = this.mMixBuf, c = 44 + a * 2, d = new Uint8Array(c); d.set([82, 73, 70, 70, (c - 8) & 255, ((c - 8) >> 8) & 255, ((c - 8) >> 16) & 255, ((c - 8) >> 24) & 255, 87, 65, 86, 69, 102, 109, 116, 32, 16, 0, 0, 0, 1, 0, 2, 0, 68, 172, 0, 0, 16, 177, 2, 0, 4, 0, 16, 0, 100, 97, 116, 97, (c - 44) & 255, ((c - 44) >> 8) & 255, ((c - 44) >> 16) & 255, ((c - 44) >> 24) & 255]); for (var e = 0; e < a; e++) { var s = Math.max(-32768, Math.min(32767, b[e])); d[44 + e * 2] = s & 255; d[44 + e * 2 + 1] = (s >> 8) & 255; } return d } };
+
+// Music loader - correct path to audio file
 (function loadNcdMusic(){
-    const s = document.createElement('script'); s.src = '../js/music/Neon-Circuit-Dash-music.js';
-    s.onload = () => { if(typeof song!=='undefined'&&window.CPlayer){ try{ const p=new CPlayer();p.init(song);p.generate();let c=setInterval(()=>{if(p.generate()>=1){clearInterval(c);const w=p.createWave();const a=document.createElement('audio');a.src=URL.createObjectURL(new Blob([w],{type:'audio/wav'}));a.loop=true;a.volume=0.3;if(!ncdMuted)a.play().catch(()=>{});window._ncdMusic=a;}},100);}catch(e){}}};
-    s.onerror=()=>{};document.head.appendChild(s);
+    const s = document.createElement('script'); s.src = '../audio/games/Neon-Circuit-Dash-Music.js';
+    s.onload = () => { if(typeof song!=='undefined'){
+        try {
+            const p = new CPlayer();
+            p.init(song);
+            let c = setInterval(()=>{
+                if(p.generate() >= 1){
+                    clearInterval(c);
+                    const w = p.createWave();
+                    const a = document.createElement('audio');
+                    a.src = URL.createObjectURL(new Blob([w], {type:'audio/wav'}));
+                    a.loop = true;
+                    a.volume = 0.3;
+                    window._ncdMusic = a;
+                    // Auto-play on first user interaction
+                    if (!ncdMusicMuted) {
+                        document.addEventListener('click', function playOnce() {
+                            a.play().catch(()=>{});
+                            document.removeEventListener('click', playOnce);
+                        }, { once: true });
+                    }
+                }
+            }, 200);
+        } catch(e) { console.warn('Music init failed:', e); }
+    }};
+    s.onerror = () => { /* No music file - silent fail */ };
+    document.head.appendChild(s);
 })();
 
 // ========== INIT ==========
