@@ -4,8 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operating Systems PBQ — CompTIA A+ Study Hub</title>
-    <link rel="stylesheet" href="../css/style.css">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        a { color: #5b9bd5; text-decoration: none; }
+        a:hover { color: #fff; }
+        :root {
+            --navy: #1F497D;
+            --navy-dark: #152d4f;
+            --blue-accent: #366092;
+            --blue-light: #5b9bd5;
+            --blue-pale: #1e3a5f;
+            --red: #e74c3c;
+            --green: #27ae60;
+            --text-dark: #f1f5f9;
+            --text-body: #e2e8f0;
+            --text-muted: #94a3b8;
+            --bg-white: #1e293b;
+            --bg-section: #1e293b;
+            --border: #334155;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --radius: 8px;
+        }
+
         /* PBQ-specific styles */
         .pbq-container {
             max-width: 1100px;
@@ -18,7 +46,7 @@
         }
         .pbq-header h1 {
             font-size: 2em;
-            color: var(--navy);
+            color: #f1f5f9;
             margin-bottom: 8px;
         }
         .pbq-header .subtitle {
@@ -27,8 +55,8 @@
             margin-bottom: 16px;
         }
         .pbq-instructions {
-            background: var(--bg-section);
-            border: 1px solid var(--border);
+            background: #1e293b;
+            border: 1px solid #334155;
             border-radius: var(--radius);
             padding: 20px 24px;
             margin-bottom: 32px;
@@ -38,7 +66,7 @@
         .pbq-instructions h3 {
             margin-top: 0;
             margin-bottom: 8px;
-            color: var(--navy);
+            color: var(--blue-light);
             font-size: 1.1em;
         }
         .pbq-instructions ul {
@@ -58,7 +86,7 @@
         }
         .drop-zone-section h3,
         .drag-bank-section h3 {
-            color: var(--navy);
+            color: var(--blue-light);
             margin-bottom: 16px;
             font-size: 1.1em;
             padding-bottom: 8px;
@@ -81,8 +109,8 @@
             margin-bottom: 12px;
             border-radius: var(--radius);
             overflow: hidden;
-            border: 1px solid var(--border);
-            background: #fff;
+            border: 1px solid #334155;
+            background: #1e293b;
             transition: all 0.2s;
         }
         .drop-item:hover {
@@ -103,7 +131,7 @@
             padding: 12px 16px;
             font-size: 0.88em;
             color: var(--text-body);
-            border-right: 1px solid var(--border);
+            border-right: 1px solid #334155;
         }
         .drop-target {
             min-width: 180px;
@@ -112,7 +140,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-section);
+            background: #0f172a;
             font-size: 0.82em;
             color: var(--text-muted);
             font-style: italic;
@@ -121,23 +149,25 @@
             text-align: center;
         }
         .drop-target.has-item {
-            background: var(--blue-pale);
-            color: var(--navy);
+            background: #1e3a5f;
+            color: #93c5fd;
             font-style: normal;
             font-weight: 600;
             font-family: 'Consolas', 'Courier New', monospace;
         }
         .drop-target.drag-over {
-            background: #d4edda;
-            border: 2px dashed var(--green);
+            background: #064e3b;
+            border: 2px dashed #27ae60;
         }
         .drop-target.correct {
-            background: #d4edda;
-            border: 2px solid var(--green);
+            background: rgba(39,174,96,0.15);
+            border: 2px solid #27ae60;
+            color: #27ae60;
         }
         .drop-target.incorrect {
-            background: #f8d7da;
-            border: 2px solid var(--red);
+            background: rgba(231,76,60,0.15);
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
         }
 
         /* Drag items bank */
@@ -147,7 +177,7 @@
             gap: 10px;
         }
         .drag-item {
-            background: var(--navy);
+            background: #366092;
             color: #fff;
             padding: 10px 14px;
             border-radius: 6px;
@@ -159,7 +189,7 @@
             font-family: 'Consolas', 'Courier New', monospace;
         }
         .drag-item:hover {
-            background: var(--blue-accent);
+            background: #5b9bd5;
             transform: translateY(-1px);
             box-shadow: var(--shadow);
         }
@@ -223,12 +253,12 @@
             display: block;
         }
         .score-display.pass {
-            background: #d4edda;
-            border: 2px solid var(--green);
+            background: rgba(39,174,96,0.15);
+            border: 2px solid #27ae60;
         }
         .score-display.fail {
-            background: #f8d7da;
-            border: 2px solid var(--red);
+            background: rgba(231,76,60,0.15);
+            border: 2px solid #e74c3c;
         }
         .score-display h2 {
             margin: 0 0 8px;
@@ -242,10 +272,10 @@
         .pbq-cta {
             text-align: center;
             padding: 40px 24px;
-            background: var(--bg-section);
+            background: #1e293b;
             border-radius: var(--radius);
             margin-top: 40px;
-            border: 1px solid var(--border);
+            border: 1px solid #334155;
         }
         .pbq-cta p {
             color: var(--text-muted);
@@ -262,34 +292,20 @@
 
         /* Mobile responsive */
         @media (max-width: 768px) {
-            .dnd-layout {
-                grid-template-columns: 1fr;
-            }
-            .drop-target {
-                min-width: 130px;
-                max-width: 130px;
-            }
-            .drop-description {
-                font-size: 0.82em;
-                padding: 10px 12px;
-            }
-            .pbq-header h1 {
-                font-size: 1.5em;
-            }
+            .dnd-layout { grid-template-columns: 1fr; }
+            .drag-bank-section { position: static; max-height: none; }
+            .drop-target { min-width: auto; max-width: 100%; }
+            .drop-item { flex-direction: column; }
+            .drop-description { border-right: none; border-bottom: 1px solid #334155; }
+            .pbq-header h1 { font-size: 1.5em; }
+            .pbq-container { padding: 24px 16px 40px; }
         }
     </style>
 </head>
 <body>
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="container">
-            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
-            <ul class="nav-links">
-                <li><a href="../index.html">← Back to Home</a></li>
-                <li><a href="#buy" class="nav-cta">Get the Book</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div style="background:#1e293b;border-bottom:1px solid #334155;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="../index.html" style="color:#5b9bd5;font-weight:600;font-size:0.9em;">← Back to Study Hub</a>
+    </div>
 
     <div class="pbq-container">
         <div class="pbq-header">
