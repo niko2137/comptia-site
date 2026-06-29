@@ -3,379 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Members — CompTIA A+ Study Hub</title>
-    <meta name="description" content="CompTIA A+ Complete Study Guide — study tools, games, and resources.">
+    <title>Members Area — CompTIA A+ Study Hub</title>
+    <meta name="description" content="Exclusive members-only content for CompTIA A+ book owners. 500+ flash cards, glossary, arcade games, and study tools.">
     <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-        --navy: #1a365d;
-        --navy-dark: #0f2440;
-        --blue-accent: #3182ce;
-        --blue-pale: #ebf4ff;
-        --text-body: #2d3748;
-        --text-muted: #718096;
-        --border: #e2e8f0;
-        --red: #e53e3e;
-        --orange: #c8a800;
-        --green: #38a169;
-        --bg-section: #f7fafc;
-        --shadow: 0 2px 8px rgba(0,0,0,0.08);
-        --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
-    }
-    body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        color: var(--text-body);
-        line-height: 1.6;
-        background: #fff;
-    }
-    a { color: var(--blue-accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* STICKY NAV */
-    .member-nav {
-        background: var(--navy);
-        padding: 0 24px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .member-nav .nav-brand {
-        font-weight: 700; font-size: 1.05em; color: #fff;
-        text-decoration: none; padding: 14px 0; white-space: nowrap;
-    }
-    .member-nav .nav-items {
-        display: flex; align-items: center; gap: 4px;
-    }
-    .member-nav .nav-items a {
-        color: rgba(255,255,255,0.85); font-size: 0.85em; font-weight: 500;
-        text-decoration: none; padding: 14px 12px; transition: all 0.2s;
-        white-space: nowrap;
-    }
-    .member-nav .nav-items a:hover { color: #fff; background: rgba(255,255,255,0.1); text-decoration: none; }
-    .hamburger {
-        display: none; background: none; border: none; color: #fff;
-        font-size: 1.5em; cursor: pointer; padding: 8px;
-    }
-
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-
-    /* WELCOME BANNER */
-    .welcome-banner {
-        background: linear-gradient(135deg, var(--navy) 0%, var(--blue-accent) 100%);
-        color: #fff; padding: 40px 32px; text-align: center;
-    }
-    .welcome-banner h2 { color: #fff; margin-bottom: 8px; font-size: 1.8em; }
-    .welcome-banner p { color: #b3d4fc; font-size: 1.05em; }
-
-    /* SECTIONS */
-    .section { margin-bottom: 56px; }
-    .section h3 {
-        font-size: 1.4em; margin-bottom: 16px; padding-bottom: 12px;
-        border-bottom: 2px solid var(--border); color: var(--navy);
-    }
-    .section-desc { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95em; }
-
-    /* GAMES GRID */
-    .games-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;
-    }
-    .game-card {
-        background: #fff; border: 1px solid var(--border); border-radius: 12px;
-        padding: 24px; text-align: center; box-shadow: var(--shadow); transition: all 0.2s;
-    }
-    .game-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-    .game-icon { font-size: 2.5em; margin-bottom: 12px; }
-    .game-card h4 { margin: 0 0 8px; color: var(--navy); }
-    .game-card p { font-size: 0.85em; color: var(--text-muted); margin-bottom: 16px; }
-    .game-link {
-        display: inline-block; padding: 8px 20px; background: var(--blue-pale);
-        color: var(--navy); border-radius: 6px; font-size: 0.85em; font-weight: 600;
-        transition: all 0.2s;
-    }
-    .game-link:hover { background: var(--navy); color: #fff; text-decoration: none; }
-
-    /* STUDY TOOLS */
-    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-    .tool-card {
-        background: #fff; border: 1px solid var(--border); border-radius: 10px;
-        padding: 24px; box-shadow: var(--shadow);
-    }
-    .tool-card h4 { margin: 0 0 16px; color: var(--navy); font-size: 1.1em; }
-    .checklist { list-style: none; padding: 0; margin: 0; }
-    .checklist li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9em; }
-    .checklist li:last-child { border-bottom: none; }
-    .checklist label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
-    .checklist input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--green); }
-    .schedule-week {
-        padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9em; color: var(--text-muted);
-    }
-    .schedule-week:last-child { border-bottom: none; }
-    .schedule-week strong { color: var(--navy); }
-
-    /* QUICK LINKS */
-    .links-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
-    }
-    .link-card {
-        display: flex; align-items: center; gap: 8px; padding: 14px 16px;
-        background: #fff; border: 1px solid var(--border); border-radius: 8px;
-        font-size: 0.85em; font-weight: 600; color: var(--navy); transition: all 0.2s;
-    }
-    .link-card:hover {
-        background: var(--blue-pale); border-color: var(--blue-accent);
-        text-decoration: none; transform: translateY(-1px);
-    }
-    .link-card span { font-size: 1.2em; }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-        .games-grid { grid-template-columns: 1fr; }
-        .tools-grid { grid-template-columns: 1fr; }
-        .links-grid { grid-template-columns: repeat(2, 1fr); }
-        .welcome-banner { padding: 32px 16px; }
-        .welcome-banner h2 { font-size: 1.4em; }
-        .hamburger { display: block; }
-        .member-nav .nav-items {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--navy-dark);
-            flex-direction: column;
-            padding: 8px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #1e293b; background: #fff; }
+        a { text-decoration: none; color: inherit; }
+        :root {
+            --navy: #0f172a;
+            --blue: #3b82f6;
+            --blue-dark: #2563eb;
+            --blue-pale: #eff6ff;
+            --red: #ef4444;
+            --emerald: #10b981;
+            --surface: #f8fafc;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --max-width: 1200px;
         }
-        .member-nav .nav-items.open { display: flex; }
-        .member-nav .nav-items a { padding: 12px 24px; width: 100%; }
-        .member-nav { position: relative; }
-    }
+
+        /* GATE */
+        .gate-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 50%, #0f172a 100%); padding: 24px; }
+        .gate-card { background: #fff; border-radius: 16px; padding: 48px 40px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: fadeUp 0.6s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+        .gate-icon { font-size: 3rem; margin-bottom: 12px; }
+        .gate-card h2 { color: var(--navy); font-size: 1.4rem; margin-bottom: 6px; }
+        .gate-card .gate-sub { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; line-height: 1.5; }
+        .gate-input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; font-family: inherit; transition: border-color 0.2s; margin-bottom: 12px; }
+        .gate-input:focus { border-color: var(--blue); }
+        .gate-error { color: var(--red); font-size: 0.8rem; margin-bottom: 12px; min-height: 20px; }
+        .gate-btn { width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .gate-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+        .gate-back { display: inline-block; margin-top: 16px; color: var(--text-muted); font-size: 0.85rem; }
+        .gate-back:hover { color: var(--blue); }
+
+        /* PROTECTED CONTENT */
+        #protectedContent { display: none; }
+
+        /* NAV */
+        .member-nav { background: var(--navy); padding: 0 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: space-between; }
+        .member-nav .nav-brand { font-weight: 800; font-size: 1rem; color: #fff; padding: 14px 0; }
+        .member-nav .nav-brand span { color: var(--blue); }
+        .member-nav .nav-items { display: flex; align-items: center; gap: 4px; }
+        .member-nav .nav-items a { color: rgba(255,255,255,0.8); font-size: 0.82rem; font-weight: 500; padding: 14px 10px; transition: all 0.2s; white-space: nowrap; }
+        .member-nav .nav-items a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); padding: 7px 14px !important; border-radius: 6px; font-weight: 600 !important; margin-left: 8px; cursor: pointer; }
+        .logout-btn:hover { background: rgba(255,255,255,0.2) !important; }
+        .hamburger { display: none; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; padding: 8px; }
+
+        /* BANNER */
+        .welcome-banner { background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 100%); color: #fff; padding: 36px 24px; text-align: center; }
+        .welcome-banner h2 { color: #fff; font-size: 1.6rem; margin-bottom: 6px; }
+        .welcome-banner p { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+        /* SECTIONS */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .section { margin-bottom: 48px; }
+        .section h3 { font-size: 1.3rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--border); color: var(--navy); }
+        .section-desc { color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem; }
+
+        /* CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+        .m-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+        .m-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .m-card .icon { font-size: 2rem; margin-bottom: 8px; }
+        .m-card h4 { margin: 0 0 6px; color: var(--navy); font-size: 1rem; }
+        .m-card p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+        .m-link { display: inline-block; padding: 7px 18px; background: var(--blue-pale); color: var(--navy); border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
+        .m-link:hover { background: var(--blue); color: #fff; }
+
+        /* TOOLS */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+        .tool-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
+        .tool-card h4 { margin: 0 0 12px; color: var(--navy); font-size: 1rem; }
+        .checklist { list-style: none; }
+        .checklist li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .checklist input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--emerald); }
+        .schedule-week { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+        .schedule-week:last-child { border-bottom: none; }
+        .schedule-week strong { color: var(--navy); }
+
+        /* LINKS */
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+        .link-card { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: var(--navy); transition: all 0.2s; }
+        .link-card:hover { background: var(--blue-pale); border-color: var(--blue); transform: translateY(-1px); }
+        .link-card span { font-size: 1.1rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .gate-card { padding: 32px 24px; }
+            .grid { grid-template-columns: 1fr; }
+            .tools-grid { grid-template-columns: 1fr; }
+            .links-grid { grid-template-columns: repeat(2, 1fr); }
+            .welcome-banner { padding: 28px 16px; }
+            .welcome-banner h2 { font-size: 1.3rem; }
+            .hamburger { display: block; }
+            .member-nav .nav-items { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--navy); flex-direction: column; padding: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+            .member-nav .nav-items.open { display: flex; }
+            .member-nav .nav-items a { padding: 12px 24px; width: 100%; }
+            .member-nav { position: relative; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Sticky Nav Bar -->
-    <nav class="member-nav">
-        <a href="index.html" class="nav-brand">CompTIA A+ Study Hub</a>
-        <button class="hamburger" id="hamburgerBtn" aria-label="Menu">&#9776;</button>
-        <div class="nav-items" id="navItems">
-            <a href="#study-tools">Study & PBQs</a>
-            <a href="#resources-row">Resources</a>
-            <a href="#games">Games</a>
-            <a href="#puzzles">Puzzles</a>
-            <a href="#quick-links">Quick Links</a>
+    <!-- PASSWORD GATE -->
+    <div id="passwordGate" class="gate-wrapper">
+        <div class="gate-card">
+            <div class="gate-icon">&#128274;</div>
+            <h2>Members Area</h2>
+            <p class="gate-sub">Enter the access code from the last page of your<br><em>CompTIA A+ Complete Study Guide</em></p>
+            <input type="text" id="codeInput" class="gate-input" placeholder="Enter access code..." autocomplete="off" autofocus>
+            <p class="gate-error" id="gateError"></p>
+            <button class="gate-btn" id="unlockBtn">Unlock Content</button>
+            <a href="index.html" class="gate-back">&larr; Back to free resources</a>
         </div>
-    </nav>
-
-    <!-- Welcome Banner -->
-    <div class="welcome-banner">
-        <h2>Welcome!</h2>
-        <p>Your study tools, games, and resources are ready.</p>
     </div>
 
-    <div class="container" style="padding-top:40px; padding-bottom:60px;">
+    <!-- PROTECTED CONTENT -->
+    <div id="protectedContent">
+        <nav class="member-nav">
+            <a href="index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <button class="hamburger" id="hamburgerBtn">&#9776;</button>
+            <div class="nav-items" id="navItems">
+                <a href="#study-tools">Study Tools</a>
+                <a href="#resources">Resources</a>
+                <a href="#arcade">Arcade</a>
+                <a href="#puzzles">Puzzles</a>
+                <a href="#pbqs">PBQs</a>
+                <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
+            </div>
+        </nav>
 
-        <!-- ROW 1: Study Tools + PBQs -->
-        <div class="section" id="study-tools">
-            <h3>&#128736; Study Tools & Practice</h3>
-            <div class="tools-grid">
-                <div class="tool-card">
-                    <h4>&#9989; Exam Day Checklist</h4>
-                    <ul class="checklist">
-                        <li><label><input type="checkbox"> Bring two forms of ID</label></li>
-                        <li><label><input type="checkbox"> Arrive 15 minutes early</label></li>
-                        <li><label><input type="checkbox"> Know your Pearson VUE login</label></li>
-                        <li><label><input type="checkbox"> Review port numbers one last time</label></li>
-                        <li><label><input type="checkbox"> Flag difficult questions and come back</label></li>
-                        <li><label><input type="checkbox"> Read EVERY answer before selecting</label></li>
-                        <li><label><input type="checkbox"> Eliminate obviously wrong answers first</label></li>
-                        <li><label><input type="checkbox"> Check for "BEST" or "FIRST" in the question stem</label></li>
-                    </ul>
-                </div>
-                <div class="tool-card">
-                    <h4>&#128197; 6-Week Study Schedule</h4>
-                    <div class="schedule-week"><strong>Week 1-2:</strong> Hardware + Networking (Core 1 heaviest domains)</div>
-                    <div class="schedule-week"><strong>Week 3:</strong> OS + Troubleshooting commands</div>
-                    <div class="schedule-week"><strong>Week 4:</strong> Security + Cloud + Mobile</div>
-                    <div class="schedule-week"><strong>Week 5:</strong> Practice PBQs + Review weak areas</div>
-                    <div class="schedule-week"><strong>Week 6:</strong> Full practice exams + final glossary review</div>
-                </div>
-                <div class="tool-card">
-                    <h4>&#128203; Performance-Based Questions</h4>
-                    <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:12px;">Exam-style interactive questions across all domains:</p>
-                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                        <a href="pbq/hardware.html" class="game-link">Hardware</a>
-                        <a href="pbq/networking.html" class="game-link">Networking</a>
-                        <a href="pbq/os.html" class="game-link">OS</a>
-                        <a href="pbq/security.html" class="game-link">Security</a>
-                        <a href="pbq/mobile.html" class="game-link">Mobile</a>
+        <div class="welcome-banner">
+            <h2>Welcome, Member!</h2>
+            <p>Your exclusive study tools, games, and resources are ready.</p>
+        </div>
+
+        <div class="container" style="padding-top:36px; padding-bottom:48px;">
+
+            <!-- STUDY TOOLS -->
+            <div class="section" id="study-tools">
+                <h3>&#128736; Study Tools</h3>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h4>&#9989; Exam Day Checklist</h4>
+                        <ul class="checklist">
+                            <li><label><input type="checkbox"> Bring two forms of ID</label></li>
+                            <li><label><input type="checkbox"> Arrive 15 minutes early</label></li>
+                            <li><label><input type="checkbox"> Know your Pearson VUE login</label></li>
+                            <li><label><input type="checkbox"> Review port numbers one last time</label></li>
+                            <li><label><input type="checkbox"> Flag difficult questions and come back</label></li>
+                            <li><label><input type="checkbox"> Read EVERY answer before selecting</label></li>
+                            <li><label><input type="checkbox"> Eliminate obviously wrong answers first</label></li>
+                            <li><label><input type="checkbox"> Check for "BEST" or "FIRST" in question</label></li>
+                        </ul>
+                    </div>
+                    <div class="tool-card">
+                        <h4>&#128197; 6-Week Study Schedule</h4>
+                        <div class="schedule-week"><strong>Week 1-2:</strong> Hardware + Networking (Core 1 heaviest)</div>
+                        <div class="schedule-week"><strong>Week 3:</strong> OS + Troubleshooting commands</div>
+                        <div class="schedule-week"><strong>Week 4:</strong> Security + Cloud + Mobile</div>
+                        <div class="schedule-week"><strong>Week 5:</strong> Practice PBQs + Review weak areas</div>
+                        <div class="schedule-week"><strong>Week 6:</strong> Full practice exams + final review</div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ROW 2: Glossary, Flash Cards, Resource Center -->
-        <div class="section" id="resources-row">
-            <h3>&#128218; Study Resources</h3>
-            <div class="games-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
-                <div class="game-card">
-                    <div class="game-icon">&#128214;</div>
-                    <h4>Searchable Glossary</h4>
-                    <p>Full 500-term glossary with search, priority filtering, and color-coded cards.</p>
-                    <a href="pbq/glossary.html" class="game-link">Open Glossary</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127183;</div>
-                    <h4>Flash Cards (500 terms)</h4>
-                    <p>Complete deck with shuffle, progress tracking, and priority filtering.</p>
-                    <a href="pbq/flashcards.html" class="game-link">Launch Flash Cards</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128230;</div>
-                    <h4>Resource Center</h4>
-                    <p>48+ free tools, video training, learning platforms, and utilities for IT pros.</p>
-                    <a href="reference/resources.html" class="game-link">Browse Resources</a>
+            <!-- RESOURCES -->
+            <div class="section" id="resources">
+                <h3>&#128218; Exclusive Resources</h3>
+                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+                    <div class="m-card">
+                        <div class="icon">&#127183;</div>
+                        <h4>Full 500 Flash Cards</h4>
+                        <p>Complete deck with shuffle, progress tracking, and priority filtering.</p>
+                        <a href="flashcards.html" class="m-link">Launch Cards</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128214;</div>
+                        <h4>Searchable Glossary</h4>
+                        <p>500-term glossary with search, priority filtering, and color-coded cards.</p>
+                        <a href="glossary.html" class="m-link">Open Glossary</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128230;</div>
+                        <h4>Resource Center</h4>
+                        <p>48+ free tools, video training, learning platforms, and utilities.</p>
+                        <a href="reference/resources.html" class="m-link">Browse</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ROW 3: Arcade Games -->
-        <div class="section" id="games">
-            <h3>&#127918; Arcade Games</h3>
-            <p class="section-desc">Learn while you play — CompTIA A+ concepts in game form.</p>
-            <div class="games-grid">
-                <div class="game-card">
-                    <div class="game-icon">&#128268;</div>
-                    <h4>Cable Match</h4>
-                    <p>Sort falling cables into speed categories</p>
-                    <a href="pbq/cable-match.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127959;</div>
-                    <h4>Troubleshooting Tower</h4>
-                    <p>Stack steps in correct order</p>
-                    <a href="pbq/troubleshoot-tower.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128640;</div>
-                    <h4>Neon Circuit Dash</h4>
-                    <p>Dodge obstacles, answer questions, survive 8 levels</p>
-                    <a href="pbq/neon-circuit-dash.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#9968;</div>
-                    <h4>OSI Layer Climb</h4>
-                    <p>Climb the mountain with OSI knowledge</p>
-                    <a href="pbq/osi-climb.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128126;</div>
-                    <h4>Maze Runner</h4>
-                    <p>Pac-Man style maze with IT threats and questions</p>
-                    <a href="pbq/maze-runner.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128163;</div>
-                    <h4>Speed Match</h4>
-                    <p>Speed-match ports to protocols in 60 seconds</p>
-                    <a href="pbq/game.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127183;</div>
-                    <h4>Port Match</h4>
-                    <p>Draw lines connecting ports to protocols</p>
-                    <a href="pbq/port-match.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127942;</div>
-                    <h4>CompTIA Jeopardy</h4>
-                    <p>Multiplayer quiz with Daily Doubles</p>
-                    <a href="pbq/jeopardy.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128126;</div>
-                    <h4>Port Blaster</h4>
-                    <p>Space shooter — blast port numbers, dodge decoys</p>
-                    <a href="pbq/port-blaster-new.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128737;</div>
-                    <h4>Terminal Takedown</h4>
-                    <p>Tetris-style defense with IT threat blocks</p>
-                    <a href="pbq/terminal-takedown.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128171;</div>
-                    <h4>Memory Overflow</h4>
-                    <p>Memory management challenge game</p>
-                    <a href="pbq/memory-overflow.html" class="game-link">Play Now</a>
+            <!-- ARCADE GAMES -->
+            <div class="section" id="arcade">
+                <h3>&#127918; Arcade Games</h3>
+                <p class="section-desc">Members-only games — learn CompTIA concepts through play.</p>
+                <div class="grid">
+                    <div class="m-card">
+                        <div class="icon">&#128640;</div>
+                        <h4>Neon Circuit Dash</h4>
+                        <p>Dodge obstacles, answer questions, survive 8 levels</p>
+                        <a href="games/neon-circuit-dash.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128268;</div>
+                        <h4>Cable Match</h4>
+                        <p>Sort falling cables into speed categories</p>
+                        <a href="games/cable-match.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#127959;</div>
+                        <h4>Troubleshooting Tower</h4>
+                        <p>Stack troubleshooting steps in correct order</p>
+                        <a href="games/troubleshoot-tower.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128126;</div>
+                        <h4>Maze Runner</h4>
+                        <p>Pac-Man style maze with IT threats and questions</p>
+                        <a href="games/maze-runner.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128737;</div>
+                        <h4>Terminal Takedown</h4>
+                        <p>Tetris-style defense with IT threat blocks</p>
+                        <a href="games/terminal-takedown.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128171;</div>
+                        <h4>Memory Overflow</h4>
+                        <p>Memory management challenge game</p>
+                        <a href="games/memory-overflow.html" class="m-link">Play</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ROW 4: Puzzle Games -->
-        <div class="section" id="puzzles">
-            <h3>&#129513; Puzzle Games</h3>
-            <p class="section-desc">Word puzzles, memory challenges, and brain teasers — all CompTIA themed.</p>
-            <div class="games-grid">
-                <div class="game-card">
-                    <div class="game-icon">&#129513;</div>
-                    <h4>Tech Wordle</h4>
-                    <p>Guess the IT term letter by letter. 6 guesses allowed.</p>
-                    <a href="pbq/wordle-tech.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127183;</div>
-                    <h4>Memory Match</h4>
-                    <p>Flip cards to find matching pairs</p>
-                    <a href="pbq/match-game.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128260;</div>
-                    <h4>Tech Scramble</h4>
-                    <p>Fill in blanks from jumbled letters</p>
-                    <a href="pbq/scramble.html" class="game-link">Play Now</a>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#128221;</div>
-                    <h4>Tech Tile Time</h4>
-                    <p>10-clue word fill puzzle</p>
-                    <a href="pbq/crossword.html" class="game-link">Play Now</a>
+            <!-- PUZZLE GAMES -->
+            <div class="section" id="puzzles">
+                <h3>&#129513; Puzzle Games</h3>
+                <p class="section-desc">Word puzzles and brain teasers — all CompTIA themed.</p>
+                <div class="grid">
+                    <div class="m-card">
+                        <div class="icon">&#127183;</div>
+                        <h4>Memory Match</h4>
+                        <p>Flip cards to find matching pairs</p>
+                        <a href="games/match-game.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128260;</div>
+                        <h4>Tech Scramble</h4>
+                        <p>Fill in blanks from jumbled letters</p>
+                        <a href="games/scramble.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128221;</div>
+                        <h4>Tech Tile Time</h4>
+                        <p>10-clue crossword puzzle</p>
+                        <a href="games/crossword.html" class="m-link">Play</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ROW 5: Quick Links -->
-        <div class="section" id="quick-links">
-            <h3>&#128279; Quick Links</h3>
-            <p class="section-desc">Jump to any page on the site.</p>
-            <div class="links-grid">
-                <a href="pbq/hardware.html" class="link-card"><span>&#128187;</span> Hardware PBQ</a>
-                <a href="pbq/networking.html" class="link-card"><span>&#127760;</span> Networking PBQ</a>
-                <a href="pbq/os.html" class="link-card"><span>&#128421;</span> OS PBQ</a>
-                <a href="pbq/security.html" class="link-card"><span>&#128274;</span> Security PBQ</a>
-                <a href="pbq/mobile.html" class="link-card"><span>&#128241;</span> Mobile PBQ</a>
-                <a href="pbq/glossary.html" class="link-card"><span>&#128214;</span> Glossary</a>
-                <a href="pbq/flashcards.html" class="link-card"><span>&#128209;</span> Flash Cards</a>
-                <a href="reference/ports.html" class="link-card"><span>&#128233;</span> Port Reference</a>
-                <a href="reference/cables.html" class="link-card"><span>&#128268;</span> Cable Reference</a>
-                <a href="reference/commands.html" class="link-card"><span>&#128187;</span> Commands</a>
-                <a href="reference/bios.html" class="link-card"><span>&#9881;</span> BIOS/UEFI</a>
-                <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resources</a>
+            <!-- PBQs -->
+            <div class="section" id="pbqs">
+                <h3>&#128203; Performance-Based Questions</h3>
+                <p class="section-desc">Exam-style interactive questions across all domains.</p>
+                <div class="grid">
+                    <div class="m-card">
+                        <div class="icon">&#128187;</div>
+                        <h4>Hardware</h4>
+                        <p>Components, connectors, troubleshooting</p>
+                        <a href="pbqs/hardware.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#127760;</div>
+                        <h4>Networking</h4>
+                        <p>Protocols, configuration, connectivity</p>
+                        <a href="pbqs/networking.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128421;</div>
+                        <h4>Operating Systems</h4>
+                        <p>Windows, Linux, macOS management</p>
+                        <a href="pbqs/os.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128274;</div>
+                        <h4>Security</h4>
+                        <p>Threats, mitigation, best practices</p>
+                        <a href="pbqs/security.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128241;</div>
+                        <h4>Mobile Devices</h4>
+                        <p>Configuration, sync, troubleshooting</p>
+                        <a href="pbqs/mobile.html" class="m-link">Start</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#9881;</div>
+                        <h4>Motherboard</h4>
+                        <p>Interactive component identification</p>
+                        <a href="pbqs/motherboard.html" class="m-link">Start</a>
+                    </div>
+                </div>
             </div>
-        </div>
 
-    </div><!-- /.container -->
+            <!-- QUICK LINKS -->
+            <div class="section" id="quick-links">
+                <h3>&#128279; Quick Links</h3>
+                <div class="links-grid">
+                    <a href="pbqs/hardware.html" class="link-card"><span>&#128187;</span> Hardware PBQ</a>
+                    <a href="pbqs/networking.html" class="link-card"><span>&#127760;</span> Networking PBQ</a>
+                    <a href="pbqs/os.html" class="link-card"><span>&#128421;</span> OS PBQ</a>
+                    <a href="pbqs/security.html" class="link-card"><span>&#128274;</span> Security PBQ</a>
+                    <a href="pbqs/mobile.html" class="link-card"><span>&#128241;</span> Mobile PBQ</a>
+                    <a href="glossary.html" class="link-card"><span>&#128214;</span> Glossary</a>
+                    <a href="flashcards.html" class="link-card"><span>&#127183;</span> Flash Cards</a>
+                    <a href="reference/ports.html" class="link-card"><span>&#128225;</span> Port Reference</a>
+                    <a href="reference/cables.html" class="link-card"><span>&#128268;</span> Cable Reference</a>
+                    <a href="reference/commands.html" class="link-card"><span>&#128421;</span> Commands</a>
+                    <a href="reference/bios.html" class="link-card"><span>&#9881;</span> BIOS/UEFI</a>
+                    <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resources</a>
+                </div>
+            </div>
+
+        </div><!-- /.container -->
+    </div><!-- /#protectedContent -->
 
     <script>
-    // Hamburger menu
-    document.getElementById('hamburgerBtn').addEventListener('click', () => {
-        document.getElementById('navItems').classList.toggle('open');
+    const VALID_CODE = 'A+CompTIA2100';
+    const gate = document.getElementById('passwordGate');
+    const content = document.getElementById('protectedContent');
+    const input = document.getElementById('codeInput');
+    const error = document.getElementById('gateError');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navItems = document.getElementById('navItems');
+
+    function unlock() {
+        gate.style.display = 'none';
+        content.style.display = 'block';
+    }
+
+    function lock() {
+        content.style.display = 'none';
+        gate.style.display = 'flex';
+        input.value = '';
+        error.textContent = '';
+        sessionStorage.removeItem('comptia_member');
+    }
+
+    unlockBtn.addEventListener('click', () => {
+        const code = input.value.trim();
+        if (!code) { input.focus(); return; }
+        if (code === VALID_CODE) {
+            sessionStorage.setItem('comptia_member', '1');
+            unlock();
+        } else {
+            error.textContent = 'Invalid code. Check the last page of your book.';
+            input.style.borderColor = 'var(--red)';
+            input.style.animation = 'shake 0.4s ease';
+            setTimeout(() => { input.style.borderColor = ''; input.style.animation = ''; }, 2000);
+        }
     });
+
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') unlockBtn.click(); });
+    logoutBtn.addEventListener('click', e => { e.preventDefault(); lock(); });
+    hamburgerBtn.addEventListener('click', () => { navItems.classList.toggle('open'); });
+
+    // Auto-restore session
+    if (sessionStorage.getItem('comptia_member') === '1') { unlock(); }
     </script>
 </body>
 </html>

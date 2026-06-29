@@ -3,1111 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CompTIA A+ Exam Study Companion — Free interactive games, flash cards, reference guides, and exclusive member content for book owners. Covers 220-1201 & 220-1202.">
+    <meta name="description" content="CompTIA A+ Study Hub — Free interactive games, flash cards, reference guides. Pass your 220-1201 & 220-1202 exams first try.">
     <title>CompTIA A+ Study Hub — Pass Your Exam First Try</title>
     <style>
-        /* ============================================
-           RESET & BASE
-           ============================================ */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #fff;
-            overflow-x: hidden;
-        }
-
-        img { max-width: 100%; height: auto; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #1e293b; background: #fff; }
         a { text-decoration: none; color: inherit; }
         button { cursor: pointer; border: none; font-family: inherit; }
         ul { list-style: none; }
-
-        /* ============================================
-           CSS CUSTOM PROPERTIES
-           ============================================ */
         :root {
-            --navy: #1F497D;
-            --navy-dark: #152d4f;
-            --navy-deepest: #0d1b2a;
-            --red-cta: #e74c3c;
-            --red-hover: #c0392b;
-            --white: #ffffff;
-            --light-bg: #f8f9fc;
-            --text-dark: #1a1a2e;
-            --text-muted: #5a6376;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
-            --shadow-lg: 0 8px 40px rgba(0,0,0,0.16);
+            --navy: #0f172a;
+            --navy-mid: #1e293b;
+            --blue: #3b82f6;
+            --blue-dark: #2563eb;
+            --blue-pale: #eff6ff;
+            --red: #ef4444;
+            --red-dark: #dc2626;
+            --amber: #f59e0b;
+            --emerald: #10b981;
+            --surface: #f8fafc;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
             --radius: 12px;
-            --radius-sm: 8px;
             --max-width: 1200px;
-            --transition: 0.3s ease;
         }
 
-
-        /* ============================================
-           NAVIGATION
-           ============================================ */
-        .nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: var(--white);
-            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-            padding: 0.75rem 1.5rem;
-        }
-
-        .nav-inner {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-brand {
-            font-weight: 700;
-            font-size: 1.15rem;
-            color: var(--navy);
-            white-space: nowrap;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 1.75rem;
-        }
-
-        .nav-links a {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--navy);
-        }
-
-        .nav-links .btn-cta-sm {
-            background: var(--red-cta);
-            color: var(--white);
-            padding: 0.5rem 1.1rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: background var(--transition), transform var(--transition);
-        }
-
-        .nav-links .btn-cta-sm:hover {
-            background: var(--red-hover);
-            transform: translateY(-1px);
-        }
-
-        /* Hamburger */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            padding: 4px;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 24px;
-            height: 2.5px;
-            background: var(--navy);
-            border-radius: 2px;
-            transition: var(--transition);
-        }
-
-        /* Mobile nav */
-        .mobile-menu {
-            display: none;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 1rem 1.5rem 1.5rem;
-            background: var(--white);
-            border-bottom: 1px solid #eee;
-        }
-
-        .mobile-menu a {
-            padding: 0.6rem 0;
-            font-size: 1rem;
-            color: var(--text-dark);
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .mobile-menu .btn-cta-sm {
-            display: inline-block;
-            text-align: center;
-            margin-top: 0.5rem;
-            background: var(--red-cta);
-            color: var(--white);
-            padding: 0.7rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-
-        /* ============================================
-           HERO SECTION
-           ============================================ */
-        .hero {
-            position: relative;
-            background: linear-gradient(135deg, var(--navy-deepest) 0%, var(--navy) 50%, #1a3a6b 100%);
-            padding: 5rem 1.5rem 4rem;
-            text-align: center;
-            overflow: hidden;
-            min-height: 520px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Animated circuit background */
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%),
-                linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,0.02) 49.5%, rgba(255,255,255,0.02) 50.5%, transparent 50.5%),
-                linear-gradient(0deg, transparent 49.5%, rgba(255,255,255,0.02) 49.5%, rgba(255,255,255,0.02) 50.5%, transparent 50.5%);
-            background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px;
-            animation: circuitFloat 20s linear infinite;
-            opacity: 0.6;
-        }
-
-        @keyframes circuitFloat {
-            0% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-10px) translateX(5px); }
-            100% { transform: translateY(0) translateX(0); }
-        }
-
-        /* Floating dots */
-        .hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(2px 2px at 10% 30%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(2px 2px at 30% 70%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(2px 2px at 50% 20%, rgba(255,255,255,0.25), transparent),
-                radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.15), transparent),
-                radial-gradient(2px 2px at 90% 40%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(2px 2px at 15% 85%, rgba(255,255,255,0.2), transparent),
-                radial-gradient(2px 2px at 85% 80%, rgba(255,255,255,0.15), transparent);
-            animation: dotFloat 15s ease-in-out infinite alternate;
-        }
-
-        @keyframes dotFloat {
-            0% { opacity: 0.4; }
-            100% { opacity: 0.8; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 760px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 800;
-            color: var(--white);
-            margin-bottom: 1rem;
-            letter-spacing: -0.5px;
-        }
-
-        .hero .subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            color: rgba(255,255,255,0.85);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-outline {
-            padding: 0.85rem 1.75rem;
-            border: 2px solid var(--white);
-            color: var(--white);
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all var(--transition);
-        }
-
-        .btn-outline:hover {
-            background: var(--white);
-            color: var(--navy);
-        }
-
-        .btn-red {
-            padding: 0.85rem 1.75rem;
-            background: var(--red-cta);
-            color: var(--white);
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 1rem;
-            border: 2px solid var(--red-cta);
-            transition: all var(--transition);
-        }
-
-        .btn-red:hover {
-            background: var(--red-hover);
-            border-color: var(--red-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(231,76,60,0.4);
-        }
-
-        .hero-checks {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-            display: flex;
-            gap: 1.25rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .hero-checks span {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-
-        /* ============================================
-           SECTIONS — COMMON
-           ============================================ */
-        .section {
-            padding: 4.5rem 1.5rem;
-        }
-
-        .section-inner {
-            max-width: var(--max-width);
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: clamp(1.5rem, 3.5vw, 2rem);
-            font-weight: 700;
-            color: var(--text-dark);
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .section--dark {
-            background: linear-gradient(135deg, var(--navy-deepest) 0%, var(--navy-dark) 100%);
-        }
-
-        .section--dark .section-title {
-            color: var(--white);
-        }
-
-        .section--dark .section-subtitle {
-            color: rgba(255,255,255,0.7);
-        }
-
-        .section--light {
-            background: var(--light-bg);
-        }
-
-        /* ============================================
-           CARD GRID
-           ============================================ */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-sm);
-            transition: transform var(--transition), box-shadow var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .card-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            flex: 1;
-            margin-bottom: 1.25rem;
-        }
-
-        .card .btn-card {
-            display: inline-block;
-            padding: 0.55rem 1.2rem;
-            background: var(--navy);
-            color: var(--white);
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: background var(--transition), transform var(--transition);
-            text-align: center;
-            align-self: flex-start;
-        }
-
-        .card .btn-card:hover {
-            background: var(--navy-dark);
-            transform: translateY(-1px);
-        }
-
-        /* Dark-section cards */
-        .section--dark .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .section--dark .card h3 { color: var(--white); }
-        .section--dark .card p { color: rgba(255,255,255,0.7); }
-
-        .section--dark .card .btn-card {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .section--dark .card .btn-card:hover {
-            background: rgba(255,255,255,0.25);
-        }
-
-        .section-note {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .section--dark .section-note {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .section-note a {
-            color: var(--navy);
-            font-weight: 500;
-        }
-
-        .section--dark .section-note a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: underline;
-        }
-
-
-        /* ============================================
-           FLASH CARD WIDGET
-           ============================================ */
-        .flashcard-container {
-            max-width: 500px;
-            margin: 0 auto 1.5rem;
-            perspective: 1000px;
-        }
-
-        .flashcard {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            cursor: pointer;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .flashcard.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-face {
-            position: absolute;
-            inset: 0;
-            backface-visibility: hidden;
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            text-align: center;
-            font-size: 1.15rem;
-            line-height: 1.5;
-        }
-
-        .flashcard-front {
-            background: linear-gradient(135deg, #1a3a6b, var(--navy));
-            color: var(--white);
-            font-weight: 700;
-            font-size: 1.4rem;
-            border: 2px solid rgba(255,255,255,0.15);
-        }
-
-        .flashcard-back {
-            background: var(--white);
-            color: var(--text-dark);
-            transform: rotateY(180deg);
-            border: 2px solid #e0e5ed;
-            font-size: 1.05rem;
-        }
-
-        .flashcard-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .flashcard-controls button {
-            padding: 0.6rem 1.3rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: var(--white);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all var(--transition);
-        }
-
-        .flashcard-controls button:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .flashcard-counter {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .flashcard-hint {
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8rem;
-            margin-top: 0.75rem;
-        }
-
-        .flashcard-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .flashcard-actions a {
-            padding: 0.65rem 1.4rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all var(--transition);
-        }
-
-        .btn-white-outline {
-            border: 1.5px solid rgba(255,255,255,0.5);
-            color: var(--white);
-        }
-
-        .btn-white-outline:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--white);
-        }
-
-        .btn-lock {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.85rem;
-        }
-
-        .btn-lock:hover {
-            color: rgba(255,255,255,0.9);
-        }
-
-
-        /* ============================================
-           MEMBERS PROMO (NEON ACCENTS)
-           ============================================ */
-        .section--members {
-            background: linear-gradient(135deg, #0d1b2a 0%, #152d4f 50%, #1a3a6b 100%);
-            position: relative;
-        }
-
-        .section--members::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse at 10% 50%, rgba(0,200,255,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 90% 30%, rgba(139,92,246,0.04) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .members-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.25rem;
-        }
-
-        .member-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            transition: all var(--transition);
-        }
-
-        .member-card:hover {
-            background: rgba(255,255,255,0.07);
-            border-color: rgba(255,255,255,0.15);
-            transform: translateY(-2px);
-        }
-
-        .member-card-icon {
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .member-card h3 {
-            color: var(--white);
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-        }
-
-        .member-card p {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.85rem;
-        }
-
-        .members-cta {
-            text-align: center;
-            margin-top: 2.5rem;
-        }
-
-        .members-cta .btn-enter {
-            display: inline-block;
-            padding: 0.85rem 2rem;
-            background: linear-gradient(135deg, var(--navy), #2a5fa8);
-            border: 1.5px solid rgba(255,255,255,0.3);
-            color: var(--white);
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all var(--transition);
-        }
-
-        .members-cta .btn-enter:hover {
-            border-color: rgba(255,255,255,0.6);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,120,255,0.2);
-        }
-
-        .members-cta .note {
-            display: block;
-            margin-top: 0.75rem;
-            color: rgba(255,255,255,0.45);
-            font-size: 0.8rem;
-        }
-
-
-        /* ============================================
-           BUY THE BOOK
-           ============================================ */
-        .book-callout {
-            background: #e8f8f0;
-            border: 1px solid #b8e6d0;
-            border-radius: var(--radius-sm);
-            padding: 1rem 1.5rem;
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-weight: 600;
-            color: #1a7a4c;
-            font-size: 1rem;
-        }
-
-        .book-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .book-card {
-            background: var(--white);
-            border: 2px solid #e5e9f0;
-            border-radius: var(--radius);
-            padding: 2rem;
-            text-align: center;
-            transition: all var(--transition);
-        }
-
-        .book-card:hover {
-            border-color: var(--navy);
-            box-shadow: var(--shadow-md);
-        }
-
-        .book-card h3 {
-            font-size: 1.25rem;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-        }
-
-        .book-card ul {
-            text-align: left;
-            margin-bottom: 1.5rem;
-        }
-
-        .book-card li {
-            padding: 0.35rem 0;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            padding-left: 1.25rem;
-            position: relative;
-        }
-
-        .book-card li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #27ae60;
-            font-weight: 700;
-        }
-
-        .book-card .btn-red {
-            display: inline-block;
-            width: 100%;
-        }
-
-        .book-extras {
-            max-width: 640px;
-            margin: 0 auto;
-        }
-
-        .book-extras h4 {
-            font-size: 1.05rem;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .book-extras li {
-            padding: 0.4rem 0;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .book-extras li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--navy);
-        }
-
-
-        /* ============================================
-           ABOUT SECTION
-           ============================================ */
-        .about-content {
-            max-width: 640px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .about-content p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.8;
-        }
-
-        /* ============================================
-           FOOTER
-           ============================================ */
-        .footer {
-            background: var(--navy-deepest);
-            color: rgba(255,255,255,0.7);
-            padding: 3.5rem 1.5rem 2rem;
-        }
-
-        .footer-grid {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .footer h4 {
-            color: var(--white);
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer a {
-            display: block;
-            padding: 0.25rem 0;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            transition: color var(--transition);
-        }
-
-        .footer a:hover {
-            color: var(--white);
-        }
-
-        .footer-bottom {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            text-align: center;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .footer-bottom p {
-            margin-bottom: 0.3rem;
-        }
-
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
+        /* NAV */
+        .nav { position: sticky; top: 0; z-index: 1000; background: var(--navy); padding: 0.75rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .nav-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand { font-weight: 800; font-size: 1.1rem; color: #fff; }
+        .nav-brand span { color: var(--blue); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+        .nav-links a { font-size: 0.9rem; font-weight: 500; color: #94a3b8; transition: color 0.2s; }
+        .nav-links a:hover { color: #fff; }
+        .nav-links .btn-members { background: var(--blue); color: #fff; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-links .btn-members:hover { background: var(--blue-dark); transform: translateY(-1px); }
+        .hamburger { display: none; background: none; padding: 4px; flex-direction: column; gap: 5px; }
+        .hamburger span { display: block; width: 24px; height: 2.5px; background: #fff; border-radius: 2px; }
+        .mobile-menu { display: none; flex-direction: column; gap: 0.5rem; padding: 1rem 1.5rem; background: var(--navy); border-bottom: 1px solid #334155; }
+        .mobile-menu a { padding: 0.6rem 0; font-size: 1rem; color: #94a3b8; border-bottom: 1px solid #1e293b; }
+        .mobile-menu .btn-members { display: inline-block; text-align: center; margin-top: 0.5rem; }
+
+        /* HERO */
+        .hero { position: relative; background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 50%, #0f172a 100%); padding: 5rem 1.5rem 4rem; text-align: center; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 80%, rgba(59,130,246,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(59,130,246,0.04) 0%, transparent 50%); }
+        .hero-content { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: #fff; margin-bottom: 1rem; }
+        .hero .subtitle { font-size: clamp(1rem, 2.5vw, 1.15rem); color: rgba(255,255,255,0.8); margin-bottom: 2rem; line-height: 1.7; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .btn-hero-primary { padding: 0.85rem 1.75rem; background: var(--blue); color: #fff; border-radius: 8px; font-weight: 600; font-size: 1rem; border: 2px solid var(--blue); transition: all 0.2s; }
+        .btn-hero-primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(59,130,246,0.4); }
+        .btn-hero-outline { padding: 0.85rem 1.75rem; border: 2px solid rgba(255,255,255,0.4); color: #fff; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: all 0.2s; }
+        .btn-hero-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        .hero-checks { font-size: 0.85rem; color: rgba(255,255,255,0.6); display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; }
+        .hero-checks span { display: inline-flex; align-items: center; gap: 0.3rem; }
+
+        /* BOOK PROMO */
+        .book-promo { background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%); border-bottom: 3px solid var(--amber); padding: 2.5rem 1.5rem; }
+        .book-promo-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        .book-promo-text { max-width: 600px; }
+        .book-promo-text h2 { font-size: 1.5rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .book-promo-text p { color: #92400e; font-size: 0.95rem; margin-bottom: 1rem; }
+        .book-promo-text ul { margin-bottom: 1.25rem; }
+        .book-promo-text li { padding: 0.25rem 0; font-size: 0.9rem; color: #78350f; padding-left: 1.5rem; position: relative; }
+        .book-promo-text li::before { content: '\2713'; position: absolute; left: 0; color: var(--emerald); font-weight: 700; }
+        .book-formats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .btn-amazon { padding: 0.7rem 1.5rem; background: var(--amber); color: #78350f; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-amazon:hover { background: #d97706; color: #fff; transform: translateY(-1px); }
+
+        /* SECTIONS */
+        .section { padding: 4rem 1.5rem; }
+        .section-inner { max-width: var(--max-width); margin: 0 auto; }
+        .section-title { font-size: clamp(1.4rem, 3vw, 1.8rem); font-weight: 700; color: var(--text); text-align: center; margin-bottom: 0.5rem; }
+        .section-subtitle { text-align: center; color: var(--text-muted); font-size: 1rem; margin-bottom: 2.5rem; }
+        .section--alt { background: var(--surface); }
+        .section--dark { background: var(--navy); }
+        .section--dark .section-title { color: #fff; }
+        .section--dark .section-subtitle { color: rgba(255,255,255,0.6); }
+
+        /* CARD GRID */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+        .card { background: #fff; border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+        .card p { font-size: 0.85rem; color: var(--text-muted); flex: 1; margin-bottom: 1rem; }
+        .btn-card { display: inline-block; padding: 0.5rem 1.1rem; background: var(--blue); color: #fff; border-radius: 6px; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; align-self: flex-start; }
+        .btn-card:hover { background: var(--blue-dark); transform: translateY(-1px); }
+        .badge-free { display: inline-block; padding: 2px 8px; background: #dcfce7; color: #166534; border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; }
+
+        /* FLASH CARD */
+        .flashcard-container { max-width: 480px; margin: 0 auto 1.5rem; perspective: 1000px; }
+        .flashcard { position: relative; width: 100%; height: 200px; cursor: pointer; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .flashcard-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
+        .flashcard-front { background: linear-gradient(135deg, #1e3a5f, var(--navy)); color: #fff; font-weight: 700; font-size: 1.3rem; border: 2px solid rgba(59,130,246,0.3); }
+        .flashcard-back { background: #fff; color: var(--text); transform: rotateY(180deg); border: 2px solid var(--border); font-size: 1rem; line-height: 1.5; }
+        .flashcard-controls { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 0.75rem; }
+        .flashcard-controls button { padding: 0.5rem 1.2rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 6px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+        .flashcard-controls button:hover { background: rgba(255,255,255,0.2); }
+        .flashcard-counter { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+        .flashcard-hint { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 0.5rem; }
+        .flashcard-cta { text-align: center; margin-top: 1.5rem; }
+        .flashcard-cta a { color: rgba(255,255,255,0.7); font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 1.2rem; border-radius: 6px; transition: all 0.2s; }
+        .flashcard-cta a:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.1); }
+
+        /* MEMBERS CTA */
+        .members-cta { background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 100%); padding: 3.5rem 1.5rem; text-align: center; }
+        .members-cta h2 { color: #fff; font-size: 1.6rem; margin-bottom: 0.75rem; }
+        .members-cta p { color: rgba(255,255,255,0.7); margin-bottom: 1.5rem; font-size: 1rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .members-cta .btn-enter { display: inline-block; padding: 0.85rem 2rem; background: var(--blue); color: #fff; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: all 0.2s; }
+        .members-cta .btn-enter:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
+        .members-cta .note { display: block; margin-top: 0.75rem; color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+
+        /* FOOTER */
+        .footer { background: var(--navy); color: rgba(255,255,255,0.6); padding: 3rem 1.5rem 2rem; }
+        .footer-inner { max-width: var(--max-width); margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer h4 { color: #fff; font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .footer a { display: block; padding: 0.2rem 0; font-size: 0.8rem; color: rgba(255,255,255,0.5); transition: color 0.2s; }
+        .footer a:hover { color: #fff; }
+        .footer-bottom { max-width: var(--max-width); margin: 0 auto; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .mobile-menu.open {
-                display: flex;
-            }
-
-            .hero {
-                padding: 3.5rem 1.25rem 3rem;
-                min-height: auto;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-checks {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .section {
-                padding: 3rem 1.25rem;
-            }
-
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .members-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .book-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .flashcard {
-                height: 180px;
-            }
-
-            .flashcard-front {
-                font-size: 1.2rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .card-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .members-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* ============================================
-           UTILITY
-           ============================================ */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-            border: 0;
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .mobile-menu.open { display: flex; }
+            .hero { padding: 3rem 1.25rem 2.5rem; }
+            .section { padding: 3rem 1.25rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .book-promo-inner { flex-direction: column; text-align: center; }
+            .book-promo-text ul { text-align: left; }
+            .hero-checks { flex-direction: column; gap: 0.4rem; }
+            .footer-inner { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-
-    <!-- ============================================
-         NAVIGATION
-         ============================================ -->
-    <nav class="nav" role="navigation" aria-label="Main navigation">
+    <!-- NAV -->
+    <nav class="nav">
         <div class="nav-inner">
-            <a href="#" class="nav-brand">CompTIA A+ Study Hub</a>
-            <div class="nav-links" role="menubar">
-                <a href="#games" role="menuitem">Free Games</a>
-                <a href="#puzzles" role="menuitem">Puzzles</a>
-                <a href="#reference" role="menuitem">Reference Guides</a>
-                <a href="#members" role="menuitem">Members</a>
-                <a href="#book" class="btn-cta-sm" role="menuitem">Get the Book</a>
+            <a href="#" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <div class="nav-links">
+                <a href="#games">Free Games</a>
+                <a href="#reference">Reference</a>
+                <a href="#flashcards">Flash Cards</a>
+                <a href="#book">Get the Book</a>
+                <a href="members.html" class="btn-members">Members Area</a>
             </div>
-            <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">
+                <span></span><span></span><span></span>
             </button>
         </div>
-        <div class="mobile-menu" id="mobileMenu" role="menu">
-            <a href="#games" onclick="closeMenu()">Free Games</a>
-            <a href="#reference" onclick="closeMenu()">Reference Guides</a>
-            <a href="#members" onclick="closeMenu()">Members</a>
-            <a href="#book" class="btn-cta-sm" onclick="closeMenu()">Get the Book</a>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#games" onclick="this.parentElement.classList.remove('open')">Free Games</a>
+            <a href="#reference" onclick="this.parentElement.classList.remove('open')">Reference</a>
+            <a href="#flashcards" onclick="this.parentElement.classList.remove('open')">Flash Cards</a>
+            <a href="#book" onclick="this.parentElement.classList.remove('open')">Get the Book</a>
+            <a href="members.html" class="btn-members">Members Area</a>
         </div>
     </nav>
 
-
-    <!-- ============================================
-         HERO SECTION
-         ============================================ -->
-    <header class="hero" id="top">
+    <!-- HERO -->
+    <header class="hero">
         <div class="hero-content">
             <h1>Pass Your CompTIA A+ Exam — First Try</h1>
-            <p class="subtitle">Interactive games, study tools, and 500-term glossary.<br>Free resources + exclusive member content for book owners.</p>
+            <p class="subtitle">Free interactive games, study tools, and reference guides.<br>Everything you need for the 220-1201 & 220-1202 exams.</p>
             <div class="hero-buttons">
-                <a href="#games" class="btn-outline">Try Free Games</a>
-                <a href="#book" class="btn-red">Get the Book</a>
+                <a href="#games" class="btn-hero-primary">Play Free Games</a>
+                <a href="#book" class="btn-hero-outline">Get the Book</a>
             </div>
             <div class="hero-checks">
-                <span>&#10003; 220-1201 &amp; 220-1202 covered</span>
+                <span>&#10003; 220-1201 &amp; 220-1202</span>
                 <span>&#10003; 500+ practice questions</span>
                 <span>&#10003; Works on mobile</span>
             </div>
         </div>
     </header>
 
+    <!-- BOOK PROMO BANNER -->
+    <section class="book-promo" id="book">
+        <div class="book-promo-inner">
+            <div class="book-promo-text">
+                <h2>&#128216; Get the Complete Study Guide</h2>
+                <p>Written by a working IT professional. Covers every exam objective with real-world context, not just memorization.</p>
+                <ul>
+                    <li>25+ structured study modules</li>
+                    <li>Original diagrams &amp; troubleshooting mnemonics</li>
+                    <li>Priority system — know what to memorize vs. skim</li>
+                    <li>FREE Members Portal access code included</li>
+                    <li>500+ flash cards, games, glossary &amp; PBQs</li>
+                </ul>
+                <div class="book-formats">
+                    <a href="#" class="btn-amazon">Kindle (Digital)</a>
+                    <a href="#" class="btn-amazon">Paperback</a>
+                    <a href="#" class="btn-amazon">Hardback</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- ============================================
-         FREE GAMES SECTION
-         ============================================ -->
-    <section class="section section--light" id="games">
+    <!-- FREE GAMES -->
+    <section class="section section--alt" id="games">
         <div class="section-inner">
             <h2 class="section-title">&#127918; Free Study Games</h2>
             <p class="section-subtitle">Learn while you play — no account needed</p>
             <div class="card-grid">
-                <!-- Port Blaster -->
                 <div class="card">
-                    <div class="card-icon">&#128640;</div>
-                    <h3>Speed Match</h3>
-                    <p>Speed-match ports to protocols — timed challenge. 3 modes, 3 difficulties.</p>
-                    <a href="pbq/game.html" class="btn-card">Play Free</a>
+                    <div class="card-icon">&#128163;</div>
+                    <h3>Speed Match <span class="badge-free">FREE</span></h3>
+                    <p>Match ports to protocols against the clock. 3 modes, 3 difficulties.</p>
+                    <a href="games/speed-match.html" class="btn-card">Play Now</a>
                 </div>
-                <!-- Port Blaster Shooter -->
                 <div class="card">
                     <div class="card-icon">&#128126;</div>
-                    <h3>Port Blaster Shooter</h3>
-                    <p>Space shooter! Blast real port numbers and dodge decoys. Memorize ports through fast arcade action.</p>
-                    <a href="pbq/port-blaster-new.html" class="btn-card">Play Free</a>
+                    <h3>Port Blaster Shooter <span class="badge-free">FREE</span></h3>
+                    <p>Space shooter! Blast real port numbers and dodge decoys. Memorize ports through arcade action.</p>
+                    <a href="games/port-blaster.html" class="btn-card">Play Now</a>
                 </div>
-                <!-- Jeopardy -->
                 <div class="card">
-                    <div class="card-icon">&#127911;</div>
-                    <h3>CompTIA Jeopardy</h3>
-                    <p>Multiplayer quiz game. 5 categories, Daily Doubles!</p>
-                    <a href="pbq/jeopardy.html" class="btn-card">Play Free</a>
+                    <div class="card-icon">&#127942;</div>
+                    <h3>CompTIA Jeopardy <span class="badge-free">FREE</span></h3>
+                    <p>Quiz game with 5 categories and Daily Doubles. Play solo or with friends.</p>
+                    <a href="games/jeopardy.html" class="btn-card">Play Now</a>
                 </div>
-                <!-- OSI Layer Climb -->
                 <div class="card">
                     <div class="card-icon">&#9968;</div>
-                    <h3>OSI Layer Climb</h3>
-                    <p>Climb the mountain by answering OSI model questions.</p>
-                    <a href="pbq/osi-climb.html" class="btn-card">Play Free</a>
-                </div>
-                <!-- Maze Runner -->
-                <div class="card">
-                    <div class="card-icon">&#128126;</div>
-                    <h3>Maze Runner</h3>
-                    <p>Pac-Man style! Navigate a circuit board, collect bytes, avoid threats, answer questions.</p>
-                    <a href="pbq/maze-runner.html" class="btn-card">Play Free</a>
-                </div>
-                <!-- Terminal Takedown -->
-                <div class="card">
-                    <div class="card-icon">&#128737;</div>
-                    <h3>Terminal Takedown</h3>
-                    <p>Tetris-style defense! Blocks represent IT threats — answer CompTIA questions to clear them.</p>
-                    <a href="pbq/terminal-takedown.html" class="btn-card">Play Free</a>
-                </div>
-            </div>
-            <p class="section-note">More games in the <a href="#members">Members section &rarr;</a></p>
-        </div>
-    </section>
-
-
-    <!-- PUZZLE GAMES SECTION -->
-    <section class="section" id="puzzles">
-        <div class="section-inner">
-            <h2 class="section-title">&#129513; Puzzle Games</h2>
-            <p class="section-subtitle">Test your CompTIA knowledge with word puzzles, memory challenges, and brain teasers</p>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-icon">&#128268;</div>
-                    <h3>Port Match</h3>
-                    <p>Draw connections between port numbers and protocols. Test your networking knowledge!</p>
-                    <a href="pbq/port-match.html" class="btn-card">Play Free</a>
+                    <h3>OSI Layer Climb <span class="badge-free">FREE</span></h3>
+                    <p>Climb the mountain by answering OSI model questions at each layer.</p>
+                    <a href="games/osi-climb.html" class="btn-card">Play Now</a>
                 </div>
                 <div class="card">
                     <div class="card-icon">&#129513;</div>
-                    <h3>Tech Wordle</h3>
+                    <h3>Tech Wordle <span class="badge-free">FREE</span></h3>
                     <p>Guess the hidden IT term letter by letter. 30 terms, 5 categories, 6 guesses.</p>
-                    <a href="pbq/wordle-tech.html" class="btn-card">Play Free</a>
+                    <a href="games/wordle-tech.html" class="btn-card">Play Now</a>
                 </div>
                 <div class="card">
                     <div class="card-icon">&#127183;</div>
-                    <h3>Memory Match</h3>
-                    <p>Flip cards to find matching pairs — ports to protocols, terms to definitions.</p>
-                    <a href="pbq/match-game.html" class="btn-card">Play Free</a>
-                </div>
-                <div class="card">
-                    <div class="card-icon">&#128260;</div>
-                    <h3>Tech Scramble</h3>
-                    <p>Fill in the blanks from jumbled letter tiles. 25 CompTIA terms with hints.</p>
-                    <a href="pbq/scramble.html" class="btn-card">Play Free</a>
-                </div>
-                <div class="card">
-                    <div class="card-icon">&#128221;</div>
-                    <h3>Tech Tile Time &#128274;</h3>
-                    <p>10-clue word fill puzzle with randomized questions. Members only — access code required!</p>
-                    <a href="pbq/crossword.html" class="btn-card">Play (Members)</a>
+                    <h3>Port Match <span class="badge-free">FREE</span></h3>
+                    <p>Draw connections between port numbers and their protocols.</p>
+                    <a href="games/port-match.html" class="btn-card">Play Now</a>
                 </div>
             </div>
         </div>
     </section>
 
-
-    <!-- ============================================
-         FLASH CARD DEMO
-         ============================================ -->
-    <section class="section section--dark" id="flashcards">
+    <!-- FREE PBQs -->
+    <section class="section" id="pbqs">
         <div class="section-inner">
-            <h2 class="section-title">&#128199; Flash Card Preview</h2>
-            <p class="section-subtitle">50 free cards — full 500-term deck in the Members section</p>
-
-            <!-- Flash card widget -->
-            <div class="flashcard-container">
-                <div class="flashcard" id="flashcard" onclick="flipCard()" role="button" aria-label="Click to flip card" tabindex="0">
-                    <div class="flashcard-face flashcard-front" id="cardFront">SSH</div>
-                    <div class="flashcard-face flashcard-back" id="cardBack">Port 22. Encrypted remote CLI access.</div>
+            <h2 class="section-title">&#128203; Practice PBQs</h2>
+            <p class="section-subtitle">Exam-style Performance-Based Questions — interactive drag-and-drop</p>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">&#128187;</div>
+                    <h3>Hardware PBQ <span class="badge-free">FREE</span></h3>
+                    <p>Identify components, match connectors, troubleshoot hardware scenarios.</p>
+                    <a href="pbqs/hardware.html" class="btn-card">Start PBQ</a>
                 </div>
-            </div>
-
-            <div class="flashcard-controls">
-                <button onclick="prevCard()" aria-label="Previous card">&larr; Prev</button>
-                <span class="flashcard-counter" id="cardCounter">1 / 10</span>
-                <button onclick="nextCard()" aria-label="Next card">Next &rarr;</button>
-            </div>
-
-            <p class="flashcard-hint">Click card to flip &middot; Use arrows to navigate</p>
-
-            <div class="flashcard-actions">
-                <a href="pbq/flashcards.html" class="btn-white-outline">View All 50 Free Cards</a>
-                <a href="members.html" class="btn-lock">&#128274; Full 500 terms in Members Area</a>
+                <div class="card">
+                    <div class="card-icon">&#127760;</div>
+                    <h3>Networking PBQ <span class="badge-free">FREE</span></h3>
+                    <p>Configure networks, troubleshoot connectivity, identify protocols.</p>
+                    <a href="pbqs/networking.html" class="btn-card">Start PBQ</a>
+                </div>
+                <div class="card">
+                    <div class="card-icon">&#9881;</div>
+                    <h3>Motherboard PBQ <span class="badge-free">FREE</span></h3>
+                    <p>Interactive motherboard — identify 22 components and rear panel connectors.</p>
+                    <a href="pbqs/motherboard.html" class="btn-card">Start PBQ</a>
+                </div>
             </div>
         </div>
     </section>
 
-
-    <!-- ============================================
-         QUICK REFERENCE GUIDES
-         ============================================ -->
-    <section class="section section--light" id="reference">
+    <!-- REFERENCE GUIDES -->
+    <section class="section section--alt" id="reference">
         <div class="section-inner">
             <h2 class="section-title">&#128203; Printable Cheat Sheets</h2>
-            <p class="section-subtitle">PDF-ready reference guides for last-minute review</p>
+            <p class="section-subtitle">Quick-reference guides for last-minute review</p>
             <div class="card-grid">
-                <!-- Network Ports -->
                 <div class="card">
                     <div class="card-icon">&#128225;</div>
                     <h3>Network Ports</h3>
                     <p>All essential ports and protocols in one quick-reference chart.</p>
                     <a href="reference/ports.html" class="btn-card">View Guide</a>
                 </div>
-                <!-- Cable Types -->
                 <div class="card">
                     <div class="card-icon">&#128268;</div>
                     <h3>Cable Types &amp; Speeds</h3>
                     <p>Ethernet, fiber, coax — categories, speeds, and max distances.</p>
                     <a href="reference/cables.html" class="btn-card">View Guide</a>
                 </div>
-                <!-- Windows Commands -->
                 <div class="card">
                     <div class="card-icon">&#128421;</div>
                     <h3>Windows Commands</h3>
                     <p>Essential CLI commands for troubleshooting and management.</p>
                     <a href="reference/commands.html" class="btn-card">View Guide</a>
                 </div>
-                <!-- BIOS/UEFI -->
                 <div class="card">
                     <div class="card-icon">&#9881;</div>
                     <h3>BIOS/UEFI Settings</h3>
@@ -1118,142 +317,59 @@
         </div>
     </section>
 
-
-    <!-- ============================================
-         MEMBERS-ONLY PROMO
-         ============================================ -->
-    <section class="section section--members" id="members">
+    <!-- FLASH CARDS PREVIEW -->
+    <section class="section section--dark" id="flashcards">
         <div class="section-inner">
-            <h2 class="section-title">&#128274; Members-Only Content</h2>
-            <p class="section-subtitle">Free with any book purchase — enter your code to unlock</p>
-            <div class="members-grid">
-                <!-- Full Flash Cards -->
-                <div class="member-card">
-                    <div class="member-card-icon">&#127183;</div>
-                    <h3>Full 500 Flash Cards</h3>
-                    <p>With shuffle &amp; priority filtering</p>
-                </div>
-                <!-- Arcade Games -->
-                <div class="member-card">
-                    <div class="member-card-icon">&#128377;</div>
-                    <h3>Arcade Games</h3>
-                    <p>Cable Match, Troubleshooting Tower, Neon Circuit Dash</p>
-                </div>
-                <!-- Searchable Glossary -->
-                <div class="member-card">
-                    <div class="member-card-icon">&#128214;</div>
-                    <h3>Searchable Glossary</h3>
-                    <p>All terms, filterable by priority level</p>
-                </div>
-                <!-- Resource Center -->
-                <div class="member-card">
-                    <div class="member-card-icon">&#129520;</div>
-                    <h3>Resource Center</h3>
-                    <p>Curated links, tools, and freebies for techs</p>
-                </div>
-                <!-- Exam Day Checklist -->
-                <div class="member-card">
-                    <div class="member-card-icon">&#9989;</div>
-                    <h3>Exam Day Checklist</h3>
-                    <p>Interactive study schedule &amp; prep guide</p>
-                </div>
-                <!-- OSI Layer Climb Full -->
-                <div class="member-card">
-                    <div class="member-card-icon">&#128246;</div>
-                    <h3>OSI Layer Climb</h3>
-                    <p>Full mountain climbing quiz game</p>
+            <h2 class="section-title">&#127183; Flash Card Preview</h2>
+            <p class="section-subtitle">50 free cards — full 500-term deck in the Members Area</p>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="flashcard-face flashcard-front" id="cardFront">SSH</div>
+                    <div class="flashcard-face flashcard-back" id="cardBack">Port 22. Encrypted remote CLI access.</div>
                 </div>
             </div>
-            <div class="members-cta">
-                <a href="members.html" class="btn-enter">Enter Members Area</a>
-                <span class="note">Access code found on inside back cover of the book</span>
+            <div class="flashcard-controls">
+                <button onclick="prevCard()">&larr; Prev</button>
+                <span class="flashcard-counter" id="cardCounter">1 / 50</span>
+                <button onclick="nextCard()">Next &rarr;</button>
+            </div>
+            <p class="flashcard-hint">Click card to flip &middot; Use arrows to navigate</p>
+            <div class="flashcard-cta">
+                <a href="flashcards.html">View All 50 Free Cards</a>
             </div>
         </div>
     </section>
 
-
-    <!-- ============================================
-         BUY THE BOOK
-         ============================================ -->
-    <section class="section section--light" id="book">
-        <div class="section-inner">
-            <h2 class="section-title">&#128216; Get the Complete Study Guide</h2>
-            <p class="section-subtitle">Everything you need to pass — one resource, no fluff</p>
-
-            <div class="book-callout">&#10003; FREE Members-Only Access Included with Purchase!</div>
-
-            <div class="book-cards">
-                <!-- Physical Book -->
-                <div class="book-card">
-                    <h3>&#128214; Physical Book</h3>
-                    <ul>
-                        <li>Full printed study guide</li>
-                        <li>Quick-reference tables</li>
-                        <li>Exam tips highlighted throughout</li>
-                        <li>Members-only access code included</li>
-                        <li>Perfect for desk study sessions</li>
-                    </ul>
-                    <a href="#" class="btn-red">Buy on Amazon</a>
-                </div>
-                <!-- Digital PDF -->
-                <div class="book-card">
-                    <h3>&#128187; Digital PDF</h3>
-                    <ul>
-                        <li>Instant download access</li>
-                        <li>Searchable text throughout</li>
-                        <li>Read on any device</li>
-                        <li>Members-only access code included</li>
-                        <li>Great for on-the-go studying</li>
-                    </ul>
-                    <a href="#" class="btn-red">Buy Digital</a>
-                </div>
-            </div>
-
-            <div class="book-extras">
-                <h4>What's in the book (not on this site):</h4>
-                <ul>
-                    <li>25+ full study modules (structured learning path)</li>
-                    <li>Exam traps called out before you fall for them</li>
-                    <li>Original diagrams for hardware, networking, troubleshooting</li>
-                    <li>Priority system (know what to memorize vs. skim)</li>
-                    <li>Troubleshooting methodologies step-by-step</li>
-                    <li>Written by a working IT professional who's been there</li>
-                </ul>
-            </div>
-        </div>
+    <!-- MEMBERS CTA -->
+    <section class="members-cta">
+        <h2>&#128274; Unlock the Full Experience</h2>
+        <p>Book owners get exclusive access to 500+ flash cards, searchable glossary, arcade games, full PBQ set, and study tools.</p>
+        <a href="members.html" class="btn-enter">Enter Members Area</a>
+        <span class="note">Access code found on the last page of the book</span>
     </section>
 
-
-    <!-- ============================================
-         ABOUT
-         ============================================ -->
-    <section class="section" id="about">
-        <div class="section-inner">
-            <h2 class="section-title">About the Author</h2>
-            <div class="about-content">
-                <p>Niko Williams is a working IT professional and CompTIA-certified technician who wrote this guide based on real-world experience — not just exam objectives. After helping dozens of colleagues and students pass their A+ on the first try, he compiled his methods, mnemonics, and study systems into one comprehensive resource. His approach focuses on understanding concepts (not just memorizing answers) so the knowledge sticks long after exam day.</p>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ============================================
-         FOOTER
-         ============================================ -->
+    <!-- FOOTER -->
     <footer class="footer">
-        <div class="footer-grid">
+        <div class="footer-inner">
             <div>
-                <h4>Resources</h4>
-                <a href="#games">Free Study Games</a>
-                <a href="pbq/flashcards.html">Flash Cards</a>
+                <h4>Free Resources</h4>
+                <a href="#games">Study Games</a>
+                <a href="flashcards.html">Flash Cards (50)</a>
                 <a href="#reference">Reference Guides</a>
-                <a href="members.html">Members Area</a>
+                <a href="#pbqs">Practice PBQs</a>
             </div>
             <div>
-                <h4>Legal</h4>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Use</a>
-                <a href="#">Cookie Policy</a>
+                <h4>Members Only</h4>
+                <a href="members.html">Full 500 Flash Cards</a>
+                <a href="members.html">Searchable Glossary</a>
+                <a href="members.html">All Arcade Games</a>
+                <a href="members.html">Study Tools</a>
+            </div>
+            <div>
+                <h4>Get the Book</h4>
+                <a href="#">Kindle (Digital)</a>
+                <a href="#">Paperback</a>
+                <a href="#">Hardback</a>
             </div>
             <div>
                 <h4>Connect</h4>
@@ -1264,103 +380,76 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Niko Williams. All rights reserved.</p>
-            <p>CompTIA A+ is a registered trademark of CompTIA, Inc.</p>
-            <p>This site is not affiliated with or endorsed by CompTIA.</p>
+            <p>CompTIA A+ is a registered trademark of CompTIA, Inc. This site is not affiliated with or endorsed by CompTIA.</p>
         </div>
     </footer>
 
-
-    <!-- ============================================
-         JAVASCRIPT
-         ============================================ -->
+    <!-- JAVASCRIPT -->
     <script>
-        /* ---- Mobile Menu ---- */
-        function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            const btn = document.querySelector('.hamburger');
-            const isOpen = menu.classList.toggle('open');
-            btn.setAttribute('aria-expanded', isOpen);
-        }
-
-        function closeMenu() {
-            document.getElementById('mobileMenu').classList.remove('open');
-            document.querySelector('.hamburger').setAttribute('aria-expanded', 'false');
-        }
-
-        /* ---- Flash Card Data ---- */
-        const cards = [
-            { front: 'SSH', back: 'Port 22. Encrypted remote CLI access.' },
-            { front: 'HTTPS', back: 'Port 443. Encrypted web (TLS/SSL).' },
-            { front: 'DHCP', back: 'Auto-assigns IPs. Ports 67/68. DORA process.' },
-            { front: 'APIPA', back: '169.254.x.x = DHCP failure.' },
-            { front: 'BitLocker', back: 'Full-disk encryption. Needs TPM + Pro/Enterprise.' },
-            { front: 'RAID 5', back: 'Striping + parity. Min 3 drives.' },
-            { front: 'Ransomware', back: 'Encrypts data, demands payment. Don\'t pay.' },
-            { front: 'NAT', back: 'Multiple private IPs share one public IP.' },
-            { front: 'TPM', back: 'Security chip. Required for BitLocker & Windows 11.' },
-            { front: 'sfc /scannow', back: 'Repairs corrupted Windows system files.' }
-        ];
-
-        let currentCard = 0;
-        let isFlipped = false;
-
-        function updateCard() {
-            const front = document.getElementById('cardFront');
-            const back = document.getElementById('cardBack');
-            const counter = document.getElementById('cardCounter');
-            const flashcard = document.getElementById('flashcard');
-
-            // Reset flip
-            isFlipped = false;
-            flashcard.classList.remove('flipped');
-
-            front.textContent = cards[currentCard].front;
-            back.textContent = cards[currentCard].back;
-            counter.textContent = (currentCard + 1) + ' / ' + cards.length;
-        }
-
-        function flipCard() {
-            const flashcard = document.getElementById('flashcard');
-            isFlipped = !isFlipped;
-            flashcard.classList.toggle('flipped');
-        }
-
-        function nextCard() {
-            currentCard = (currentCard + 1) % cards.length;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentCard = (currentCard - 1 + cards.length) % cards.length;
-            updateCard();
-        }
-
-        /* Keyboard support for flash cards */
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowRight') nextCard();
-            if (e.key === 'ArrowLeft') prevCard();
-            if (e.key === ' ' || e.key === 'Enter') {
-                const fc = document.getElementById('flashcard');
-                if (document.activeElement === fc || 
-                    document.getElementById('flashcards').contains(document.activeElement)) {
-                    e.preventDefault();
-                    flipCard();
-                }
-            }
-        });
-
-        /* ---- Smooth scroll offset for sticky nav ---- */
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    e.preventDefault();
-                    const navHeight = document.querySelector('.nav').offsetHeight;
-                    const targetPos = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 10;
-                    window.scrollTo({ top: targetPos, behavior: 'smooth' });
-                }
-            });
-        });
+    const cards = [
+        {f:'SSH',b:'Port 22. Encrypted remote CLI access. Replaces Telnet.'},
+        {f:'HTTPS',b:'Port 443. Encrypted web (TLS/SSL). Padlock icon.'},
+        {f:'DHCP',b:'Ports 67/68 (UDP). Auto-assigns IPs. DORA process.'},
+        {f:'APIPA',b:'169.254.x.x = DHCP failure. Self-assigned fallback.'},
+        {f:'BitLocker',b:'Full-disk encryption. Needs TPM + Pro/Enterprise.'},
+        {f:'RAID 5',b:'Striping + parity. Min 3 drives. Survives 1 failure.'},
+        {f:'Ransomware',b:'Encrypts data, demands payment. Disconnect & restore.'},
+        {f:'NAT',b:'Multiple private IPs share one public IP via router.'},
+        {f:'TPM',b:'Security chip. Required for BitLocker & Windows 11.'},
+        {f:'sfc /scannow',b:'Repairs corrupted Windows system files.'},
+        {f:'DNS',b:'Port 53. Translates domain names to IP addresses.'},
+        {f:'FTP',b:'Ports 20/21. File transfer. Unencrypted. Use SFTP.'},
+        {f:'SMTP',b:'Port 25/587. Sends outbound email.'},
+        {f:'RDP',b:'Port 3389. Windows remote desktop. Never expose to WAN.'},
+        {f:'SMB',b:'Port 445. Windows file/printer sharing.'},
+        {f:'IMAP',b:'Port 143/993. Email stays on server, syncs devices.'},
+        {f:'POP3',b:'Port 110/995. Downloads email, removes from server.'},
+        {f:'Telnet',b:'Port 23. Unencrypted remote access. Obsolete.'},
+        {f:'SNMP',b:'Port 161/162. Monitors network devices.'},
+        {f:'LDAP',b:'Port 389. Queries Active Directory.'},
+        {f:'ATX',b:'Standard motherboard. 305x244mm. 7 PCIe slots.'},
+        {f:'DDR4',b:'2133-3200 MHz, 1.2V, 288 pins. Not DDR5 compatible.'},
+        {f:'DDR5',b:'4800-7200+ MHz, 1.1V. On-die ECC. Intel 12th gen+.'},
+        {f:'NVMe',b:'Flash over PCIe. Much lower latency than SATA.'},
+        {f:'RAID 0',b:'Striping. No redundancy. Fastest but riskiest.'},
+        {f:'RAID 1',b:'Mirroring. 2 drives. Survives 1 failure. Half capacity.'},
+        {f:'GPT',b:'Modern partition table. >2TB. 128 partitions. UEFI.'},
+        {f:'MBR',b:'Legacy. 2TB max. 4 partitions. BIOS boot.'},
+        {f:'NTFS',b:'Windows file system. Permissions, encryption, >4GB files.'},
+        {f:'FAT32',b:'Legacy. 4GB max file. No permissions. UEFI ESP.'},
+        {f:'Cat 6a',b:'10 Gbps at 100m. Augmented shielding.'},
+        {f:'Wi-Fi 6',b:'802.11ax. Up to 9.6 Gbps. OFDMA. 2.4/5/6 GHz.'},
+        {f:'WPA3',b:'Latest wireless security. SAE authentication.'},
+        {f:'Phishing',b:'Fraudulent messages to steal credentials. #1 vector.'},
+        {f:'MFA',b:'Multi-Factor Auth. Something you know/have/are.'},
+        {f:'VPN',b:'Encrypted tunnel for secure remote access.'},
+        {f:'Least Privilege',b:'Users get minimum access needed for their role.'},
+        {f:'Evil Twin',b:'Rogue AP mimicking legitimate Wi-Fi. Use VPN.'},
+        {f:'BSOD',b:'Blue Screen. Critical kernel error. Check Event Viewer.'},
+        {f:'Safe Mode',b:'Minimal drivers/services. Isolates conflicts.'},
+        {f:'ipconfig',b:'/release /renew for DHCP. /flushdns clears cache.'},
+        {f:'chkdsk',b:'/f=fixes errors. /r=bad sectors. Run elevated.'},
+        {f:'DISM',b:'/RestoreHealth repairs component store before sfc.'},
+        {f:'OSI Layer 4',b:'Transport. TCP/UDP. Port numbers. Segmentation.'},
+        {f:'OSI Layer 3',b:'Network. IP addressing. Routing. Device: Router.'},
+        {f:'OSI Layer 2',b:'Data Link. MAC addresses. Device: Switch.'},
+        {f:'Secure Boot',b:'UEFI feature. Only signed OS boots. Required Win11.'},
+        {f:'ESD',b:'Electrostatic Discharge. Ground yourself first. 100V damages.'},
+        {f:'3-2-1 Backup',b:'3 copies, 2 media types, 1 offsite.'},
+        {f:'Incremental',b:'Changes since LAST backup. Fastest. Complex restore.'}
+    ];
+    let cur = 0, flipped = false;
+    function updateCard() {
+        flipped = false;
+        document.getElementById('flashcard').classList.remove('flipped');
+        document.getElementById('cardFront').textContent = cards[cur].f;
+        document.getElementById('cardBack').textContent = cards[cur].b;
+        document.getElementById('cardCounter').textContent = (cur+1)+' / '+cards.length;
+    }
+    function flipCard() { flipped=!flipped; document.getElementById('flashcard').classList.toggle('flipped'); }
+    function nextCard() { cur=(cur+1)%cards.length; updateCard(); }
+    function prevCard() { cur=(cur-1+cards.length)%cards.length; updateCard(); }
+    document.addEventListener('keydown', e => { if(e.key==='ArrowRight') nextCard(); if(e.key==='ArrowLeft') prevCard(); if(e.key===' ') { e.preventDefault(); flipCard(); } });
     </script>
 </body>
 </html>
