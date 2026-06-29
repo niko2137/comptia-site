@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAID Configuration PBQ — CompTIA A+ Study Hub</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        /* Top Bar */
+        .top-bar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-link:hover {
+            color: #60a5fa;
+        }
+        .score-display {
+            background: #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #94a3b8;
+        }
+        .score-display span {
+            color: #3b82f6;
+            font-size: 1.1em;
+        }
+
+        /* Container */
+        .pbq-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: #94a3b8;
+            font-size: 1.05em;
+        }
+        /* Instructions */
+        .instructions {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 36px;
+        }
+        .instructions h3 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        .instructions p {
+            color: #94a3b8;
+            font-size: 0.92em;
+            margin-bottom: 6px;
+        }
+        /* Exam Trap */
+        .exam-trap {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 36px;
+        }
+        .exam-trap h4 {
+            color: #ef4444;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+        .exam-trap p {
+            color: #fca5a5;
+            font-size: 0.88em;
+        }
+
+        /* Section Headers */
+        .section-title {
+            font-size: 1.3em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3b82f6;
+        }
+        .section-subtitle {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        /* Exercise 1: Drag and Drop */
+        .exercise-section {
+            margin-bottom: 48px;
+        }
+        .drag-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #1e293b;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            min-height: 60px;
+        }
+        .drag-item {
+            background: #3b82f6;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.88em;
+            font-weight: 700;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s;
+            touch-action: none;
+        }
+        .drag-item:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .drag-item:active {
+            cursor: grabbing;
+            opacity: 0.9;
+        }
+        .drag-item.placed {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Drop Zones */
+        .drop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .drop-row {
+            display: flex;
+            align-items: stretch;
+            background: #1e293b;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .drop-row:hover {
+            border-color: #475569;
+        }
+        .drop-description {
+            flex: 1;
+            padding: 14px 18px;
+            font-size: 0.88em;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+        .drop-target {
+            min-width: 140px;
+            max-width: 160px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            border-left: 1px solid #334155;
+            font-size: 0.85em;
+            color: #64748b;
+            font-style: italic;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+        }
+        .drop-target.has-item {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            font-style: normal;
+            font-weight: 700;
+        }
+        .drop-target.drag-over {
+            background: rgba(59, 130, 246, 0.25);
+            border-left: 2px dashed #3b82f6;
+        }
+        .drop-target.correct {
+            background: rgba(16, 185, 129, 0.15);
+            border-left: 3px solid #10b981;
+            color: #10b981;
+        }
+        .drop-target.incorrect {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 3px solid #ef4444;
+            color: #ef4444;
+        }
+
+        /* Exercise 2: Multiple Choice */
+        .scenario-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+        .scenario-card .question-num {
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 0.82em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .scenario-card .question-text {
+            color: #e2e8f0;
+            font-size: 0.95em;
+            margin-bottom: 14px;
+            font-style: italic;
+        }
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .choice-btn {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #cbd5e1;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .choice-btn:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+        }
+        .choice-btn.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+        .choice-btn.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        .choice-btn.incorrect {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .choice-btn.show-correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 14px 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-check {
+            background: #10b981;
+            color: #fff;
+        }
+        .btn-check:hover {
+            background: #059669;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        .btn-reset {
+            background: #334155;
+            color: #e2e8f0;
+        }
+        .btn-reset:hover {
+            background: #475569;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pbq-container {
+                padding: 24px 16px 60px;
+            }
+            .pbq-header h1 {
+                font-size: 1.5em;
+            }
+            .drop-row {
+                flex-direction: column;
+            }
+            .drop-target {
+                min-width: unset;
+                max-width: unset;
+                border-left: none;
+                border-top: 1px solid #334155;
+            }
+            .choices {
+                grid-template-columns: 1fr;
+            }
+            .drag-item {
+                padding: 8px 14px;
+                font-size: 0.82em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="../index.html" class="back-link">&#8592; Back to Study Hub</a>
+        <div class="score-display">Score: <span id="scoreValue">0</span> / <span id="scoreTotal">11</span></div>
+    </div>
+
+    <div class="pbq-container">
+        <!-- Header -->
+        <div class="pbq-header">
+            <h1>RAID Configuration PBQ</h1>
+            <p class="subtitle">CompTIA A+ Core 1 (220-1101) &mdash; Performance-Based Question</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>Instructions</h3>
+            <p>This PBQ has two exercises. Complete both and click "Check Answers" to see your score.</p>
+            <p><strong>Exercise 1:</strong> Drag each RAID level from the bank and drop it onto the matching description.</p>
+            <p><strong>Exercise 2:</strong> Read each scenario and select the best RAID level for the situation.</p>
+        </div>
+
+        <!-- Exam Trap -->
+        <div class="exam-trap">
+            <h4>&#9888; Exam Trap</h4>
+            <p>RAID is NOT a backup! It protects against drive failure but NOT against ransomware, accidental deletion, or corruption.</p>
+        </div>
+
+        <!-- Exercise 1: Drag & Drop -->
+        <div class="exercise-section">
+            <h2 class="section-title">Exercise 1: RAID Level Matching</h2>
+            <p class="section-subtitle">Drag the RAID levels from the bank below and drop them onto the correct description.</p>
+
+            <div class="drag-bank" id="dragBank">
+                <div class="drag-item" draggable="true" data-raid="RAID 0">RAID 0</div>
+                <div class="drag-item" draggable="true" data-raid="RAID 5">RAID 5</div>
+                <div class="drag-item" draggable="true" data-raid="RAID 10">RAID 10</div>
+                <div class="drag-item" draggable="true" data-raid="RAID 1">RAID 1</div>
+                <div class="drag-item" draggable="true" data-raid="JBOD">JBOD</div>
+                <div class="drag-item" draggable="true" data-raid="RAID 6">RAID 6</div>
+            </div>
+
+            <div class="drop-list" id="dropList">
+                <div class="drop-row" data-answer="RAID 0">
+                    <div class="drop-description">Striping only. No fault tolerance. Fastest read/write. One failure = all data lost. Min 2 drives.</div>
+                    <div class="drop-target" data-slot="true">Drop here</div>
+                </div>
+                <div class="drop-row" data-answer="RAID 1">
+                    <div class="drop-description">Mirroring. Survives 1 drive failure. Half usable capacity. Min 2 drives.</div>
+                    <div class="drop-target" data-slot="true">Drop here</div>
+                </div>
+                <div class="drop-row" data-answer="RAID 5">
+                    <div class="drop-description">Striping + single parity. Survives 1 drive failure. Min 3 drives. Most popular NAS.</div>
+                    <div class="drop-target" data-slot="true">Drop here</div>
+                </div>
+                <div class="drop-row" data-answer="RAID 6">
+                    <div class="drop-description">Striping + double parity. Survives 2 drive failures. Min 4 drives.</div>
+                    <div class="drop-target" data-slot="true">Drop here</div>
+                </div>
+                <div class="drop-row" data-answer="RAID 10">
+                    <div class="drop-description">Mirror + stripe. Excellent fault tolerance. Min 4 drives. Best performance + redundancy.</div>
+                    <div class="drop-target" data-slot="true">Drop here</div>
+                </div>
+                <div class="drop-row" data-answer="JBOD">
+                    <div class="drop-description">Not RAID. Drives treated independently or concatenated. No redundancy.</div>
+                    <div class="drop-target" data-slot="true">Drop here</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 2: Multiple Choice Scenarios -->
+        <div class="exercise-section">
+            <h2 class="section-title">Exercise 2: Scenario-Based Questions</h2>
+            <p class="section-subtitle">Select the best RAID level for each real-world scenario.</p>
+
+            <div id="scenarioList">
+                <div class="scenario-card" data-answer="RAID 0">
+                    <div class="question-num">Scenario 1</div>
+                    <div class="question-text">"A video editor needs maximum speed for temporary render files and doesn't care about data loss."</div>
+                    <div class="choices">
+                        <button class="choice-btn" data-value="RAID 0">RAID 0</button>
+                        <button class="choice-btn" data-value="RAID 1">RAID 1</button>
+                        <button class="choice-btn" data-value="RAID 5">RAID 5</button>
+                        <button class="choice-btn" data-value="RAID 10">RAID 10</button>
+                    </div>
+                </div>
+
+                <div class="scenario-card" data-answer="RAID 5">
+                    <div class="question-num">Scenario 2</div>
+                    <div class="question-text">"A small business needs a NAS with good balance of performance, capacity, and can survive one drive failure with 4 drives."</div>
+                    <div class="choices">
+                        <button class="choice-btn" data-value="RAID 0">RAID 0</button>
+                        <button class="choice-btn" data-value="RAID 1">RAID 1</button>
+                        <button class="choice-btn" data-value="RAID 5">RAID 5</button>
+                        <button class="choice-btn" data-value="RAID 6">RAID 6</button>
+                    </div>
+                </div>
+
+                <div class="scenario-card" data-answer="RAID 10">
+                    <div class="question-num">Scenario 3</div>
+                    <div class="question-text">"A hospital database server needs the best combination of speed AND redundancy, budget is not a concern."</div>
+                    <div class="choices">
+                        <button class="choice-btn" data-value="RAID 5">RAID 5</button>
+                        <button class="choice-btn" data-value="RAID 6">RAID 6</button>
+                        <button class="choice-btn" data-value="RAID 10">RAID 10</button>
+                        <button class="choice-btn" data-value="RAID 1">RAID 1</button>
+                    </div>
+                </div>
+
+                <div class="scenario-card" data-answer="RAID 1">
+                    <div class="question-num">Scenario 4</div>
+                    <div class="question-text">"An accountant wants a simple backup where an exact copy exists on a second drive."</div>
+                    <div class="choices">
+                        <button class="choice-btn" data-value="RAID 0">RAID 0</button>
+                        <button class="choice-btn" data-value="RAID 1">RAID 1</button>
+                        <button class="choice-btn" data-value="RAID 5">RAID 5</button>
+                        <button class="choice-btn" data-value="JBOD">JBOD</button>
+                    </div>
+                </div>
+
+                <div class="scenario-card" data-answer="RAID 6">
+                    <div class="question-num">Scenario 5</div>
+                    <div class="question-text">"A data center needs to survive TWO simultaneous drive failures in a large array."</div>
+                    <div class="choices">
+                        <button class="choice-btn" data-value="RAID 5">RAID 5</button>
+                        <button class="choice-btn" data-value="RAID 6">RAID 6</button>
+                        <button class="choice-btn" data-value="RAID 10">RAID 10</button>
+                        <button class="choice-btn" data-value="RAID 0">RAID 0</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pbq-actions">
+            <button class="pbq-btn btn-check" id="checkBtn" onclick="checkAnswers()">Check Answers</button>
+            <button class="pbq-btn btn-reset" id="resetBtn" onclick="resetAll()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // ===== Drag & Drop Logic =====
+        let draggedItem = null;
+        const dragBank = document.getElementById('dragBank');
+        const dropTargets = document.querySelectorAll('.drop-target');
+        const dragItems = document.querySelectorAll('.drag-item');
+
+        // Desktop drag events
+        dragItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                e.dataTransfer.setData('text/plain', this.dataset.raid);
+                setTimeout(() => this.style.opacity = '0.5', 0);
+            });
+            item.addEventListener('dragend', function() {
+                this.style.opacity = '';
+                draggedItem = null;
+            });
+        });
+
+        dropTargets.forEach(target => {
+            target.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+            target.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+            target.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                const raid = e.dataTransfer.getData('text/plain');
+                placeItem(this, raid);
+            });
+            // Click to remove
+            target.addEventListener('click', function() {
+                if (this.classList.contains('has-item')) {
+                    removeItem(this);
+                }
+            });
+        });
+
+        // Touch support for mobile drag
+        let touchDragItem = null;
+        let touchClone = null;
+
+        dragItems.forEach(item => {
+            item.addEventListener('touchstart', function(e) {
+                touchDragItem = this;
+                const touch = e.touches[0];
+                touchClone = this.cloneNode(true);
+                touchClone.style.position = 'fixed';
+                touchClone.style.zIndex = '9999';
+                touchClone.style.pointerEvents = 'none';
+                touchClone.style.opacity = '0.8';
+                touchClone.style.transform = 'scale(1.1)';
+                touchClone.style.left = (touch.clientX - 40) + 'px';
+                touchClone.style.top = (touch.clientY - 20) + 'px';
+                document.body.appendChild(touchClone);
+                this.style.opacity = '0.3';
+            }, { passive: true });
+
+            item.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (!touchClone) return;
+                const touch = e.touches[0];
+                touchClone.style.left = (touch.clientX - 40) + 'px';
+                touchClone.style.top = (touch.clientY - 20) + 'px';
+
+                // Highlight drop targets
+                dropTargets.forEach(t => t.classList.remove('drag-over'));
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (el && el.dataset.slot) {
+                    el.classList.add('drag-over');
+                }
+            }, { passive: false });
+
+            item.addEventListener('touchend', function(e) {
+                if (!touchDragItem || !touchClone) return;
+                const touch = e.changedTouches[0];
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (el && el.dataset.slot) {
+                    placeItem(el, touchDragItem.dataset.raid);
+                }
+                touchDragItem.style.opacity = '';
+                if (touchClone.parentNode) touchClone.parentNode.removeChild(touchClone);
+                dropTargets.forEach(t => t.classList.remove('drag-over'));
+                touchDragItem = null;
+                touchClone = null;
+            });
+        });
+
+        function placeItem(target, raid) {
+            // If target already has an item, return it to bank
+            if (target.classList.contains('has-item')) {
+                removeItem(target);
+            }
+            // Mark drag item as placed
+            const bankItem = document.querySelector(`.drag-item[data-raid="${raid}"]`);
+            if (bankItem) bankItem.classList.add('placed');
+            // Fill target
+            target.textContent = raid;
+            target.dataset.current = raid;
+            target.classList.add('has-item');
+            target.classList.remove('correct', 'incorrect');
+        }
+
+        function removeItem(target) {
+            const raid = target.dataset.current;
+            if (!raid) return;
+            const bankItem = document.querySelector(`.drag-item[data-raid="${raid}"]`);
+            if (bankItem) bankItem.classList.remove('placed');
+            target.textContent = 'Drop here';
+            target.dataset.current = '';
+            target.classList.remove('has-item', 'correct', 'incorrect');
+        }
+
+        // ===== Multiple Choice Logic =====
+        const scenarioCards = document.querySelectorAll('.scenario-card');
+        scenarioCards.forEach(card => {
+            const buttons = card.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove previous selection in this card
+                    buttons.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+
+        // ===== Check Answers =====
+        function checkAnswers() {
+            let score = 0;
+
+            // Check drag and drop
+            const dropRows = document.querySelectorAll('.drop-row');
+            dropRows.forEach(row => {
+                const target = row.querySelector('.drop-target');
+                const correct = row.dataset.answer;
+                const current = target.dataset.current;
+                target.classList.remove('correct', 'incorrect');
+                if (current === correct) {
+                    target.classList.add('correct');
+                    score++;
+                } else if (current) {
+                    target.classList.add('incorrect');
+                }
+            });
+
+            // Check multiple choice
+            scenarioCards.forEach(card => {
+                const correct = card.dataset.answer;
+                const buttons = card.querySelectorAll('.choice-btn');
+                const selected = card.querySelector('.choice-btn.selected');
+                buttons.forEach(btn => {
+                    btn.classList.remove('correct', 'incorrect', 'show-correct');
+                    if (btn.dataset.value === correct) {
+                        btn.classList.add('show-correct');
+                    }
+                });
+                if (selected) {
+                    if (selected.dataset.value === correct) {
+                        selected.classList.add('correct');
+                        selected.classList.remove('show-correct');
+                        score++;
+                    } else {
+                        selected.classList.add('incorrect');
+                    }
+                }
+            });
+
+            document.getElementById('scoreValue').textContent = score;
+        }
+
+        // ===== Reset =====
+        function resetAll() {
+            // Reset drag & drop
+            dropTargets.forEach(target => {
+                target.textContent = 'Drop here';
+                target.dataset.current = '';
+                target.classList.remove('has-item', 'correct', 'incorrect');
+            });
+            dragItems.forEach(item => item.classList.remove('placed'));
+
+            // Reset multiple choice
+            scenarioCards.forEach(card => {
+                const buttons = card.querySelectorAll('.choice-btn');
+                buttons.forEach(btn => btn.classList.remove('selected', 'correct', 'incorrect', 'show-correct'));
+            });
+
+            // Reset score
+            document.getElementById('scoreValue').textContent = '0';
+        }
+
+        // Expose to global for onclick
+        window.checkAnswers = checkAnswers;
+        window.resetAll = resetAll;
+    })();
+    </script>
+</body>
+</html>

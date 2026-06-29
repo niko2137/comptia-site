@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laser Printing Process PBQ — CompTIA A+ Study Hub</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        a { color: #3b82f6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .top-bar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .top-bar a { font-size: 0.9em; font-weight: 600; }
+        .top-bar .badge {
+            background: #3b82f6;
+            color: #fff;
+            font-size: 0.7em;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: #94a3b8;
+            font-size: 1em;
+        }
+
+        .exam-trap {
+            background: linear-gradient(135deg, #1e293b, #1e3a5f);
+            border: 1px solid #3b82f6;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 36px;
+        }
+        .exam-trap h3 {
+            color: #3b82f6;
+            font-size: 0.95em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .exam-trap p {
+            font-size: 0.88em;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+        .exam-trap strong { color: #f1f5f9; }
+
+
+        .exercise {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 36px;
+        }
+        .exercise h2 {
+            color: #f1f5f9;
+            font-size: 1.3em;
+            margin-bottom: 6px;
+        }
+        .exercise .ex-desc {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        /* Score display */
+        .score-bar {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px 24px;
+            text-align: center;
+            margin-bottom: 36px;
+            font-size: 1.1em;
+            color: #94a3b8;
+        }
+        .score-bar span { color: #3b82f6; font-weight: 700; }
+
+        /* Drag and drop Exercise 1 */
+        .drag-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            min-height: 50px;
+            padding: 16px;
+            background: #0f172a;
+            border: 2px dashed #334155;
+            border-radius: 8px;
+        }
+
+
+        .drag-item {
+            background: #3b82f6;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .drag-item:hover { background: #2563eb; transform: translateY(-2px); }
+        .drag-item:active { cursor: grabbing; opacity: 0.8; }
+        .drag-item.placed { opacity: 0.3; pointer-events: none; }
+
+        .drop-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .drop-slot {
+            display: flex;
+            align-items: stretch;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #0f172a;
+            transition: all 0.2s;
+        }
+        .drop-slot .slot-num {
+            background: #334155;
+            color: #e2e8f0;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        .drop-slot .slot-target {
+            flex: 1;
+            padding: 14px 16px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            color: #64748b;
+            font-style: italic;
+            font-size: 0.88em;
+            transition: all 0.2s;
+        }
+        .drop-slot .slot-target.has-item {
+            color: #e2e8f0;
+            font-style: normal;
+            font-weight: 600;
+            background: #1e3a5f;
+        }
+        .drop-slot .slot-target.drag-over {
+            background: #164e63;
+            border: 2px dashed #3b82f6;
+        }
+        .drop-slot.correct { border-color: #10b981; background: #064e3b; }
+        .drop-slot.incorrect { border-color: #ef4444; background: #450a0a; }
+
+
+        /* Exercise 2: Matching */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .match-left, .match-right { display: flex; flex-direction: column; gap: 10px; }
+        .match-left h4, .match-right h4 {
+            color: #94a3b8;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .match-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.88em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .match-item:hover { border-color: #3b82f6; }
+        .match-item.selected {
+            border-color: #3b82f6;
+            background: #1e3a5f;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+        }
+        .match-item.matched {
+            border-color: #10b981;
+            background: #064e3b;
+            pointer-events: none;
+        }
+        .match-item.incorrect-flash {
+            border-color: #ef4444;
+            background: #450a0a;
+        }
+        .match-pairs-display {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .pair-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+        .pair-item .arrow { color: #3b82f6; font-weight: 700; }
+        .pair-item.correct { border-color: #10b981; }
+        .pair-item.incorrect { border-color: #ef4444; }
+
+
+        /* Exercise 3: Multiple Choice */
+        .mc-question {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .mc-question p {
+            color: #e2e8f0;
+            font-size: 0.92em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .mc-question .scenario {
+            color: #94a3b8;
+            font-style: italic;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            background: #1e293b;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+        .mc-options { display: flex; flex-direction: column; gap: 8px; }
+        .mc-option {
+            padding: 10px 14px;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.88em;
+            transition: all 0.2s;
+        }
+        .mc-option:hover { border-color: #3b82f6; background: #1e3a5f; }
+        .mc-option.selected { border-color: #3b82f6; background: #1e3a5f; }
+        .mc-option.correct { border-color: #10b981; background: #064e3b; }
+        .mc-option.incorrect { border-color: #ef4444; background: #450a0a; }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-check { background: #10b981; color: #fff; }
+        .btn-check:hover { background: #059669; }
+        .btn-reset { background: #64748b; color: #fff; }
+        .btn-reset:hover { background: #475569; }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.88em;
+            font-weight: 600;
+            display: none;
+        }
+        .feedback.show { display: block; }
+        .feedback.success { background: #064e3b; color: #10b981; border: 1px solid #10b981; }
+        .feedback.error { background: #450a0a; color: #ef4444; border: 1px solid #ef4444; }
+        .feedback.partial { background: #1e3a5f; color: #3b82f6; border: 1px solid #3b82f6; }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .match-grid { grid-template-columns: 1fr; }
+            .container { padding: 20px 16px 40px; }
+            .exercise { padding: 20px; }
+            .drag-item { font-size: 0.8em; padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../members.html">← Back to Members Area</a>
+        <span class="badge">Members Only</span>
+    </div>
+
+    <div class="container">
+        <div class="pbq-header">
+            <h1>Laser Printing Process PBQ</h1>
+            <p class="subtitle">CompTIA A+ Core 1 (220-1101) — Performance-Based Question</p>
+        </div>
+
+        <div class="exam-trap">
+            <h3>⚠️ Exam Trap Alert</h3>
+            <p>CompTIA <strong>HEAVILY</strong> tests the exact order of the laser printing cycle. Memorize: <strong>Processing → Charging → Exposing → Developing → Transferring → Fusing → Cleaning</strong></p>
+        </div>
+
+        <div class="score-bar">
+            Total Score: <span id="totalScore">0</span> / <span id="totalPossible">18</span>
+        </div>
+
+
+        <!-- Exercise 1: Drag & Drop Order -->
+        <div class="exercise" id="exercise1">
+            <h2>Exercise 1: Order the Laser Printing Steps</h2>
+            <p class="ex-desc">Drag each step into the correct chronological order (1–7).</p>
+
+            <div class="drag-bank" id="dragBank1">
+                <!-- Filled by JS -->
+            </div>
+
+            <div class="drop-slots" id="dropSlots1">
+                <div class="drop-slot" data-slot="1"><div class="slot-num">1</div><div class="slot-target" data-slot="1">Drop step here...</div></div>
+                <div class="drop-slot" data-slot="2"><div class="slot-num">2</div><div class="slot-target" data-slot="2">Drop step here...</div></div>
+                <div class="drop-slot" data-slot="3"><div class="slot-num">3</div><div class="slot-target" data-slot="3">Drop step here...</div></div>
+                <div class="drop-slot" data-slot="4"><div class="slot-num">4</div><div class="slot-target" data-slot="4">Drop step here...</div></div>
+                <div class="drop-slot" data-slot="5"><div class="slot-num">5</div><div class="slot-target" data-slot="5">Drop step here...</div></div>
+                <div class="drop-slot" data-slot="6"><div class="slot-num">6</div><div class="slot-target" data-slot="6">Drop step here...</div></div>
+                <div class="drop-slot" data-slot="7"><div class="slot-num">7</div><div class="slot-target" data-slot="7">Drop step here...</div></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-check" onclick="checkExercise1()">Check Answers</button>
+                <button class="btn btn-reset" onclick="resetExercise1()">Reset</button>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+        </div>
+
+
+        <!-- Exercise 2: Component Matching -->
+        <div class="exercise" id="exercise2">
+            <h2>Exercise 2: Component Matching</h2>
+            <p class="ex-desc">Match each laser printer component to its function. Click a component on the left, then click its matching function on the right.</p>
+
+            <div class="match-grid">
+                <div class="match-left">
+                    <h4>Components</h4>
+                    <div id="matchComponents"></div>
+                </div>
+                <div class="match-right">
+                    <h4>Functions</h4>
+                    <div id="matchFunctions"></div>
+                </div>
+            </div>
+
+            <div class="match-pairs-display" id="matchPairs"></div>
+
+            <div class="btn-group">
+                <button class="btn btn-check" onclick="checkExercise2()">Check Answers</button>
+                <button class="btn btn-reset" onclick="resetExercise2()">Reset</button>
+            </div>
+            <div class="feedback" id="feedback2"></div>
+        </div>
+
+
+        <!-- Exercise 3: Troubleshooting -->
+        <div class="exercise" id="exercise3">
+            <h2>Exercise 3: Troubleshooting Scenarios</h2>
+            <p class="ex-desc">For each printer problem, select the most likely cause.</p>
+
+            <div id="mcQuestions"></div>
+
+            <div class="btn-group">
+                <button class="btn btn-check" onclick="checkExercise3()">Check Answers</button>
+                <button class="btn btn-reset" onclick="resetExercise3()">Reset</button>
+            </div>
+            <div class="feedback" id="feedback3"></div>
+        </div>
+    </div>
+
+
+    <script>
+    // ===== EXERCISE 1: Drag & Drop Order =====
+    const steps = [
+        { id: 'processing', name: 'Processing', desc: 'Printer receives and rasterizes page into bitmap' },
+        { id: 'charging', name: 'Charging', desc: 'Charging roller applies uniform negative charge to drum' },
+        { id: 'exposing', name: 'Exposing', desc: 'Laser beam writes image by neutralizing selected areas on drum' },
+        { id: 'developing', name: 'Developing', desc: 'Negatively charged toner attracted to neutral areas on drum' },
+        { id: 'transferring', name: 'Transferring', desc: 'Transfer roller pulls toner from drum onto paper with positive charge' },
+        { id: 'fusing', name: 'Fusing', desc: 'Heat + pressure rollers permanently melt toner into paper' },
+        { id: 'cleaning', name: 'Cleaning', desc: 'Blade removes excess toner; erase lamp neutralizes drum charge' }
+    ];
+
+    const correctOrder = ['processing', 'charging', 'exposing', 'developing', 'transferring', 'fusing', 'cleaning'];
+    let slotContents = {}; // slot number -> step id
+    let draggedItem = null;
+    let scores = { ex1: 0, ex2: 0, ex3: 0 };
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+
+    function initExercise1() {
+        const bank = document.getElementById('dragBank1');
+        bank.innerHTML = '';
+        slotContents = {};
+        const shuffled = shuffle(steps);
+        shuffled.forEach(step => {
+            const el = document.createElement('div');
+            el.className = 'drag-item';
+            el.draggable = true;
+            el.dataset.id = step.id;
+            el.textContent = step.name;
+            el.addEventListener('dragstart', handleDragStart);
+            el.addEventListener('dragend', handleDragEnd);
+            // Touch support
+            el.addEventListener('touchstart', handleTouchStart, { passive: false });
+            el.addEventListener('touchmove', handleTouchMove, { passive: false });
+            el.addEventListener('touchend', handleTouchEnd);
+            bank.appendChild(el);
+        });
+
+        document.querySelectorAll('#dropSlots1 .slot-target').forEach(target => {
+            target.textContent = 'Drop step here...';
+            target.classList.remove('has-item');
+            target.parentElement.classList.remove('correct', 'incorrect');
+            target.addEventListener('dragover', handleDragOver);
+            target.addEventListener('dragleave', handleDragLeave);
+            target.addEventListener('drop', handleDrop);
+        });
+
+        document.getElementById('feedback1').classList.remove('show');
+    }
+
+    function handleDragStart(e) {
+        draggedItem = e.target;
+        e.dataTransfer.setData('text/plain', e.target.dataset.id);
+        setTimeout(() => e.target.style.opacity = '0.5', 0);
+    }
+    function handleDragEnd(e) { e.target.style.opacity = '1'; }
+    function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const stepId = e.dataTransfer.getData('text/plain');
+        const slotNum = e.currentTarget.dataset.slot;
+        const step = steps.find(s => s.id === stepId);
+        if (!step) return;
+
+        // If slot already has content, return that item to bank
+        if (slotContents[slotNum]) {
+            returnToBank(slotContents[slotNum]);
+        }
+
+        // Remove from previous slot if it was placed elsewhere
+        Object.keys(slotContents).forEach(key => {
+            if (slotContents[key] === stepId) {
+                const prevTarget = document.querySelector(`.slot-target[data-slot="${key}"]`);
+                prevTarget.textContent = 'Drop step here...';
+                prevTarget.classList.remove('has-item');
+                delete slotContents[key];
+            }
+        });
+
+        slotContents[slotNum] = stepId;
+        e.currentTarget.textContent = step.name + ' — ' + step.desc;
+        e.currentTarget.classList.add('has-item');
+
+        // Mark drag item as placed
+        const dragItem = document.querySelector(`.drag-item[data-id="${stepId}"]`);
+        if (dragItem) dragItem.classList.add('placed');
+    }
+
+    function returnToBank(stepId) {
+        const dragItem = document.querySelector(`.drag-item[data-id="${stepId}"]`);
+        if (dragItem) dragItem.classList.remove('placed');
+    }
+
+
+    // Touch support for mobile
+    let touchClone = null;
+    let touchStartItem = null;
+
+    function handleTouchStart(e) {
+        e.preventDefault();
+        touchStartItem = e.target;
+        const touch = e.touches[0];
+        touchClone = e.target.cloneNode(true);
+        touchClone.style.position = 'fixed';
+        touchClone.style.zIndex = '9999';
+        touchClone.style.pointerEvents = 'none';
+        touchClone.style.opacity = '0.8';
+        touchClone.style.left = (touch.clientX - 50) + 'px';
+        touchClone.style.top = (touch.clientY - 20) + 'px';
+        document.body.appendChild(touchClone);
+        e.target.style.opacity = '0.5';
+    }
+
+    function handleTouchMove(e) {
+        e.preventDefault();
+        if (!touchClone) return;
+        const touch = e.touches[0];
+        touchClone.style.left = (touch.clientX - 50) + 'px';
+        touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+
+    function handleTouchEnd(e) {
+        if (!touchClone || !touchStartItem) return;
+        touchClone.remove();
+        touchClone = null;
+        touchStartItem.style.opacity = '1';
+
+        const touch = e.changedTouches[0];
+        const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (dropTarget && dropTarget.classList.contains('slot-target')) {
+            const stepId = touchStartItem.dataset.id;
+            const slotNum = dropTarget.dataset.slot;
+            const step = steps.find(s => s.id === stepId);
+            if (!step) return;
+
+            if (slotContents[slotNum]) returnToBank(slotContents[slotNum]);
+            Object.keys(slotContents).forEach(key => {
+                if (slotContents[key] === stepId) {
+                    const prevTarget = document.querySelector(`.slot-target[data-slot="${key}"]`);
+                    prevTarget.textContent = 'Drop step here...';
+                    prevTarget.classList.remove('has-item');
+                    delete slotContents[key];
+                }
+            });
+            slotContents[slotNum] = stepId;
+            dropTarget.textContent = step.name + ' — ' + step.desc;
+            dropTarget.classList.add('has-item');
+            touchStartItem.classList.add('placed');
+        }
+        touchStartItem = null;
+    }
+
+
+    function checkExercise1() {
+        let correct = 0;
+        for (let i = 1; i <= 7; i++) {
+            const slot = document.querySelector(`.drop-slot[data-slot="${i}"]`);
+            if (slotContents[i] === correctOrder[i - 1]) {
+                slot.classList.add('correct');
+                slot.classList.remove('incorrect');
+                correct++;
+            } else {
+                slot.classList.add('incorrect');
+                slot.classList.remove('correct');
+            }
+        }
+        scores.ex1 = correct;
+        updateTotalScore();
+        const fb = document.getElementById('feedback1');
+        fb.classList.add('show');
+        if (correct === 7) {
+            fb.className = 'feedback show success';
+            fb.textContent = `✓ Perfect! All 7 steps in the correct order! (${correct}/7)`;
+        } else {
+            fb.className = 'feedback show error';
+            fb.textContent = `✗ ${correct}/7 correct. Remember: Processing → Charging → Exposing → Developing → Transferring → Fusing → Cleaning`;
+        }
+    }
+
+    function resetExercise1() {
+        scores.ex1 = 0;
+        updateTotalScore();
+        initExercise1();
+    }
+
+
+    // ===== EXERCISE 2: Component Matching =====
+    const components = [
+        { id: 'drum', name: 'Imaging Drum', func: 'Holds the electrostatic image (photosensitive cylinder)' },
+        { id: 'fuser', name: 'Fuser Assembly', func: 'Melts toner into paper using heat (up to 200°C) and pressure' },
+        { id: 'transfer', name: 'Transfer Roller', func: 'Applies positive charge to pull toner onto paper' },
+        { id: 'charging', name: 'Charging Roller', func: 'Applies uniform negative charge to drum surface' },
+        { id: 'pickup', name: 'Pickup Rollers', func: 'Pull paper from tray into printer mechanism' },
+        { id: 'toner', name: 'Toner Cartridge', func: 'Supplies fine powder; may include drum' }
+    ];
+
+    let matchState = { selectedComponent: null, pairs: {}, checked: false };
+
+    function initExercise2() {
+        matchState = { selectedComponent: null, pairs: {}, checked: false };
+        const compDiv = document.getElementById('matchComponents');
+        const funcDiv = document.getElementById('matchFunctions');
+        const pairsDiv = document.getElementById('matchPairs');
+        compDiv.innerHTML = '';
+        funcDiv.innerHTML = '';
+        pairsDiv.innerHTML = '';
+
+        const shuffledComps = shuffle(components);
+        const shuffledFuncs = shuffle(components);
+
+        shuffledComps.forEach(comp => {
+            const el = document.createElement('div');
+            el.className = 'match-item';
+            el.dataset.id = comp.id;
+            el.dataset.type = 'component';
+            el.textContent = comp.name;
+            el.addEventListener('click', () => selectMatchItem(el, 'component'));
+            compDiv.appendChild(el);
+        });
+
+        shuffledFuncs.forEach(comp => {
+            const el = document.createElement('div');
+            el.className = 'match-item';
+            el.dataset.id = comp.id;
+            el.dataset.type = 'function';
+            el.textContent = comp.func;
+            el.addEventListener('click', () => selectMatchItem(el, 'function'));
+            funcDiv.appendChild(el);
+        });
+
+        document.getElementById('feedback2').classList.remove('show');
+    }
+
+
+    function selectMatchItem(el, type) {
+        if (matchState.checked) return;
+        if (el.classList.contains('matched')) return;
+
+        if (type === 'component') {
+            document.querySelectorAll('#matchComponents .match-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            matchState.selectedComponent = el.dataset.id;
+        } else if (type === 'function' && matchState.selectedComponent) {
+            const compId = matchState.selectedComponent;
+            const funcId = el.dataset.id;
+
+            // Store the pair
+            matchState.pairs[compId] = funcId;
+
+            // Mark both as matched visually
+            const compEl = document.querySelector(`#matchComponents .match-item[data-id="${compId}"]`);
+            compEl.classList.remove('selected');
+            compEl.classList.add('matched');
+            el.classList.add('matched');
+
+            matchState.selectedComponent = null;
+            updatePairsDisplay();
+        }
+    }
+
+    function updatePairsDisplay() {
+        const pairsDiv = document.getElementById('matchPairs');
+        pairsDiv.innerHTML = '';
+        Object.keys(matchState.pairs).forEach(compId => {
+            const comp = components.find(c => c.id === compId);
+            const funcId = matchState.pairs[compId];
+            const funcComp = components.find(c => c.id === funcId);
+            const pair = document.createElement('div');
+            pair.className = 'pair-item';
+            pair.dataset.comp = compId;
+            pair.innerHTML = `<span>${comp.name}</span><span class="arrow">→</span><span>${funcComp.func}</span>`;
+            pairsDiv.appendChild(pair);
+        });
+    }
+
+
+    function checkExercise2() {
+        matchState.checked = true;
+        let correct = 0;
+        document.querySelectorAll('.pair-item').forEach(pair => {
+            const compId = pair.dataset.comp;
+            const funcId = matchState.pairs[compId];
+            if (compId === funcId) {
+                pair.classList.add('correct');
+                correct++;
+            } else {
+                pair.classList.add('incorrect');
+            }
+        });
+        scores.ex2 = correct;
+        updateTotalScore();
+        const fb = document.getElementById('feedback2');
+        fb.classList.add('show');
+        if (correct === 6) {
+            fb.className = 'feedback show success';
+            fb.textContent = `✓ Perfect! All 6 components correctly matched! (${correct}/6)`;
+        } else {
+            fb.className = 'feedback show error';
+            fb.textContent = `✗ ${correct}/6 correct. Review the component functions and try again.`;
+        }
+    }
+
+    function resetExercise2() {
+        scores.ex2 = 0;
+        updateTotalScore();
+        initExercise2();
+    }
+
+
+    // ===== EXERCISE 3: Multiple Choice Troubleshooting =====
+    const mcData = [
+        {
+            scenario: 'Print comes out with vertical lines/streaks repeating on every page.',
+            options: [
+                'Scratched imaging drum (replace toner/drum cartridge)',
+                'Low toner level (replace toner cartridge)',
+                'Dirty corona wire (clean with brush)',
+                'Paper moisture issue (replace paper)'
+            ],
+            correct: 0
+        },
+        {
+            scenario: 'Toner rubs off the paper easily when touched.',
+            options: [
+                'Wrong paper type loaded in tray',
+                'Fuser assembly failure (not melting toner properly)',
+                'Overcharged imaging drum',
+                'Toner cartridge defect'
+            ],
+            correct: 1
+        },
+        {
+            scenario: 'Pages come out completely blank with no image.',
+            options: [
+                'Empty toner cartridge',
+                'Transfer roller malfunction',
+                'Failed laser assembly (not writing image to drum)',
+                'Paper loaded incorrectly'
+            ],
+            correct: 2
+        },
+        {
+            scenario: 'Paper keeps jamming in the printer.',
+            options: [
+                'Fuser temperature too high',
+                'Toner cartridge overfilled',
+                'Worn pickup rollers or separation pad (replace rollers)',
+                'Laser assembly misalignment'
+            ],
+            correct: 2
+        },
+        {
+            scenario: 'A faint copy of the previous page appears on current pages.',
+            options: [
+                'Imaging drum reaching end of life',
+                'Bad fuser (ghosting — not fully cleaning between pages)',
+                'Charging roller contamination',
+                'Driver software corruption'
+            ],
+            correct: 1
+        }
+    ];
+
+    let mcAnswers = {};
+
+
+    function initExercise3() {
+        mcAnswers = {};
+        const container = document.getElementById('mcQuestions');
+        container.innerHTML = '';
+        mcData.forEach((q, idx) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'mc-question';
+            qDiv.innerHTML = `
+                <p>Question ${idx + 1}:</p>
+                <div class="scenario">"${q.scenario}"</div>
+                <div class="mc-options" id="mcOpts${idx}">
+                    ${q.options.map((opt, oi) => `
+                        <div class="mc-option" data-q="${idx}" data-o="${oi}" onclick="selectMC(${idx}, ${oi})">${opt}</div>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(qDiv);
+        });
+        document.getElementById('feedback3').classList.remove('show');
+    }
+
+    function selectMC(qIdx, oIdx) {
+        mcAnswers[qIdx] = oIdx;
+        document.querySelectorAll(`#mcOpts${qIdx} .mc-option`).forEach(el => {
+            el.classList.remove('selected');
+        });
+        document.querySelector(`#mcOpts${qIdx} .mc-option[data-o="${oIdx}"]`).classList.add('selected');
+    }
+
+    function checkExercise3() {
+        let correct = 0;
+        mcData.forEach((q, idx) => {
+            const opts = document.querySelectorAll(`#mcOpts${idx} .mc-option`);
+            opts.forEach(el => {
+                const oIdx = parseInt(el.dataset.o);
+                el.classList.remove('selected');
+                if (oIdx === q.correct) {
+                    el.classList.add('correct');
+                } else if (mcAnswers[idx] === oIdx) {
+                    el.classList.add('incorrect');
+                }
+            });
+            if (mcAnswers[idx] === q.correct) correct++;
+        });
+        scores.ex3 = correct;
+        updateTotalScore();
+        const fb = document.getElementById('feedback3');
+        fb.classList.add('show');
+        if (correct === 5) {
+            fb.className = 'feedback show success';
+            fb.textContent = `✓ Perfect! All 5 troubleshooting scenarios correct! (${correct}/5)`;
+        } else {
+            fb.className = 'feedback show error';
+            fb.textContent = `✗ ${correct}/5 correct. Review the highlighted correct answers above.`;
+        }
+    }
+
+    function resetExercise3() {
+        scores.ex3 = 0;
+        updateTotalScore();
+        initExercise3();
+    }
+
+
+    // ===== Score Tracking =====
+    function updateTotalScore() {
+        const total = scores.ex1 + scores.ex2 + scores.ex3;
+        document.getElementById('totalScore').textContent = total;
+    }
+
+    // ===== Initialize All =====
+    initExercise1();
+    initExercise2();
+    initExercise3();
+    </script>
+</body>
+</html>

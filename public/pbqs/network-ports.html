@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Ports &amp; Protocols PBQ — CompTIA A+ Study Hub</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        a { color: #3b82f6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .top-bar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-bar .back-link { font-size: 0.95em; }
+        .score-display {
+            background: #3b82f6;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .pbq-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: #94a3b8;
+            font-size: 1.05em;
+        }
+
+        .instructions {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+        }
+        .instructions h3 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        .instructions ul { padding-left: 20px; }
+        .instructions li { margin-bottom: 4px; color: #cbd5e1; font-size: 0.93em; }
+
+        .exam-tip {
+            background: linear-gradient(135deg, #1e3a5f, #1e293b);
+            border: 1px solid #3b82f6;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 36px;
+        }
+        .exam-tip strong { color: #3b82f6; }
+        .exam-tip p { color: #cbd5e1; font-size: 0.93em; margin-top: 6px; }
+
+        .section-title {
+            font-size: 1.4em;
+            color: #f1f5f9;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        /* Drag and Drop */
+        .drag-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            min-height: 60px;
+        }
+        .port-chip {
+            background: #3b82f6;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95em;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .port-chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+        .port-chip.dragging { opacity: 0.5; transform: scale(0.95); }
+
+        .drop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        @media (max-width: 768px) {
+            .drop-grid { grid-template-columns: 1fr; }
+        }
+
+        .drop-item {
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .drop-item.drag-over { border-color: #3b82f6; background: #1e3a5f; }
+        .drop-item.correct { border-color: #10b981; background: rgba(16,185,129,0.1); }
+        .drop-item.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+
+        .drop-info {
+            flex: 1;
+            padding: 12px 16px;
+        }
+        .drop-info .protocol-name { font-weight: 700; color: #f1f5f9; font-size: 0.95em; }
+        .drop-info .protocol-desc { color: #94a3b8; font-size: 0.8em; margin-top: 2px; }
+
+        .drop-zone {
+            min-width: 70px;
+            min-height: 48px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px dashed #475569;
+            color: #64748b;
+            font-size: 0.85em;
+            transition: background 0.2s;
+        }
+        .drop-zone.has-chip {
+            border-left: 1px solid #334155;
+        }
+        .drop-zone .port-chip {
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 6px 12px;
+        }
+
+        /* Multiple Choice */
+        .question-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .question-card.correct { border-color: #10b981; }
+        .question-card.incorrect { border-color: #ef4444; }
+
+        .question-num {
+            display: inline-block;
+            background: #3b82f6;
+            color: #fff;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .question-text {
+            display: inline;
+            font-weight: 600;
+            color: #f1f5f9;
+            font-size: 1em;
+        }
+        .options {
+            margin-top: 14px;
+            display: grid;
+            gap: 8px;
+        }
+        .option-btn {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: #e2e8f0;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.93em;
+            transition: all 0.15s;
+        }
+        .option-btn:hover { border-color: #3b82f6; background: #1e3a5f; }
+        .option-btn.selected { border-color: #3b82f6; background: #1e3a5f; }
+        .option-btn.correct-answer { border-color: #10b981; background: rgba(16,185,129,0.15); color: #10b981; }
+        .option-btn.wrong-answer { border-color: #ef4444; background: rgba(239,68,68,0.1); color: #ef4444; }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary { background: #3b82f6; color: #fff; }
+        .btn-primary:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.4); }
+        .btn-secondary { background: #334155; color: #e2e8f0; }
+        .btn-secondary:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+        .results-banner {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            font-size: 1.1em;
+            font-weight: 700;
+            display: none;
+        }
+        .results-banner.show { display: block; }
+        .results-banner.perfect { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #10b981; }
+        .results-banner.good { background: rgba(59,130,246,0.15); border: 1px solid #3b82f6; color: #3b82f6; }
+        .results-banner.needs-work { background: rgba(239,68,68,0.1); border: 1px solid #ef4444; color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../index.html" class="back-link">← Back to Study Hub</a>
+        <div class="score-display" id="scoreDisplay">Score: 0 / 25</div>
+    </div>
+
+    <div class="pbq-container">
+        <div class="pbq-header">
+            <h1>Network Ports &amp; Protocols PBQ</h1>
+            <p class="subtitle">CompTIA A+ Core 1 (220-1101) — Performance-Based Question</p>
+        </div>
+
+        <div class="instructions">
+            <h3>Instructions</h3>
+            <ul>
+                <li><strong>Exercise 1:</strong> Drag the correct port number chip into the slot next to each protocol name.</li>
+                <li><strong>Exercise 2:</strong> Select the best answer for each scenario question.</li>
+                <li>Click <strong>Check Answers</strong> to see your results. Click <strong>Reset</strong> to try again.</li>
+                <li>Total score: 25 points (19 drag-and-drop + 6 scenario questions)</li>
+            </ul>
+        </div>
+
+        <div class="exam-tip">
+            <strong>💡 Exam Tip</strong>
+            <p>Know the difference between port 20 (FTP data) and 21 (FTP control). SSH and SFTP BOTH use port 22. DHCP uses TWO ports: 67 (server) and 68 (client).</p>
+        </div>
+
+        <!-- Exercise 1 -->
+        <h2 class="section-title">Exercise 1: Port Number Matching</h2>
+        <p style="color:#94a3b8; margin-bottom:16px; font-size:0.93em;">Drag each port number into the correct slot. Click a placed chip to return it to the bank.</p>
+
+        <div class="drag-bank" id="dragBank"></div>
+        <div class="drop-grid" id="dropGrid"></div>
+
+        <!-- Exercise 2 -->
+        <h2 class="section-title">Exercise 2: Protocol Identification Scenarios</h2>
+        <div id="questionsContainer"></div>
+
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="checkAnswers()">Check Answers</button>
+            <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+        </div>
+
+        <div class="results-banner" id="resultsBanner"></div>
+    </div>
+
+<script>
+// Port data
+const portData = [
+    { protocol: "HTTP", port: "80", desc: "Hypertext Transfer Protocol (unsecured web)" },
+    { protocol: "HTTPS", port: "443", desc: "HTTP Secure (encrypted web traffic)" },
+    { protocol: "FTP (Data)", port: "20", desc: "File Transfer Protocol — data channel" },
+    { protocol: "FTP (Control)", port: "21", desc: "File Transfer Protocol — command channel" },
+    { protocol: "SSH/SFTP", port: "22", desc: "Secure Shell / Secure File Transfer" },
+    { protocol: "Telnet", port: "23", desc: "Unencrypted remote terminal access" },
+    { protocol: "SMTP", port: "25", desc: "Simple Mail Transfer Protocol (send email)" },
+    { protocol: "DNS", port: "53", desc: "Domain Name System (name resolution)" },
+    { protocol: "DHCP Server", port: "67", desc: "Dynamic Host Configuration — server side" },
+    { protocol: "DHCP Client", port: "68", desc: "Dynamic Host Configuration — client side" },
+    { protocol: "POP3", port: "110", desc: "Post Office Protocol v3 (retrieve email)" },
+    { protocol: "IMAP", port: "143", desc: "Internet Message Access Protocol (email sync)" },
+    { protocol: "LDAP", port: "389", desc: "Lightweight Directory Access Protocol" },
+    { protocol: "LDAPS", port: "636", desc: "LDAP over SSL/TLS (encrypted directory)" },
+    { protocol: "SMB", port: "445", desc: "Server Message Block (file sharing)" },
+    { protocol: "RDP", port: "3389", desc: "Remote Desktop Protocol (Windows)" },
+    { protocol: "SNMP", port: "161", desc: "Simple Network Management Protocol" },
+    { protocol: "NTP", port: "123", desc: "Network Time Protocol (clock sync)" },
+    { protocol: "SIP", port: "5060", desc: "Session Initiation Protocol (VoIP)" }
+];
+
+// Scenario questions
+const questions = [
+    {
+        text: "A user needs to securely transfer files to a server. Which protocol should they use?",
+        options: ["FTP (Port 21)", "SFTP (Port 22)", "SMTP (Port 25)", "HTTP (Port 80)"],
+        correct: 1
+    },
+    {
+        text: "You need to remotely manage a Windows server's desktop. Which port must be open?",
+        options: ["22 (SSH)", "443 (HTTPS)", "3389 (RDP)", "23 (Telnet)"],
+        correct: 2
+    },
+    {
+        text: "An admin wants to query Active Directory. Which port does LDAP use?",
+        options: ["636", "445", "389", "161"],
+        correct: 2
+    },
+    {
+        text: "A device gets IP address 169.254.x.x. Which protocol failed?",
+        options: ["DNS (Port 53)", "DHCP (Ports 67/68)", "NTP (Port 123)", "SNMP (Port 161)"],
+        correct: 1
+    },
+    {
+        text: "Which protocol sends email and uses port 25?",
+        options: ["POP3", "IMAP", "SMTP", "LDAP"],
+        correct: 2
+    },
+    {
+        text: "A technician needs encrypted remote CLI access to a Linux server. Which protocol and port?",
+        options: ["Telnet (Port 23)", "RDP (Port 3389)", "SSH (Port 22)", "SNMP (Port 161)"],
+        correct: 2
+    }
+];
+
+let score = 0;
+let checked = false;
+let selectedAnswers = {};
+let draggedChip = null;
+
+// Shuffle array
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// Build Exercise 1
+function buildDragDrop() {
+    const bank = document.getElementById('dragBank');
+    const grid = document.getElementById('dropGrid');
+    bank.innerHTML = '';
+    grid.innerHTML = '';
+
+    const shuffledPorts = shuffle(portData.map(p => p.port));
+
+    shuffledPorts.forEach(port => {
+        const chip = createChip(port);
+        bank.appendChild(chip);
+    });
+
+    portData.forEach((item, idx) => {
+        const dropItem = document.createElement('div');
+        dropItem.className = 'drop-item';
+        dropItem.innerHTML = `
+            <div class="drop-info">
+                <div class="protocol-name">${item.protocol}</div>
+                <div class="protocol-desc">${item.desc}</div>
+            </div>
+            <div class="drop-zone" data-answer="${item.port}" data-index="${idx}">Drop</div>
+        `;
+        grid.appendChild(dropItem);
+    });
+
+    // Add drop events to zones
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            zone.parentElement.classList.add('drag-over');
+        });
+        zone.addEventListener('dragleave', () => {
+            zone.parentElement.classList.remove('drag-over');
+        });
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.parentElement.classList.remove('drag-over');
+            if (checked) return;
+            if (zone.querySelector('.port-chip')) {
+                // Return existing chip to bank
+                const existingChip = zone.querySelector('.port-chip');
+                returnChipToBank(existingChip);
+            }
+            if (draggedChip) {
+                zone.textContent = '';
+                const newChip = createChip(draggedChip.dataset.port);
+                newChip.draggable = false;
+                newChip.style.cursor = 'pointer';
+                newChip.addEventListener('click', () => {
+                    if (checked) return;
+                    returnChipToBank(newChip);
+                    zone.textContent = 'Drop';
+                });
+                zone.appendChild(newChip);
+                zone.classList.add('has-chip');
+                // Remove from bank
+                draggedChip.remove();
+                draggedChip = null;
+            }
+        });
+
+        // Touch support
+        zone.addEventListener('touchend', e => {
+            // Handled via touchChipSelect
+        });
+    });
+
+    // Also allow dropping on bank to return
+    bank.addEventListener('dragover', e => e.preventDefault());
+    bank.addEventListener('drop', e => {
+        e.preventDefault();
+        // chip is already being dragged from a zone or bank - no special action needed for bank
+    });
+}
+
+function createChip(port) {
+    const chip = document.createElement('div');
+    chip.className = 'port-chip';
+    chip.textContent = port;
+    chip.draggable = true;
+    chip.dataset.port = port;
+    chip.addEventListener('dragstart', e => {
+        draggedChip = chip;
+        chip.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    });
+    chip.addEventListener('dragend', () => {
+        chip.classList.remove('dragging');
+    });
+
+    // Touch support - tap to select
+    chip.addEventListener('click', () => {
+        if (checked) return;
+        document.querySelectorAll('.port-chip.selected-for-drop').forEach(c => c.classList.remove('selected-for-drop'));
+        chip.classList.add('selected-for-drop');
+        window.selectedChipForDrop = chip;
+    });
+    return chip;
+}
+
+function returnChipToBank(chip) {
+    const bank = document.getElementById('dragBank');
+    const newChip = createChip(chip.dataset.port);
+    bank.appendChild(newChip);
+    chip.remove();
+}
+
+// Allow clicking drop zones to place selected chip (touch/click support)
+document.addEventListener('click', e => {
+    const zone = e.target.closest('.drop-zone');
+    if (zone && window.selectedChipForDrop && !checked) {
+        if (zone.querySelector('.port-chip')) {
+            const existingChip = zone.querySelector('.port-chip');
+            returnChipToBank(existingChip);
+        }
+        zone.textContent = '';
+        const port = window.selectedChipForDrop.dataset.port;
+        const newChip = createChip(port);
+        newChip.draggable = false;
+        newChip.style.cursor = 'pointer';
+        newChip.addEventListener('click', ev => {
+            ev.stopPropagation();
+            if (checked) return;
+            returnChipToBank(newChip);
+            zone.textContent = 'Drop';
+            zone.classList.remove('has-chip');
+        });
+        zone.appendChild(newChip);
+        zone.classList.add('has-chip');
+        window.selectedChipForDrop.remove();
+        window.selectedChipForDrop = null;
+        document.querySelectorAll('.port-chip.selected-for-drop').forEach(c => c.classList.remove('selected-for-drop'));
+    }
+});
+
+// Build Exercise 2
+function buildQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = '';
+    questions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-${idx}`;
+        let optionsHTML = '';
+        q.options.forEach((opt, oIdx) => {
+            optionsHTML += `<button class="option-btn" data-question="${idx}" data-option="${oIdx}" onclick="selectOption(${idx}, ${oIdx})">${opt}</button>`;
+        });
+        card.innerHTML = `
+            <div><span class="question-num">${idx + 1}</span><span class="question-text">${q.text}</span></div>
+            <div class="options">${optionsHTML}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function selectOption(qIdx, oIdx) {
+    if (checked) return;
+    selectedAnswers[qIdx] = oIdx;
+    const btns = document.querySelectorAll(`[data-question="${qIdx}"]`);
+    btns.forEach(b => b.classList.remove('selected'));
+    btns[oIdx].classList.add('selected');
+}
+
+// Check answers
+function checkAnswers() {
+    if (checked) return;
+    checked = true;
+    score = 0;
+
+    // Check drag and drop
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        const answer = zone.dataset.answer;
+        const chip = zone.querySelector('.port-chip');
+        const dropItem = zone.parentElement;
+        if (chip && chip.dataset.port === answer) {
+            dropItem.classList.add('correct');
+            score++;
+        } else {
+            dropItem.classList.add('incorrect');
+        }
+    });
+
+    // Check multiple choice
+    questions.forEach((q, idx) => {
+        const card = document.getElementById(`question-${idx}`);
+        const btns = card.querySelectorAll('.option-btn');
+        if (selectedAnswers[idx] === q.correct) {
+            btns[q.correct].classList.add('correct-answer');
+            card.classList.add('correct');
+            score++;
+        } else {
+            if (selectedAnswers[idx] !== undefined) {
+                btns[selectedAnswers[idx]].classList.add('wrong-answer');
+            }
+            btns[q.correct].classList.add('correct-answer');
+            card.classList.add('incorrect');
+        }
+    });
+
+    updateScore();
+    showResults();
+}
+
+function updateScore() {
+    document.getElementById('scoreDisplay').textContent = `Score: ${score} / 25`;
+}
+
+function showResults() {
+    const banner = document.getElementById('resultsBanner');
+    banner.classList.add('show');
+    if (score === 25) {
+        banner.className = 'results-banner show perfect';
+        banner.textContent = `🎉 Perfect Score! ${score}/25 — You've mastered network ports!`;
+    } else if (score >= 18) {
+        banner.className = 'results-banner show good';
+        banner.textContent = `👍 Good Job! ${score}/25 — Review the ones you missed and try again.`;
+    } else {
+        banner.className = 'results-banner show needs-work';
+        banner.textContent = `📚 Keep Studying! ${score}/25 — Review port numbers and try again.`;
+    }
+}
+
+function resetAll() {
+    checked = false;
+    score = 0;
+    selectedAnswers = {};
+    window.selectedChipForDrop = null;
+    document.getElementById('scoreDisplay').textContent = 'Score: 0 / 25';
+    document.getElementById('resultsBanner').className = 'results-banner';
+    document.querySelectorAll('.drop-item').forEach(el => {
+        el.classList.remove('correct', 'incorrect', 'drag-over');
+    });
+    buildDragDrop();
+    buildQuestions();
+}
+
+// Initialize
+buildDragDrop();
+buildQuestions();
+</script>
+</body>
+</html>

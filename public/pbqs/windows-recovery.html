@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Recovery Environment PBQ — CompTIA A+ Study Hub</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .top-bar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-link:hover { color: #60a5fa; }
+        .score-display {
+            background: #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #94a3b8;
+        }
+        .score-display span {
+            color: #3b82f6;
+            font-size: 1.1em;
+        }
+
+        .pbq-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+        .pbq-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .pbq-header h1 {
+            font-size: 2em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .pbq-header .subtitle {
+            color: #94a3b8;
+            font-size: 1.05em;
+        }
+        .exam-tips {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-left: 4px solid #3b82f6;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 36px;
+        }
+        .exam-tips h3 {
+            color: #3b82f6;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .exam-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        .exam-tips li {
+            padding: 4px 0;
+            color: #cbd5e1;
+            font-size: 0.9em;
+        }
+        .exam-tips li::before {
+            content: "💡 ";
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3b82f6;
+        }
+        .section-subtitle {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        /* Drag and Drop */
+        .dnd-section {
+            margin-bottom: 48px;
+        }
+        .drag-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #1e293b;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            min-height: 60px;
+        }
+        .drag-item {
+            background: #3b82f6;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.82em;
+            font-weight: 600;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .drag-item:hover {
+            background: #60a5fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+        .drag-item:active { cursor: grabbing; opacity: 0.8; }
+        .drag-item.placed {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .drop-item {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            background: #1e293b;
+            transition: all 0.2s;
+        }
+        .drop-number {
+            background: #3b82f6;
+            color: #fff;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        .drop-description {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 0.88em;
+            color: #cbd5e1;
+            border-right: 1px solid #334155;
+        }
+        .drop-target {
+            min-width: 200px;
+            max-width: 220px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            font-size: 0.82em;
+            color: #64748b;
+            font-style: italic;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+        }
+        .drop-target.has-item {
+            background: #1e3a5f;
+            color: #93c5fd;
+            font-style: normal;
+            font-weight: 600;
+        }
+        .drop-target.drag-over {
+            background: #064e3b;
+            border: 2px dashed #10b981;
+        }
+        .drop-target.correct {
+            background: #064e3b;
+            border: 2px solid #10b981;
+            color: #10b981;
+        }
+        .drop-target.incorrect {
+            background: #451a1a;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+
+        /* Multiple Choice */
+        .mc-section {
+            margin-bottom: 48px;
+        }
+        .mc-question {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+        .mc-question p {
+            color: #e2e8f0;
+            font-size: 0.95em;
+            margin-bottom: 14px;
+            font-weight: 500;
+        }
+        .mc-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .mc-option {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 0.88em;
+            color: #cbd5e1;
+            transition: all 0.2s;
+        }
+        .mc-option:hover {
+            border-color: #3b82f6;
+            background: #1e3a5f;
+        }
+        .mc-option.selected {
+            border-color: #3b82f6;
+            background: #1e3a5f;
+            color: #93c5fd;
+            font-weight: 600;
+        }
+        .mc-option.correct {
+            border-color: #10b981;
+            background: #064e3b;
+            color: #10b981;
+        }
+        .mc-option.incorrect {
+            border-color: #ef4444;
+            background: #451a1a;
+            color: #ef4444;
+        }
+        .mc-option.show-correct {
+            border-color: #10b981;
+            background: #064e3b;
+            color: #10b981;
+        }
+
+        /* Buttons */
+        .pbq-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 36px 0;
+            flex-wrap: wrap;
+        }
+        .pbq-btn {
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .pbq-btn-check {
+            background: #10b981;
+            color: #fff;
+        }
+        .pbq-btn-check:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        .pbq-btn-reset {
+            background: #3b82f6;
+            color: #fff;
+        }
+        .pbq-btn-reset:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        /* Results */
+        .results-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 24px;
+            display: none;
+        }
+        .results-box.show { display: block; }
+        .results-box h3 {
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .results-box .score-text {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        .results-box .score-text.perfect { color: #10b981; }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .drop-item { flex-direction: column; }
+            .drop-target { max-width: 100%; min-width: auto; }
+            .drop-description { border-right: none; border-bottom: 1px solid #334155; }
+            .pbq-header h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="../members.html" class="back-link">&#8592; MEMBERS ONLY</a>
+        <div class="score-display">Score: <span id="score">0</span>/14</div>
+    </div>
+
+    <div class="pbq-container">
+        <!-- Header -->
+        <div class="pbq-header">
+            <h1>Windows Recovery Environment PBQ</h1>
+            <p class="subtitle">CompTIA A+ Core 2 (220-1102) — Performance-Based Question</p>
+        </div>
+
+        <!-- Exam Tips -->
+        <div class="exam-tips">
+            <h3>Exam Tips — Windows Recovery Environment</h3>
+            <ul>
+                <li>Startup Repair = always try FIRST for generic boot failures</li>
+                <li>F8 does NOT work in Windows 10/11 — use Shift+Restart or WinRE automatic trigger (3 failed boots)</li>
+                <li>System Restore does NOT affect personal files — only system settings, drivers, and programs</li>
+            </ul>
+        </div>
+
+        <!-- Exercise 1: Drag and Drop -->
+        <div class="dnd-section">
+            <h2 class="section-title">Exercise 1: Recovery Tool Matching</h2>
+            <p class="section-subtitle">Drag each WinRE recovery tool to the scenario it best resolves.</p>
+
+            <!-- Drag Bank -->
+            <div class="drag-bank" id="dragBank">
+                <div class="drag-item" draggable="true" data-tool="startup-repair">Startup Repair</div>
+                <div class="drag-item" draggable="true" data-tool="system-restore">System Restore</div>
+                <div class="drag-item" draggable="true" data-tool="system-image-recovery">System Image Recovery</div>
+                <div class="drag-item" draggable="true" data-tool="reset-keep">Reset This PC (Keep files)</div>
+                <div class="drag-item" draggable="true" data-tool="reset-remove">Reset This PC (Remove everything)</div>
+                <div class="drag-item" draggable="true" data-tool="safe-mode">Safe Mode</div>
+                <div class="drag-item" draggable="true" data-tool="bootrec">Command Prompt (bootrec)</div>
+                <div class="drag-item" draggable="true" data-tool="uninstall-updates">Uninstall Updates</div>
+            </div>
+
+            <!-- Drop Zones -->
+            <div id="dropZones">
+                <div class="drop-item">
+                    <div class="drop-number">1</div>
+                    <div class="drop-description">Windows won't boot after a Windows Update was installed last night.</div>
+                    <div class="drop-target" data-answer="uninstall-updates" data-index="0">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">2</div>
+                    <div class="drop-description">Computer displays 'bootmgr is missing' error on startup.</div>
+                    <div class="drop-target" data-answer="bootrec" data-index="1">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">3</div>
+                    <div class="drop-description">Windows boots but a newly installed driver causes blue screens.</div>
+                    <div class="drop-target" data-answer="safe-mode" data-index="2">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">4</div>
+                    <div class="drop-description">System files are corrupted but personal files must be preserved.</div>
+                    <div class="drop-target" data-answer="reset-keep" data-index="3">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">5</div>
+                    <div class="drop-description">PC needs to be wiped clean for a new employee.</div>
+                    <div class="drop-target" data-answer="reset-remove" data-index="4">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">6</div>
+                    <div class="drop-description">Windows won't start — generic boot failure with no specific error.</div>
+                    <div class="drop-target" data-answer="startup-repair" data-index="5">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">7</div>
+                    <div class="drop-description">User installed software yesterday that broke their system. They have a restore point from last week.</div>
+                    <div class="drop-target" data-answer="system-restore" data-index="6">Drop tool here</div>
+                </div>
+                <div class="drop-item">
+                    <div class="drop-number">8</div>
+                    <div class="drop-description">Complete hard drive failure. New drive installed. IT has a full system image backup.</div>
+                    <div class="drop-target" data-answer="system-image-recovery" data-index="7">Drop tool here</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 2: Multiple Choice -->
+        <div class="mc-section">
+            <h2 class="section-title">Exercise 2: What Should You Try FIRST?</h2>
+            <p class="section-subtitle">Select the best FIRST step for each scenario.</p>
+
+            <div class="mc-question" data-correct="a">
+                <p>1. Windows won't boot after power outage. No specific error shown.</p>
+                <div class="mc-options">
+                    <div class="mc-option" data-value="a">A. Startup Repair</div>
+                    <div class="mc-option" data-value="b">B. System Restore</div>
+                    <div class="mc-option" data-value="c">C. Reset This PC</div>
+                    <div class="mc-option" data-value="d">D. Reinstall Windows</div>
+                </div>
+            </div>
+
+            <div class="mc-question" data-correct="b">
+                <p>2. A user's PC boots but they can't open any applications and get constant errors.</p>
+                <div class="mc-options">
+                    <div class="mc-option" data-value="a">A. Reset This PC (Remove everything)</div>
+                    <div class="mc-option" data-value="b">B. System Restore</div>
+                    <div class="mc-option" data-value="c">C. System Image Recovery</div>
+                    <div class="mc-option" data-value="d">D. Command Prompt (sfc /scannow)</div>
+                </div>
+            </div>
+
+            <div class="mc-question" data-correct="c">
+                <p>3. A technician suspects a third-party driver is causing crashes. How should they diagnose?</p>
+                <div class="mc-options">
+                    <div class="mc-option" data-value="a">A. Uninstall Updates</div>
+                    <div class="mc-option" data-value="b">B. Reset This PC (Keep files)</div>
+                    <div class="mc-option" data-value="c">C. Boot into Safe Mode</div>
+                    <div class="mc-option" data-value="d">D. System Image Recovery</div>
+                </div>
+            </div>
+
+            <div class="mc-question" data-correct="d">
+                <p>4. Windows shows 'BCD error 0xc000000f' on boot.</p>
+                <div class="mc-options">
+                    <div class="mc-option" data-value="a">A. Startup Repair</div>
+                    <div class="mc-option" data-value="b">B. System Restore</div>
+                    <div class="mc-option" data-value="c">C. Safe Mode</div>
+                    <div class="mc-option" data-value="d">D. bootrec /rebuildbcd from Command Prompt</div>
+                </div>
+            </div>
+
+            <div class="mc-question" data-correct="a">
+                <p>5. Malware has completely compromised the system and AV can't clean it.</p>
+                <div class="mc-options">
+                    <div class="mc-option" data-value="a">A. Reset This PC (Remove everything)</div>
+                    <div class="mc-option" data-value="b">B. System Restore</div>
+                    <div class="mc-option" data-value="c">C. Startup Repair</div>
+                    <div class="mc-option" data-value="d">D. Uninstall Updates</div>
+                </div>
+            </div>
+
+            <div class="mc-question" data-correct="b">
+                <p>6. An important update was installed and now Wi-Fi doesn't work, but everything else is fine.</p>
+                <div class="mc-options">
+                    <div class="mc-option" data-value="a">A. System Restore</div>
+                    <div class="mc-option" data-value="b">B. Uninstall Updates</div>
+                    <div class="mc-option" data-value="c">C. Reset This PC (Keep files)</div>
+                    <div class="mc-option" data-value="d">D. Safe Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pbq-actions">
+            <button class="pbq-btn pbq-btn-check" onclick="checkAnswers()">Check Answers</button>
+            <button class="pbq-btn pbq-btn-reset" onclick="resetAll()">Reset</button>
+        </div>
+
+        <!-- Results -->
+        <div class="results-box" id="resultsBox">
+            <h3>Results</h3>
+            <p class="score-text" id="resultsText"></p>
+        </div>
+    </div>
+
+    <script>
+    // ====== Drag and Drop Logic ======
+    const toolLabels = {
+        'startup-repair': 'Startup Repair',
+        'system-restore': 'System Restore',
+        'system-image-recovery': 'System Image Recovery',
+        'reset-keep': 'Reset This PC (Keep files)',
+        'reset-remove': 'Reset This PC (Remove everything)',
+        'safe-mode': 'Safe Mode',
+        'bootrec': 'Command Prompt (bootrec)',
+        'uninstall-updates': 'Uninstall Updates'
+    };
+
+    let draggedTool = null;
+    let placements = {}; // index -> tool
+
+    // Drag events for items
+    document.querySelectorAll('.drag-item').forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            draggedTool = e.target.dataset.tool;
+            e.target.style.opacity = '0.5';
+        });
+        item.addEventListener('dragend', (e) => {
+            e.target.style.opacity = '';
+        });
+    });
+
+    // Drop targets
+    document.querySelectorAll('.drop-target').forEach(target => {
+        target.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            target.classList.add('drag-over');
+        });
+        target.addEventListener('dragleave', () => {
+            target.classList.remove('drag-over');
+        });
+        target.addEventListener('drop', (e) => {
+            e.preventDefault();
+            target.classList.remove('drag-over');
+            if (!draggedTool) return;
+
+            const idx = target.dataset.index;
+
+            // If this zone already has an item, return it to bank
+            if (placements[idx]) {
+                returnToBank(placements[idx]);
+            }
+
+            // Place new item
+            placements[idx] = draggedTool;
+            target.textContent = toolLabels[draggedTool];
+            target.classList.add('has-item');
+
+            // Mark drag item as placed
+            const dragEl = document.querySelector(`.drag-item[data-tool="${draggedTool}"]`);
+            if (dragEl) dragEl.classList.add('placed');
+
+            draggedTool = null;
+        });
+
+        // Click to remove
+        target.addEventListener('click', () => {
+            const idx = target.dataset.index;
+            if (placements[idx]) {
+                returnToBank(placements[idx]);
+                delete placements[idx];
+                target.textContent = 'Drop tool here';
+                target.classList.remove('has-item', 'correct', 'incorrect');
+            }
+        });
+    });
+
+    function returnToBank(tool) {
+        const dragEl = document.querySelector(`.drag-item[data-tool="${tool}"]`);
+        if (dragEl) dragEl.classList.remove('placed');
+    }
+
+    // ====== Multiple Choice Logic ======
+    document.querySelectorAll('.mc-question').forEach(question => {
+        const options = question.querySelectorAll('.mc-option');
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                // Clear previous selection in this question
+                options.forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+            });
+        });
+    });
+
+    // ====== Check Answers ======
+    function checkAnswers() {
+        let score = 0;
+
+        // Check drag and drop
+        document.querySelectorAll('.drop-target').forEach(target => {
+            const idx = target.dataset.index;
+            const answer = target.dataset.answer;
+            target.classList.remove('correct', 'incorrect');
+
+            if (placements[idx] === answer) {
+                target.classList.add('correct');
+                score++;
+            } else if (placements[idx]) {
+                target.classList.add('incorrect');
+            }
+        });
+
+        // Check multiple choice
+        document.querySelectorAll('.mc-question').forEach(question => {
+            const correct = question.dataset.correct;
+            const options = question.querySelectorAll('.mc-option');
+            const selected = question.querySelector('.mc-option.selected');
+
+            options.forEach(o => o.classList.remove('correct', 'incorrect', 'show-correct'));
+
+            if (selected) {
+                if (selected.dataset.value === correct) {
+                    selected.classList.add('correct');
+                    score++;
+                } else {
+                    selected.classList.add('incorrect');
+                    // Show correct answer
+                    const correctEl = question.querySelector(`.mc-option[data-value="${correct}"]`);
+                    if (correctEl) correctEl.classList.add('show-correct');
+                }
+            } else {
+                // No selection — show correct
+                const correctEl = question.querySelector(`.mc-option[data-value="${correct}"]`);
+                if (correctEl) correctEl.classList.add('show-correct');
+            }
+        });
+
+        // Update score
+        document.getElementById('score').textContent = score;
+        const resultsBox = document.getElementById('resultsBox');
+        const resultsText = document.getElementById('resultsText');
+        resultsBox.classList.add('show');
+        resultsText.textContent = `${score} / 14`;
+        if (score === 14) {
+            resultsText.classList.add('perfect');
+            resultsText.textContent = '14 / 14 — Perfect Score!';
+        } else {
+            resultsText.classList.remove('perfect');
+        }
+    }
+
+    // ====== Reset ======
+    function resetAll() {
+        // Reset drag and drop
+        placements = {};
+        document.querySelectorAll('.drop-target').forEach(target => {
+            target.textContent = 'Drop tool here';
+            target.classList.remove('has-item', 'correct', 'incorrect');
+        });
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.classList.remove('placed');
+        });
+
+        // Reset multiple choice
+        document.querySelectorAll('.mc-option').forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect', 'show-correct');
+        });
+
+        // Reset score
+        document.getElementById('score').textContent = '0';
+        document.getElementById('resultsBox').classList.remove('show');
+    }
+
+    // ====== Touch Support for Mobile ======
+    let touchDragTool = null;
+
+    document.querySelectorAll('.drag-item').forEach(item => {
+        item.addEventListener('touchstart', (e) => {
+            touchDragTool = item.dataset.tool;
+            item.style.opacity = '0.5';
+        });
+        item.addEventListener('touchend', (e) => {
+            item.style.opacity = '';
+        });
+    });
+
+    document.querySelectorAll('.drop-target').forEach(target => {
+        target.addEventListener('touchend', (e) => {
+            if (!touchDragTool) return;
+            e.preventDefault();
+
+            const idx = target.dataset.index;
+
+            // If already has item, return it
+            if (placements[idx]) {
+                returnToBank(placements[idx]);
+            }
+
+            placements[idx] = touchDragTool;
+            target.textContent = toolLabels[touchDragTool];
+            target.classList.add('has-item');
+
+            const dragEl = document.querySelector(`.drag-item[data-tool="${touchDragTool}"]`);
+            if (dragEl) {
+                dragEl.classList.add('placed');
+                dragEl.style.opacity = '';
+            }
+
+            touchDragTool = null;
+        });
+    });
+    </script>
+</body>
+</html>
