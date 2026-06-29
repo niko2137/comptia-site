@@ -860,10 +860,36 @@ function adminRemovePlayer(){
 
 // ===== MUSIC LOADER =====
 (function(){
-  const s=document.createElement('script');s.src='../js/music/Jeopardy-music.js';
-  s.onload=()=>{if(typeof song!=='undefined'&&window.CPlayer){try{const p=new CPlayer();p.init(song);p.generate();let c=setInterval(()=>{if(p.generate()>=1){clearInterval(c);const w=p.createWave();const a=document.createElement('audio');a.src=URL.createObjectURL(new Blob([w],{type:'audio/wav'}));a.loop=true;a.volume=0.25;window._jeopMusic=a;}},100);}catch(e){}}};
+  const s=document.createElement('script');s.src='../audio/games/Jeopardy-Music.js';
+  s.onload=()=>{
+    if(typeof JeopardyTheme!=='undefined'){
+      window._jeopTheme=new JeopardyTheme();
+    }
+  };
   s.onerror=()=>{};document.head.appendChild(s);
 })();
+
+// Play Jeopardy theme when game starts (hook into existing startGame)
+const _origBuildBoard = buildBoard;
+buildBoard = function() {
+  _origBuildBoard();
+  if(window._jeopTheme && state.soundOn && !window._jeopTheme.isPlaying) {
+    window._jeopTheme.start(() => {
+      // Loop: restart when finished
+      if(state.soundOn && state.gameActive) window._jeopTheme.start();
+    });
+  }
+};
+
+// Stop music on sound toggle off
+const _origToggleSound = toggleSound;
+toggleSound = function() {
+  _origToggleSound();
+  if(!state.soundOn && window._jeopTheme) window._jeopTheme.stop();
+  if(state.soundOn && state.gameActive && window._jeopTheme && !window._jeopTheme.isPlaying) {
+    window._jeopTheme.start(() => { if(state.soundOn && state.gameActive) window._jeopTheme.start(); });
+  }
+};
 
 // ===== INIT =====
 showStartScreen();
