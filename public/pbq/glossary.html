@@ -64,67 +64,7 @@
     }
     .navbar .nav-links a:hover { color: #fff; text-decoration: none; }
 
-    /* PASSWORD GATE */
-    .gate-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, #2c5282 100%);
-        padding: 24px;
-    }
-    .gate-card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 48px 40px;
-        max-width: 440px;
-        width: 100%;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        animation: fadeInUp 0.6s ease;
-    }
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-8px); }
-        75% { transform: translateX(8px); }
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .gate-icon { font-size: 3.5em; margin-bottom: 16px; display: block; }
-    .gate-card h2 { margin-bottom: 8px; color: var(--navy-dark); font-size: 1.5em; }
-    .gate-subtitle {
-        color: var(--text-muted); font-size: 0.9em; margin-bottom: 28px; line-height: 1.5;
-    }
-    .password-field {
-        position: relative; margin-bottom: 16px;
-    }
-    .password-field input {
-        width: 100%; padding: 14px 48px 14px 16px; border: 2px solid var(--border);
-        border-radius: 8px; font-size: 1em; transition: border-color 0.2s;
-        outline: none; font-family: inherit;
-    }
-    .password-field input:focus { border-color: var(--blue-accent); }
-    .password-toggle {
-        position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-        background: none; border: none; cursor: pointer; font-size: 1.2em; color: var(--text-muted);
-    }
-    .gate-error {
-        color: var(--red); font-size: 0.85em; margin-bottom: 16px;
-        display: none; animation: shake 0.4s ease;
-    }
-    .gate-error.visible { display: block; }
-    .unlock-btn {
-        width: 100%; padding: 14px; background: var(--navy); color: #fff;
-        border: none; border-radius: 8px; font-size: 1em; font-weight: 600;
-        cursor: pointer; transition: all 0.2s; font-family: inherit;
-    }
-    .unlock-btn:hover { background: var(--blue-accent); transform: translateY(-1px); }
-
     /* MAIN CONTENT */
-    #glossaryContent { display: none; animation: fadeIn 0.8s ease; }
     .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 60px; }
     .page-title {
         font-size: 2em;
@@ -208,26 +148,10 @@
         .navbar .brand { font-size: 0.95em; }
         .navbar .nav-links { gap: 12px; }
         .navbar .nav-links a { font-size: 0.8em; }
-        .gate-card { padding: 32px 24px; }
     }
     </style>
 </head>
 <body>
-
-    <!-- PASSWORD GATE -->
-    <div id="passwordGate" class="gate-wrapper">
-        <div class="gate-card">
-            <span class="gate-icon">&#128274;</span>
-            <h2>Members Only</h2>
-            <p class="gate-subtitle">Enter your access code to view the glossary<br><small>Find your code on the inside back cover of the <em>CompTIA A+ Complete Study Guide</em></small></p>
-            <div class="password-field">
-                <input type="password" id="passwordInput" placeholder="Enter access code..." autocomplete="off">
-                <button class="password-toggle" id="togglePassword" type="button">&#128065;</button>
-            </div>
-            <p class="gate-error" id="gateError">Incorrect code. Check your book's back cover.</p>
-            <button class="unlock-btn" id="unlockBtn">Unlock Glossary</button>
-        </div>
-    </div>
 
     <!-- GLOSSARY CONTENT -->
     <div id="glossaryContent">
@@ -264,74 +188,6 @@
     </div>
 
     <script>
-    // SHA-256 hash of the password
-    const PASSWORD_HASH = '474575e3aca7654bf83560c6d86c87015ae66a897b69bfd139160dec68c4ce7e';
-
-    async function sha256(str) {
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    const gate = document.getElementById('passwordGate');
-    const glossaryContent = document.getElementById('glossaryContent');
-    const passwordInput = document.getElementById('passwordInput');
-    const unlockBtn = document.getElementById('unlockBtn');
-    const gateError = document.getElementById('gateError');
-    const togglePassword = document.getElementById('togglePassword');
-
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
-        togglePassword.textContent = type === 'password' ? '\u{1F441}' : '\u{1F512}';
-    });
-
-    function showGlossary() {
-        gate.style.display = 'none';
-        glossaryContent.style.display = 'block';
-        initGlossary();
-    }
-
-    async function attemptUnlock(password) {
-        const hash = await sha256(password);
-        if (hash !== PASSWORD_HASH) return false;
-        showGlossary();
-        return true;
-    }
-
-    unlockBtn.addEventListener('click', async () => {
-        const pw = passwordInput.value.trim();
-        if (!pw) { passwordInput.focus(); return; }
-        const success = await attemptUnlock(pw);
-        if (success) {
-            localStorage.setItem('comptia_member_auth', 'true');
-            localStorage.setItem('comptia_member_pw', btoa(pw));
-        } else {
-            gateError.classList.add('visible');
-            passwordInput.style.borderColor = 'var(--red)';
-            setTimeout(() => { gateError.classList.remove('visible'); passwordInput.style.borderColor = ''; }, 3000);
-        }
-    });
-
-    passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlockBtn.click(); });
-
-    // Auto-login check
-    (async () => {
-        const saved = localStorage.getItem('comptia_member_auth');
-        const savedPw = localStorage.getItem('comptia_member_pw');
-        if (saved === 'true') {
-            if (savedPw) {
-                try {
-                    const pw = atob(savedPw);
-                    const success = await attemptUnlock(pw);
-                    if (!success) { localStorage.removeItem('comptia_member_auth'); localStorage.removeItem('comptia_member_pw'); }
-                } catch(e) { localStorage.removeItem('comptia_member_auth'); localStorage.removeItem('comptia_member_pw'); }
-            } else {
-                // Already authenticated flag set without pw — show directly
-                showGlossary();
-            }
-        }
-    })();
-
     // ============ GLOSSARY ============
     function initGlossary() {
         const glossaryData = [
@@ -889,6 +745,9 @@
             });
         });
     }
+
+    // Initialize glossary immediately
+    initGlossary();
     </script>
 </body>
 </html>

@@ -1105,11 +1105,6 @@ function renderStartScreen() {
                     10 randomized clues • Type your answers • Beat the clock<br>
                     <span style="font-size:0.9em">+100 pts per word • -10 wrong • -25 reveal</span>
                 </p>
-                <div style="margin-bottom:16px;">
-                    <p style="font-size:0.78em;color:#ff8800;margin-bottom:8px;letter-spacing:1px;">🔒 MEMBERS ONLY — Enter access code</p>
-                    <input type="password" id="member-code" placeholder="Access code from book" style="padding:10px 16px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,136,0,0.4);border-radius:6px;color:#fff;font-family:monospace;font-size:0.9em;width:220px;text-align:center;">
-                    <div id="code-error" style="color:#ff4444;font-size:0.75em;margin-top:4px;min-height:16px;"></div>
-                </div>
                 <button id="start-btn" style="background:linear-gradient(135deg,rgba(0,240,255,0.15),rgba(0,240,255,0.03));border:2px solid #00f0ff;color:#00f0ff;padding:16px 55px;font-size:1.25em;font-weight:bold;border-radius:10px;cursor:pointer;transition:all 0.3s;box-shadow:0 0 25px rgba(0,240,255,0.2);letter-spacing:2px">
                     START PUZZLE
                 </button>
@@ -1139,14 +1134,7 @@ function renderStartScreen() {
     // Button interactions
     const btn = document.getElementById('start-btn');
     btn.addEventListener('click', function() {
-        const code = document.getElementById('member-code').value;
-        const VALID_CODE = 'DEV#password';
-        if (code === VALID_CODE || code === 'IamTesting' || sessionStorage.getItem('ttt_auth') === '1') {
-            sessionStorage.setItem('ttt_auth', '1');
-            startGame();
-        } else {
-            document.getElementById('code-error').textContent = code ? 'Invalid code. Check inside back cover.' : 'Please enter your access code.';
-        }
+        startGame();
     });
     btn.addEventListener('mouseenter', function() {
         this.style.boxShadow = '0 0 45px rgba(0,240,255,0.5), inset 0 0 15px rgba(0,240,255,0.1)';
