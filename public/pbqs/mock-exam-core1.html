@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CompTIA A+ Core 1 (220-1201) Mock Exam</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.top-bar{position:sticky;top:0;z-index:100;background:#1e293b;border-bottom:1px solid #334155;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.back-link{color:#3b82f6;text-decoration:none;font-size:14px;display:flex;align-items:center;gap:6px}
+.back-link:hover{color:#60a5fa}
+.timer{font-size:20px;font-weight:700;color:#f8fafc;background:#0f172a;padding:8px 16px;border-radius:8px;border:1px solid #334155}
+.timer.warning{color:#f59e0b;border-color:#f59e0b}
+.timer.danger{color:#ef4444;border-color:#ef4444;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.progress-container{width:100%;background:#334155;border-radius:4px;height:6px;margin-top:8px}
+.progress-bar{height:100%;background:#3b82f6;border-radius:4px;transition:width .3s}
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="../members.html" class="back-link">← Back to Members</a>
+<div class="timer" id="timer">90:00</div>
+<div style="font-size:14px;color:#94a3b8" id="questionIndicator">Question 1 of 90</div>
+</div>
+<div class="progress-container"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+
+<style>
+.main-container{display:flex;max-width:1400px;margin:0 auto;padding:20px;gap:20px}
+.question-area{flex:1;min-width:0}
+.nav-panel{width:280px;flex-shrink:0}
+.card{background:#1e293b;border-radius:12px;border:1px solid #334155;padding:24px;margin-bottom:16px}
+.question-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.domain-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:#3b82f620;color:#3b82f6;border:1px solid #3b82f640}
+.flag-btn{background:none;border:1px solid #475569;border-radius:8px;padding:8px 12px;cursor:pointer;color:#94a3b8;font-size:14px;display:flex;align-items:center;gap:6px;transition:all .2s}
+.flag-btn:hover{border-color:#f59e0b;color:#f59e0b}
+.flag-btn.flagged{background:#f59e0b20;border-color:#f59e0b;color:#f59e0b}
+.question-text{font-size:17px;line-height:1.6;color:#f1f5f9;margin-bottom:24px}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{padding:14px 18px;border-radius:10px;border:2px solid #334155;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px}
+.choice:hover{border-color:#3b82f6;background:#3b82f610}
+.choice.selected{border-color:#3b82f6;background:#3b82f620}
+.choice-letter{font-weight:700;color:#3b82f6;min-width:20px}
+.choice-text{flex:1;line-height:1.4}
+.nav-buttons{display:flex;gap:12px;margin-top:20px}
+.nav-btn{flex:1;padding:12px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.nav-btn.prev{background:#334155;color:#e2e8f0}
+.nav-btn.next{background:#3b82f6;color:white}
+.nav-btn:hover{opacity:.85;transform:translateY(-1px)}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.submit-btn{width:100%;padding:14px;border-radius:8px;border:none;background:#10b981;color:white;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;transition:all .2s}
+.submit-btn:hover{background:#059669;transform:translateY(-1px)}
+</style>
+
+<style>
+.nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.nav-grid-btn{width:36px;height:36px;border-radius:6px;border:1px solid #475569;background:#0f172a;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.nav-grid-btn:hover{border-color:#3b82f6}
+.nav-grid-btn.current{border-color:#3b82f6;background:#3b82f6;color:white}
+.nav-grid-btn.answered{background:#3b82f620;border-color:#3b82f6;color:#3b82f6}
+.nav-grid-btn.flagged{background:#f59e0b20;border-color:#f59e0b;color:#f59e0b}
+.nav-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:11px;color:#94a3b8}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.review-screen,.results-screen{display:none;max-width:800px;margin:40px auto;padding:20px}
+.review-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:#1e293b;border:1px solid #334155;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.review-item:hover{border-color:#3b82f6}
+.review-badge{font-size:11px;padding:3px 8px;border-radius:6px}
+.badge-flagged{background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b40}
+.badge-unanswered{background:#ef444420;color:#ef4444;border:1px solid #ef444440}
+.results-header{text-align:center;margin-bottom:32px}
+.score-circle{width:180px;height:180px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:20px auto;border:6px solid}
+.score-circle.pass{border-color:#10b981;background:#10b98110}
+.score-circle.fail{border-color:#ef4444;background:#ef444410}
+.score-number{font-size:42px;font-weight:800}
+.domain-table{width:100%;border-collapse:collapse;margin-top:24px}
+.domain-table th,.domain-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #334155}
+.domain-table th{color:#94a3b8;font-size:13px;font-weight:600}
+.domain-bar{height:8px;border-radius:4px;background:#334155;overflow:hidden;min-width:100px}
+.domain-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
+.confetti{position:absolute;width:10px;height:10px;top:-10px;animation:confettiFall 3s linear forwards}
+@keyframes confettiFall{to{top:110vh;transform:rotateZ(720deg)}}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+.modal{background:#1e293b;border-radius:12px;padding:32px;max-width:400px;width:90%;text-align:center;border:1px solid #334155}
+.modal h3{margin-bottom:12px;font-size:20px}
+.modal p{color:#94a3b8;margin-bottom:24px}
+.modal-btns{display:flex;gap:12px;justify-content:center}
+.modal-btn{padding:10px 24px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:14px}
+.modal-btn.cancel{background:#334155;color:#e2e8f0}
+.modal-btn.confirm{background:#ef4444;color:white}
+.review-incorrect-btn{padding:12px 24px;border-radius:8px;border:none;background:#3b82f6;color:white;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px}
+.incorrect-list{margin-top:24px}
+.incorrect-item{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:20px;margin-bottom:12px}
+.incorrect-item .q-text{font-weight:600;margin-bottom:10px}
+.incorrect-item .your-answer{color:#ef4444}
+.incorrect-item .correct-answer{color:#10b981}
+.incorrect-item .explanation{color:#94a3b8;font-size:13px;margin-top:8px;font-style:italic}
+@media(max-width:900px){.main-container{flex-direction:column}.nav-panel{width:100%;order:-1}}
+</style>
+
+<div class="main-container" id="examContainer">
+<div class="question-area" id="questionArea">
+<div class="card">
+<div class="question-header">
+<span class="domain-badge" id="domainBadge"></span>
+<button class="flag-btn" id="flagBtn" onclick="toggleFlag()">⚑ Flag</button>
+</div>
+<div class="question-text" id="questionText"></div>
+<div class="choices" id="choicesContainer"></div>
+</div>
+<div class="nav-buttons">
+<button class="nav-btn prev" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+<button class="nav-btn next" id="nextBtn" onclick="nextQuestion()">Next →</button>
+</div>
+<button class="submit-btn" id="submitBtn" onclick="showSubmitConfirm()">Submit Exam</button>
+</div>
+<div class="nav-panel">
+<div class="card">
+<h4 style="margin-bottom:12px;color:#f1f5f9;font-size:14px">Question Navigator</h4>
+<div class="nav-grid" id="navGrid"></div>
+<div class="nav-legend">
+<div class="legend-item"><div class="legend-dot" style="background:#0f172a;border:1px solid #475569"></div>Unanswered</div>
+<div class="legend-item"><div class="legend-dot" style="background:#3b82f620;border:1px solid #3b82f6"></div>Answered</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f59e0b20;border:1px solid #f59e0b"></div>Flagged</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="review-screen" id="reviewScreen">
+<div class="card">
+<h2 style="margin-bottom:8px">Review Before Submitting</h2>
+<p style="color:#94a3b8;margin-bottom:20px">These questions are either flagged or unanswered. Click any to return to it.</p>
+<div id="reviewList"></div>
+<div style="display:flex;gap:12px;margin-top:20px">
+<button class="nav-btn prev" onclick="backToExam()">← Back to Exam</button>
+<button class="submit-btn" style="margin-top:0" onclick="submitExam()">Submit Exam</button>
+</div>
+</div>
+</div>
+
+<div class="results-screen" id="resultsScreen"></div>
+
+<div class="modal-overlay" id="submitModal">
+<div class="modal">
+<h3>Submit Exam?</h3>
+<p id="modalMsg">Are you sure you want to submit? You cannot change answers after submission.</p>
+<div class="modal-btns">
+<button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+<button class="modal-btn confirm" onclick="confirmSubmit()">Submit</button>
+</div>
+</div>
+</div>
+
+<script>
+const questions = [
+{id:1,domain:"Mobile Devices",q:"Which mobile device uses watchOS?",choices:["iPad","iPhone","Apple Watch","MacBook"],correct:2,explanation:"watchOS is Apple's operating system designed specifically for the Apple Watch."},
+{id:2,domain:"Mobile Devices",q:"A smartphone shows 169.254.x.x when connected to Wi-Fi. What failed?",choices:["DNS","DHCP","NFC","Bluetooth"],correct:1,explanation:"169.254.x.x is an APIPA address assigned when DHCP fails to provide an IP address."},
+{id:3,domain:"Mobile Devices",q:"What is the IMEI number used for?",choices:["Identify carrier account","Identify physical device hardware","Store contacts","Connect to Wi-Fi"],correct:1,explanation:"IMEI (International Mobile Equipment Identity) uniquely identifies a physical mobile device."},
+{id:4,domain:"Mobile Devices",q:"Which connection type has a range of approximately 10 meters?",choices:["NFC","Bluetooth Class 2","Wi-Fi","Cellular"],correct:1,explanation:"Bluetooth Class 2 devices have an effective range of approximately 10 meters (33 feet)."},
+{id:5,domain:"Mobile Devices",q:"A user's phone cannot send or receive emails after traveling internationally. What should be checked FIRST?",choices:["Email password","Airplane mode and data roaming settings","SIM card","Phone OS version"],correct:1,explanation:"When traveling internationally, data roaming must be enabled and airplane mode must be off for data services."},
+{id:6,domain:"Mobile Devices",q:"Which mobile OS is open-source?",choices:["iOS","watchOS","Android (AOSP)","iPadOS"],correct:2,explanation:"Android Open Source Project (AOSP) is the open-source foundation of Android."},
+{id:7,domain:"Mobile Devices",q:"What does an eSIM replace?",choices:["The battery","The physical SIM card","The antenna","The screen"],correct:1,explanation:"An eSIM (embedded SIM) is built into the device, eliminating the need for a physical SIM card."},
+{id:8,domain:"Mobile Devices",q:"A technician needs to configure corporate email on a phone using Exchange. Which protocol syncs email, contacts, and calendar together?",choices:["POP3","IMAP","Exchange ActiveSync","SMTP"],correct:2,explanation:"Exchange ActiveSync synchronizes email, contacts, calendars, and tasks between Exchange server and mobile devices."},
+{id:9,domain:"Mobile Devices",q:"Which feature allows a smartphone to share its cellular data connection with a laptop?",choices:["AirDrop","Hotspot/Tethering","NFC","Miracast"],correct:1,explanation:"Hotspot/Tethering allows a phone to share its cellular internet connection with other devices."},
+{id:10,domain:"Mobile Devices",q:"What is the correct action if a company phone with sensitive data is lost?",choices:["Report to police first","Remote wipe immediately","Remote lock first, then assess","Wait 24 hours"],correct:2,explanation:"Remote lock first secures the device immediately while allowing recovery if found. Wiping destroys all data permanently."},
+{id:11,domain:"Mobile Devices",q:"GPS requires line of sight to how many satellites minimum?",choices:["2","3","4","6"],correct:2,explanation:"GPS requires signals from at least 4 satellites to determine a 3D position (latitude, longitude, altitude)."},
+{id:12,domain:"Mobile Devices",q:"Which MDM feature prevents users from installing unauthorized apps?",choices:["Remote wipe","Geofencing","App whitelisting","Screen lock"],correct:2,explanation:"App whitelisting allows only pre-approved applications to be installed on managed devices."},
+
+{id:13,domain:"Networking",q:"SSH uses which port?",choices:["21","22","23","25"],correct:1,explanation:"SSH (Secure Shell) operates on TCP port 22 for encrypted remote access."},
+{id:14,domain:"Networking",q:"A workstation has IP 169.254.47.12. What does this indicate?",choices:["DNS failure","DHCP server unreachable","Gateway misconfigured","NIC disabled"],correct:1,explanation:"169.254.x.x is an APIPA address, indicating the DHCP server is unreachable."},
+{id:15,domain:"Networking",q:"Which protocol uses UDP ports 67 and 68?",choices:["DNS","DHCP","SNMP","NTP"],correct:1,explanation:"DHCP uses UDP port 67 (server) and UDP port 68 (client) for IP address assignment."},
+{id:16,domain:"Networking",q:"A switch operates at which OSI layer?",choices:["Layer 1","Layer 2","Layer 3","Layer 4"],correct:1,explanation:"Switches operate at Layer 2 (Data Link) using MAC addresses to forward frames."},
+{id:17,domain:"Networking",q:"What is the maximum speed of Cat 6a at 100 meters?",choices:["1 Gbps","5 Gbps","10 Gbps","25 Gbps"],correct:2,explanation:"Cat 6a supports 10 Gbps at distances up to 100 meters."},
+{id:18,domain:"Networking",q:"Which port does RDP use?",choices:["22","443","3389","5900"],correct:2,explanation:"Remote Desktop Protocol (RDP) uses TCP port 3389."},
+{id:19,domain:"Networking",q:"What does NAT do?",choices:["Assigns IPs automatically","Translates private IPs to public IP","Encrypts traffic","Filters packets"],correct:1,explanation:"NAT (Network Address Translation) translates private IP addresses to a public IP for internet access."},
+{id:20,domain:"Networking",q:"WPA3 uses which authentication method?",choices:["TKIP","PSK only","SAE","WEP"],correct:2,explanation:"WPA3 uses SAE (Simultaneous Authentication of Equals) for stronger key exchange."},
+{id:21,domain:"Networking",q:"The DHCP process follows which sequence?",choices:["DORA","DARO","ROAD","OARD"],correct:0,explanation:"DHCP follows DORA: Discover, Offer, Request, Acknowledge."},
+{id:22,domain:"Networking",q:"Which device operates at Layer 3 of the OSI model?",choices:["Hub","Switch","Router","Access Point"],correct:2,explanation:"Routers operate at Layer 3 (Network) using IP addresses to route packets between networks."},
+{id:23,domain:"Networking",q:"A user can ping localhost but not the gateway. What is most likely?",choices:["DNS down","NIC/cable issue","Account locked","DHCP expired"],correct:1,explanation:"If localhost works but gateway doesn't respond to ping, there's likely a physical NIC or cable issue."},
+{id:24,domain:"Networking",q:"Which port does HTTPS use?",choices:["80","8080","443","8443"],correct:2,explanation:"HTTPS uses TCP port 443 for encrypted web traffic."},
+{id:25,domain:"Networking",q:"What is the private IP range for Class A networks?",choices:["172.16.0.0/12","192.168.0.0/16","10.0.0.0/8","169.254.0.0/16"],correct:2,explanation:"10.0.0.0/8 is the Class A private IP range (10.0.0.0 - 10.255.255.255)."},
+{id:26,domain:"Networking",q:"VLAN operates at which OSI layer?",choices:["Layer 1","Layer 2","Layer 3","Layer 4"],correct:1,explanation:"VLANs operate at Layer 2, logically segmenting a switch into separate broadcast domains."},
+{id:27,domain:"Networking",q:"Which cable type is required for air-handling (plenum) spaces?",choices:["PVC","Riser (CMR)","Plenum (CMP)","Direct burial"],correct:2,explanation:"Plenum-rated (CMP) cable has fire-retardant coating required for air-handling spaces."},
+{id:28,domain:"Networking",q:"What is the function of DNS?",choices:["Assign IPs","Translate domain names to IPs","Encrypt traffic","Route packets"],correct:1,explanation:"DNS (Domain Name System) translates human-readable domain names to IP addresses."},
+{id:29,domain:"Networking",q:"Which Wi-Fi standard operates on 5 GHz only?",choices:["802.11n","802.11ac","802.11ax","802.11g"],correct:1,explanation:"802.11ac (Wi-Fi 5) operates exclusively on the 5 GHz band."},
+{id:30,domain:"Networking",q:"What does SNMP use port 161 for?",choices:["Email","File transfer","Network monitoring","Remote access"],correct:2,explanation:"SNMP uses UDP port 161 for network device monitoring and management queries."},
+{id:31,domain:"Networking",q:"A user reports slow internet. The technician finds the cable is Cat 5e connected to a 10 Gbps switch port. What's the issue?",choices:["Bad switch port","Cat 5e maxes at 1 Gbps","Wrong VLAN","DNS issue"],correct:1,explanation:"Cat 5e cable supports a maximum of 1 Gbps, which bottlenecks a 10 Gbps connection."},
+{id:32,domain:"Networking",q:"Which topology has all devices connected to a central switch?",choices:["Bus","Ring","Star","Mesh"],correct:2,explanation:"Star topology connects all devices to a central device (switch/hub)."},
+{id:33,domain:"Networking",q:"What port does FTP control channel use?",choices:["20","21","22","25"],correct:1,explanation:"FTP uses port 21 for the control channel and port 20 for data transfer."},
+
+{id:34,domain:"Hardware",q:"What form factor is 305x244mm with 7 expansion slots?",choices:["Mini-ITX","Micro-ATX","ATX","E-ATX"],correct:2,explanation:"ATX motherboards measure 305x244mm and typically have 7 expansion slots."},
+{id:35,domain:"Hardware",q:"A dead CMOS battery causes what symptom?",choices:["No POST","Clock resets every boot","Blue screen","No display"],correct:1,explanation:"A dead CMOS battery causes BIOS settings and system clock to reset on every boot."},
+{id:36,domain:"Hardware",q:"DDR4 RAM uses how many pins?",choices:["184","240","260","288"],correct:3,explanation:"DDR4 desktop DIMMs use 288 pins."},
+{id:37,domain:"Hardware",q:"Which connector provides the main power to the motherboard?",choices:["8-pin EPS","24-pin ATX","6-pin PCIe","Molex"],correct:1,explanation:"The 24-pin ATX connector provides main power to the motherboard."},
+{id:38,domain:"Hardware",q:"What does the 8-pin EPS connector provide?",choices:["GPU power","Dedicated 12V CPU power","Fan power","SATA power"],correct:1,explanation:"The 8-pin EPS connector provides dedicated 12V power directly to the CPU."},
+{id:39,domain:"Hardware",q:"TPM is required for which Windows feature?",choices:["Windows Defender","BitLocker","Firewall","UAC"],correct:1,explanation:"BitLocker full-disk encryption requires a TPM (Trusted Platform Module) chip."},
+{id:40,domain:"Hardware",q:"SATA III supports what maximum speed?",choices:["1.5 Gb/s","3 Gb/s","6 Gb/s","12 Gb/s"],correct:2,explanation:"SATA III (SATA 6Gb/s) supports a maximum throughput of 6 Gb/s."},
+{id:41,domain:"Hardware",q:"Which RAID level provides striping with NO fault tolerance?",choices:["RAID 1","RAID 5","RAID 0","RAID 10"],correct:2,explanation:"RAID 0 stripes data across disks for performance but offers no redundancy."},
+{id:42,domain:"Hardware",q:"M.2 NVMe SSDs connect via which interface?",choices:["SATA","USB","PCIe","Thunderbolt"],correct:2,explanation:"NVMe SSDs use the PCIe bus through the M.2 slot for maximum throughput."},
+{id:43,domain:"Hardware",q:"What is the correct order of the laser printing process?",choices:["Charging, Processing, Exposing, Developing, Transferring, Fusing","Processing, Charging, Exposing, Developing, Transferring, Fusing","Exposing, Charging, Processing, Developing, Fusing, Transferring","Processing, Exposing, Charging, Developing, Transferring, Fusing"],correct:1,explanation:"The laser printing process is: Processing, Charging, Exposing, Developing, Transferring, Fusing."},
+{id:44,domain:"Hardware",q:"A GPU is installed in which slot?",choices:["PCIe x1","PCIe x4","PCIe x16","M.2"],correct:2,explanation:"GPUs use the PCIe x16 slot which provides maximum bandwidth for graphics cards."},
+{id:45,domain:"Hardware",q:"What does ECC RAM do?",choices:["Increase speed","Detect and correct single-bit errors","Add RGB","Reduce latency"],correct:1,explanation:"ECC (Error Correcting Code) RAM can detect and correct single-bit memory errors."},
+{id:46,domain:"Hardware",q:"Dual-channel RAM requires what?",choices:["Same brand","Matched pairs in correct slots","ECC support","DDR5 only"],correct:1,explanation:"Dual-channel requires matched RAM pairs installed in the correct color-coded slots."},
+{id:47,domain:"Hardware",q:"SO-DIMM is used in which devices?",choices:["Desktops","Servers","Laptops","Printers"],correct:2,explanation:"SO-DIMM (Small Outline DIMM) is the smaller form factor used in laptops and compact devices."},
+{id:48,domain:"Hardware",q:"What PSU rating indicates 87% efficiency?",choices:["80 PLUS Bronze","80 PLUS Silver","80 PLUS Gold","80 PLUS Platinum"],correct:2,explanation:"80 PLUS Gold certification requires at least 87% efficiency at 20%, 50%, and 100% loads."},
+{id:49,domain:"Hardware",q:"Which partition format supports drives larger than 2TB?",choices:["MBR","FAT32","GPT","NTFS"],correct:2,explanation:"GPT (GUID Partition Table) supports drives larger than 2TB, unlike MBR's 2TB limit."},
+{id:50,domain:"Hardware",q:"A clicking sound from a hard drive indicates what?",choices:["Full disk","Head crash/failure","Normal operation","Overheating"],correct:1,explanation:"Clicking from a hard drive indicates the read/write heads are failing (click of death)."},
+{id:51,domain:"Hardware",q:"What file system is required for Windows OS installation?",choices:["FAT32","exFAT","NTFS","ext4"],correct:2,explanation:"Windows requires NTFS for the OS installation partition."},
+{id:52,domain:"Hardware",q:"Which connector type is NOT hot-swappable?",choices:["USB","HDMI","PS/2","Thunderbolt"],correct:2,explanation:"PS/2 connectors are not hot-swappable; the system must be powered off to connect/disconnect."},
+{id:53,domain:"Hardware",q:"What is the maximum file size on FAT32?",choices:["2 GB","4 GB","16 GB","No limit"],correct:1,explanation:"FAT32 has a maximum individual file size limit of 4 GB (4,294,967,295 bytes)."},
+{id:54,domain:"Hardware",q:"UEFI Secure Boot prevents what?",choices:["Overclocking","Unsigned OS from booting","USB drives","Network boot"],correct:1,explanation:"Secure Boot prevents unsigned or untrusted operating systems and bootloaders from running."},
+{id:55,domain:"Hardware",q:"Thermal paste is applied between which components?",choices:["RAM and motherboard","CPU and heatsink","GPU and case","PSU and motherboard"],correct:1,explanation:"Thermal paste fills microscopic gaps between the CPU and heatsink for better heat transfer."},
+
+{id:56,domain:"Virtualization & Cloud",q:"A Type 1 hypervisor runs on what?",choices:["Within an existing OS","Bare metal (directly on hardware)","In a container","Cloud only"],correct:1,explanation:"Type 1 (bare-metal) hypervisors run directly on hardware without a host OS (e.g., VMware ESXi, Hyper-V)."},
+{id:57,domain:"Virtualization & Cloud",q:"Which VM network mode gives the VM its own IP on the physical LAN?",choices:["NAT","Bridged","Host-only","Internal"],correct:1,explanation:"Bridged mode connects the VM directly to the physical network, getting its own IP from the LAN's DHCP."},
+{id:58,domain:"Virtualization & Cloud",q:"SaaS is best described as?",choices:["Customer manages VMs","Provider manages everything, user accesses via browser","Customer manages OS","Hardware rental"],correct:1,explanation:"SaaS (Software as a Service) means the provider manages all infrastructure; users just access the application."},
+{id:59,domain:"Virtualization & Cloud",q:"With IaaS, the customer is responsible for?",choices:["Physical hardware","VMs, OS, and applications","Nothing","Only networking"],correct:1,explanation:"With IaaS, the customer manages VMs, operating systems, applications, and data. The provider manages physical infrastructure."},
+{id:60,domain:"Virtualization & Cloud",q:"Cloud elasticity means?",choices:["Fixed resources","Automatic scaling based on demand","Physical expansion","Manual provisioning"],correct:1,explanation:"Elasticity is the ability to automatically scale resources up or down based on current demand."},
+{id:61,domain:"Virtualization & Cloud",q:"Which is an example of PaaS?",choices:["AWS EC2","Microsoft 365","Azure App Service","VirtualBox"],correct:2,explanation:"Azure App Service is PaaS - it provides a platform to deploy apps without managing underlying infrastructure."},
+{id:62,domain:"Virtualization & Cloud",q:"A VM snapshot is best described as?",choices:["A full backup","A point-in-time state capture for rollback","A clone","An export"],correct:1,explanation:"A snapshot captures the VM's state at a specific moment, allowing rollback if needed."},
+{id:63,domain:"Virtualization & Cloud",q:"Private cloud means?",choices:["Shared with public","Organization-owned, not shared externally","Free tier","Government only"],correct:1,explanation:"Private cloud infrastructure is dedicated to a single organization and not shared externally."},
+{id:64,domain:"Virtualization & Cloud",q:"Containers differ from VMs because they?",choices:["Have their own OS","Share the host OS kernel","Are slower","Require Type 1 hypervisor"],correct:1,explanation:"Containers share the host OS kernel, making them lighter and faster to start than full VMs."},
+{id:65,domain:"Virtualization & Cloud",q:"Which cloud concept means the customer always owns data regardless of model?",choices:["Elasticity","Shared responsibility","High availability","Multi-tenancy"],correct:1,explanation:"The shared responsibility model defines that data ownership always remains with the customer regardless of cloud service model."},
+
+{id:66,domain:"Hardware & Network Troubleshooting",q:"A computer won't POST. You hear one long beep followed by two short beeps. What is the likely cause?",choices:["RAM failure","Video/GPU issue","CPU overheat","PSU failure"],correct:1,explanation:"One long beep + two short beeps typically indicates a video/display adapter issue in most BIOS POST codes."},
+{id:67,domain:"Hardware & Network Troubleshooting",q:"A user's monitor displays no image but the power LED is on. What to check FIRST?",choices:["Replace monitor","Check video cable connection","Replace GPU","Update drivers"],correct:1,explanation:"Always check the simplest physical connection first - verify the video cable is properly connected."},
+{id:68,domain:"Hardware & Network Troubleshooting",q:"After a power outage, a computer boots but shows the wrong date/time. What's the issue?",choices:["OS corruption","Dead CMOS battery","Failed HDD","Bad PSU"],correct:1,explanation:"The CMOS battery maintains BIOS settings including date/time when power is off. A dead battery causes resets."},
+{id:69,domain:"Hardware & Network Troubleshooting",q:"A laser printer produces pages with toner that rubs off. What component has failed?",choices:["Imaging drum","Fuser assembly","Transfer roller","Charging roller"],correct:1,explanation:"The fuser assembly melts toner onto paper. If it fails, toner sits unfused on the page and rubs off."},
+{id:70,domain:"Hardware & Network Troubleshooting",q:"A user reports very slow file transfers to a network share. The technician finds the patch cable is Cat 5e on a 10G switch. What's the bottleneck?",choices:["Switch","Cat 5e cable (max 1 Gbps)","Server","Firewall"],correct:1,explanation:"Cat 5e cable supports maximum 1 Gbps, creating a bottleneck on a 10 Gbps switch port."},
+{id:71,domain:"Hardware & Network Troubleshooting",q:"A laptop's built-in display is dark but external monitor works. What to check FIRST?",choices:["Replace LCD","Check brightness/function keys","Replace motherboard","Reinstall OS"],correct:1,explanation:"Check the simplest solution first - brightness might be turned down or display output switched to external only."},
+{id:72,domain:"Hardware & Network Troubleshooting",q:"A computer randomly shuts down under heavy load. What is the most likely cause?",choices:["Virus","Overheating/thermal throttling","Bad RAM","Corrupt OS"],correct:1,explanation:"Random shutdowns under load typically indicate overheating causing thermal protection shutdown."},
+{id:73,domain:"Hardware & Network Troubleshooting",q:"You connect to Wi-Fi but get 'No Internet Access.' What should you try FIRST?",choices:["Replace router","Check if other devices have internet","Reinstall OS","Replace NIC"],correct:1,explanation:"Checking other devices determines if the issue is with your device or the network/ISP."},
+{id:74,domain:"Hardware & Network Troubleshooting",q:"A printer repeatedly jams paper. What's the most likely hardware cause?",choices:["Low toner","Worn pickup rollers","Bad fuser","Network issue"],correct:1,explanation:"Worn or dirty pickup rollers fail to grip paper properly, causing repeated paper jams."},
+{id:75,domain:"Hardware & Network Troubleshooting",q:"ipconfig shows 0.0.0.0 for the gateway. What does this indicate?",choices:["DNS failure","No default gateway configured/DHCP issue","Firewall blocking","Wrong subnet"],correct:1,explanation:"A 0.0.0.0 gateway means no default gateway is configured, typically due to DHCP or static config issues."},
+{id:76,domain:"Hardware & Network Troubleshooting",q:"A user can ping IP addresses but not domain names. What's the issue?",choices:["DHCP failure","DNS resolution failure","Gateway wrong","NIC disabled"],correct:1,explanation:"Being able to reach IPs but not names means DNS resolution is failing."},
+{id:77,domain:"Hardware & Network Troubleshooting",q:"After adding RAM, the computer beeps continuously and won't boot. What's wrong?",choices:["Bad CPU","RAM not seated properly","PSU underpowered","HDD failed"],correct:1,explanation:"Continuous beeping after RAM installation typically means the RAM is not properly seated in the slot."},
+{id:78,domain:"Hardware & Network Troubleshooting",q:"Network cable tester shows no continuity on pin 3. What does this mean?",choices:["Normal","Cable has a break/bad crimp","Switch port down","Wrong VLAN"],correct:1,explanation:"No continuity on a pin indicates a break in the wire or a bad crimp at one end."},
+{id:79,domain:"Hardware & Network Troubleshooting",q:"A computer blue screens with IRQL_NOT_LESS_OR_EQUAL. Common cause?",choices:["Full disk","Driver or RAM issue","Network failure","Bad monitor"],correct:1,explanation:"IRQL_NOT_LESS_OR_EQUAL typically indicates a faulty driver or failing RAM accessing invalid memory."},
+{id:80,domain:"Hardware & Network Troubleshooting",q:"A technician needs to identify which wall port a cable goes to. Which tool?",choices:["Cable tester","Tone generator and probe","Loopback plug","Crimper"],correct:1,explanation:"A tone generator and probe (fox and hound) traces cables through walls to identify endpoints."},
+{id:81,domain:"Hardware & Network Troubleshooting",q:"Users on VLAN 10 cannot reach users on VLAN 20. What's needed?",choices:["New switch","Layer 3 device/router for inter-VLAN routing","New cables","DHCP server"],correct:1,explanation:"VLANs are separate broadcast domains. A Layer 3 device (router) is needed for inter-VLAN communication."},
+{id:82,domain:"Hardware & Network Troubleshooting",q:"A wireless client connects but gets extremely slow speeds. What to check?",choices:["Is it connecting to 2.4 GHz instead of 5 GHz","Cable connection","DNS settings","IP conflict"],correct:0,explanation:"2.4 GHz is slower and more congested than 5 GHz. The client may have connected to the slower band."},
+{id:83,domain:"Hardware & Network Troubleshooting",q:"SFC /scannow reports it found corrupt files but couldn't fix some. What to run next?",choices:["chkdsk","DISM /RestoreHealth","format","diskpart"],correct:1,explanation:"DISM /Online /Cleanup-Image /RestoreHealth repairs the Windows component store that SFC uses."},
+{id:84,domain:"Hardware & Network Troubleshooting",q:"A NAS shows a degraded RAID 5 array. What happened?",choices:["Power failure","One drive failed","Network issue","Firmware bug"],correct:1,explanation:"A degraded RAID 5 array means one disk has failed. The array still functions but without redundancy."},
+{id:85,domain:"Hardware & Network Troubleshooting",q:"A user's new USB device isn't recognized. Device Manager shows yellow triangle. What to do?",choices:["Replace USB port","Update/install driver","Replace device","Reformat drive"],correct:1,explanation:"A yellow triangle in Device Manager indicates a driver issue. Update or install the correct driver."},
+{id:86,domain:"Hardware & Network Troubleshooting",q:"A network printer works locally but not over the network. What to check?",choices:["Toner level","Network cable/IP configuration","Paper tray","Print head"],correct:1,explanation:"If printing works locally but not over network, check the network connection and IP configuration."},
+{id:87,domain:"Hardware & Network Troubleshooting",q:"After a lightning strike, the computer won't turn on at all. What failed?",choices:["Monitor","PSU (or surge protector)","Hard drive","RAM"],correct:1,explanation:"A power surge from lightning most commonly damages the PSU, which is the first component in the power path."},
+{id:88,domain:"Hardware & Network Troubleshooting",q:"Wi-Fi keeps disconnecting in a specific room. What's the most likely cause?",choices:["Bad password","Interference or distance from AP","Wrong SSID","Firmware bug"],correct:1,explanation:"Location-specific disconnections point to signal interference or being too far from the access point."},
+{id:89,domain:"Hardware & Network Troubleshooting",q:"A user reports their external HDD shows as RAW in Disk Management. What happened?",choices:["Drive is encrypted","File system is corrupted","Drive is too large","Wrong cable"],correct:1,explanation:"A RAW file system indication means the file system structure is corrupted and unreadable."},
+{id:90,domain:"Hardware & Network Troubleshooting",q:"A computer POSTs but shows 'No boot device found.' What to check FIRST?",choices:["Replace HDD","Check BIOS boot order and cable connections","Reinstall Windows","Replace motherboard"],correct:1,explanation:"Check the simplest causes first: BIOS boot order may be wrong or the drive cable may be loose."},
+];
+
+
+const domains = ["Mobile Devices","Networking","Hardware","Virtualization & Cloud","Hardware & Network Troubleshooting"];
+const domainColors = {"Mobile Devices":"#8b5cf6","Networking":"#3b82f6","Hardware":"#f59e0b","Virtualization & Cloud":"#06b6d4","Hardware & Network Troubleshooting":"#ef4444"};
+
+let currentQ = 0;
+let answers = new Array(90).fill(-1);
+let flags = new Array(90).fill(false);
+let timeLeft = 90 * 60;
+let timerInterval = null;
+let examSubmitted = false;
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) { timeLeft = 0; clearInterval(timerInterval); submitExam(); }
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        const el = document.getElementById('timer');
+        el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        if (timeLeft <= 300) el.className = 'timer danger';
+        else if (timeLeft <= 600) el.className = 'timer warning';
+    }, 1000);
+}
+
+function buildNavGrid() {
+    const grid = document.getElementById('navGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < 90; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'nav-grid-btn';
+        btn.textContent = i + 1;
+        btn.onclick = () => goToQuestion(i);
+        grid.appendChild(btn);
+    }
+    updateNavGrid();
+}
+
+function updateNavGrid() {
+    const btns = document.querySelectorAll('.nav-grid-btn');
+    btns.forEach((btn, i) => {
+        btn.className = 'nav-grid-btn';
+        if (i === currentQ) btn.classList.add('current');
+        else if (flags[i]) btn.classList.add('flagged');
+        else if (answers[i] !== -1) btn.classList.add('answered');
+    });
+}
+
+function updateProgress() {
+    const answered = answers.filter(a => a !== -1).length;
+    document.getElementById('progressBar').style.width = `${(answered / 90) * 100}%`;
+}
+
+function renderQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('questionIndicator').textContent = `Question ${currentQ + 1} of 90`;
+    document.getElementById('domainBadge').textContent = q.domain;
+    document.getElementById('domainBadge').style.borderColor = domainColors[q.domain] + '60';
+    document.getElementById('domainBadge').style.color = domainColors[q.domain];
+    document.getElementById('domainBadge').style.background = domainColors[q.domain] + '15';
+    document.getElementById('questionText').textContent = `${currentQ + 1}. ${q.q}`;
+    const flagBtn = document.getElementById('flagBtn');
+    flagBtn.className = flags[currentQ] ? 'flag-btn flagged' : 'flag-btn';
+    const container = document.getElementById('choicesContainer');
+    container.innerHTML = '';
+    const letters = ['A','B','C','D'];
+    q.choices.forEach((choice, i) => {
+        const div = document.createElement('div');
+        div.className = 'choice' + (answers[currentQ] === i ? ' selected' : '');
+        div.onclick = () => selectAnswer(i);
+        div.innerHTML = `<span class="choice-letter">${letters[i]}.</span><span class="choice-text">${choice}</span>`;
+        container.appendChild(div);
+    });
+    document.getElementById('prevBtn').disabled = currentQ === 0;
+    document.getElementById('nextBtn').textContent = currentQ === 89 ? 'Review →' : 'Next →';
+    updateNavGrid();
+    updateProgress();
+}
+
+function selectAnswer(i) {
+    if (examSubmitted) return;
+    answers[currentQ] = i;
+    renderQuestion();
+}
+
+function toggleFlag() {
+    flags[currentQ] = !flags[currentQ];
+    renderQuestion();
+}
+
+function nextQuestion() {
+    if (currentQ < 89) { currentQ++; renderQuestion(); }
+    else showReviewScreen();
+}
+
+function prevQuestion() {
+    if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function goToQuestion(i) {
+    currentQ = i;
+    renderQuestion();
+    document.getElementById('examContainer').style.display = 'flex';
+    document.getElementById('reviewScreen').style.display = 'none';
+}
+
+function showReviewScreen() {
+    document.getElementById('examContainer').style.display = 'none';
+    document.getElementById('reviewScreen').style.display = 'block';
+    const list = document.getElementById('reviewList');
+    list.innerHTML = '';
+    let hasItems = false;
+    for (let i = 0; i < 90; i++) {
+        if (flags[i] || answers[i] === -1) {
+            hasItems = true;
+            const div = document.createElement('div');
+            div.className = 'review-item';
+            div.onclick = () => goToQuestion(i);
+            let badges = '';
+            if (flags[i]) badges += '<span class="review-badge badge-flagged">Flagged</span> ';
+            if (answers[i] === -1) badges += '<span class="review-badge badge-unanswered">Unanswered</span>';
+            div.innerHTML = `<span>Question ${i+1}: ${questions[i].q.substring(0,50)}...</span><div>${badges}</div>`;
+            list.appendChild(div);
+        }
+    }
+    if (!hasItems) list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px">All questions answered and none flagged. Ready to submit!</p>';
+}
+
+function backToExam() {
+    document.getElementById('examContainer').style.display = 'flex';
+    document.getElementById('reviewScreen').style.display = 'none';
+}
+
+function showSubmitConfirm() {
+    const unanswered = answers.filter(a => a === -1).length;
+    const flagged = flags.filter(f => f).length;
+    let msg = 'Are you sure you want to submit your exam?';
+    if (unanswered > 0) msg += ` You have ${unanswered} unanswered question${unanswered>1?'s':''}.`;
+    if (flagged > 0) msg += ` You have ${flagged} flagged question${flagged>1?'s':''}.`;
+    document.getElementById('modalMsg').textContent = msg;
+    document.getElementById('submitModal').style.display = 'flex';
+}
+
+function closeModal() { document.getElementById('submitModal').style.display = 'none'; }
+
+function confirmSubmit() {
+    closeModal();
+    submitExam();
+}
+
+
+function submitExam() {
+    examSubmitted = true;
+    clearInterval(timerInterval);
+    document.getElementById('examContainer').style.display = 'none';
+    document.getElementById('reviewScreen').style.display = 'none';
+    document.getElementById('resultsScreen').style.display = 'block';
+    document.querySelector('.top-bar').style.display = 'none';
+    document.querySelector('.progress-container').style.display = 'none';
+
+    let totalCorrect = 0;
+    const domainScores = {};
+    const domainTotals = {};
+    domains.forEach(d => { domainScores[d] = 0; domainTotals[d] = 0; });
+
+    questions.forEach((q, i) => {
+        domainTotals[q.domain]++;
+        if (answers[i] === q.correct) {
+            totalCorrect++;
+            domainScores[q.domain]++;
+        }
+    });
+
+    const percentage = Math.round((totalCorrect / 90) * 100);
+    const scaledScore = Math.round((totalCorrect / 90) * 900);
+    const passed = scaledScore >= 675;
+
+    let html = `<div class="card results-header">
+        <h2 style="margin-bottom:4px">Exam Complete</h2>
+        <p style="color:#94a3b8">CompTIA A+ Core 1 (220-1201) Practice Exam</p>
+        <div class="score-circle ${passed ? 'pass' : 'fail'}">
+            <div class="score-number" style="color:${passed ? '#10b981' : '#ef4444'}">${scaledScore}</div>
+            <div style="font-size:13px;color:#94a3b8">out of 900</div>
+        </div>
+        <div style="font-size:22px;font-weight:700;color:${passed ? '#10b981' : '#ef4444'};margin-top:12px">
+            ${passed ? '🎉 PASSED!' : '❌ DID NOT PASS'}
+        </div>
+        <p style="color:#94a3b8;margin-top:8px">${totalCorrect}/90 correct (${percentage}%) • Passing: 675/900 (75%)</p>
+        <p style="color:#64748b;margin-top:4px;font-size:13px">Time used: ${formatTimeUsed()}</p>
+    </div>
+    <div class="card">
+        <h3 style="margin-bottom:16px">Score Breakdown by Domain</h3>
+        <table class="domain-table">
+            <thead><tr><th>Domain</th><th>Score</th><th>Performance</th></tr></thead>
+            <tbody>`;
+
+    domains.forEach(d => {
+        const pct = domainTotals[d] > 0 ? Math.round((domainScores[d] / domainTotals[d]) * 100) : 0;
+        const color = pct >= 75 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+        html += `<tr>
+            <td style="color:#e2e8f0;font-size:14px">${d}</td>
+            <td style="color:${color};font-weight:600">${domainScores[d]}/${domainTotals[d]} (${pct}%)</td>
+            <td><div class="domain-bar"><div class="domain-bar-fill" style="width:${pct}%;background:${color}"></div></div></td>
+        </tr>`;
+    });
+
+    html += `</tbody></table></div>
+    <div style="text-align:center;margin-top:20px">
+        <button class="review-incorrect-btn" onclick="showIncorrect()">Review Incorrect Answers</button>
+        <button class="review-incorrect-btn" style="background:#334155;margin-left:12px" onclick="restartExam()">Retake Exam</button>
+    </div>
+    <div class="incorrect-list" id="incorrectList"></div>`;
+
+    document.getElementById('resultsScreen').innerHTML = html;
+
+    if (passed) launchConfetti();
+}
+
+function formatTimeUsed() {
+    const used = (90 * 60) - timeLeft;
+    const m = Math.floor(used / 60);
+    const s = used % 60;
+    return `${m}m ${s}s`;
+}
+
+function showIncorrect() {
+    const list = document.getElementById('incorrectList');
+    if (list.children.length > 0) { list.innerHTML = ''; return; }
+    const letters = ['A','B','C','D'];
+    let html = '';
+    questions.forEach((q, i) => {
+        if (answers[i] !== q.correct) {
+            const yourAns = answers[i] === -1 ? 'Not answered' : `${letters[answers[i]]}. ${q.choices[answers[i]]}`;
+            html += `<div class="incorrect-item">
+                <div class="q-text">${i+1}. ${q.q}</div>
+                <div class="your-answer">Your answer: ${yourAns}</div>
+                <div class="correct-answer">Correct answer: ${letters[q.correct]}. ${q.choices[q.correct]}</div>
+                <div class="explanation">${q.explanation}</div>
+            </div>`;
+        }
+    });
+    if (!html) html = '<p style="text-align:center;color:#10b981;padding:20px;font-weight:600">Perfect score! All answers correct! 🎉</p>';
+    list.innerHTML = html;
+}
+
+function restartExam() {
+    currentQ = 0;
+    answers = new Array(90).fill(-1);
+    flags = new Array(90).fill(false);
+    timeLeft = 90 * 60;
+    examSubmitted = false;
+    document.getElementById('resultsScreen').style.display = 'none';
+    document.getElementById('examContainer').style.display = 'flex';
+    document.querySelector('.top-bar').style.display = 'flex';
+    document.querySelector('.progress-container').style.display = 'block';
+    document.getElementById('timer').textContent = '90:00';
+    document.getElementById('timer').className = 'timer';
+    renderQuestion();
+    startTimer();
+}
+
+function launchConfetti() {
+    const container = document.createElement('div');
+    container.className = 'confetti-container';
+    document.body.appendChild(container);
+    const colors = ['#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
+    for (let i = 0; i < 150; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + '%';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDelay = Math.random() * 2 + 's';
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        c.style.width = (6 + Math.random() * 8) + 'px';
+        c.style.height = (6 + Math.random() * 8) + 'px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        container.appendChild(c);
+    }
+    setTimeout(() => container.remove(), 5000);
+}
+
+// Initialize
+buildNavGrid();
+renderQuestion();
+startTimer();
+</script>
+</body>
+</html>
