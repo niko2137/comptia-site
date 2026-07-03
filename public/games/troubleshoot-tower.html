@@ -36,7 +36,7 @@ canvas { display: block; width: 100%; height: 100%; }
     <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
         <button onclick="togglePause()" id="btn-pause" style="display:block;width:100%;padding:10px;border:1px solid #fa044;background:#fa011;color:#fa0;font-family:monospace;font-size:13px;font-weight:bold;text-align:center;cursor:pointer;border-radius:6px;">⏸ PAUSE</button>
         <button onclick="toggleMute()" id="btn-mute" style="display:block;width:100%;padding:10px;border:1px solid #f4f44;background:#f4f11;color:#f4f;font-family:monospace;font-size:13px;font-weight:bold;text-align:center;cursor:pointer;border-radius:6px;">🔊 MUTE</button>
-        <a href="../index.html" style="display:block;width:100%;padding:10px;border:1px solid #f4444;background:#f4411;color:#f44;font-family:monospace;font-size:13px;font-weight:bold;text-align:center;cursor:pointer;border-radius:6px;text-decoration:none;">← RETURN</a>
+        <a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;" style="display:block;width:100%;padding:10px;border:1px solid #f4444;background:#f4411;color:#f44;font-family:monospace;font-size:13px;font-weight:bold;text-align:center;cursor:pointer;border-radius:6px;text-decoration:none;">← RETURN</a>
     </div>
 </div>
 

@@ -405,9 +405,9 @@
             <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
             <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
             <ul class="nav-links">
-                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Back to Home</a></li>
                 <li><a href="../index.html#pbq">All PBQs</a></li>
-                <li><a href="../index.html#buy" class="nav-cta">Get the Book</a></li>
+                <li><a href="../book.html" class="nav-cta">Get the Book</a></li>
             </ul>
         </div>
     </nav>
@@ -458,7 +458,7 @@
             <!-- Bottom CTA -->
             <div class="bottom-cta">
                 <p>Master all 20+ ports in the complete study guide — with mnemonics, groupings, and exam tricks.</p>
-                <a href="../index.html#buy">Get the Book →</a>
+                <a href="../book.html">Get the Book →</a>
             </div>
         </div>
     </div>

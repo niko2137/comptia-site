@@ -83,13 +83,15 @@ body {
 }
 .slot .slot-name { font-size: 12px; color: #94a3b8; }
 .slot .slot-img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
+    width: 36px;
+    height: 36px;
     margin-bottom: 5px;
-    opacity: 0.35;
-    border-radius: 4px;
+    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+.slot .slot-img svg { width: 36px; height: 36px; display: block; }
 .slot.drag-over { border-color: #5b9bd5; background: #1e3a5f; box-shadow: 0 0 12px #5b9bd533; }
 .slot.filled { border-color: #27ae60; border-style: solid; background: #27ae6015; }
 .slot.filled .slot-name { color: #27ae60; font-weight: 600; }
@@ -133,14 +135,15 @@ body {
     align-items: center;
     gap: 10px;
 }
-.component-item img {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    border-radius: 4px;
+.component-item .comp-icon {
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
-    background: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+.component-item .comp-icon svg { width: 36px; height: 36px; display: block; }
 .component-item .comp-label { font-size: 12px; color: #e2e8f0; line-height: 1.3; }
 .component-item:hover { border-color: #5b9bd5; background: #1e3a5f; transform: translateX(-2px); }
 .component-item:active, .component-item.dragging { cursor: grabbing; opacity: 0.6; transform: scale(0.95); }
@@ -201,8 +204,7 @@ body {
 </head>
 <body>
 <div class="top-bar">
-    <a href="../index.html">← Back to Study Hub</a>
-    <h1>🖥️ Build-a-PC Puzzle</h1>
+<a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Return</a>
     <span id="score-display" style="margin-left:auto;font-size:14px;color:#94a3b8;">Score: 0/12</span>
 </div>
 <div class="game-container">
@@ -221,25 +223,26 @@ body {
 (function() {
 "use strict";
 
-// Component images: uses your existing diagram files where available, data-URIs for the rest
-const COMP_IMAGES = {
-    "Intel Core i5 (LGA 1700)":       "../Images/Diagrams/Intel_Core_i5-13600KF_with_LGA_1700_socket.jpg",
-    "Tower Air Cooler (4-pin PWM)":   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='20' y='4' width='24' height='56' rx='4' fill='%23334155'/%3E%3Crect x='14' y='10' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='18' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='26' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='34' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='42' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Ccircle cx='32' cy='54' r='4' fill='%2394a3b8'/%3E%3C/svg%3E",
-    "DDR5-5600 16GB DIMM":            "../Images/Diagrams/DDR.svg",
-    "RTX 4070 Graphics Card":         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='16' width='56' height='28' rx='4' fill='%231e293b' stroke='%235b9bd5' stroke-width='2'/%3E%3Crect x='8' y='20' width='24' height='20' rx='3' fill='%23334155'/%3E%3Ccircle cx='20' cy='30' r='7' fill='%230f172a' stroke='%235b9bd5' stroke-width='1.5'/%3E%3Ccircle cx='20' cy='30' r='3' fill='%235b9bd5'/%3E%3Crect x='36' y='22' width='20' height='3' rx='1' fill='%2394a3b8'/%3E%3Crect x='36' y='28' width='16' height='3' rx='1' fill='%2394a3b8'/%3E%3Crect x='36' y='34' width='18' height='3' rx='1' fill='%2394a3b8'/%3E%3Crect x='8' y='44' width='48' height='4' rx='2' fill='%23475569'/%3E%3C/svg%3E",
-    "1TB NVMe SSD (PCIe 4.0)":        "../Images/Diagrams/storage-drives-comparison.svg",
-    "2TB HDD (SATA III)":             "../Images/Diagrams/storage-drives-comparison.svg",
-    "24-Pin Main Power Cable":        "../Images/Diagrams/PSU Connectors.svg",
-    "8-Pin CPU Power Cable":          "../Images/Diagrams/PSU Connectors.svg",
-    "120mm Case Fan (3-pin)":         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='8' fill='%23334155' stroke='%23475569' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%235b9bd5' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%235b9bd5'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(0 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(72 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(144 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(216 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(288 32 32)'/%3E%3C/svg%3E",
-    "Power Button / LED Cables":      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='10' y='24' width='12' height='18' rx='2' fill='%23e74c3c'/%3E%3Crect x='26' y='24' width='12' height='18' rx='2' fill='%2327ae60'/%3E%3Crect x='42' y='24' width='12' height='18' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='16' width='4' height='10' rx='1' fill='%2394a3b8'/%3E%3Crect x='30' y='16' width='4' height='10' rx='1' fill='%2394a3b8'/%3E%3Crect x='46' y='16' width='4' height='10' rx='1' fill='%2394a3b8'/%3E%3C/svg%3E",
-    "CR2032 Battery":                 "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='24' fill='%23334155' stroke='%2394a3b8' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='18' fill='%231e293b'/%3E%3Ctext x='32' y='37' text-anchor='middle' fill='%235b9bd5' font-size='11' font-family='monospace' font-weight='bold'%3ECR2032%3C/text%3E%3C/svg%3E",
-    // distractors
-    "DDR4-3200 8GB":                  "../Images/Diagrams/DDR.svg",
-    "IDE Ribbon Cable":               "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='20' width='56' height='24' rx='2' fill='%23475569'/%3E%3Crect x='8' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='14' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='20' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='26' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='32' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='38' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='44' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='50' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3C/svg%3E",
-    "Molex to SATA Adapter":          "../Images/Diagrams/PSU Connectors.svg",
-    "AMD Ryzen 7 (AM5)":              "../Images/Diagrams/AMD processor.jpg"
+// Pixel art SVG icons — all self-contained, no external files needed
+const PIXEL_ART = {
+    "Intel Core i5 (LGA 1700)": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="6" y="6" width="20" height="20" fill="#475569" rx="2"/><rect x="9" y="9" width="14" height="14" fill="#94a3b8"/><rect x="11" y="11" width="10" height="10" fill="#5b9bd5"/><rect x="13" y="13" width="6" height="6" fill="#1e3a5f"/><rect x="4" y="8" width="2" height="2" fill="#334155"/><rect x="4" y="12" width="2" height="2" fill="#334155"/><rect x="4" y="16" width="2" height="2" fill="#334155"/><rect x="4" y="20" width="2" height="2" fill="#334155"/><rect x="26" y="8" width="2" height="2" fill="#334155"/><rect x="26" y="12" width="2" height="2" fill="#334155"/><rect x="26" y="16" width="2" height="2" fill="#334155"/><rect x="26" y="20" width="2" height="2" fill="#334155"/><rect x="8" y="4" width="2" height="2" fill="#334155"/><rect x="12" y="4" width="2" height="2" fill="#334155"/><rect x="16" y="4" width="2" height="2" fill="#334155"/><rect x="20" y="4" width="2" height="2" fill="#334155"/><rect x="8" y="26" width="2" height="2" fill="#334155"/><rect x="12" y="26" width="2" height="2" fill="#334155"/><rect x="16" y="26" width="2" height="2" fill="#334155"/><rect x="20" y="26" width="2" height="2" fill="#334155"/><text x="16" y="20" text-anchor="middle" fill="#0f172a" font-size="4" font-family="monospace" font-weight="bold">i5</text></svg>`,
+    "Tower Air Cooler (4-pin PWM)": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="10" y="2" width="12" height="28" fill="#334155" rx="1"/><rect x="6" y="4" width="4" height="2" fill="#5b9bd5"/><rect x="6" y="8" width="4" height="2" fill="#5b9bd5"/><rect x="6" y="12" width="4" height="2" fill="#5b9bd5"/><rect x="6" y="16" width="4" height="2" fill="#5b9bd5"/><rect x="6" y="20" width="4" height="2" fill="#5b9bd5"/><rect x="6" y="24" width="4" height="2" fill="#5b9bd5"/><rect x="22" y="4" width="4" height="2" fill="#5b9bd5"/><rect x="22" y="8" width="4" height="2" fill="#5b9bd5"/><rect x="22" y="12" width="4" height="2" fill="#5b9bd5"/><rect x="22" y="16" width="4" height="2" fill="#5b9bd5"/><rect x="22" y="20" width="4" height="2" fill="#5b9bd5"/><rect x="22" y="24" width="4" height="2" fill="#5b9bd5"/><rect x="13" y="14" width="6" height="6" fill="#475569" rx="1"/><rect x="14" y="15" width="4" height="4" fill="#94a3b8"/></svg>`,
+    "DDR5-5600 16GB DIMM": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="4" y="4" width="24" height="24" fill="#27ae60" rx="1"/><rect x="5" y="5" width="22" height="22" fill="#1a3a2a"/><rect x="7" y="7" width="4" height="4" fill="#27ae60"/><rect x="13" y="7" width="4" height="4" fill="#27ae60"/><rect x="19" y="7" width="4" height="4" fill="#27ae60"/><rect x="7" y="13" width="4" height="4" fill="#27ae60"/><rect x="13" y="13" width="4" height="4" fill="#1a5c3a"/><rect x="19" y="13" width="4" height="4" fill="#27ae60"/><rect x="7" y="19" width="4" height="4" fill="#27ae60"/><rect x="13" y="19" width="4" height="4" fill="#27ae60"/><rect x="19" y="19" width="4" height="4" fill="#27ae60"/><text x="16" y="30" text-anchor="middle" fill="#27ae60" font-size="3" font-family="monospace">DDR5</text></svg>`,
+    "RTX 4070 Graphics Card": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="2" y="8" width="28" height="16" fill="#334155" rx="2"/><rect x="4" y="10" width="10" height="12" fill="#1e3a5f" rx="1"/><circle cx="9" cy="16" r="4" fill="#0f172a"/><circle cx="9" cy="16" r="2" fill="#5b9bd5"/><rect x="16" y="11" width="12" height="2" fill="#94a3b8"/><rect x="16" y="15" width="10" height="2" fill="#94a3b8"/><rect x="16" y="19" width="11" height="2" fill="#94a3b8"/><rect x="4" y="24" width="24" height="3" fill="#475569"/><rect x="6" y="25" width="2" height="1" fill="#27ae60"/><rect x="10" y="25" width="2" height="1" fill="#27ae60"/></svg>`,
+    "1TB NVMe SSD (PCIe 4.0)": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="3" y="10" width="26" height="12" fill="#334155" rx="2"/><rect x="5" y="12" width="4" height="4" fill="#5b9bd5"/><rect x="11" y="12" width="2" height="4" fill="#475569"/><rect x="15" y="12" width="2" height="4" fill="#475569"/><rect x="19" y="12" width="2" height="4" fill="#475569"/><rect x="23" y="12" width="4" height="2" fill="#94a3b8"/><rect x="23" y="15" width="4" height="2" fill="#94a3b8"/><rect x="3" y="23" width="26" height="2" fill="#27ae60" rx="1"/><text x="16" y="8" text-anchor="middle" fill="#5b9bd5" font-size="4" font-family="monospace">NVMe</text></svg>`,
+    "2TB HDD (SATA III)": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="4" y="6" width="24" height="20" fill="#475569" rx="2"/><rect x="6" y="8" width="20" height="16" fill="#334155" rx="1"/><circle cx="16" cy="16" r="5" fill="#1e293b" stroke="#94a3b8" stroke-width="1"/><circle cx="16" cy="16" r="2" fill="#5b9bd5"/><rect x="21" y="12" width="4" height="2" fill="#94a3b8"/><rect x="21" y="17" width="4" height="2" fill="#94a3b8"/><text x="16" y="28" text-anchor="middle" fill="#94a3b8" font-size="3" font-family="monospace">HDD</text></svg>`,
+    "24-Pin Main Power Cable": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="6" y="4" width="20" height="24" fill="#475569" rx="2"/><rect x="8" y="6" width="2" height="3" fill="#e74c3c"/><rect x="11" y="6" width="2" height="3" fill="#f59e0b"/><rect x="14" y="6" width="2" height="3" fill="#e2e8f0"/><rect x="17" y="6" width="2" height="3" fill="#e2e8f0"/><rect x="20" y="6" width="2" height="3" fill="#0f172a"/><rect x="8" y="10" width="2" height="3" fill="#e74c3c"/><rect x="11" y="10" width="2" height="3" fill="#f59e0b"/><rect x="14" y="10" width="2" height="3" fill="#27ae60"/><rect x="17" y="10" width="2" height="3" fill="#e2e8f0"/><rect x="20" y="10" width="2" height="3" fill="#0f172a"/><rect x="8" y="14" width="2" height="3" fill="#e74c3c"/><rect x="11" y="14" width="2" height="3" fill="#f59e0b"/><rect x="14" y="14" width="2" height="3" fill="#5b9bd5"/><rect x="17" y="14" width="2" height="3" fill="#e2e8f0"/><rect x="20" y="14" width="2" height="3" fill="#0f172a"/><text x="16" y="28" text-anchor="middle" fill="#94a3b8" font-size="3" font-family="monospace">24-PIN</text></svg>`,
+    "8-Pin CPU Power Cable": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="8" y="6" width="16" height="20" fill="#475569" rx="2"/><rect x="10" y="8" width="2" height="3" fill="#e74c3c"/><rect x="14" y="8" width="2" height="3" fill="#e74c3c"/><rect x="18" y="8" width="2" height="3" fill="#e74c3c"/><rect x="22" y="8" width="2" height="3" fill="#e74c3c"/><rect x="10" y="13" width="2" height="3" fill="#f59e0b"/><rect x="14" y="13" width="2" height="3" fill="#f59e0b"/><rect x="18" y="13" width="2" height="3" fill="#0f172a"/><rect x="22" y="13" width="2" height="3" fill="#0f172a"/><text x="16" y="26" text-anchor="middle" fill="#94a3b8" font-size="3" font-family="monospace">8-PIN</text><text x="16" y="30" text-anchor="middle" fill="#f59e0b" font-size="3" font-family="monospace">EPS</text></svg>`,
+    "120mm Case Fan (3-pin)": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="2" y="2" width="28" height="28" fill="#334155" rx="3"/><rect x="4" y="4" width="24" height="24" fill="#1e293b" rx="2"/><circle cx="16" cy="16" r="8" fill="none" stroke="#475569" stroke-width="2"/><circle cx="16" cy="16" r="2" fill="#5b9bd5"/><rect x="14" y="8" width="4" height="5" fill="#5b9bd5" rx="1"/><rect x="14" y="19" width="4" height="5" fill="#5b9bd5" rx="1"/><rect x="8" y="14" width="5" height="4" fill="#5b9bd5" rx="1"/><rect x="19" y="14" width="5" height="4" fill="#5b9bd5" rx="1"/></svg>`,
+    "Power Button / LED Cables": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="4" y="14" width="6" height="10" fill="#e74c3c" rx="1"/><rect x="13" y="14" width="6" height="10" fill="#27ae60" rx="1"/><rect x="22" y="14" width="6" height="10" fill="#5b9bd5" rx="1"/><rect x="6" y="8" width="2" height="7" fill="#94a3b8"/><rect x="15" y="8" width="2" height="7" fill="#94a3b8"/><rect x="24" y="8" width="2" height="7" fill="#94a3b8"/><rect x="3" y="6" width="8" height="3" fill="#334155" rx="1"/><rect x="12" y="6" width="8" height="3" fill="#334155" rx="1"/><rect x="21" y="6" width="8" height="3" fill="#334155" rx="1"/></svg>`,
+    "CR2032 Battery": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><circle cx="16" cy="16" r="12" fill="#475569"/><circle cx="16" cy="16" r="9" fill="#334155"/><circle cx="16" cy="16" r="5" fill="#94a3b8"/><rect x="14" y="6" width="4" height="3" fill="#94a3b8"/><text x="16" y="18" text-anchor="middle" fill="#1e293b" font-size="3" font-family="monospace" font-weight="bold">CR</text><text x="16" y="21" text-anchor="middle" fill="#1e293b" font-size="3" font-family="monospace" font-weight="bold">2032</text></svg>`,
+    "DDR4-3200 8GB": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="4" y="4" width="24" height="24" fill="#e74c3c" rx="1" opacity="0.3"/><rect x="5" y="5" width="22" height="22" fill="#3a1a1a"/><rect x="7" y="7" width="4" height="4" fill="#e74c3c"/><rect x="13" y="7" width="4" height="4" fill="#e74c3c"/><rect x="19" y="7" width="4" height="4" fill="#e74c3c"/><rect x="7" y="13" width="4" height="4" fill="#e74c3c"/><rect x="13" y="13" width="4" height="4" fill="#5c1a1a"/><rect x="19" y="13" width="4" height="4" fill="#e74c3c"/><rect x="7" y="19" width="4" height="4" fill="#e74c3c"/><rect x="13" y="19" width="4" height="4" fill="#e74c3c"/><rect x="19" y="19" width="4" height="4" fill="#e74c3c"/><text x="16" y="30" text-anchor="middle" fill="#e74c3c" font-size="3" font-family="monospace">DDR4 ✗</text></svg>`,
+    "IDE Ribbon Cable": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="2" y="12" width="28" height="8" fill="#475569"/><rect x="4" y="13" width="2" height="6" fill="#e74c3c"/><rect x="8" y="13" width="2" height="6" fill="#94a3b8"/><rect x="12" y="13" width="2" height="6" fill="#94a3b8"/><rect x="16" y="13" width="2" height="6" fill="#94a3b8"/><rect x="20" y="13" width="2" height="6" fill="#94a3b8"/><rect x="24" y="13" width="2" height="6" fill="#94a3b8"/><text x="16" y="9" text-anchor="middle" fill="#e74c3c" font-size="4" font-family="monospace">IDE</text><text x="16" y="28" text-anchor="middle" fill="#e74c3c" font-size="3" font-family="monospace">OBSOLETE</text></svg>`,
+    "Molex to SATA Adapter": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="2" y="10" width="10" height="8" fill="#475569" rx="1"/><rect x="20" y="12" width="10" height="6" fill="#f59e0b" rx="1"/><rect x="12" y="15" width="8" height="2" fill="#94a3b8"/><rect x="4" y="12" width="2" height="4" fill="#e74c3c"/><rect x="7" y="12" width="2" height="4" fill="#0f172a"/><rect x="22" y="13" width="2" height="4" fill="#f59e0b"/><rect x="25" y="13" width="2" height="4" fill="#f59e0b"/><text x="16" y="28" text-anchor="middle" fill="#e74c3c" font-size="3" font-family="monospace">FIRE RISK!</text></svg>`,
+    "AMD Ryzen 7 (AM5)": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#1e293b"/><rect x="6" y="6" width="20" height="20" fill="#e74c3c" rx="2"/><rect x="9" y="9" width="14" height="14" fill="#c0392b"/><rect x="11" y="11" width="10" height="10" fill="#5b9bd5"/><rect x="13" y="13" width="6" height="6" fill="#1e3a5f"/><rect x="4" y="8" width="2" height="2" fill="#334155"/><rect x="4" y="12" width="2" height="2" fill="#334155"/><rect x="4" y="16" width="2" height="2" fill="#334155"/><rect x="4" y="20" width="2" height="2" fill="#334155"/><rect x="26" y="8" width="2" height="2" fill="#334155"/><rect x="26" y="12" width="2" height="2" fill="#334155"/><rect x="26" y="16" width="2" height="2" fill="#334155"/><rect x="26" y="20" width="2" height="2" fill="#334155"/><text x="16" y="20" text-anchor="middle" fill="#fff" font-size="4" font-family="monospace" font-weight="bold">Ryzen</text></svg>`
 };
+
+function getImg(name) { return PIXEL_ART[name] || null; }
 
 const SLOTS = [
     { id: "cpu-socket",   label: "Slot 1",  name: "CPU Socket",           correct: "Intel Core i5 (LGA 1700)",      fact: "LGA 1700 has 1700 contact points and supports 12th-14th gen Intel CPUs!" },
@@ -275,18 +278,16 @@ let attemptedSlots = new Set(), filledSlots = new Set();
 let muted = false, music = null, draggedItem = null;
 let touchDragEl = null, touchOffsetX = 0, touchOffsetY = 0;
 
-function getImg(name) { return COMP_IMAGES[name] || ""; }
-
 function buildCase() {
     const caseEl = document.getElementById("pc-case");
     caseEl.innerHTML = "";
     SLOTS.forEach(slot => {
-        const imgSrc = getImg(slot.correct);
+        const svg = getImg(slot.correct);
         const div = document.createElement("div");
         div.className = "slot";
         div.dataset.slotId = slot.id;
         div.innerHTML = `
-            ${imgSrc ? `<img src="${imgSrc}" class="slot-img" alt="${slot.correct}" onerror="this.style.display='none'">` : ""}
+            ${svg ? `<div class="slot-img">${svg}</div>` : ""}
             <div class="slot-label">${slot.label} — ${slot.name}</div>
             <div class="slot-name">Drop component here</div>`;
         div.addEventListener("dragover", handleDragOver);
@@ -301,19 +302,17 @@ function buildBank() {
     const bankEl = document.getElementById("bank-items");
     bankEl.innerHTML = "";
     const items = [];
-    SLOTS.forEach(slot => {
-        items.push({ name: slot.correct });
-    });
+    SLOTS.forEach(slot => { items.push({ name: slot.correct }); });
     DISTRACTORS.forEach(d => items.push({ name: d.name }));
     shuffle(items);
     items.forEach(item => {
-        const imgSrc = getImg(item.name);
+        const svg = getImg(item.name);
         const div = document.createElement("div");
         div.className = "component-item";
         div.dataset.componentName = item.name;
         div.draggable = true;
         div.innerHTML = `
-            <img src="${imgSrc}" alt="${item.name}" onerror="this.style.display='none'">
+            ${svg ? `<div class="comp-icon">${svg}</div>` : ""}
             <span class="comp-label">${item.name}</span>`;
         div.addEventListener("dragstart", handleDragStart);
         div.addEventListener("dragend", handleDragEnd);

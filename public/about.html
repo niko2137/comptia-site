@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the Author — CompTIA A+ Study Hub</title>
+<meta name="description" content="Meet Niko Williams, working IT professional and author of the CompTIA A+ Complete Study Guide.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1a2332;--navy2:#243447;--blue:#5b9bd5;--green:#27ae60;
+  --red:#e63946;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --white:#fff;--light:#f8fafc;
+}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--white);color:var(--text);line-height:1.6}
+a{text-decoration:none;color:inherit}
+/* NAV */
+.nav{background:var(--navy);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.nav-brand{color:#fff;font-weight:800;font-size:1.05rem}
+.nav-brand span{color:var(--blue)}
+.nav-links{display:flex;gap:10px;align-items:center}
+.nav-links a{color:rgba(255,255,255,.8);font-size:.88rem;padding:6px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-links .btn-book{background:var(--red);color:#fff;font-weight:700}
+.nav-links .btn-book:hover{background:#c0313d}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:60px 24px;text-align:center}
+.hero-inner{max-width:700px;margin:0 auto}
+.avatar{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#1e3a5f);border:4px solid rgba(255,255,255,.2);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:3rem}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:8px}
+.hero .title{color:var(--blue);font-size:1rem;font-weight:600;margin-bottom:12px}
+.hero p{color:rgba(255,255,255,.75);font-size:1rem;max-width:520px;margin:0 auto}
+/* BODY */
+.container{max-width:800px;margin:0 auto;padding:0 24px}
+.section{padding:52px 0}
+.section h2{font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:16px}
+.section p{color:var(--muted);margin-bottom:14px;font-size:.97rem;line-height:1.75}
+.section p:last-child{margin-bottom:0}
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+/* CREDENTIALS */
+.creds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:24px}
+.cred-card{background:var(--light);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;align-items:flex-start;gap:12px}
+.cred-card .icon{font-size:1.5rem;flex-shrink:0;margin-top:2px}
+.cred-card .info h4{font-size:.9rem;font-weight:700;color:var(--navy)}
+.cred-card .info p{font-size:.8rem;color:var(--muted);margin:0}
+/* BOOK CTA */
+.book-cta{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:14px;padding:36px;text-align:center;margin:0 0 52px}
+.book-cta h3{color:#fff;font-size:1.4rem;font-weight:800;margin-bottom:8px}
+.book-cta p{color:rgba(255,255,255,.7);margin-bottom:24px;font-size:.95rem}
+.book-cta a{display:inline-block;background:#f59e0b;color:#78350f;padding:12px 28px;border-radius:8px;font-weight:700;font-size:.95rem;transition:all .2s}
+.book-cta a:hover{background:#d97706;color:#fff;transform:translateY(-1px)}
+/* CONTACT */
+.contact-section{padding:52px 0}
+.contact-section h2{font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:8px}
+.contact-section .sub{color:var(--muted);margin-bottom:28px;font-size:.97rem}
+.contact-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:32px}
+.contact-card{background:var(--light);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;gap:14px;align-items:flex-start}
+.contact-card .cc-icon{font-size:1.6rem;flex-shrink:0}
+.contact-card h4{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:4px}
+.contact-card p{font-size:.82rem;color:var(--muted);margin:0}
+.contact-card a{color:var(--blue);font-size:.82rem;font-weight:600}
+/* EMBED FORM AREA */
+.form-embed-box{background:var(--light);border:2px dashed var(--border);border-radius:12px;padding:36px;text-align:center;color:var(--muted)}
+.form-embed-box .fi{font-size:2.5rem;margin-bottom:12px}
+.form-embed-box h3{font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+.form-embed-box p{font-size:.88rem;line-height:1.6;max-width:480px;margin:0 auto 16px}
+.form-embed-box .platforms{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.form-embed-box .plat-badge{background:#fff;border:1px solid var(--border);border-radius:6px;padding:5px 14px;font-size:.78rem;font-weight:600;color:var(--muted)}
+/* FOOTER */
+.footer{background:var(--navy);padding:28px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.08)}
+.footer p{color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:4px}
+.footer-links{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.footer-links a{color:rgba(255,255,255,.55);font-size:.8rem;padding:4px 10px;border-radius:4px;transition:color .2s}
+.footer-links a:hover{color:#fff}
+@media(max-width:600px){.nav-links .btn-book{display:none}.hero h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">← Home</a>
+    <a href="members.html">Members Area</a>
+    <a href="book.html" class="btn-book">Get the Book</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="avatar">👨‍💻</div>
+    <h1>Niko Williams</h1>
+    <div class="title">IT Professional · Author · Educator</div>
+    <p>Working in IT and writing about it — because the best study guides come from people who actually do the job.</p>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ABOUT -->
+  <section class="section">
+    <h2>About Niko</h2>
+    <p>I've spent years working in IT — troubleshooting hardware, managing networks, securing systems, and helping people understand technology that can feel overwhelming at first. The CompTIA A+ certification was one of my early milestones, and I remember exactly what it felt like to study for it: endless books that listed every objective without ever helping you <em>understand</em> it.</p>
+    <p>That frustration is what drove me to write the <em>CompTIA A+ Complete Study Guide</em>. I wanted a resource that reads like a conversation with a colleague who's already passed — one that tells you what actually matters on the exam, calls out the tricky wording you'll encounter, and gives you the mental models that make concepts stick.</p>
+    <p>The Members Portal — with the games, flashcards, glossary, and practice tools on this site — is an extension of that same philosophy. Learning should be active, not passive. You remember what you interact with.</p>
+
+    <div class="creds-grid">
+      <div class="cred-card"><div class="icon">🖥️</div><div class="info"><h4>CompTIA A+</h4><p>220-1101 &amp; 220-1102 certified</p></div></div>
+      <div class="cred-card"><div class="icon">🌐</div><div class="info"><h4>Networking</h4><p>Real-world IT infrastructure experience</p></div></div>
+      <div class="cred-card"><div class="icon">🔒</div><div class="info"><h4>Security</h4><p>Endpoint &amp; network security practice</p></div></div>
+      <div class="cred-card"><div class="icon">📚</div><div class="info"><h4>Author</h4><p>CompTIA A+ Complete Study Guide</p></div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- THE BOOK -->
+  <section class="section">
+    <h2>About the Book</h2>
+    <p>The <em>CompTIA A+ Complete Study Guide</em> covers every exam objective for both the Core 1 (220-1201) and Core 2 (220-1202) exams. It's structured around how technicians actually think — not around how CompTIA organizes their objective list.</p>
+    <p>Every topic is priority-tagged so you know what to memorize cold versus what to skim. Exam traps are called out explicitly. Original diagrams and mnemonics give you mental shortcuts that generic books don't provide. And every format — Kindle, Paperback, or Hardback — includes the Members Portal access code on the last page.</p>
+
+    <div class="book-cta">
+      <h3>📚 Get the Complete Study Guide</h3>
+      <p>Available in Kindle (Digital), Paperback, and Hardback on Amazon. Members Portal access included with every format.</p>
+      <a href="book.html">View All Formats →</a>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <h2>Get in Touch</h2>
+    <p class="sub">Questions about the book, the site, or a bug you found? I'd love to hear from you.</p>
+
+    <div class="contact-options">
+      <div class="contact-card">
+        <div class="cc-icon">🐛</div>
+        <div>
+          <h4>Report a Bug</h4>
+          <p>Found something broken on the site? Let me know and I'll fix it fast.</p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">💡</div>
+        <div>
+          <h4>Suggest a Feature</h4>
+          <p>Have an idea for a new game, diagram, or study tool? Pitch it.</p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">📖</div>
+        <div>
+          <h4>Book Questions</h4>
+          <p>Can't find your access code? Content question? Happy to help.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMBED FORM PLACEHOLDER -->
+    <div class="form-embed-box">
+      <div class="fi">📬</div>
+      <h3>Contact Form Coming Soon</h3>
+      <p>A contact form will be embedded here. If you use an external platform like Google Forms, Typeform, Formspree, or Netlify Forms, paste the embed code in place of this block. All of these work with a static site hosted on Cloudflare Pages.</p>
+      <p><strong>To embed:</strong> Replace this entire <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:.82rem;">&lt;div class="form-embed-box"&gt;</code> block with your platform's embed code.</p>
+      <div class="platforms">
+        <span class="plat-badge">Google Forms</span>
+        <span class="plat-badge">Typeform</span>
+        <span class="plat-badge">Formspree</span>
+        <span class="plat-badge">Netlify Forms</span>
+        <span class="plat-badge">JotForm</span>
+        <span class="plat-badge">Tally.so</span>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /.container -->
+
+<footer class="footer">
+  <p>&copy; 2026 Niko Williams. All rights reserved.</p>
+  <p>CompTIA A+ is a registered trademark of CompTIA, Inc. This site is not affiliated with or endorsed by CompTIA.</p>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="members.html">Members Area</a>
+    <a href="book.html">Get the Book</a>
+    <a href="about.html">About</a>
+    <a href="about.html#contact">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
