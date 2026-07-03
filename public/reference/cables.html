@@ -172,6 +172,17 @@
             <h1>Cable Types & Speeds Quick Reference</h1>
             <p class="subtitle">Ethernet, USB, and video connector specifications for the CompTIA A+ 220-1200 exam</p>
 
+            <!-- DIAGRAM REFERENCE PANEL -->
+            <div style="margin-bottom:24px;border:1px solid #c7d2e0;border-radius:10px;overflow:hidden;background:#f8fafc;">
+                <button onclick="var p=this.nextElementSibling;p.style.display=p.style.display==='none'?'grid':'none';this.textContent=this.textContent.includes('▶')?'📐 Reference Diagrams ▼':'📐 Reference Diagrams ▶';" style="width:100%;padding:12px 18px;background:none;border:none;color:#1F497D;font-size:0.95rem;font-weight:700;cursor:pointer;text-align:left;">📐 Reference Diagrams ▶</button>
+                <div style="display:none;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:16px;">
+                    <a href="../Images/Diagrams/storage-drives-comparison.svg" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/storage-drives-comparison.svg" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="Storage Drives"><br>Storage Drive Types</a>
+                    <a href="../Images/Diagrams/PSU-Connectors.png" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/PSU-Connectors.png" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="PSU Connectors"><br>PSU Connectors</a>
+                    <a href="../Images/Diagrams/DDR.svg" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/DDR.svg" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="DDR RAM"><br>DDR RAM Types</a>
+                </div>
+            </div>
+            <!-- END DIAGRAM PANEL -->
+
             <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
 
             <!-- Ethernet Cables -->

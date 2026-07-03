@@ -217,6 +217,12 @@
                         <p>48+ free tools, video training, learning platforms, and utilities.</p>
                         <a href="reference/resources.html" class="m-link">Browse</a>
                     </div>
+                    <div class="m-card">
+                        <div class="icon">&#128208;</div>
+                        <h4>Cheat Sheets & Diagrams <span class="badge-members">MEMBERS</span></h4>
+                        <p>30+ downloadable reference diagrams — hardware, networking, security, printing, and more.</p>
+                        <a href="reference/cheat-sheets.html" class="m-link">View All</a>
+                    </div>
                 </div>
             </div>
 
@@ -464,6 +470,7 @@
                     <a href="reference/commands.html" class="link-card"><span>&#128421;</span> Commands</a>
                     <a href="reference/bios.html" class="link-card"><span>&#9881;</span> BIOS/UEFI</a>
                     <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resources</a>
+                    <a href="reference/cheat-sheets.html" class="link-card"><span>&#128208;</span> Cheat Sheets</a>
                 </div>
             </div>
 
@@ -471,7 +478,7 @@
     </div><!-- /#protectedContent -->
 
     <script>
-    const VALID_CODE = 'A+CompTIA2100';
+    const VALID_CODES = ['A+CompTIA2100', 'EarlyAccess26', 'A+Hub2026'];
     const gate = document.getElementById('passwordGate');
     const content = document.getElementById('protectedContent');
     const input = document.getElementById('codeInput');
@@ -498,7 +505,7 @@
     unlockBtn.addEventListener('click', () => {
         const code = input.value.trim();
         if (!code) { input.focus(); return; }
-        if (code === VALID_CODE) {
+        if (VALID_CODES.includes(code)) {
             if (rememberMe.checked) {
                 localStorage.setItem('comptia_member', '1');
             }

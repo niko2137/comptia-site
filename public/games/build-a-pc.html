@@ -24,18 +24,9 @@ body {
     top: 0;
     z-index: 100;
 }
-.top-bar a {
-    color: #5b9bd5;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-}
+.top-bar a { color: #5b9bd5; text-decoration: none; font-size: 14px; font-weight: 500; }
 .top-bar a:hover { text-decoration: underline; }
-.top-bar h1 {
-    font-size: 18px;
-    color: #f1f5f9;
-    font-weight: 600;
-}
+.top-bar h1 { font-size: 18px; color: #f1f5f9; font-weight: 600; }
 .game-container {
     display: flex;
     gap: 24px;
@@ -67,12 +58,13 @@ body {
     color: #5b9bd5;
     font-weight: 600;
 }
+</style>
 .slot {
     background: #0f172a;
     border: 2px dashed #475569;
     border-radius: 8px;
-    padding: 14px;
-    min-height: 80px;
+    padding: 10px;
+    min-height: 90px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -82,35 +74,30 @@ body {
     position: relative;
 }
 .slot .slot-label {
-    font-size: 11px;
+    font-size: 10px;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     font-weight: 600;
 }
-.slot .slot-name {
-    font-size: 13px;
-    color: #94a3b8;
+.slot .slot-name { font-size: 12px; color: #94a3b8; }
+.slot .slot-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    opacity: 0.35;
+    border-radius: 4px;
 }
-.slot.drag-over {
-    border-color: #5b9bd5;
-    background: #1e3a5f;
-    box-shadow: 0 0 12px #5b9bd533;
-}
-.slot.filled {
-    border-color: #27ae60;
-    border-style: solid;
-    background: #27ae6015;
-}
-.slot.filled .slot-name {
-    color: #27ae60;
-    font-weight: 600;
-}
+.slot.drag-over { border-color: #5b9bd5; background: #1e3a5f; box-shadow: 0 0 12px #5b9bd533; }
+.slot.filled { border-color: #27ae60; border-style: solid; background: #27ae6015; }
+.slot.filled .slot-name { color: #27ae60; font-weight: 600; }
 .slot.filled .slot-label { color: #27ae60; }
+.slot.filled .slot-img { opacity: 1; }
 .component-bank {
-    width: 320px;
-    min-width: 280px;
+    width: 300px;
+    min-width: 260px;
     background: #1e293b;
     border: 2px solid #334155;
     border-radius: 12px;
@@ -121,16 +108,8 @@ body {
     position: sticky;
     top: 77px;
 }
-.bank-title {
-    font-size: 16px;
-    color: #f1f5f9;
-    margin-bottom: 4px;
-}
-.bank-subtitle {
-    font-size: 12px;
-    color: #64748b;
-    margin-bottom: 12px;
-}
+.bank-title { font-size: 16px; color: #f1f5f9; margin-bottom: 4px; }
+.bank-subtitle { font-size: 12px; color: #64748b; margin-bottom: 12px; }
 .bank-items {
     display: flex;
     flex-direction: column;
@@ -143,122 +122,72 @@ body {
     background: #0f172a;
     border: 1px solid #475569;
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     cursor: grab;
-    font-size: 13px;
+    font-size: 12px;
     color: #e2e8f0;
     transition: all 0.2s;
     user-select: none;
     touch-action: none;
-}
-.component-item:hover {
-    border-color: #5b9bd5;
-    background: #1e3a5f;
-    transform: translateX(-2px);
-}
-.component-item:active, .component-item.dragging {
-    cursor: grabbing;
-    opacity: 0.6;
-    transform: scale(0.95);
-}
-.component-item.used {
-    opacity: 0.3;
-    pointer-events: none;
-    border-color: #27ae60;
-    text-decoration: line-through;
-}
-#toast-container {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    pointer-events: none;
+    align-items: center;
+    gap: 10px;
+}
+.component-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: #1e293b;
+}
+.component-item .comp-label { font-size: 12px; color: #e2e8f0; line-height: 1.3; }
+.component-item:hover { border-color: #5b9bd5; background: #1e3a5f; transform: translateX(-2px); }
+.component-item:active, .component-item.dragging { cursor: grabbing; opacity: 0.6; transform: scale(0.95); }
+.component-item.used { opacity: 0.3; pointer-events: none; border-color: #27ae60; }
+.component-item.used .comp-label { text-decoration: line-through; }
+#toast-container {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+    z-index: 1000; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
 }
 .toast {
-    background: #1e293b;
-    border: 1px solid #475569;
-    border-radius: 10px;
-    padding: 16px 20px;
-    max-width: 440px;
-    min-width: 300px;
-    box-shadow: 0 8px 32px #0008;
-    animation: toastIn 0.3s ease;
-    pointer-events: auto;
+    background: #1e293b; border: 1px solid #475569; border-radius: 10px;
+    padding: 16px 20px; max-width: 440px; min-width: 300px;
+    box-shadow: 0 8px 32px #0008; animation: toastIn 0.3s ease; pointer-events: auto;
 }
 .toast.correct { border-color: #27ae60; }
 .toast.incorrect { border-color: #e74c3c; }
-.toast-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
+.toast-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .toast.correct .toast-title { color: #27ae60; }
 .toast.incorrect .toast-title { color: #e74c3c; }
-.toast-body {
-    font-size: 13px;
-    color: #94a3b8;
-    line-height: 1.5;
-}
-@keyframes toastIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.toast-body { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 #mute-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid #475569;
-    background: #1e293b;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
+    position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px;
+    border-radius: 50%; border: 2px solid #475569; background: #1e293b;
+    font-size: 20px; cursor: pointer; z-index: 200; display: flex;
+    align-items: center; justify-content: center; transition: all 0.2s;
 }
 #mute-btn:hover { border-color: #5b9bd5; background: #1e3a5f; }
 .completion-hidden { display: none; }
 .completion-screen {
-    position: fixed;
-    inset: 0;
-    background: #0f172aee;
-    z-index: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.5s ease;
+    position: fixed; inset: 0; background: #0f172aee; z-index: 500;
+    display: flex; align-items: center; justify-content: center; animation: fadeIn 0.5s ease;
 }
 .completion-card {
-    background: #1e293b;
-    border: 2px solid #27ae60;
-    border-radius: 16px;
-    padding: 40px;
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
+    background: #1e293b; border: 2px solid #27ae60; border-radius: 16px;
+    padding: 40px; text-align: center; max-width: 500px; width: 90%;
     box-shadow: 0 0 60px #27ae6033;
 }
 .completion-card h2 { font-size: 28px; color: #27ae60; margin-bottom: 12px; }
-.completion-card .specs { text-align: left; margin: 20px 0; padding: 16px; background: #0f172a; border-radius: 8px; font-size: 13px; line-height: 1.8; color: #94a3b8; }
+.completion-card .specs {
+    text-align: left; margin: 20px 0; padding: 16px; background: #0f172a;
+    border-radius: 8px; font-size: 13px; line-height: 1.8; color: #94a3b8;
+}
 .completion-card .score-line { font-size: 18px; color: #5b9bd5; margin: 16px 0; font-weight: 600; }
 .completion-card button {
-    background: #5b9bd5;
-    color: #fff;
-    border: none;
-    padding: 12px 32px;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+    background: #5b9bd5; color: #fff; border: none; padding: 12px 32px;
+    border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s;
 }
 .completion-card button:hover { background: #4a8bc4; }
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
@@ -292,54 +221,74 @@ body {
 (function() {
 "use strict";
 
+// Component images: uses your existing diagram files where available, data-URIs for the rest
+const COMP_IMAGES = {
+    "Intel Core i5 (LGA 1700)":       "../Images/Diagrams/Intel_Core_i5-13600KF_with_LGA_1700_socket.jpg",
+    "Tower Air Cooler (4-pin PWM)":   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='20' y='4' width='24' height='56' rx='4' fill='%23334155'/%3E%3Crect x='14' y='10' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='18' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='26' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='34' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='42' width='36' height='4' rx='2' fill='%235b9bd5'/%3E%3Ccircle cx='32' cy='54' r='4' fill='%2394a3b8'/%3E%3C/svg%3E",
+    "DDR5-5600 16GB DIMM":            "../Images/Diagrams/DDR.svg",
+    "RTX 4070 Graphics Card":         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='16' width='56' height='28' rx='4' fill='%231e293b' stroke='%235b9bd5' stroke-width='2'/%3E%3Crect x='8' y='20' width='24' height='20' rx='3' fill='%23334155'/%3E%3Ccircle cx='20' cy='30' r='7' fill='%230f172a' stroke='%235b9bd5' stroke-width='1.5'/%3E%3Ccircle cx='20' cy='30' r='3' fill='%235b9bd5'/%3E%3Crect x='36' y='22' width='20' height='3' rx='1' fill='%2394a3b8'/%3E%3Crect x='36' y='28' width='16' height='3' rx='1' fill='%2394a3b8'/%3E%3Crect x='36' y='34' width='18' height='3' rx='1' fill='%2394a3b8'/%3E%3Crect x='8' y='44' width='48' height='4' rx='2' fill='%23475569'/%3E%3C/svg%3E",
+    "1TB NVMe SSD (PCIe 4.0)":        "../Images/Diagrams/storage-drives-comparison.svg",
+    "2TB HDD (SATA III)":             "../Images/Diagrams/storage-drives-comparison.svg",
+    "24-Pin Main Power Cable":        "../Images/Diagrams/PSU Connectors.svg",
+    "8-Pin CPU Power Cable":          "../Images/Diagrams/PSU Connectors.svg",
+    "120mm Case Fan (3-pin)":         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='8' fill='%23334155' stroke='%23475569' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%235b9bd5' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%235b9bd5'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(0 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(72 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(144 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(216 32 32)'/%3E%3Cellipse cx='32' cy='16' rx='5' ry='8' fill='%2394a3b8' transform='rotate(288 32 32)'/%3E%3C/svg%3E",
+    "Power Button / LED Cables":      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='10' y='24' width='12' height='18' rx='2' fill='%23e74c3c'/%3E%3Crect x='26' y='24' width='12' height='18' rx='2' fill='%2327ae60'/%3E%3Crect x='42' y='24' width='12' height='18' rx='2' fill='%235b9bd5'/%3E%3Crect x='14' y='16' width='4' height='10' rx='1' fill='%2394a3b8'/%3E%3Crect x='30' y='16' width='4' height='10' rx='1' fill='%2394a3b8'/%3E%3Crect x='46' y='16' width='4' height='10' rx='1' fill='%2394a3b8'/%3E%3C/svg%3E",
+    "CR2032 Battery":                 "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='24' fill='%23334155' stroke='%2394a3b8' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='18' fill='%231e293b'/%3E%3Ctext x='32' y='37' text-anchor='middle' fill='%235b9bd5' font-size='11' font-family='monospace' font-weight='bold'%3ECR2032%3C/text%3E%3C/svg%3E",
+    // distractors
+    "DDR4-3200 8GB":                  "../Images/Diagrams/DDR.svg",
+    "IDE Ribbon Cable":               "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='20' width='56' height='24' rx='2' fill='%23475569'/%3E%3Crect x='8' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='14' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='20' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='26' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='32' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='38' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='44' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3Crect x='50' y='24' width='2' height='16' fill='%2394a3b8'/%3E%3C/svg%3E",
+    "Molex to SATA Adapter":          "../Images/Diagrams/PSU Connectors.svg",
+    "AMD Ryzen 7 (AM5)":              "../Images/Diagrams/AMD processor.jpg"
+};
+
 const SLOTS = [
-    { id: "cpu-socket", label: "Slot 1", name: "CPU Socket", correct: "Intel Core i5 (LGA 1700)", fact: "LGA 1700 has 1700 contact points and supports 12th-14th gen Intel CPUs!" },
-    { id: "cpu-cooler", label: "Slot 2", name: "CPU Cooler", correct: "Tower Air Cooler (4-pin PWM)", fact: "PWM (Pulse Width Modulation) allows the motherboard to control fan speed dynamically." },
-    { id: "ram-a2", label: "Slot 3", name: "RAM Slot 1 (A2)", correct: "DDR5-5600 16GB DIMM", fact: "A2 + B2 placement enables dual-channel mode for double the memory bandwidth!" },
-    { id: "ram-b2", label: "Slot 4", name: "RAM Slot 2 (B2)", correct: "DDR5-5600 16GB DIMM", fact: "DDR5 starts at 4800 MT/s and can reach 8000+ MT/s with overclocking." },
-    { id: "gpu-slot", label: "Slot 5", name: "GPU Slot (PCIe x16)", correct: "RTX 4070 Graphics Card", fact: "PCIe x16 provides 16 lanes — enough bandwidth for the fastest GPUs." },
-    { id: "m2-slot", label: "Slot 6", name: "M.2 Slot", correct: "1TB NVMe SSD (PCIe 4.0)", fact: "NVMe SSDs can reach 7000 MB/s — 14x faster than SATA SSDs!" },
-    { id: "sata-port", label: "Slot 7", name: "SATA Port", correct: "2TB HDD (SATA III)", fact: "SATA III runs at 6 Gb/s — great for mass storage HDDs." },
-    { id: "atx-24pin", label: "Slot 8", name: "24-Pin ATX", correct: "24-Pin Main Power Cable", fact: "The 24-pin connector powers the motherboard's chipset, RAM slots, and PCIe slots." },
-    { id: "eps-8pin", label: "Slot 9", name: "8-Pin EPS", correct: "8-Pin CPU Power Cable", fact: "EPS provides dedicated 12V power directly to the CPU voltage regulators." },
-    { id: "fan-header", label: "Slot 10", name: "Case Fan Header", correct: "120mm Case Fan (3-pin)", fact: "3-pin fans use voltage control while 4-pin fans use PWM for speed regulation." },
-    { id: "front-panel", label: "Slot 11", name: "Front Panel Header", correct: "Power Button / LED Cables", fact: "These tiny connectors have polarity — LEDs won't light if reversed!" },
-    { id: "cmos-battery", label: "Slot 12", name: "CMOS Battery Slot", correct: "CR2032 Battery", fact: "The CR2032 keeps BIOS settings and the real-time clock running when powered off." }
+    { id: "cpu-socket",   label: "Slot 1",  name: "CPU Socket",           correct: "Intel Core i5 (LGA 1700)",      fact: "LGA 1700 has 1700 contact points and supports 12th-14th gen Intel CPUs!" },
+    { id: "cpu-cooler",   label: "Slot 2",  name: "CPU Cooler",           correct: "Tower Air Cooler (4-pin PWM)",  fact: "PWM (Pulse Width Modulation) allows the motherboard to control fan speed dynamically." },
+    { id: "ram-a2",       label: "Slot 3",  name: "RAM Slot 1 (A2)",      correct: "DDR5-5600 16GB DIMM",           fact: "A2 + B2 placement enables dual-channel mode for double the memory bandwidth!" },
+    { id: "ram-b2",       label: "Slot 4",  name: "RAM Slot 2 (B2)",      correct: "DDR5-5600 16GB DIMM",           fact: "DDR5 starts at 4800 MT/s and can reach 8000+ MT/s with overclocking." },
+    { id: "gpu-slot",     label: "Slot 5",  name: "GPU Slot (PCIe x16)",  correct: "RTX 4070 Graphics Card",        fact: "PCIe x16 provides 16 lanes — enough bandwidth for the fastest GPUs." },
+    { id: "m2-slot",      label: "Slot 6",  name: "M.2 Slot",             correct: "1TB NVMe SSD (PCIe 4.0)",       fact: "NVMe SSDs can reach 7000 MB/s — 14x faster than SATA SSDs!" },
+    { id: "sata-port",    label: "Slot 7",  name: "SATA Port",            correct: "2TB HDD (SATA III)",            fact: "SATA III runs at 6 Gb/s — great for mass storage HDDs." },
+    { id: "atx-24pin",    label: "Slot 8",  name: "24-Pin ATX",           correct: "24-Pin Main Power Cable",       fact: "The 24-pin connector powers the motherboard's chipset, RAM slots, and PCIe slots." },
+    { id: "eps-8pin",     label: "Slot 9",  name: "8-Pin EPS",            correct: "8-Pin CPU Power Cable",         fact: "EPS provides dedicated 12V power directly to the CPU voltage regulators." },
+    { id: "fan-header",   label: "Slot 10", name: "Case Fan Header",       correct: "120mm Case Fan (3-pin)",        fact: "3-pin fans use voltage control while 4-pin fans use PWM for speed regulation." },
+    { id: "front-panel",  label: "Slot 11", name: "Front Panel Header",   correct: "Power Button / LED Cables",     fact: "These tiny connectors have polarity — LEDs won't light if reversed!" },
+    { id: "cmos-battery", label: "Slot 12", name: "CMOS Battery Slot",    correct: "CR2032 Battery",                fact: "The CR2032 keeps BIOS settings and the real-time clock running when powered off." }
 ];
 
 const DISTRACTORS = [
-    { name: "DDR4-3200 8GB", feedback: "DDR4 and DDR5 are NOT interchangeable — different notch positions. This motherboard uses DDR5 slots only.", study: "Module - Desktop PC Hardware → RAM" },
-    { name: "IDE Ribbon Cable", feedback: "IDE is obsolete. Modern motherboards use SATA III (6 Gb/s) and M.2 NVMe slots.", study: "Module - Hard Drives & Storage" },
+    { name: "DDR4-3200 8GB",         feedback: "DDR4 and DDR5 are NOT interchangeable — different notch positions. This motherboard uses DDR5 slots only.", study: "Module - Desktop PC Hardware → RAM" },
+    { name: "IDE Ribbon Cable",      feedback: "IDE is obsolete. Modern motherboards use SATA III (6 Gb/s) and M.2 NVMe slots.", study: "Module - Hard Drives & Storage" },
     { name: "Molex to SATA Adapter", feedback: "Molex-to-SATA adapters are a known fire hazard. Always use native SATA power cables from the PSU.", study: "Module - Desktop PC Hardware → PSU" },
-    { name: "AMD Ryzen 7 (AM5)", feedback: "This is an LGA 1700 socket (Intel). AMD Ryzen uses AM5 socket. CPU and socket MUST match exactly.", study: "Module - Desktop PC Hardware → CPU" }
+    { name: "AMD Ryzen 7 (AM5)",     feedback: "This is an LGA 1700 socket (Intel). AMD Ryzen uses AM5 socket. CPU and socket MUST match exactly.", study: "Module - Desktop PC Hardware → CPU" }
 ];
 
 const WRONG_SLOT_FEEDBACK = {
-    "DDR4-3200 8GB": { msg: "DDR4 and DDR5 are NOT interchangeable — different notch positions. This motherboard uses DDR5 slots only.", study: "Module - Desktop PC Hardware → RAM" },
-    "IDE Ribbon Cable": { msg: "IDE is obsolete. Modern motherboards use SATA III (6 Gb/s) and M.2 NVMe slots.", study: "Module - Hard Drives & Storage" },
+    "DDR4-3200 8GB":         { msg: "DDR4 and DDR5 are NOT interchangeable — different notch positions. This motherboard uses DDR5 slots only.", study: "Module - Desktop PC Hardware → RAM" },
+    "IDE Ribbon Cable":      { msg: "IDE is obsolete. Modern motherboards use SATA III (6 Gb/s) and M.2 NVMe slots.", study: "Module - Hard Drives & Storage" },
     "Molex to SATA Adapter": { msg: "Molex-to-SATA adapters are a known fire hazard. Always use native SATA power cables from the PSU.", study: "Module - Desktop PC Hardware → PSU" },
-    "AMD Ryzen 7 (AM5)": { msg: "This is an LGA 1700 socket (Intel). AMD Ryzen uses AM5 socket. CPU and socket MUST match exactly.", study: "Module - Desktop PC Hardware → CPU" }
+    "AMD Ryzen 7 (AM5)":     { msg: "This is an LGA 1700 socket (Intel). AMD Ryzen uses AM5 socket. CPU and socket MUST match exactly.", study: "Module - Desktop PC Hardware → CPU" }
 };
 
-let score = 0;
-let firstTryCorrect = 0;
-let attemptedSlots = new Set();
-let filledSlots = new Set();
-let muted = false;
-let music = null;
-let draggedItem = null;
-let touchDragEl = null;
-let touchOffsetX = 0, touchOffsetY = 0;
+let score = 0, firstTryCorrect = 0;
+let attemptedSlots = new Set(), filledSlots = new Set();
+let muted = false, music = null, draggedItem = null;
+let touchDragEl = null, touchOffsetX = 0, touchOffsetY = 0;
 
-// --- Build UI ---
+function getImg(name) { return COMP_IMAGES[name] || ""; }
+
 function buildCase() {
     const caseEl = document.getElementById("pc-case");
     caseEl.innerHTML = "";
     SLOTS.forEach(slot => {
+        const imgSrc = getImg(slot.correct);
         const div = document.createElement("div");
         div.className = "slot";
         div.dataset.slotId = slot.id;
-        div.innerHTML = `<div class="slot-label">${slot.label} — ${slot.name}</div><div class="slot-name">Drop component here</div>`;
+        div.innerHTML = `
+            ${imgSrc ? `<img src="${imgSrc}" class="slot-img" alt="${slot.correct}" onerror="this.style.display='none'">` : ""}
+            <div class="slot-label">${slot.label} — ${slot.name}</div>
+            <div class="slot-name">Drop component here</div>`;
         div.addEventListener("dragover", handleDragOver);
         div.addEventListener("dragenter", handleDragEnter);
         div.addEventListener("dragleave", handleDragLeave);
@@ -353,20 +302,19 @@ function buildBank() {
     bankEl.innerHTML = "";
     const items = [];
     SLOTS.forEach(slot => {
-        if (!items.find(i => i.name === slot.correct)) {
-            items.push({ name: slot.correct, isDistractor: false });
-        } else {
-            items.push({ name: slot.correct, isDistractor: false, duplicate: true });
-        }
+        items.push({ name: slot.correct });
     });
-    DISTRACTORS.forEach(d => items.push({ name: d.name, isDistractor: true }));
+    DISTRACTORS.forEach(d => items.push({ name: d.name }));
     shuffle(items);
     items.forEach(item => {
+        const imgSrc = getImg(item.name);
         const div = document.createElement("div");
         div.className = "component-item";
-        div.textContent = item.name;
         div.dataset.componentName = item.name;
         div.draggable = true;
+        div.innerHTML = `
+            <img src="${imgSrc}" alt="${item.name}" onerror="this.style.display='none'">
+            <span class="comp-label">${item.name}</span>`;
         div.addEventListener("dragstart", handleDragStart);
         div.addEventListener("dragend", handleDragEnd);
         div.addEventListener("touchstart", handleTouchStart, { passive: false });
@@ -383,23 +331,16 @@ function shuffle(arr) {
     }
 }
 
-// --- Drag & Drop (Desktop) ---
 function handleDragStart(e) {
-    draggedItem = e.target.dataset.componentName;
-    e.target.classList.add("dragging");
+    draggedItem = e.currentTarget.dataset.componentName;
+    e.currentTarget.classList.add("dragging");
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", draggedItem);
 }
-
-function handleDragEnd(e) {
-    e.target.classList.remove("dragging");
-    draggedItem = null;
-}
-
+function handleDragEnd(e) { e.currentTarget.classList.remove("dragging"); draggedItem = null; }
 function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }
 function handleDragEnter(e) { e.preventDefault(); e.currentTarget.classList.add("drag-over"); }
 function handleDragLeave(e) { e.currentTarget.classList.remove("drag-over"); }
-
 function handleDrop(e) {
     e.preventDefault();
     e.currentTarget.classList.remove("drag-over");
@@ -408,7 +349,6 @@ function handleDrop(e) {
     if (componentName && slotId) processPlacement(slotId, componentName);
 }
 
-// --- Touch Drag (Mobile) ---
 function handleTouchStart(e) {
     e.preventDefault();
     const touch = e.touches[0];
@@ -417,16 +357,13 @@ function handleTouchStart(e) {
     const rect = target.getBoundingClientRect();
     touchOffsetX = touch.clientX - rect.left;
     touchOffsetY = touch.clientY - rect.top;
-    touchDragEl = document.createElement("div");
-    touchDragEl.className = "component-item";
-    touchDragEl.textContent = draggedItem;
+    touchDragEl = target.cloneNode(true);
     touchDragEl.style.cssText = `position:fixed;z-index:9999;width:${rect.width}px;pointer-events:none;opacity:0.9;transform:scale(1.05);`;
     touchDragEl.style.left = (touch.clientX - touchOffsetX) + "px";
     touchDragEl.style.top = (touch.clientY - touchOffsetY) + "px";
     document.body.appendChild(touchDragEl);
     target.classList.add("dragging");
 }
-
 function handleTouchMove(e) {
     e.preventDefault();
     if (!touchDragEl) return;
@@ -435,10 +372,9 @@ function handleTouchMove(e) {
     touchDragEl.style.top = (touch.clientY - touchOffsetY) + "px";
     document.querySelectorAll(".slot").forEach(s => s.classList.remove("drag-over"));
     const el = document.elementFromPoint(touch.clientX, touch.clientY);
-    const slot = el && (el.closest ? el.closest(".slot") : null);
+    const slot = el && el.closest(".slot");
     if (slot && !slot.classList.contains("filled")) slot.classList.add("drag-over");
 }
-
 function handleTouchEnd(e) {
     if (touchDragEl) { touchDragEl.remove(); touchDragEl = null; }
     document.querySelectorAll(".component-item.dragging").forEach(el => el.classList.remove("dragging"));
@@ -446,22 +382,17 @@ function handleTouchEnd(e) {
     if (!draggedItem) return;
     const touch = e.changedTouches[0];
     const el = document.elementFromPoint(touch.clientX, touch.clientY);
-    const slot = el && (el.closest ? el.closest(".slot") : null);
-    if (slot && slot.dataset.slotId) {
-        processPlacement(slot.dataset.slotId, draggedItem);
-    }
+    const slot = el && el.closest(".slot");
+    if (slot && slot.dataset.slotId) processPlacement(slot.dataset.slotId, draggedItem);
     draggedItem = null;
 }
 
-// --- Game Logic ---
 function processPlacement(slotId, componentName) {
     if (filledSlots.has(slotId)) return;
     const slot = SLOTS.find(s => s.id === slotId);
     if (!slot) return;
-
     const isFirstAttempt = !attemptedSlots.has(slotId);
     attemptedSlots.add(slotId);
-
     if (componentName === slot.correct) {
         filledSlots.add(slotId);
         score++;
@@ -473,8 +404,7 @@ function processPlacement(slotId, componentName) {
         updateScore();
         if (filledSlots.size === 12) setTimeout(showCompletion, 800);
     } else {
-        let feedback = "";
-        let study = "";
+        let feedback = "", study = "";
         if (WRONG_SLOT_FEEDBACK[componentName]) {
             feedback = WRONG_SLOT_FEEDBACK[componentName].msg;
             study = WRONG_SLOT_FEEDBACK[componentName].study;
@@ -489,10 +419,11 @@ function processPlacement(slotId, componentName) {
 
 function updateSlotUI(slotId, componentName) {
     const slotEl = document.querySelector(`.slot[data-slot-id="${slotId}"]`);
-    if (slotEl) {
-        slotEl.classList.add("filled");
-        slotEl.querySelector(".slot-name").textContent = componentName;
-    }
+    if (!slotEl) return;
+    slotEl.classList.add("filled");
+    const imgEl = slotEl.querySelector(".slot-img");
+    if (imgEl) imgEl.style.opacity = "1";
+    slotEl.querySelector(".slot-name").textContent = componentName;
 }
 
 function markComponentUsed(componentName) {
@@ -510,7 +441,6 @@ function updateScore() {
     document.getElementById("score-display").textContent = `Score: ${score}/12`;
 }
 
-// --- Toast ---
 function showToast(isCorrect, title, body) {
     const container = document.getElementById("toast-container");
     const toast = document.createElement("div");
@@ -520,7 +450,6 @@ function showToast(isCorrect, title, body) {
     setTimeout(() => { toast.style.opacity = "0"; toast.style.transition = "opacity 0.3s"; setTimeout(() => toast.remove(), 300); }, isCorrect ? 2500 : 4000);
 }
 
-// --- Completion ---
 function showCompletion() {
     const screen = document.getElementById("completion-screen");
     screen.className = "completion-screen";
@@ -540,22 +469,16 @@ function showCompletion() {
             </div>
             <div class="score-line">First-Try Accuracy: ${firstTryCorrect}/12</div>
             <button onclick="resetGame()">🔄 Build Again</button>
-        </div>
-    `;
+        </div>`;
 }
 
 window.resetGame = function() {
-    score = 0;
-    firstTryCorrect = 0;
-    attemptedSlots.clear();
-    filledSlots.clear();
+    score = 0; firstTryCorrect = 0;
+    attemptedSlots.clear(); filledSlots.clear();
     document.getElementById("completion-screen").className = "completion-hidden";
-    updateScore();
-    buildCase();
-    buildBank();
+    updateScore(); buildCase(); buildBank();
 };
 
-// --- Audio ---
 function initMusic() {
     try {
         music = new LofiChillMusic();
@@ -569,8 +492,7 @@ function playSFX(type) {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
+        osc.connect(gain); gain.connect(ctx.destination);
         if (type === "correct") {
             osc.type = "sine";
             osc.frequency.setValueAtTime(523, ctx.currentTime);
@@ -578,16 +500,14 @@ function playSFX(type) {
             osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
             gain.gain.setValueAtTime(0.15, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 0.4);
+            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
         } else {
             osc.type = "sawtooth";
             osc.frequency.setValueAtTime(200, ctx.currentTime);
             osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
             gain.gain.setValueAtTime(0.1, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 0.3);
+            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.3);
         }
     } catch(e) {}
 }
@@ -599,16 +519,14 @@ document.getElementById("mute-btn").addEventListener("click", () => {
     else if (!muted) { initMusic(); }
 });
 
-// Auto-start music on first interaction
 let musicStarted = false;
-document.addEventListener("click", function startMusicOnce() {
+document.addEventListener("click", function startOnce() {
     if (!musicStarted && !muted) { initMusic(); musicStarted = true; }
 }, { once: true });
-document.addEventListener("touchstart", function startMusicOnceTouch() {
+document.addEventListener("touchstart", function startOnceTouch() {
     if (!musicStarted && !muted) { initMusic(); musicStarted = true; }
 }, { once: true });
 
-// --- Init ---
 buildCase();
 buildBank();
 })();

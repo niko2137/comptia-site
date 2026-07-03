@@ -150,6 +150,18 @@
             <h1>BIOS/UEFI Settings Quick Reference</h1>
             <p class="subtitle">Key firmware settings for the CompTIA A+ 220-1200 exam — know what each does and when to change it</p>
 
+            <!-- DIAGRAM REFERENCE PANEL -->
+            <div style="margin-bottom:24px;border:1px solid #c7d2e0;border-radius:10px;overflow:hidden;background:#f8fafc;">
+                <button onclick="var p=this.nextElementSibling;p.style.display=p.style.display==='none'?'grid':'none';this.textContent=this.textContent.includes('▶')?'📐 Reference Diagrams ▼':'📐 Reference Diagrams ▶';" style="width:100%;padding:12px 18px;background:none;border:none;color:#1F497D;font-size:0.95rem;font-weight:700;cursor:pointer;text-align:left;">📐 Reference Diagrams ▶</button>
+                <div style="display:none;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:16px;">
+                    <a href="../Images/Diagrams/Motherboard.svg" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/Motherboard.svg" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="Motherboard"><br>Motherboard Layout</a>
+                    <a href="../Images/Diagrams/CPU-sockets.svg" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/CPU-sockets.svg" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="CPU Sockets"><br>CPU Socket Types</a>
+                    <a href="../Images/Diagrams/motherboard-form-factors.svg" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/motherboard-form-factors.svg" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="Form Factors"><br>Motherboard Form Factors</a>
+                    <a href="../Images/Diagrams/pga-vs-lga.svg" target="_blank" style="display:block;text-align:center;background:#fff;border:1px solid #c7d2e0;border-radius:8px;padding:10px;color:#475569;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/pga-vs-lga.svg" style="width:100%;max-height:110px;object-fit:contain;margin-bottom:6px;" alt="PGA vs LGA"><br>PGA vs LGA</a>
+                </div>
+            </div>
+            <!-- END DIAGRAM PANEL -->
+
             <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
 
             <div class="table-wrapper">

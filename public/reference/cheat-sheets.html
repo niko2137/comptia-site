@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Downloadable Cheat Sheets & Diagrams — CompTIA A+ Study Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;min-height:100vh}
+a{color:#5b9bd5;text-decoration:none}
+a:hover{color:#7db4e6}
+.top-bar{background:#1e293b;padding:12px 24px;border-bottom:1px solid #334155;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.top-bar a{color:#94a3b8;font-size:0.9rem;font-weight:500}
+.top-bar a:hover{color:#fff}
+.badge-members{background:#f59e0b;color:#0f172a;padding:4px 10px;border-radius:6px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px 60px}
+.header{text-align:center;margin-bottom:40px}
+.header h1{font-size:2rem;color:#f1f5f9;margin-bottom:8px}
+.header .subtitle{color:#94a3b8;font-size:1rem;margin-bottom:16px}
+.intro{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:20px 24px;margin-bottom:32px;color:#94a3b8;font-size:0.9rem;line-height:1.7}
+.intro strong{color:#5b9bd5}
+.category{margin-bottom:48px}
+.category-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid #334155}
+.category-header h2{font-size:1.4rem;color:#5b9bd5;font-weight:700}
+.category-icon{font-size:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.diagram-card{background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;transition:all 0.2s}
+.diagram-card:hover{border-color:#5b9bd5;box-shadow:0 4px 20px rgba(91,155,213,0.15);transform:translateY(-2px)}
+.diagram-preview{width:100%;height:180px;background:#0f172a;display:flex;align-items:center;justify-content:center;padding:12px;border-bottom:1px solid #334155}
+.diagram-preview img{max-width:100%;max-height:100%;object-fit:contain}
+.diagram-info{padding:14px 16px}
+.diagram-title{font-size:0.9rem;font-weight:600;color:#f1f5f9;margin-bottom:8px}
+.diagram-actions{display:flex;gap:8px}
+.btn{padding:7px 14px;border-radius:6px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;border:none;display:inline-block}
+.btn-view{background:#1e3a5f;color:#5b9bd5;flex:1}
+.btn-view:hover{background:#2a4a7f;color:#7db4e6}
+.btn-download{background:#334155;color:#94a3b8;flex:1}
+.btn-download:hover{background:#475569;color:#e2e8f0}
+@media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}.header h1{font-size:1.5rem}}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="../members.html">← Back to Members Area</a>
+<span class="badge-members">Members Only</span>
+</div>
+<div class="container">
+<div class="header">
+    <h1>📐 Cheat Sheets & Reference Diagrams</h1>
+    <p class="subtitle">Every diagram from your CompTIA A+ Complete Study Guide — view full size or download for offline study</p>
+</div>
+<div class="intro">
+    Click <strong>View</strong> to open any diagram full size in a new tab (great for zooming in). Click <strong>Download</strong> to save it for offline study, printing, or your notes app. SVG files are vector — they'll look crisp at any size.
+</div>
+
+<!-- HARDWARE & COMPONENTS -->
+<div class="category">
+<div class="category-header"><span class="category-icon">🖥️</span><h2>Hardware & Components</h2></div>
+<div class="grid">
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/Motherboard.svg" alt="Motherboard Layout"></div>
+        <div class="diagram-info"><div class="diagram-title">Motherboard Layout</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/Motherboard.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/Motherboard.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/CPU-sockets.svg" alt="CPU Sockets"></div>
+        <div class="diagram-info"><div class="diagram-title">CPU Socket Types</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/CPU-sockets.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/CPU-sockets.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/DDR.svg" alt="DDR RAM Types"></div>
+        <div class="diagram-info"><div class="diagram-title">DDR RAM Types</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/DDR.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/DDR.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/motherboard-form-factors.svg" alt="Form Factors"></div>
+        <div class="diagram-info"><div class="diagram-title">Motherboard Form Factors</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/motherboard-form-factors.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/motherboard-form-factors.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/pga-vs-lga.svg" alt="PGA vs LGA"></div>
+        <div class="diagram-info"><div class="diagram-title">PGA vs LGA CPU Sockets</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/pga-vs-lga.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/pga-vs-lga.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/PSU-Connectors.png" alt="PSU Connectors"></div>
+        <div class="diagram-info"><div class="diagram-title">PSU Connectors</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/PSU-Connectors.png" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/PSU-Connectors.png" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/psu-infographic-with-labels.png" alt="PSU Infographic"></div>
+        <div class="diagram-info"><div class="diagram-title">PSU Full Infographic</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/psu-infographic-with-labels.png" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/psu-infographic-with-labels.png" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/storage-drives-comparison.svg" alt="Storage Drives"></div>
+        <div class="diagram-info"><div class="diagram-title">Storage Drive Comparison</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/storage-drives-comparison.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/storage-drives-comparison.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/Cases.svg" alt="PC Cases"></div>
+        <div class="diagram-info"><div class="diagram-title">PC Case Types</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/Cases.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/Cases.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/standoffs.svg" alt="Standoffs"></div>
+        <div class="diagram-info"><div class="diagram-title">Motherboard Standoffs</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/standoffs.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/standoffs.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/tools.svg" alt="IT Tools"></div>
+        <div class="diagram-info"><div class="diagram-title">IT Technician Tools</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/tools.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/tools.svg" download>⬇ Download</a></div></div>
+    </div>
+</div>
+</div>
+
+<!-- NETWORKING -->
+<div class="category">
+<div class="category-header"><span class="category-icon">🌐</span><h2>Networking</h2></div>
+<div class="grid">
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/osi-model.svg" alt="OSI Model"></div>
+        <div class="diagram-info"><div class="diagram-title">OSI Model (7 Layers)</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/osi-model.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/osi-model.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/osi-vs-tcpip.svg" alt="OSI vs TCP/IP"></div>
+        <div class="diagram-info"><div class="diagram-title">OSI vs TCP/IP Model</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/osi-vs-tcpip.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/osi-vs-tcpip.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/tcp-vs-udp.svg" alt="TCP vs UDP"></div>
+        <div class="diagram-info"><div class="diagram-title">TCP vs UDP</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/tcp-vs-udp.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/tcp-vs-udp.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/IPv4.svg" alt="IPv4 Addressing"></div>
+        <div class="diagram-info"><div class="diagram-title">IPv4 Addressing</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/IPv4.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/IPv4.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/dhcp-dora.svg" alt="DHCP DORA"></div>
+        <div class="diagram-info"><div class="diagram-title">DHCP DORA Process</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/dhcp-dora.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/dhcp-dora.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/nat-pat.svg" alt="NAT/PAT"></div>
+        <div class="diagram-info"><div class="diagram-title">NAT / PAT</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/nat-pat.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/nat-pat.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/network-topologies.svg" alt="Network Topologies"></div>
+        <div class="diagram-info"><div class="diagram-title">Network Topologies</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/network-topologies.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/network-topologies.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/vlans.svg" alt="VLANs"></div>
+        <div class="diagram-info"><div class="diagram-title">VLANs</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/vlans.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/vlans.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/wireless-standards.svg" alt="Wireless Standards"></div>
+        <div class="diagram-info"><div class="diagram-title">Wireless Standards</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/wireless-standards.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/wireless-standards.svg" download>⬇ Download</a></div></div>
+    </div>
+</div>
+</div>
+
+<!-- SECURITY & OPERATIONS -->
+<div class="category">
+<div class="category-header"><span class="category-icon">🔒</span><h2>Security & Operations</h2></div>
+<div class="grid">
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/malware-removal-mnemonic.svg" alt="Malware Removal"></div>
+        <div class="diagram-info"><div class="diagram-title">Malware Removal Steps</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/malware-removal-mnemonic.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/malware-removal-mnemonic.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/data-destruction.svg" alt="Data Destruction"></div>
+        <div class="diagram-info"><div class="diagram-title">Data Destruction Methods</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/data-destruction.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/data-destruction.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/fire-safety.svg" alt="Fire Safety"></div>
+        <div class="diagram-info"><div class="diagram-title">Fire Safety & ESD</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/fire-safety.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/fire-safety.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/scripting-errors.svg" alt="Scripting Errors"></div>
+        <div class="diagram-info"><div class="diagram-title">Scripting Error Types</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/scripting-errors.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/scripting-errors.svg" download>⬇ Download</a></div></div>
+    </div>
+</div>
+</div>
+
+<!-- STORAGE & RAID -->
+<div class="category">
+<div class="category-header"><span class="category-icon">💾</span><h2>Storage & RAID</h2></div>
+<div class="grid">
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/raid-levels-new.svg" alt="RAID Levels"></div>
+        <div class="diagram-info"><div class="diagram-title">RAID Levels Overview</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/raid-levels-new.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/raid-levels-new.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/storage-drives-comparison.svg" alt="Storage Comparison"></div>
+        <div class="diagram-info"><div class="diagram-title">Storage Drive Types</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/storage-drives-comparison.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/storage-drives-comparison.svg" download>⬇ Download</a></div></div>
+    </div>
+</div>
+</div>
+
+<!-- TROUBLESHOOTING & OPERATIONS -->
+<div class="category">
+<div class="category-header"><span class="category-icon">🔧</span><h2>Troubleshooting & Operations</h2></div>
+<div class="grid">
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/troubleshooting-methodology.svg" alt="Troubleshooting Methodology"></div>
+        <div class="diagram-info"><div class="diagram-title">6-Step Troubleshooting Methodology</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/troubleshooting-methodology.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/troubleshooting-methodology.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/ticket-lifecycle.svg" alt="Ticket Lifecycle"></div>
+        <div class="diagram-info"><div class="diagram-title">Ticket Lifecycle</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/ticket-lifecycle.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/ticket-lifecycle.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/ticketpriority.svg" alt="Ticket Priority"></div>
+        <div class="diagram-info"><div class="diagram-title">Ticket Priority Levels</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/ticketpriority.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/ticketpriority.svg" download>⬇ Download</a></div></div>
+    </div>
+</div>
+</div>
+
+<!-- PRINTERS -->
+<div class="category">
+<div class="category-header"><span class="category-icon">🖨️</span><h2>Printers</h2></div>
+<div class="grid">
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/laser-printing-process.svg" alt="Laser Printing Process"></div>
+        <div class="diagram-info"><div class="diagram-title">Laser Printing Process (7 Steps)</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/laser-printing-process.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/laser-printing-process.svg" download>⬇ Download</a></div></div>
+    </div>
+    <div class="diagram-card">
+        <div class="diagram-preview"><img src="../Images/Diagrams/Printer-types.svg" alt="Printer Types"></div>
+        <div class="diagram-info"><div class="diagram-title">Printer Types</div>
+        <div class="diagram-actions"><a class="btn btn-view" href="../Images/Diagrams/Printer-types.svg" target="_blank">🔍 View</a><a class="btn btn-download" href="../Images/Diagrams/Printer-types.svg" download>⬇ Download</a></div></div>
+    </div>
+</div>
+</div>
+
+</div><!-- /.container -->
+</body>
+</html>
