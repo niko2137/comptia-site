@@ -1,0 +1,50 @@
+<svg width="256" height="256" viewBox="0 0 256 256"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rope -->
+  <line x1="128" y1="0" x2="128" y2="220"
+        stroke="#00F6FF" stroke-width="8"
+        stroke-linecap="round" filter="url(#glow)" />
+
+  <!-- Head -->
+  <circle cx="128" cy="60" r="22"
+          fill="#05010A"
+          stroke="#00F6FF" stroke-width="8"
+          filter="url(#glow)" />
+
+  <!-- Torso -->
+  <path d="M128 82 L140 140 L116 140 Z"
+        fill="#05010A"
+        stroke="#00F6FF"
+        stroke-width="8"
+        filter="url(#glow)" />
+
+  <!-- Arms (modify per frame) -->
+  <line x1="128" y1="90" x2="160" y2="70"
+        stroke="#00F6FF" stroke-width="8"
+        stroke-linecap="round" filter="url(#glow)" />
+
+  <line x1="128" y1="90" x2="96" y2="70"
+        stroke="#00F6FF" stroke-width="8"
+        stroke-linecap="round" filter="url(#glow)" />
+
+  <!-- Legs (modify per frame) -->
+  <line x1="128" y1="140" x2="150" y2="200"
+        stroke="#00F6FF" stroke-width="8"
+        stroke-linecap="round" filter="url(#glow)" />
+
+  <line x1="128" y1="140" x2="106" y2="200"
+        stroke="#00F6FF" stroke-width="8"
+        stroke-linecap="round" filter="url(#glow)" />
+
+</svg>

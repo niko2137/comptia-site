@@ -76,7 +76,7 @@
         .book-promo-text ul { margin-bottom: 1.25rem; }
         .book-promo-text li { padding: 0.25rem 0; font-size: 0.9rem; color: #78350f; padding-left: 1.5rem; position: relative; }
         .book-promo-text li::before { content: '\2713'; position: absolute; left: 0; color: var(--emerald); font-weight: 700; }
-        .book-formats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+               .book-formats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
         .btn-amazon { padding: 0.7rem 1.5rem; background: var(--amber); color: #78350f; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: all 0.2s; }
         .btn-amazon:hover { background: #d97706; color: #fff; transform: translateY(-1px); }
 
@@ -179,7 +179,7 @@
     <header class="hero">
         <div class="hero-content">
             <h1>Pass Your CompTIA A+ Exam — First Try</h1>
-            <p class="subtitle">Free interactive games, study tools, and reference guides.<br>Everything you need for the 220-1201 & 220-1202 exams.</p>
+            <p class="subtitle">Free interactive games, study tools, and reference guides.<br>The companion study portal for the CompTIA A+ 220-1201 &amp; 220-1202 exams.</p>
             <div class="hero-buttons">
                 <a href="#games" class="btn-hero-primary">Play Free Games</a>
                 <a href="book.html" class="btn-hero-outline">Get the Book</a>
@@ -195,21 +195,22 @@
     <!-- BOOK PROMO BANNER -->
     <section class="book-promo" id="book">
         <div class="book-promo-inner">
-            <img src="Images/book-cover.jpg" alt="CompTIA A+ Complete Study Guide book cover" class="book-cover-img">
+            <img src="reference/book/bookcover.jpg" alt="CompTIA A+ 220-1200 Series Complete Study Guide book cover" class="book-cover-img">
             <div class="book-promo-text">
-                <h2>&#128216; Get the Complete Study Guide</h2>
-                <p>Written by a working IT professional. Covers every exam objective with real-world context, not just memorization.</p>
+                <h2>&#128216;Get the Book!</h2>
+                <p>Covers every Core 1 (220-1201) &amp; Core 2 (220-1202) exam objective with real-world context, original diagrams, PBQs, Exams, and troubleshooting mnemonics.</p>
                 <ul>
-                    <li>25+ structured study modules</li>
-                    <li>Original diagrams &amp; troubleshooting mnemonics</li>
-                    <li>Priority system — know what to memorize vs. skim</li>
-                    <li>FREE Members Portal access code included</li>
-                    <li>500+ flash cards, games, glossary &amp; PBQs</li>
+                    <li>25+ structured study modules mapped to exam domains</li>
+                    <li>Original diagrams, charts &amp; troubleshooting mnemonics</li>
+                    <li>Exam Tips, Exam Traps &amp; Pro Tips throughout</li>
+                    <li><b>Access code to Member's Only Portal!</b></li>
+                    <li>500+ flash cards, interactive PBQs, arcade games &amp; glossary</li>
                 </ul>
+                <p style="margin-bottom: 1.25rem; font-weight:bold;">
+                    Digital (Kindle), Paperback, or Hardback
+                </p>
                 <div class="book-formats">
-                    <a href="book.html" class="btn-amazon">Kindle (Digital)</a>
-                    <a href="book.html" class="btn-amazon">Paperback</a>
-                    <a href="book.html" class="btn-amazon">Hardback</a>
+                    <a href="book.html" class="btn-amazon">Learn More About the Book</a>
                 </div>
             </div>
         </div>
@@ -260,7 +261,7 @@
                 <div class="card">
                     <div class="card-icon">&#128221;</div>
                     <h3>Acronym Decoder <span class="badge-free">FREE</span></h3>
-                    <p>50 IT acronyms, select the correct meaning</p>
+                    <p>75 IT acronyms, select the correct meaning</p>
                     <a href="games/acronym-decoder.html" class="btn-card">Play Now</a>
                 </div>
                 <div class="card">
@@ -318,13 +319,7 @@
                 <div class="card" style="opacity:0.85;">
                     <div class="card-icon">&#128737;</div>
                     <h3>Terminal Takedown <span class="badge-members">MEMBERS</span></h3>
-                    <p>Tetris-style defense with IT threat blocks.</p>
-                    <a href="members.html" class="btn-card">Unlock</a>
-                </div>
-                <div class="card" style="opacity:0.85;">
-                    <div class="card-icon">&#128171;</div>
-                    <h3>Memory Overflow <span class="badge-members">MEMBERS</span></h3>
-                    <p>Memory management challenge game.</p>
+                    <p>Tetris defense — clear threat blocks &amp; answer IT questions.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
                 <div class="card" style="opacity:0.85;">
@@ -343,12 +338,6 @@
                     <div class="card-icon">&#128221;</div>
                     <h3>Tech Tile Time <span class="badge-members">MEMBERS</span></h3>
                     <p>10-clue crossword puzzle with CompTIA terms.</p>
-                    <a href="members.html" class="btn-card">Unlock</a>
-                </div>
-                <div class="card" style="opacity:0.85;">
-                    <div class="card-icon">&#128421;</div>
-                    <h3>Build-a-PC <span class="badge-members">MEMBERS</span></h3>
-                    <p>Drag 12 components into correct PC slots</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
                 <div class="card" style="opacity:0.85;">
@@ -543,9 +532,10 @@
             </div>
             <div>
                 <h4>Get the Book</h4>
-                <a href="book.html">Kindle (Digital)</a>
+                <a href="book.html">Digital (Kindle)</a>
                 <a href="book.html">Paperback</a>
                 <a href="book.html">Hardback</a>
+                <a href="book.html">Learn More About the Book</a>
             </div>
             <div>
                 <h4>Connect</h4>
@@ -558,10 +548,20 @@
         <div class="footer-bottom">
             <p>&copy; 2026 Niko Williams. All rights reserved.</p>
             <p>CompTIA A+ is a registered trademark of CompTIA, Inc. This site is not affiliated with or endorsed by CompTIA.</p>
+            <p style="margin-top:8px;font-size:0.7rem;color:rgba(255,255,255,0.25);">Page views: <span id="hitCount">0</span></p>
         </div>
     </footer>
 
     <!-- JAVASCRIPT -->
+    <script>
+    // Page hit counter (localStorage)
+    (function(){
+        const key='comptia_home_hits';
+        let count=parseInt(localStorage.getItem(key)||'0')+1;
+        localStorage.setItem(key,count);
+        const el=document.getElementById('hitCount');
+        if(el)el.textContent=count.toLocaleString();
+    })();
     <script>
     const cards = [
         {f:'SSH',b:'Port 22. Encrypted remote CLI access. Replaces Telnet.'},

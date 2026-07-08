@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>Packet Pop — Bubble Blast | CompTIA A+ Study Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier New',monospace;color:#e2e8f0;touch-action:none;-webkit-user-select:none;user-select:none}
+:root{--cyan:#00f3ff;--green:#00ff88;--red:#ff4444;--yellow:#ffcc00;--purple:#cc44ff;--blue:#4488ff;--orange:#ff8800}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+</style>
+</head>
+<body>
+<div id="app">
+    <header id="hud">
+        <span class="h-item">SCORE: <b id="sVal">0</b></span>
+        <span class="h-item title">PACKET POP</span>
+        <span class="h-item">LEVEL: <b id="lVal">1</b></span>
+    </header>
+    <div id="aimLine"></div>
+    <canvas id="game"></canvas>
+    <footer id="foot">
+        <div class="next-bubble" id="nextBubble"></div>
+        <div class="foot-info">Tap/Click to shoot • Match 3+ same-color packets</div>
+        <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
+    </footer>
+</div>
+
+<style>
+#hud{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-bottom:1px solid rgba(0,243,255,0.15);flex-shrink:0}
+.h-item{font-size:11px;color:#778}
+.h-item b{color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.5)}
+.h-item.title{font-size:13px;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 8px rgba(0,243,255,0.4)}
+#game{flex:1;display:block;width:100%;cursor:crosshair}
+#aimLine{position:absolute;bottom:60px;left:50%;width:2px;height:0;background:rgba(0,243,255,0.4);transform-origin:bottom center;pointer-events:none;z-index:10;display:none}
+#foot{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-top:1px solid rgba(0,243,255,0.15);flex-shrink:0}
+.next-bubble{width:30px;height:30px;border-radius:50%;border:2px solid #333}
+.foot-info{font-size:10px;color:#556;text-align:center}
+.fbtn{width:32px;height:32px;border-radius:50%;border:1px solid #444;background:none;color:#888;font-size:14px;cursor:pointer}
+.fbtn:hover{border-color:var(--red);color:var(--red)}
+</style>
+
+<script>
+// ============================================================
+// PACKET POP — Bubble Blast CompTIA Edition
+// ============================================================
+const canvas = document.getElementById('game');
+const c = canvas.getContext('2d');
+const scoreEl = document.getElementById('sVal');
+const levelEl = document.getElementById('lVal');
+const nextEl = document.getElementById('nextBubble');
+
+// --- CONFIG ---
+const COLS = 8;
+let RADIUS = 20;
+let DIAMETER = RADIUS * 2;
+let offsetX = 0;
+let rows = [];
+let score = 0, level = 1;
+let shootBubble = null, nextColor = null;
+let shooting = false, animFrame = null;
+let sx = 0, sy = 0, svx = 0, svy = 0;
+const SPEED = 12;
+
+// Colors mapped to CompTIA domains
+const COLORS = [
+    {hex:'#4488ff',label:'HW',glow:'rgba(68,136,255,0.4)'},
+    {hex:'#ffcc00',label:'NET',glow:'rgba(255,204,0,0.4)'},
+    {hex:'#cc44ff',label:'SEC',glow:'rgba(204,68,255,0.4)'},
+    {hex:'#00ff88',label:'TS',glow:'rgba(0,255,136,0.4)'},
+    {hex:'#ff8800',label:'OS',glow:'rgba(255,136,0,0.4)'},
+    {hex:'#ff4488',label:'CLD',glow:'rgba(255,68,136,0.4)'},
+];
+
+function resize(){
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    RADIUS = Math.floor(canvas.width / (COLS * 2 + 1));
+    DIAMETER = RADIUS * 2;
+    offsetX = (canvas.width - COLS * DIAMETER) / 2;
+}
+
+// --- GRID LOGIC ---
+function initGrid(){
+    rows = [];
+    const startRows = 4 + Math.min(level, 4);
+    for(let r=0; r<startRows; r++){
+        const row = [];
+        const cols = (r % 2 === 0) ? COLS : COLS - 1;
+        for(let col=0; col<cols; col++){
+            row.push({color: Math.floor(Math.random()*Math.min(4+level,COLORS.length)), popping:false});
+        }
+        rows.push(row);
+    }
+}
+
+function getBubblePos(row, col){
+    const isOffset = row % 2 !== 0;
+    const x = offsetX + RADIUS + col * DIAMETER + (isOffset ? RADIUS : 0);
+    const y = RADIUS + row * (DIAMETER * 0.87);
+    return {x, y};
+}
+
+function draw(){
+    c.clearRect(0,0,canvas.width,canvas.height);
+    // Draw grid lines (subtle)
+    c.strokeStyle = 'rgba(0,243,255,0.03)';
+    c.lineWidth = 1;
+    for(let i=0;i<canvas.width;i+=40){c.beginPath();c.moveTo(i,0);c.lineTo(i,canvas.height);c.stroke();}
+    for(let i=0;i<canvas.height;i+=40){c.beginPath();c.moveTo(0,i);c.lineTo(canvas.width,i);c.stroke();}
+
+    // Draw bubbles
+    rows.forEach((row, ri)=>{
+        row.forEach((cell, ci)=>{
+            if(cell === null) return;
+            const {x, y} = getBubblePos(ri, ci);
+            drawBubble(x, y, cell.color, cell.popping);
+        });
+    });
+
+    // Draw shooting bubble
+    if(shootBubble !== null && shooting){
+        drawBubble(sx, sy, shootBubble, false);
+    }
+
+    // Draw current bubble (waiting to shoot)
+    if(!shooting && shootBubble !== null){
+        drawBubble(canvas.width/2, canvas.height - 40, shootBubble, false);
+    }
+}
+
+function drawBubble(x, y, colorIdx, popping){
+    const col = COLORS[colorIdx];
+    c.beginPath();
+    c.arc(x, y, RADIUS - 2, 0, Math.PI*2);
+    c.fillStyle = popping ? '#fff' : col.hex;
+    c.shadowColor = col.glow;
+    c.shadowBlur = popping ? 20 : 8;
+    c.fill();
+    c.shadowBlur = 0;
+    // Label
+    c.fillStyle = popping ? col.hex : 'rgba(0,0,0,0.6)';
+    c.font = `bold ${Math.max(8,RADIUS*0.5)}px Courier New`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(col.label, x, y);
+    // Border
+    c.beginPath();
+    c.arc(x, y, RADIUS - 2, 0, Math.PI*2);
+    c.strokeStyle = popping ? '#fff' : 'rgba(255,255,255,0.2)';
+    c.lineWidth = 1.5;
+    c.stroke();
+}
+
+function pickColor(){return Math.floor(Math.random()*Math.min(4+level,COLORS.length));}
+function prepareShot(){shootBubble = nextColor !== null ? nextColor : pickColor(); nextColor = pickColor(); updateNext();}
+function updateNext(){nextEl.style.background=COLORS[nextColor].hex;nextEl.style.borderColor=COLORS[nextColor].hex;nextEl.style.boxShadow=`0 0 8px ${COLORS[nextColor].glow}`;}
+
+// --- SHOOTING ---
+function shoot(targetX, targetY){
+    if(shooting || shootBubble === null) return;
+    const startX = canvas.width / 2;
+    const startY = canvas.height - 40;
+    const angle = Math.atan2(targetY - startY, targetX - startX);
+    // Don't shoot downward
+    if(angle > -0.15 && angle < 0.15) return;
+    if(angle > 0) return;
+
+    sx = startX; sy = startY;
+    svx = Math.cos(angle) * SPEED;
+    svy = Math.sin(angle) * SPEED;
+    shooting = true;
+    animate();
+}
+
+function animate(){
+    if(!shooting) return;
+    sx += svx; sy += svy;
+    // Wall bounce
+    if(sx - RADIUS <= 0 || sx + RADIUS >= canvas.width) svx = -svx;
+    // Ceiling or collision
+    if(sy - RADIUS <= 0){
+        snap(); return;
+    }
+    // Check collision with existing bubbles
+    for(let ri=0; ri<rows.length; ri++){
+        for(let ci=0; ci<rows[ri].length; ci++){
+            if(rows[ri][ci] === null) continue;
+            const {x, y} = getBubblePos(ri, ci);
+            const dist = Math.sqrt((sx-x)**2 + (sy-y)**2);
+            if(dist < DIAMETER - 4){
+                snap(); return;
+            }
+        }
+    }
+    draw();
+    animFrame = requestAnimationFrame(animate);
+}
+
+function snap(){
+    shooting = false;
+    cancelAnimationFrame(animFrame);
+    // Find closest grid position
+    let bestRow=0, bestCol=0, bestDist=Infinity;
+    for(let ri=0; ri<=rows.length; ri++){
+        const cols = (ri%2===0)?COLS:COLS-1;
+        for(let ci=0; ci<cols; ci++){
+            const {x,y} = getBubblePos(ri,ci);
+            const dist = Math.sqrt((sx-x)**2+(sy-y)**2);
+            if(dist < bestDist){
+                // Check if slot empty
+                if(ri >= rows.length || !rows[ri] || rows[ri][ci] === null || rows[ri][ci] === undefined){
+                    bestDist=dist;bestRow=ri;bestCol=ci;
+                }
+            }
+        }
+    }
+    // Add to grid
+    while(rows.length <= bestRow){
+        const cols = (rows.length%2===0)?COLS:COLS-1;
+        const newRow = [];
+        for(let i=0;i<cols;i++) newRow.push(null);
+        rows.push(newRow);
+    }
+    if(bestCol >= rows[bestRow].length) bestCol = rows[bestRow].length-1;
+    rows[bestRow][bestCol] = {color: shootBubble, popping: false};
+
+    // Check matches
+    checkMatches(bestRow, bestCol);
+
+    // Check game over (bubbles reach bottom)
+    const maxY = rows.length * (DIAMETER * 0.87) + RADIUS;
+    if(maxY > canvas.height - 80){
+        alert(`Game Over! Score: ${score}`);
+        score=0;level=1;initGrid();updateHUD();
+    }
+
+    prepareShot();
+    draw();
+}
+
+// --- MATCH DETECTION (flood fill) ---
+function getNeighbors(row, col){
+    const neighbors = [];
+    const isOffset = row % 2 !== 0;
+    // Same row left/right
+    neighbors.push([row, col-1],[row, col+1]);
+    // Row above/below
+    const dCol = isOffset ? [0, 1] : [-1, 0];
+    neighbors.push([row-1, col+dCol[0]],[row-1, col+dCol[1]]);
+    neighbors.push([row+1, col+dCol[0]],[row+1, col+dCol[1]]);
+    return neighbors.filter(([r,c])=> r>=0 && r<rows.length && c>=0 && c<rows[r].length);
+}
+
+function checkMatches(row, col){
+    const targetColor = rows[row][col].color;
+    const visited = new Set();
+    const cluster = [];
+    const queue = [[row, col]];
+    visited.add(`${row},${col}`);
+
+    while(queue.length > 0){
+        const [r, cc] = queue.shift();
+        if(rows[r][cc] === null) continue;
+        if(rows[r][cc].color !== targetColor) continue;
+        cluster.push([r, cc]);
+        const nbrs = getNeighbors(r, cc);
+        for(const [nr, nc] of nbrs){
+            const key = `${nr},${nc}`;
+            if(!visited.has(key)){
+                visited.add(key);
+                if(rows[nr] && rows[nr][nc] && rows[nr][nc] !== null && rows[nr][nc].color === targetColor){
+                    queue.push([nr, nc]);
+                }
+            }
+        }
+    }
+
+    if(cluster.length >= 3){
+        // Pop them!
+        cluster.forEach(([r,cc])=>{
+            rows[r][cc] = null;
+        });
+        score += cluster.length * 10;
+        // Remove floating bubbles
+        removeFloating();
+        updateHUD();
+        // Level up every 150 pts
+        if(Math.floor(score/150)+1 > level){
+            level = Math.floor(score/150)+1;
+            updateHUD();
+        }
+    }
+}
+
+function removeFloating(){
+    // BFS from top row to find connected bubbles
+    const connected = new Set();
+    const queue = [];
+    // Start from all non-null top-row cells
+    if(rows.length > 0){
+        rows[0].forEach((cell, ci)=>{
+            if(cell !== null){
+                queue.push([0, ci]);
+                connected.add(`0,${ci}`);
+            }
+        });
+    }
+    while(queue.length > 0){
+        const [r, cc] = queue.shift();
+        const nbrs = getNeighbors(r, cc);
+        for(const [nr, nc] of nbrs){
+            const key = `${nr},${nc}`;
+            if(!connected.has(key) && rows[nr] && rows[nr][nc] !== null){
+                connected.add(key);
+                queue.push([nr, nc]);
+            }
+        }
+    }
+    // Remove anything not connected
+    let dropped = 0;
+    rows.forEach((row, ri)=>{
+        row.forEach((cell, ci)=>{
+            if(cell !== null && !connected.has(`${ri},${ci}`)){
+                rows[ri][ci] = null;
+                dropped++;
+            }
+        });
+    });
+    if(dropped > 0) score += dropped * 5;
+}
+
+function updateHUD(){scoreEl.textContent=score;levelEl.textContent=level;}
+
+// --- INPUT ---
+function getAngle(e){
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    return {x, y};
+}
+
+canvas.addEventListener('click', e=>{
+    const {x, y} = getAngle(e);
+    shoot(x, y);
+});
+canvas.addEventListener('touchend', e=>{
+    if(e.changedTouches.length > 0){
+        const rect = canvas.getBoundingClientRect();
+        const x = e.changedTouches[0].clientX - rect.left;
+        const y = e.changedTouches[0].clientY - rect.top;
+        shoot(x, y);
+    }
+},{passive:true});
+
+// Prevent scroll
+document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
+// --- INIT ---
+window.addEventListener('resize', ()=>{resize();draw();});
+resize();
+initGrid();
+nextColor = pickColor();
+prepareShot();
+draw();
+</script>
+</body>
+</html>

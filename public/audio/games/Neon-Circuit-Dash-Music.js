@@ -16,18 +16,53 @@ class NeonCircuitMusic {
         this.activeNodes = [];
         this.onFinishedCallback = onFinished;
 
-        const tempo = 138;
+        const tempo = 128;
         const beat = 60 / tempo;
         const eighth = beat / 2;
         const sixteenth = beat / 4;
 
         const master = this.ctx.createGain();
-        master.gain.setValueAtTime(0.22, this.ctx.currentTime);
+        master.gain.setValueAtTime(0.24, this.ctx.currentTime);
         master.connect(this.ctx.destination);
 
         const t = this.ctx.currentTime + 0.05;
+        const totalBeats = 16;
+        const totalDuration = totalBeats * beat;
 
-        // Bass line - driving square wave (Am - F - C - G progression, 2 bars repeated)
+        // --- TRON-STYLE PAD (warm background glow) ---
+        const padChords = [
+            {notes: [220, 329.63, 440], dur: 4},  // Am
+            {notes: [174.61, 261.63, 349.23], dur: 4},  // F
+            {notes: [261.63, 392, 523.25], dur: 4},  // C
+            {notes: [196, 293.66, 392], dur: 4}   // G
+        ];
+        let padTime = t;
+        padChords.forEach(chord => {
+            const dur = chord.dur * beat;
+            chord.notes.forEach(freq => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                const filter = this.ctx.createBiquadFilter();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, padTime);
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1200, padTime);
+                filter.Q.setValueAtTime(0.5, padTime);
+                gain.gain.setValueAtTime(0, padTime);
+                gain.gain.linearRampToValueAtTime(0.04, padTime + 0.15);
+                gain.gain.setValueAtTime(0.04, padTime + dur - 0.1);
+                gain.gain.linearRampToValueAtTime(0.001, padTime + dur);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(master);
+                osc.start(padTime);
+                osc.stop(padTime + dur + 0.05);
+                this.activeNodes.push(osc);
+            });
+            padTime += dur;
+        });
+
+        // --- BASS (smooth triangle wave, not harsh square) ---
         const bassNotes = [
             ['A2', 8], ['A2', 8], ['F2', 8], ['F2', 8],
             ['C3', 8], ['C3', 8], ['G2', 8], ['G2', 8],
@@ -42,18 +77,24 @@ class NeonCircuitMusic {
             const dur = sixteenths * sixteenth;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            osc.type = 'square';
+            const filter = this.ctx.createBiquadFilter();
+            osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, bassTime);
-            gain.gain.setValueAtTime(0.18, bassTime);
-            gain.gain.setValueAtTime(0.18, bassTime + dur - 0.02);
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(400, bassTime);
+            gain.gain.setValueAtTime(0.22, bassTime);
+            gain.gain.setValueAtTime(0.22, bassTime + dur - 0.03);
             gain.gain.linearRampToValueAtTime(0.001, bassTime + dur);
-            osc.connect(gain); gain.connect(master);
-            osc.start(bassTime); osc.stop(bassTime + dur);
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(master);
+            osc.start(bassTime);
+            osc.stop(bassTime + dur);
             this.activeNodes.push(osc);
             bassTime += dur;
         });
 
-        // Lead arpeggio - sawtooth, fast sixteenth notes
+        // --- LEAD ARPEGGIO (filtered triangle, smooth TRON glow) ---
         const leadPattern = [
             'A4','C5','E5','A5', 'A4','C5','E5','A5',
             'F4','A4','C5','F5', 'F4','A4','C5','F5',
@@ -76,37 +117,86 @@ class NeonCircuitMusic {
             const dur = sixteenth;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            osc.type = 'sawtooth';
+            const filter = this.ctx.createBiquadFilter();
+            osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, leadTime);
-            gain.gain.setValueAtTime(0.06, leadTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, leadTime + dur * 0.8);
-            osc.connect(gain); gain.connect(master);
-            osc.start(leadTime); osc.stop(leadTime + dur);
+            // Gentle filter sweep gives TRON shimmer
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(2800, leadTime);
+            filter.frequency.exponentialRampToValueAtTime(800, leadTime + dur * 0.9);
+            filter.Q.setValueAtTime(2, leadTime);
+            gain.gain.setValueAtTime(0.09, leadTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, leadTime + dur * 0.85);
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(master);
+            osc.start(leadTime);
+            osc.stop(leadTime + dur);
             this.activeNodes.push(osc);
             leadTime += dur;
         });
 
-        // Kick drum - on each beat
-        const totalBeats = 16;
+        // --- KICK (punchy but smooth) ---
         for (let i = 0; i < totalBeats; i++) {
             const kickTime = t + i * beat;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(150, kickTime);
-            osc.frequency.exponentialRampToValueAtTime(30, kickTime + 0.08);
-            gain.gain.setValueAtTime(0.25, kickTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, kickTime + 0.12);
-            osc.connect(gain); gain.connect(master);
-            osc.start(kickTime); osc.stop(kickTime + 0.12);
+            osc.frequency.setValueAtTime(120, kickTime);
+            osc.frequency.exponentialRampToValueAtTime(35, kickTime + 0.1);
+            gain.gain.setValueAtTime(0.28, kickTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, kickTime + 0.15);
+            osc.connect(gain);
+            gain.connect(master);
+            osc.start(kickTime);
+            osc.stop(kickTime + 0.16);
             this.activeNodes.push(osc);
         }
 
-        // Hi-hat - off-beats (8th note off-beats)
+        // --- SNARE (layered noise + body, on beats 2 and 4) ---
+        for (let i = 0; i < totalBeats; i++) {
+            if (i % 4 === 2 || i % 4 === 0) continue; // only on 2 and 4
+            const snareTime = t + i * beat;
+            // Noise burst
+            const bufSize = this.ctx.sampleRate * 0.06;
+            const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let s = 0; s < bufSize; s++) data[s] = Math.random() * 2 - 1;
+            const noise = this.ctx.createBufferSource();
+            const nGain = this.ctx.createGain();
+            const nFilter = this.ctx.createBiquadFilter();
+            noise.buffer = buf;
+            nFilter.type = 'bandpass';
+            nFilter.frequency.value = 5000;
+            nFilter.Q.value = 0.8;
+            nGain.gain.setValueAtTime(0.08, snareTime);
+            nGain.gain.exponentialRampToValueAtTime(0.001, snareTime + 0.06);
+            noise.connect(nFilter);
+            nFilter.connect(nGain);
+            nGain.connect(master);
+            noise.start(snareTime);
+            noise.stop(snareTime + 0.08);
+            this.activeNodes.push(noise);
+            // Body tone
+            const snareOsc = this.ctx.createOscillator();
+            const sGain = this.ctx.createGain();
+            snareOsc.type = 'triangle';
+            snareOsc.frequency.setValueAtTime(180, snareTime);
+            snareOsc.frequency.exponentialRampToValueAtTime(80, snareTime + 0.04);
+            sGain.gain.setValueAtTime(0.12, snareTime);
+            sGain.gain.exponentialRampToValueAtTime(0.001, snareTime + 0.05);
+            snareOsc.connect(sGain);
+            sGain.connect(master);
+            snareOsc.start(snareTime);
+            snareOsc.stop(snareTime + 0.06);
+            this.activeNodes.push(snareOsc);
+        }
+
+        // --- HI-HAT (softer, filtered noise on off-eighths) ---
         for (let i = 0; i < totalBeats * 2; i++) {
             if (i % 2 === 1) {
                 const hatTime = t + i * eighth;
-                const bufSize = this.ctx.sampleRate * 0.03;
+                const bufSize = this.ctx.sampleRate * 0.025;
                 const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
                 const data = buf.getChannelData(0);
                 for (let s = 0; s < bufSize; s++) data[s] = Math.random() * 2 - 1;
@@ -114,17 +204,20 @@ class NeonCircuitMusic {
                 const nGain = this.ctx.createGain();
                 const filter = this.ctx.createBiquadFilter();
                 noise.buffer = buf;
-                filter.type = 'highpass'; filter.frequency.value = 9000;
-                nGain.gain.setValueAtTime(0.05, hatTime);
-                nGain.gain.exponentialRampToValueAtTime(0.001, hatTime + 0.03);
-                noise.connect(filter); filter.connect(nGain); nGain.connect(master);
-                noise.start(hatTime); noise.stop(hatTime + 0.04);
+                filter.type = 'highpass';
+                filter.frequency.value = 8000;
+                nGain.gain.setValueAtTime(0.035, hatTime);
+                nGain.gain.exponentialRampToValueAtTime(0.001, hatTime + 0.025);
+                noise.connect(filter);
+                filter.connect(nGain);
+                nGain.connect(master);
+                noise.start(hatTime);
+                noise.stop(hatTime + 0.03);
                 this.activeNodes.push(noise);
             }
         }
 
         // Total duration and auto-loop/callback
-        const totalDuration = totalBeats * beat;
         const totalMs = totalDuration * 1000;
         this.loopTimeout = setTimeout(() => {
             this.stop();

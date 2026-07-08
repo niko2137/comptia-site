@@ -1,0 +1,73 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OSI Climb</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="game-wrapper">
+    <!-- Top bar: badges + score -->
+    <header class="top-bar">
+      <div class="badge-row" id="badgeRow"></div>
+      <div class="score-panel">
+        <span>Score: <span id="score">0</span></span>
+        <span>Loop: <span id="loop">1</span></span>
+        <span>Tier: <span id="tier">1</span></span>
+      </div>
+      <button id="musicToggle" class="music-btn">Music: Off</button>
+    </header>
+<div class="hud-panel">
+  <div><span class="hud-label">Score</span> <span class="hud-value" id="score"></span></div>
+  <div><span class="hud-label">Loop</span> <span class="hud-value" id="loop"></span></div>
+  <div><span class="hud-label">Tier</span> <span class="hud-value" id="tier"></span></div>
+</div>
+
+    <main class="main-layout">
+      <!-- Left: mountain + climber -->
+      <section class="mountain-area">
+        <div class="mountain-bg"></div>
+        <div class="climber" id="climber"></div>
+      </section>
+
+      <!-- Center: question + answers -->
+      <section class="question-area">
+        <div class="question-box">
+          <h2 id="questionText">Press Start to Begin Your Ascent</h2>
+        </div>
+        <div class="answers">
+          <button class="answer-btn" data-index="0"></button>
+          <button class="answer-btn" data-index="1"></button>
+          <button class="answer-btn" data-index="2"></button>
+          <button class="answer-btn" data-index="3"></button>
+        </div>
+        <button id="startBtn" class="start-btn">Start Climb</button>
+      </section>
+
+      <!-- Right: status panel -->
+      <aside class="status-panel">
+        <h3>Status</h3>
+        <p>Difficulty: <span id="difficultyLabel">Tier 1 — Warm‑up</span></p>
+        <p>Streak: <span id="streak">0</span></p>
+        <p>Questions Remaining: <span id="remaining">0</span></p>
+      </aside>
+    </main>
+
+    <!-- Confetti / final message -->
+    <div class="overlay" id="finalOverlay">
+      <div class="final-message">
+        <h1 id="finalTitle"></h1>
+        <p id="finalSubtitle"></p>
+        <button id="playAgainBtn">Climb Again</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="assets/audio/osi-climb-synthwave.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script src="game.js"></script>
+</body>
+</html>

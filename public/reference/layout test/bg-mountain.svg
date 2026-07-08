@@ -1,0 +1,21 @@
+<svg class="bg-mountain" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a0033"/>
+      <stop offset="100%" stop-color="#05010a"/>
+    </linearGradient>
+    <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b0070"/>
+      <stop offset="100%" stop-color="#05010a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect x="0" y="0" width="400" height="300" fill="url(#skyGrad)" />
+
+  <!-- Back mountain -->
+  <polygon points="20,260 200,60 380,260" fill="url(#mountainGrad)" />
+
+  <!-- Front ridge -->
+  <polygon points="80,260 220,140 360,260" fill="#1a0033" opacity="0.8" />
+</svg>

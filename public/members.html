@@ -124,7 +124,7 @@
         <div class="gate-card">
             <div class="gate-icon">&#128274;</div>
             <h2>Members Area</h2>
-            <p class="gate-sub">Enter the access code from the last page of your<br><em>CompTIA A+ Complete Study Guide</em></p>
+            <p class="gate-sub">Enter the access code from the last page of your<br><em>CompTIA A+ 220-1200 Series Complete Study Guide</em></p>
             <p style="font-size:0.75rem;color:#f59e0b;margin-bottom:16px;">&#9888; Code is CASE SENSITIVE</p>
             <input type="text" id="codeInput" class="gate-input" placeholder="Enter access code..." autocomplete="off" autofocus>
             <p class="gate-error" id="gateError"></p>
@@ -144,10 +144,11 @@
             <button class="hamburger" id="hamburgerBtn">&#9776;</button>
             <div class="nav-items" id="navItems">
                 <a href="#study-tools">Study Tools</a>
+                <a href="#mock-exams">Mock Exams</a>
                 <a href="#resources">Resources</a>
-                <a href="#arcade">Arcade</a>
-                <a href="#puzzles">Puzzles</a>
                 <a href="#pbqs">PBQs</a>
+                <a href="#arcade">Games</a>
+                <a href="#reference-sheets">Reference</a>
                 <a href="#" class="logout-btn" id="logoutBtn">Logout</a>
             </div>
         </nav>
@@ -176,60 +177,72 @@
                             <li><label><input type="checkbox"> Check for "BEST" or "FIRST" in question</label></li>
                         </ul>
                     </div>
-                    <div class="tool-card">
-                        <h4>&#128197; 6-Week Study Schedule</h4>
-                        <div class="schedule-week"><strong>Week 1-2:</strong> Hardware + Networking (Core 1 heaviest)</div>
-                        <div class="schedule-week"><strong>Week 3:</strong> OS + Troubleshooting commands</div>
-                        <div class="schedule-week"><strong>Week 4:</strong> Security + Cloud + Mobile</div>
-                        <div class="schedule-week"><strong>Week 5:</strong> Practice PBQs + Review weak areas</div>
-                        <div class="schedule-week"><strong>Week 6:</strong> Full practice exams + final review</div>
-                    </div>
-                    <div class="tool-card">
-                        <h4>&#128221; Mock Exams</h4>
-                        <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:12px;">Full 90-question timed practice exams with scoring and review.</p>
-                        <div style="display:flex;flex-direction:column;gap:10px;">
-                            <a href="pbqs/mock-exam-core1.html" class="m-link" style="text-align:center;">Core 1 (220-1201) — 90 Questions</a>
-                            <a href="pbqs/mock-exam-core2.html" class="m-link" style="text-align:center;">Core 2 (220-1202) — 90 Questions</a>
+                    <div class="tool-card" style="grid-column:1/-1;">
+                        <h4>&#128197; 8-Week "Zero-to-Certified" Study Schedule</h4>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+                        <div class="schedule-week"><strong>Week 1:</strong> Mobile Devices &amp; Laptops (Core 1 — 13%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: Understanding Mobile Devices, Working on Laptops, Mobile Input Devices, Laptop System Board, Expansion Cards &amp; Radios, Wireless/Cellular Connectivity, Mobile Sync</span></div>
+                        <div class="schedule-week"><strong>Week 2:</strong> Networking Fundamentals (Core 1 — 23%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: Networking Fundamentals — OSI &amp; TCP/IP models, ports &amp; protocols, IP addressing, subnetting, VLANs, DNS, DHCP, network devices</span></div>
+                        <div class="schedule-week"><strong>Week 3:</strong> Hardware &amp; Peripherals (Core 1 — 25%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: Desktop PC Hardware, Computer Displays, Hard Drives &amp; Storage, Windows File Systems, Cables &amp; Connectors, Printers &amp; Multifunction Devices</span></div>
+                        <div class="schedule-week"><strong>Week 4:</strong> Virtualization, Cloud &amp; Embedded (Core 1 — 11%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: Virtualization &amp; Cloud Computing, Embedded Systems &amp; IoT, Cloud service/deployment models, VM networking</span></div>
+                        <div class="schedule-week"><strong>Week 5:</strong> Operating Systems (Core 2 — 28%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: Windows Editions &amp; Features, Operating Systems (Win/macOS/Linux), system tools, command-line, users &amp; permissions, scripting basics</span></div>
+                        <div class="schedule-week"><strong>Week 6:</strong> Security &amp; Networking Security (Core 2 — 28%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: Security, Browser Security, SOHO Network Security, MDM, Remote Access Technologies, malware removal, encryption, physical security</span></div>
+                        <div class="schedule-week"><strong>Week 7:</strong> Troubleshooting &amp; Operations (Core 1 — 28% / Core 2 — 23% + 21%)<br><span style="font-size:0.8rem;color:#64748b;">Modules: HW/Network Troubleshooting, Software Troubleshooting, WinRE, Backup &amp; Recovery, Methodology, Safety, Customer Service, Data Destruction, Licensing, AI</span></div>
+                        <div class="schedule-week"><strong>Week 8:</strong> Full Review &amp; Practice Exams<br><span style="font-size:0.8rem;color:#64748b;">Mock exams (Core 1 &amp; Core 2), PBQ practice, review Exam Traps &amp; weak areas, port numbers, mnemonics, flash cards, glossary review — exam day!</span></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOCK EXAMS -->
+            <div class="section" id="mock-exams">
+                <h3>&#128221; Mock Exams</h3>
+                <p class="section-desc">Full 90-question timed practice exams matching the real exam format. Scored out of 900 with domain breakdown.</p>
+                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                    <div class="m-card">
+                        <div class="icon">&#128187;</div>
+                        <h4>Core 1 (220-1201) Mock Exam</h4>
+                        <p>90 questions &bull; 90 minutes &bull; Passing: 675/900<br>Domains: Mobile, Networking, Hardware, Cloud, Troubleshooting</p>
+                        <a href="pbqs/mock-exam-core1.html" class="m-link">Start Core 1 Exam</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128274;</div>
+                        <h4>Core 2 (220-1202) Mock Exam</h4>
+                        <p>90 questions &bull; 90 minutes &bull; Passing: 700/900<br>Domains: OS, Security, Software Troubleshooting, Operations</p>
+                        <a href="pbqs/mock-exam-core2.html" class="m-link">Start Core 2 Exam</a>
                     </div>
                 </div>
             </div>
 
             <!-- RESOURCES -->
             <div class="section" id="resources">
-                <h3>&#128218; Exclusive Resources</h3>
+                <h3>&#128218; Study Content</h3>
+                <p class="section-desc">Flash cards, glossaries, and study aids for active review.</p>
                 <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
                     <div class="m-card">
                         <div class="icon">&#127183;</div>
-                        <h4>Full 500 Flash Cards <span class="badge-members">MEMBERS</span></h4>
-                        <p>Complete deck with shuffle, progress tracking, and priority filtering.</p>
+                        <h4>Full Flash Card Deck <span class="badge-members">MEMBERS</span></h4>
+                        <p>500+ terms with shuffle. Covers all exam domains.</p>
                         <a href="flashcards.html" class="m-link">Launch Cards</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128214;</div>
                         <h4>Searchable Glossary <span class="badge-members">MEMBERS</span></h4>
-                        <p>500-term glossary with search, priority filtering, and color-coded cards.</p>
+                        <p>500+ terms with search, priority filtering, and color-coded cards.</p>
                         <a href="glossary.html" class="m-link">Open Glossary</a>
                     </div>
                     <div class="m-card">
-                        <div class="icon">&#128230;</div>
-                        <h4>Resource Center <span class="badge-members">MEMBERS</span></h4>
-                        <p>48+ free tools, video training, learning platforms, and utilities.</p>
-                        <a href="reference/resources.html" class="m-link">Browse</a>
-                    </div>
-                    <div class="m-card">
-                        <div class="icon">&#128208;</div>
-                        <h4>Cheat Sheets & Diagrams <span class="badge-members">MEMBERS</span></h4>
-                        <p>30+ downloadable reference diagrams — hardware, networking, security, printing, and more.</p>
-                        <a href="reference/cheat-sheets.html" class="m-link">View All</a>
+                        <div class="icon">&#128214;</div>
+                        <h4>Glossary+ (Expanded) <span class="badge-members">MEMBERS</span></h4>
+                        <p>100 additional terms covering IoT, AI, printers, cloud, and more.</p>
+                        <a href="glossary-plus.html" class="m-link">Open Glossary+</a>
                     </div>
                 </div>
             </div>
 
-            <!-- ARCADE GAMES -->
+            <!-- ALL GAMES -->
             <div class="section" id="arcade">
-                <h3>&#127918; All Games</h3>
-                <p class="section-desc">All games available to members — including free ones.</p>
+                <h3>&#127918; Games &amp; Puzzles</h3>
+                <p class="section-desc">All arcade games and puzzles — learn by playing.</p>
                 <div class="grid">
                     <div class="m-card">
                         <div class="icon">&#128163;</div>
@@ -274,6 +287,18 @@
                         <a href="games/neon-circuit-dash.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
+                        <div class="icon">&#128737;</div>
+                        <h4>Threat Matrix <span class="badge-members">MEMBERS</span></h4>
+                        <p>Neutralize threats with correct countermeasures before they breach</p>
+                        <a href="games/threat-matrix.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#127880;</div>
+                        <h4>Packet Pop <span class="badge-members">MEMBERS</span></h4>
+                        <p>Bubble-blast shooter — match 3+ same-domain packets</p>
+                        <a href="games/bubble-blast.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card">
                         <div class="icon">&#128268;</div>
                         <h4>Cable Match <span class="badge-members">MEMBERS</span></h4>
                         <p>Sort falling cables into speed categories</p>
@@ -294,23 +319,9 @@
                     <div class="m-card">
                         <div class="icon">&#128737;</div>
                         <h4>Terminal Takedown <span class="badge-members">MEMBERS</span></h4>
-                        <p>Tetris-style defense with IT threat blocks</p>
+                        <p>Tetris defense — clear threat blocks &amp; answer IT questions</p>
                         <a href="games/terminal-takedown.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
-                        <div class="icon">&#128171;</div>
-                        <h4>Memory Overflow <span class="badge-members">MEMBERS</span></h4>
-                        <p>Memory management challenge game</p>
-                        <a href="games/memory-overflow.html" class="m-link">Play</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PUZZLE GAMES -->
-            <div class="section" id="puzzles">
-                <h3>&#129513; Puzzle Games</h3>
-                <p class="section-desc">Word puzzles and brain teasers — all CompTIA themed.</p>
-                <div class="grid">
                     <div class="m-card">
                         <div class="icon">&#127183;</div>
                         <h4>Memory Match <span class="badge-members">MEMBERS</span></h4>
@@ -332,7 +343,7 @@
                     <div class="m-card">
                         <div class="icon">&#128221;</div>
                         <h4>Acronym Decoder <span class="badge-free">FREE</span></h4>
-                        <p>50 IT acronyms, select the correct meaning</p>
+                        <p>75 IT acronyms, select the correct meaning</p>
                         <a href="games/acronym-decoder.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
@@ -352,12 +363,6 @@
                         <h4>Cable Connector Match <span class="badge-free">FREE</span></h4>
                         <p>Match 25 cables to their specs</p>
                         <a href="games/cable-connector-match.html" class="m-link">Play</a>
-                    </div>
-                    <div class="m-card">
-                        <div class="icon">&#128421;</div>
-                        <h4>Build-a-PC <span class="badge-members">MEMBERS</span></h4>
-                        <p>Drag 12 components into correct PC slots</p>
-                        <a href="games/build-a-pc.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128737;</div>
@@ -454,23 +459,70 @@
                 </div>
             </div>
 
+            <!-- REFERENCE SHEETS -->
+            <div class="section" id="reference-sheets">
+                <h3>&#128203; Reference Sheets &amp; Guides</h3>
+                <p class="section-desc">Printable cheat sheets and quick-reference guides for last-minute review.</p>
+                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+                    <div class="m-card">
+                        <div class="icon">&#128225;</div>
+                        <h4>Network Ports</h4>
+                        <p>All essential ports and protocols in one chart</p>
+                        <a href="reference/ports.html" class="m-link">View</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128268;</div>
+                        <h4>Cable Types &amp; Speeds</h4>
+                        <p>Ethernet, fiber, coax — categories and specs</p>
+                        <a href="reference/cables.html" class="m-link">View</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128421;</div>
+                        <h4>Windows Commands</h4>
+                        <p>Essential CLI commands for troubleshooting</p>
+                        <a href="reference/commands.html" class="m-link">View</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#9881;</div>
+                        <h4>BIOS/UEFI Settings</h4>
+                        <p>Boot order, Secure Boot, TPM, virtualization</p>
+                        <a href="reference/bios.html" class="m-link">View</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128208;</div>
+                        <h4>Cheat Sheets &amp; Diagrams</h4>
+                        <p>Downloadable SVG/PNG reference diagrams</p>
+                        <a href="reference/cheat-sheets.html" class="m-link">View All</a>
+                    </div>
+                    <div class="m-card">
+                        <div class="icon">&#128230;</div>
+                        <h4>Resource Center</h4>
+                        <p>48+ free tools, video training &amp; platforms</p>
+                        <a href="reference/resources.html" class="m-link">Browse</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- QUICK LINKS -->
             <div class="section" id="quick-links">
                 <h3>&#128279; Quick Links</h3>
                 <div class="links-grid">
+                    <a href="flashcards.html" class="link-card"><span>&#127183;</span> Flash Cards (Full Deck)</a>
+                    <a href="glossary.html" class="link-card"><span>&#128214;</span> Glossary (500+)</a>
+                    <a href="glossary-plus.html" class="link-card"><span>&#128214;</span> Glossary+</a>
+                    <a href="pbqs/mock-exam-core1.html" class="link-card"><span>&#128221;</span> Mock Exam Core 1</a>
+                    <a href="pbqs/mock-exam-core2.html" class="link-card"><span>&#128221;</span> Mock Exam Core 2</a>
                     <a href="pbqs/hardware.html" class="link-card"><span>&#128187;</span> Hardware PBQ</a>
                     <a href="pbqs/networking.html" class="link-card"><span>&#127760;</span> Networking PBQ</a>
                     <a href="pbqs/os.html" class="link-card"><span>&#128421;</span> OS PBQ</a>
                     <a href="pbqs/security.html" class="link-card"><span>&#128274;</span> Security PBQ</a>
                     <a href="pbqs/mobile.html" class="link-card"><span>&#128241;</span> Mobile PBQ</a>
-                    <a href="glossary.html" class="link-card"><span>&#128214;</span> Glossary</a>
-                    <a href="flashcards.html" class="link-card"><span>&#127183;</span> Flash Cards</a>
                     <a href="reference/ports.html" class="link-card"><span>&#128225;</span> Port Reference</a>
                     <a href="reference/cables.html" class="link-card"><span>&#128268;</span> Cable Reference</a>
                     <a href="reference/commands.html" class="link-card"><span>&#128421;</span> Commands</a>
                     <a href="reference/bios.html" class="link-card"><span>&#9881;</span> BIOS/UEFI</a>
-                    <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resources</a>
                     <a href="reference/cheat-sheets.html" class="link-card"><span>&#128208;</span> Cheat Sheets</a>
+                    <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resources</a>
                 </div>
             </div>
 
@@ -535,6 +587,18 @@
         </div>
         <p style="color:rgba(255,255,255,.3);font-size:.75rem;margin-bottom:4px;">&copy; 2026 Niko Williams. All rights reserved.</p>
         <p style="color:rgba(255,255,255,.2);font-size:.72rem;">CompTIA A+ is a registered trademark of CompTIA, Inc. This site is not affiliated with or endorsed by CompTIA.</p>
+        <p style="color:rgba(255,255,255,.15);font-size:.68rem;margin-top:6px;">Portal views: <span id="memberHits">0</span></p>
     </footer>
+
+<script>
+// Member portal hit counter (localStorage)
+(function(){
+    const key='comptia_member_hits';
+    let count=parseInt(localStorage.getItem(key)||'0')+1;
+    localStorage.setItem(key,count);
+    const el=document.getElementById('memberHits');
+    if(el)el.textContent=count.toLocaleString();
+})();
+</script>
 </body>
 </html>

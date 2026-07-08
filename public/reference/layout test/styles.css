@@ -1,0 +1,385 @@
+/* styles.css */
+body {
+  margin: 0;
+  font-family: "Inter", system-ui;
+  background: radial-gradient(circle at top, #1a0033 0%, #05010a 60%, #000000 100%);
+  color: #e0e0ff;
+}
+
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: rgba(5, 1, 10, 0.9);
+  border-bottom: 1px solid #ff00e6;
+}
+
+.badge-row {
+  display: flex;
+  gap: 4px;
+}
+
+.badge-row::before {
+  content: "Badges:";
+  margin-right: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.badge-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #00f6ff, #ff00e6);
+  box-shadow: 0 0 6px #00f6ff;
+}
+
+.score-panel span {
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+.music-btn,
+.start-btn,
+.answer-btn {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.music-btn {
+  padding: 6px 12px;
+  background: #05010a;
+  color: #00f6ff;
+  border: 1px solid #00f6ff;
+  box-shadow: 0 0 8px #00f6ff;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 0.8fr;
+  flex: 1;
+}
+
+/* Mountain area */
+.mountain-area {
+  position: relative;
+  overflow: hidden;
+}
+
+.mountain-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to top, #05010a 0%, #1a0033 40%, #3b0070 100%),
+    radial-gradient(circle at bottom, #00f6ff33 0%, transparent 60%);
+}
+
+.climber {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  transform: translateX(-50%);
+  background: url("assets/sprites/climber.png") no-repeat 0 0 / cover;
+  filter: drop-shadow(0 0 8px #00f6ff);
+}
+
+/* Question area */
+.question-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 16px;
+}
+
+.question-box {
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(5, 1, 10, 0.9);
+  box-shadow: 0 0 12px #8a2bff;
+  margin-bottom: 12px;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.answer-btn {
+  padding: 10px;
+  border-radius: 6px;
+  background: #05010a;
+  color: #f9ff00;
+  border: 1px solid #ff00e6;
+  box-shadow: 0 0 8px #ff00e6;
+}
+
+.answer-btn:hover {
+  box-shadow: 0 0 12px #00f6ff;
+}
+
+.start-btn {
+  padding: 10px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #00f6ff, #ff00e6);
+  color: #05010a;
+  box-shadow: 0 0 12px #00f6ff;
+}
+
+/* Status panel */
+.status-panel {
+  padding: 16px;
+  border-left: 1px solid #8a2bff;
+  background: rgba(5, 1, 10, 0.85);
+}
+
+/* Final overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.final-message {
+  padding: 24px;
+  border-radius: 12px;
+  background: #05010a;
+  box-shadow: 0 0 20px #00f6ff;
+  text-align: center;
+}
+
+
+
+/* Base sprite */
+.climber {
+  width: 256px;
+  height: 256px;
+  background-image: url("assets/sprites/climber-sheet.png");
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px #00f6ff);
+}
+
+/* Idle: 4 frames */
+.climber.idle {
+  animation: idleAnim 0.8s steps(4) infinite;
+  background-position-y: 0px;
+}
+
+@keyframes idleAnim {
+  from { background-position-x: 0px; }
+  to { background-position-x: -1024px; }
+}
+
+/* Climb: 6 frames */
+.climber.climb {
+  animation: climbAnim 0.5s steps(6) infinite;
+  background-position-y: -256px;
+}
+
+@keyframes climbAnim {
+  from { background-position-x: 0px; }
+  to { background-position-x: -1536px; }
+}
+
+/* Slip: 4 frames */
+.climber.slip {
+  animation: slipAnim 0.5s steps(4) 1;
+  background-position-y: -512px;
+}
+
+@keyframes slipAnim {
+  from { background-position-x: 0px; }
+  to { background-position-x: -1024px; }
+}
+
+/* Victory: 6 frames */
+.climber.victory {
+  animation: victoryAnim 1.2s steps(6) 1 forwards;
+  background-position-y: -768px;
+}
+
+@keyframes victoryAnim {
+  from { background-position-x: 0px; }
+  to { background-position-x: -1536px; }
+}
+
+.mountain-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: radial-gradient(circle at top, #1a0033 0%, #05010a 60%, #000 100%);
+}
+
+.mountain-svg {
+  width: 100%;
+  max-width: 500px;
+  filter: drop-shadow(0 0 12px #00f6ff);
+}
+.climber {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 40px;
+  height: 80px;
+  transform: translateX(-50%);
+}
+
+.climber::before,
+.climber::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #00f6ff;
+  box-shadow: 0 0 10px #00f6ff;
+}
+
+/* body */
+.climber::before {
+  top: 20px;
+  width: 6px;
+  height: 40px;
+}
+
+/* head */
+.climber::after {
+  top: 0;
+  width: 18px;
+  height: 18px;
+}
+
+/* simple climb animation */
+.climber.climb {
+  animation: climbPulse 0.4s alternate 3;
+}
+
+@keyframes climbPulse {
+  from { transform: translateX(-50%) translateY(0); }
+  to   { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* simple slip animation */
+.climber.slip {
+  animation: slipPulse 0.4s alternate 2;
+}
+
+@keyframes slipPulse {
+  from { transform: translateX(-50%) translateY(0); }
+  to   { transform: translateX(-50%) translateY(6px); }
+}
+
+/* victory */
+.climber.victory::after {
+  box-shadow: 0 0 16px #f9ff00;
+}
+.btn-neon {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #00f6ff;
+  background: #05010a;
+  color: #f9ff00;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 10px #00f6ff;
+  cursor: pointer;
+}
+
+.btn-neon.primary {
+  background: linear-gradient(135deg, #00f6ff, #ff00e6);
+  color: #05010a;
+  box-shadow: 0 0 14px #00f6ff;
+}
+.hud-panel {
+  padding: 12px 16px;
+  border-left: 1px solid #8a2bff;
+  background: rgba(5, 1, 10, 0.85);
+  font-size: 14px;
+}
+
+.hud-label {
+  color: #ff00e6;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+
+.hud-value {
+  color: #f9ff00;
+}
+.bg-mountain {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 16px #00f6ff);
+}
+.climber {
+  width: 256px;
+  height: 256px;
+  background-image: url("assets/sprites/climber-sheet.png");
+  background-repeat: no-repeat;
+  image-rendering: crisp-edges;
+}
+
+/* Idle: row 1, 4 frames */
+.climber.idle {
+  background-position-y: 0;
+  animation: idleAnim 0.8s steps(4) infinite;
+}
+
+@keyframes idleAnim {
+  from { background-position-x: 0; }
+  to   { background-position-x: -1024px; }
+}
+
+/* Climb: row 2, 6 frames */
+.climber.climb {
+  background-position-y: -256px;
+  animation: climbAnim 0.5s steps(6) 1;
+}
+
+@keyframes climbAnim {
+  from { background-position-x: 0; }
+  to   { background-position-x: -1536px; }
+}
+
+/* Slip: row 3, 4 frames */
+.climber.slip {
+  background-position-y: -512px;
+  animation: slipAnim 0.5s steps(4) 1;
+}
+
+@keyframes slipAnim {
+  from { background-position-x: 0; }
+  to   { background-position-x: -1024px; }
+}
+
+/* Victory: row 4, 6 frames */
+.climber.victory {
+  background-position-y: -768px;
+  animation: victoryAnim 1.2s steps(6) 1 forwards;
+}
+
+@keyframes victoryAnim {
+  from { background-position-x: 0; }
+  to   { background-position-x: -1536px; }
+}

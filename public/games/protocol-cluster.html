@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>Protocol Cluster — Sync the Grid | CompTIA A+ Study Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+    height:100%;overflow:hidden;
+    background:#050510;
+    font-family:'Courier New',monospace;
+    color:#c0c0c0;
+    touch-action:none;
+    -webkit-user-select:none;user-select:none;
+}
+:root{
+    --blue:#00aaff;--yellow:#ffcc00;--purple:#cc44ff;--green:#00ff88;
+    --cyan:#00f3ff;--grid-line:rgba(0,243,255,0.08);
+    --bg-panel:rgba(5,10,25,0.95);
+}
+</style>
+</head>
+<body>
+<div id="app">
+    <!-- TOP BAR -->
+    <header id="topBar">
+        <div class="prompt" id="prompt">SYNC INITIATED. SELECT COMPATIBLE PACKETS.</div>
+        <div class="top-stats">
+            <span class="stat-chip">SCORE: <b id="scoreVal">0</b></span>
+            <span class="stat-chip">LEVEL: <b id="levelVal">1</b></span>
+            <span class="stat-chip combo-chip" id="comboChip">×1</span>
+        </div>
+    </header>
+
+    <!-- MAIN AREA: Grid + Side Panel -->
+    <div id="mainArea">
+        <!-- GAME GRID -->
+        <div id="gridWrap">
+            <canvas id="lineCanvas"></canvas>
+            <div id="grid"></div>
+            <!-- Grid overlay lines (Tron effect) -->
+            <div class="grid-lines"></div>
+        </div>
+
+        <!-- SIDE PANEL -->
+        <aside id="sidePanel">
+            <div class="panel-block">
+                <div class="panel-label">SYSTEM HEALTH</div>
+                <div class="health-bar"><div class="health-fill" id="healthFill"></div></div>
+                <div class="health-text" id="healthText">100%</div>
+            </div>
+            <div class="panel-block">
+                <div class="panel-label">CHARTING THE GRID</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressText">0% COMPLETE</div>
+            </div>
+            <div class="panel-block bonus-block">
+                <div class="panel-label">BONUS OBJECTIVE</div>
+                <div class="bonus-text" id="bonusText">Clear 5 packets in one sync</div>
+                <div class="bonus-status" id="bonusStatus">⬡ PENDING</div>
+            </div>
+            <div class="panel-block">
+                <div class="panel-label">CATEGORIES</div>
+                <div class="cat-legend">
+                    <span class="cat-dot blue"></span> Hardware
+                    <span class="cat-dot yellow"></span> Networking
+                    <span class="cat-dot purple"></span> Security
+                    <span class="cat-dot green"></span> Troubleshoot
+                </div>
+            </div>
+            <div class="panel-block">
+                <button class="ctrl-btn" id="muteBtn">🔊 AUDIO</button>
+                <button class="ctrl-btn exit-btn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕ EXIT</button>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<style>
+/* === LAYOUT === */
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+#topBar{
+    padding:8px 12px;
+    background:var(--bg-panel);
+    border-bottom:1px solid rgba(0,243,255,0.15);
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;
+    flex-shrink:0;
+}
+.prompt{
+    font-size:11px;letter-spacing:2px;color:var(--cyan);
+    text-shadow:0 0 6px rgba(0,243,255,0.6);
+    animation:promptPulse 3s ease-in-out infinite;
+}
+@keyframes promptPulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.top-stats{display:flex;gap:8px;align-items:center}
+.stat-chip{font-size:11px;padding:3px 10px;border:1px solid #333;border-radius:4px;background:#0a0a1a}
+.stat-chip b{color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.5)}
+.combo-chip{border-color:var(--yellow);color:var(--yellow);font-weight:700;text-shadow:0 0 6px rgba(255,204,0,0.5);transition:all 0.3s}
+
+#mainArea{
+    flex:1;display:flex;gap:0;overflow:hidden;
+    min-height:0;
+}
+
+/* === GRID === */
+#gridWrap{
+    flex:1;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    padding:8px;
+    min-width:0;
+}
+.grid-lines{
+    position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+        linear-gradient(var(--grid-line) 1px,transparent 1px),
+        linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+    background-size:40px 40px;
+    pointer-events:none;
+    opacity:0.6;
+}
+#lineCanvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+#grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    grid-template-rows:repeat(6,1fr);
+    gap:5px;
+    width:min(100%, 380px);
+    aspect-ratio:1/1;
+    position:relative;z-index:5;
+}
+
+/* === DATA PACKETS (Nodes) === */
+.node{
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%;
+    font-size:10px;font-weight:700;
+    text-align:center;line-height:1.1;
+    cursor:pointer;
+    transition:transform 0.15s,box-shadow 0.15s;
+    position:relative;
+    border:2px solid;
+    aspect-ratio:1/1;
+    word-break:break-word;
+    padding:3px;
+}
+/* Category colors — glowing orbs */
+.node.cat-hw{background:radial-gradient(circle,rgba(0,170,255,0.25),rgba(0,170,255,0.05));border-color:var(--blue);color:var(--blue);text-shadow:0 0 4px var(--blue)}
+.node.cat-net{background:radial-gradient(circle,rgba(255,204,0,0.2),rgba(255,204,0,0.03));border-color:var(--yellow);color:var(--yellow);text-shadow:0 0 4px var(--yellow)}
+.node.cat-sec{background:radial-gradient(circle,rgba(204,68,255,0.2),rgba(204,68,255,0.03));border-color:var(--purple);color:var(--purple);text-shadow:0 0 4px var(--purple)}
+.node.cat-ts{background:radial-gradient(circle,rgba(0,255,136,0.2),rgba(0,255,136,0.03));border-color:var(--green);color:var(--green);text-shadow:0 0 4px var(--green)}
+
+.node.selected{transform:scale(1.2);z-index:20}
+.node.cat-hw.selected{box-shadow:0 0 12px var(--blue),0 0 24px rgba(0,170,255,0.4)}
+.node.cat-net.selected{box-shadow:0 0 12px var(--yellow),0 0 24px rgba(255,204,0,0.4)}
+.node.cat-sec.selected{box-shadow:0 0 12px var(--purple),0 0 24px rgba(204,68,255,0.4)}
+.node.cat-ts.selected{box-shadow:0 0 12px var(--green),0 0 24px rgba(0,255,136,0.4)}
+
+.node.matched{animation:burstOut 0.45s forwards}
+@keyframes burstOut{
+    0%{transform:scale(1.2);opacity:1}
+    40%{transform:scale(1.6);opacity:0.8;filter:brightness(2)}
+    100%{transform:scale(0);opacity:0}
+}
+.node.falling{animation:dropIn 0.3s ease-out forwards}
+@keyframes dropIn{from{transform:translateY(-150%);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Laser sweep on clear */
+.laser-sweep{
+    position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+    box-shadow:0 0 12px var(--cyan);
+    z-index:50;pointer-events:none;
+    animation:sweep 0.5s ease-out forwards;
+}
+@keyframes sweep{from{top:0;opacity:1}to{top:100%;opacity:0}}
+
+/* === SIDE PANEL === */
+#sidePanel{
+    width:160px;flex-shrink:0;
+    background:var(--bg-panel);
+    border-left:1px solid rgba(0,243,255,0.12);
+    padding:12px 10px;
+    display:flex;flex-direction:column;gap:12px;
+    overflow-y:auto;
+}
+.panel-block{border:1px solid #1a1a2e;border-radius:6px;padding:10px;background:rgba(0,0,0,0.4)}
+.panel-label{font-size:9px;letter-spacing:2px;color:#555;margin-bottom:6px;text-transform:uppercase}
+.health-bar,.progress-bar{width:100%;height:10px;background:#111;border:1px solid #222;border-radius:3px;overflow:hidden}
+.health-fill{height:100%;width:100%;background:linear-gradient(90deg,#ff4444,#ffaa00,var(--green));transition:width 0.5s;box-shadow:inset 0 0 6px rgba(0,255,136,0.3)}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--blue));transition:width 0.5s;box-shadow:inset 0 0 6px rgba(0,243,255,0.3)}
+.health-text,.progress-text{font-size:10px;color:#888;text-align:center;margin-top:4px}
+.bonus-block{border-color:rgba(255,204,0,0.2)}
+.bonus-text{font-size:10px;color:var(--yellow);margin-bottom:4px}
+.bonus-status{font-size:9px;color:#666}
+.cat-legend{font-size:9px;display:flex;flex-direction:column;gap:4px;color:#888}
+.cat-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.cat-dot.blue{background:var(--blue);box-shadow:0 0 4px var(--blue)}
+.cat-dot.yellow{background:var(--yellow);box-shadow:0 0 4px var(--yellow)}
+.cat-dot.purple{background:var(--purple);box-shadow:0 0 4px var(--purple)}
+.cat-dot.green{background:var(--green);box-shadow:0 0 4px var(--green)}
+.ctrl-btn{
+    width:100%;padding:8px;border:1px solid #333;border-radius:4px;
+    background:#0a0a1a;color:#888;font-family:inherit;font-size:10px;
+    cursor:pointer;transition:all 0.2s;margin-top:4px;
+}
+.ctrl-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.exit-btn:hover{border-color:#ff4444;color:#ff4444}
+
+/* === PARTICLES === */
+.particle{
+    position:fixed;border-radius:50%;pointer-events:none;z-index:100;
+    animation:pfly 0.7s ease-out forwards;
+}
+@keyframes pfly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
+
+/* === TOAST === */
+.toast{
+    position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) scale(0.8);
+    padding:14px 32px;border-radius:8px;font-size:16px;font-weight:700;
+    pointer-events:none;z-index:200;opacity:0;transition:all 0.3s;
+    letter-spacing:2px;
+}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.toast.success{background:rgba(0,30,0,0.95);border:2px solid var(--green);color:var(--green);text-shadow:0 0 8px var(--green)}
+.toast.fail{background:rgba(30,0,30,0.95);border:2px solid var(--purple);color:var(--purple);text-shadow:0 0 8px var(--purple)}
+.toast.combo{background:rgba(30,20,0,0.95);border:2px solid var(--yellow);color:var(--yellow);text-shadow:0 0 8px var(--yellow)}
+
+/* === RESPONSIVE === */
+@media(max-width:580px){
+    #sidePanel{display:none}
+    #topBar .prompt{font-size:9px}
+    .stat-chip{font-size:10px;padding:2px 6px}
+    #grid{width:min(100%,340px)}
+    .node{font-size:9px}
+}
+@media(min-width:581px) and (max-width:800px){
+    #sidePanel{width:140px}
+}
+@media(min-height:750px){
+    #grid{width:min(100%,400px)}
+}
+</style>
+
+<script>
+// ============================================================
+// PROTOCOL CLUSTER — Engine v2
+// ============================================================
+
+// --- DATA: CompTIA A+ clusters by domain ---
+const CLUSTERS = [
+    // [items[], categories[], hint]
+    // Networking (yellow)
+    {items:['22','SSH'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['80','HTTP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['443','HTTPS'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['3389','RDP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['53','DNS'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['25','SMTP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['445','SMB'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['110','POP3'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['143','IMAP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['21','FTP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['67/68','DHCP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['161','SNMP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['389','LDAP'],cats:['net','net'],hint:'Port → Protocol'},
+    {items:['OSI','7 Layers'],cats:['net','net'],hint:'Model → Count'},
+    {items:['TCP','Reliable'],cats:['net','net'],hint:'Protocol → Trait'},
+    {items:['UDP','Fast'],cats:['net','net'],hint:'Protocol → Trait'},
+    {items:['DHCP','DORA'],cats:['net','net'],hint:'Protocol → Process'},
+    {items:['NAT','Private→Public'],cats:['net','net'],hint:'Function → Description'},
+    // Hardware (blue)
+    {items:['NVMe','PCIe','SSD'],cats:['hw','hw','hw'],hint:'Tech chain'},
+    {items:['DDR4','288pin'],cats:['hw','hw'],hint:'RAM → Pins'},
+    {items:['DDR5','4800MHz'],cats:['hw','hw'],hint:'RAM → Speed'},
+    {items:['ATX','305mm'],cats:['hw','hw'],hint:'Form → Size'},
+    {items:['SATA','6Gbps'],cats:['hw','hw'],hint:'Interface → Speed'},
+    {items:['Cat6a','10Gbps'],cats:['hw','hw'],hint:'Cable → Speed'},
+    {items:['TPM','BitLocker'],cats:['hw','sec'],hint:'Chip → Feature'},
+    {items:['RAID5','Parity'],cats:['hw','hw'],hint:'RAID → Method'},
+    {items:['RAID1','Mirror'],cats:['hw','hw'],hint:'RAID → Method'},
+    {items:['GPU','PCIe x16'],cats:['hw','hw'],hint:'Card → Slot'},
+    {items:['CMOS','CR2032'],cats:['hw','hw'],hint:'Function → Battery'},
+    {items:['POST','Beep Code'],cats:['hw','hw'],hint:'Process → Signal'},
+    // Security (purple)
+    {items:['WPA3','SAE'],cats:['sec','sec'],hint:'Protocol → Auth'},
+    {items:['MFA','2+ Factors'],cats:['sec','sec'],hint:'Method → Definition'},
+    {items:['Phishing','Email'],cats:['sec','sec'],hint:'Attack → Vector'},
+    {items:['Rootkit','Kernel'],cats:['sec','sec'],hint:'Malware → Location'},
+    {items:['ESD','100V'],cats:['sec','sec'],hint:'Threat → Threshold'},
+    {items:['VPN','Encrypted'],cats:['sec','sec'],hint:'Tool → Feature'},
+    {items:['Evil Twin','Rogue AP'],cats:['sec','sec'],hint:'Attack → Method'},
+    {items:['Ransomware','Encrypts'],cats:['sec','sec'],hint:'Malware → Action'},
+    // Troubleshooting (green)
+    {items:['sfc','System Files'],cats:['ts','ts'],hint:'Command → Repairs'},
+    {items:['DISM','Components'],cats:['ts','ts'],hint:'Command → Repairs'},
+    {items:['chkdsk','Bad Sectors'],cats:['ts','ts'],hint:'Command → Finds'},
+    {items:['ipconfig','IP Info'],cats:['ts','ts'],hint:'Command → Shows'},
+    {items:['BSOD','Kernel Error'],cats:['ts','ts'],hint:'Symptom → Cause'},
+    {items:['Safe Mode','Minimal'],cats:['ts','ts'],hint:'Boot → Loads'},
+    {items:['bootrec','Boot Fix'],cats:['ts','ts'],hint:'Command → Repairs'},
+];
+
+// --- GAME STATE ---
+const GS = 6; // grid size
+const TOTAL = GS * GS;
+let grid = [];
+let score = 0, level = 1, combo = 0, health = 100, progress = 0;
+let totalCleared = 0, bonusTarget = 5, bonusAchieved = false;
+let selectedPath = [], isDrawing = false, muted = false;
+let audioCtx = null;
+
+// Persistence
+const saved = JSON.parse(localStorage.getItem('protoCluster2')||'{}');
+if(saved.score){score=saved.score;level=saved.level||1;progress=saved.progress||0;totalCleared=saved.totalCleared||0;}
+
+// --- DOM ---
+const gridEl=document.getElementById('grid');
+const canvas=document.getElementById('lineCanvas');
+const lctx=canvas.getContext('2d');
+const scoreEl=document.getElementById('scoreVal');
+const levelEl=document.getElementById('levelVal');
+const comboChip=document.getElementById('comboChip');
+const healthFill=document.getElementById('healthFill');
+const healthText=document.getElementById('healthText');
+const progressFill=document.getElementById('progressFill');
+const progressText=document.getElementById('progressText');
+const bonusText=document.getElementById('bonusText');
+const bonusStatus=document.getElementById('bonusStatus');
+const promptEl=document.getElementById('prompt');
+const muteBtn=document.getElementById('muteBtn');
+
+// --- HELPERS ---
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function catClass(c){return c==='hw'?'cat-hw':c==='net'?'cat-net':c==='sec'?'cat-sec':'cat-ts';}
+
+// --- GRID GENERATION ---
+function makeCell(){
+    const cl=CLUSTERS[rand(0,CLUSTERS.length-1)];
+    const idx=rand(0,cl.items.length-1);
+    return{text:cl.items[idx],cat:cl.cats[idx],cluster:cl};
+}
+
+function fillGrid(){
+    grid=[];
+    for(let i=0;i<TOTAL;i++) grid.push(makeCell());
+    // Seed guaranteed matches
+    seedMatches();
+    renderGrid();
+}
+
+function seedMatches(){
+    const count = Math.min(4 + level, 10);
+    const picks = shuffle(CLUSTERS).slice(0, count);
+    const positions = shuffle([...Array(TOTAL).keys()]);
+    let pi = 0;
+    picks.forEach(cl=>{
+        cl.items.forEach((item,ii)=>{
+            if(pi<TOTAL){
+                grid[positions[pi]]={text:item,cat:cl.cats[ii],cluster:cl};
+                pi++;
+            }
+        });
+    });
+}
+
+function renderGrid(){
+    gridEl.innerHTML='';
+    grid.forEach((cell,i)=>{
+        const n=document.createElement('div');
+        n.className=`node ${catClass(cell.cat)}`;
+        n.textContent=cell.text;
+        n.dataset.idx=i;
+        gridEl.appendChild(n);
+    });
+    resizeCanvas();
+}
+
+function resizeCanvas(){
+    const r=gridEl.getBoundingClientRect();
+    canvas.width=r.width;canvas.height=r.height;
+    canvas.style.left=gridEl.offsetLeft+'px';
+    canvas.style.top=gridEl.offsetTop+'px';
+}
+
+// --- HUD UPDATE ---
+function updateHUD(){
+    scoreEl.textContent=score;
+    levelEl.textContent=level;
+    comboChip.textContent='×'+Math.max(1,combo);
+    comboChip.style.transform=combo>1?'scale(1.2)':'scale(1)';
+    healthFill.style.width=health+'%';
+    healthText.textContent=health+'%';
+    progressFill.style.width=Math.min(progress,100)+'%';
+    progressText.textContent=Math.min(Math.round(progress),100)+'% COMPLETE';
+    if(bonusAchieved) bonusStatus.textContent='✓ ACHIEVED';
+}
+
+// --- ADJACENCY ---
+function adjacent(a,b){
+    const ax=a%GS,ay=Math.floor(a/GS),bx=b%GS,by=Math.floor(b/GS);
+    return Math.abs(ax-bx)<=1&&Math.abs(ay-by)<=1&&a!==b;
+}
+
+// --- INPUT ---
+function nodeAt(x,y){
+    const el=document.elementFromPoint(x,y);
+    if(el&&el.classList.contains('node'))return parseInt(el.dataset.idx);
+    return -1;
+}
+function startDraw(x,y){
+    const i=nodeAt(x,y);if(i<0)return;
+    isDrawing=true;selectedPath=[i];highlight();
+}
+function moveDraw(x,y){
+    if(!isDrawing)return;
+    const i=nodeAt(x,y);if(i<0)return;
+    // Backtrack
+    const prev=selectedPath.indexOf(i);
+    if(prev===selectedPath.length-2){selectedPath.pop();highlight();return;}
+    if(selectedPath.includes(i))return;
+    if(!adjacent(selectedPath[selectedPath.length-1],i))return;
+    selectedPath.push(i);highlight();
+}
+function endDraw(){
+    if(!isDrawing)return;
+    isDrawing=false;
+    evaluate();
+    clearHL();selectedPath=[];
+}
+
+// --- HIGHLIGHT & LINE ---
+function highlight(){
+    document.querySelectorAll('.node.selected').forEach(n=>n.classList.remove('selected'));
+    selectedPath.forEach(i=>gridEl.children[i]?.classList.add('selected'));
+    drawLine();
+}
+function clearHL(){
+    document.querySelectorAll('.node.selected').forEach(n=>n.classList.remove('selected'));
+    lctx.clearRect(0,0,canvas.width,canvas.height);
+}
+function drawLine(){
+    lctx.clearRect(0,0,canvas.width,canvas.height);
+    if(selectedPath.length<2)return;
+    lctx.beginPath();
+    lctx.strokeStyle='rgba(0,243,255,0.8)';
+    lctx.lineWidth=3;lctx.lineCap='round';lctx.lineJoin='round';
+    lctx.shadowColor='#00f3ff';lctx.shadowBlur=10;
+    const gr=gridEl.getBoundingClientRect();
+    selectedPath.forEach((idx,i)=>{
+        const nd=gridEl.children[idx];if(!nd)return;
+        const r=nd.getBoundingClientRect();
+        const cx=r.left-gr.left+r.width/2, cy=r.top-gr.top+r.height/2;
+        if(i===0)lctx.moveTo(cx,cy);else lctx.lineTo(cx,cy);
+    });
+    lctx.stroke();lctx.shadowBlur=0;
+}
+
+// --- EVALUATION ---
+function evaluate(){
+    if(selectedPath.length<2){handleMiss();return;}
+    const items=selectedPath.map(i=>grid[i]);
+    const texts=items.map(it=>it.text);
+    // Check against all clusters
+    let matched=false;
+    for(const cl of CLUSTERS){
+        if(selectedPath.length<cl.items.length)continue;
+        // All cluster items present in selection?
+        const need=[...cl.items];
+        const have=[...texts];
+        let ok=true;
+        for(const item of need){
+            const fi=have.indexOf(item);
+            if(fi===-1){ok=false;break;}
+            have.splice(fi,1);
+        }
+        if(ok&&selectedPath.length<=cl.items.length+1){
+            matched=true;
+            promptEl.textContent='SYNC: '+cl.hint;
+            break;
+        }
+    }
+    if(matched) handleMatch();
+    else handleMiss();
+}
+
+function handleMatch(){
+    combo++;
+    const pts=selectedPath.length*15*combo;
+    score+=pts;
+    totalCleared+=selectedPath.length;
+    progress=Math.min((totalCleared/(level*20))*100,100);
+    // Level up
+    if(progress>=100){level++;progress=0;totalCleared=0;bonusAchieved=false;bonusTarget=3+level;bonusText.textContent=`Clear ${bonusTarget} in one sync`;showToast('LEVEL '+level,'combo');}
+    // Bonus check
+    if(selectedPath.length>=bonusTarget&&!bonusAchieved){bonusAchieved=true;score+=50;showToast('BONUS +50','combo');}
+
+    // Visuals
+    selectedPath.forEach(i=>{const nd=gridEl.children[i];if(nd){spawnParticles(nd);nd.classList.add('matched');}});
+    laserSweep();
+    playChime();
+    showToast(combo>1?`×${combo} SYNC +${pts}`:`+${pts}`,'success');
+
+    setTimeout(()=>{refill(selectedPath);updateHUD();saveState();},450);
+}
+
+function handleMiss(){
+    combo=0;
+    health=Math.max(0,health-5);
+    if(health<=0){showToast('SYSTEM FAILURE','fail');setTimeout(()=>{health=100;score=Math.max(0,score-100);updateHUD();},2000);}
+    playBuzz();
+    showToast('INVALID SYNC','fail');
+    updateHUD();
+}
+
+// --- REFILL (gravity) ---
+function refill(indices){
+    indices.sort((a,b)=>a-b);
+    indices.forEach(i=>{grid[i]=null;});
+    for(let col=0;col<GS;col++){
+        let wr=GS-1;
+        for(let row=GS-1;row>=0;row--){
+            const idx=row*GS+col;
+            if(grid[idx]!==null){
+                const ni=wr*GS+col;
+                if(ni!==idx){grid[ni]=grid[idx];grid[idx]=null;}
+                wr--;
+            }
+        }
+        for(let row=wr;row>=0;row--){grid[row*GS+col]=makeCell();}
+    }
+    if(Math.random()<0.5)seedMatches();
+    renderGrid();
+}
+
+// --- EFFECTS ---
+function spawnParticles(node){
+    const r=node.getBoundingClientRect();
+    const cx=r.left+r.width/2,cy=r.top+r.height/2;
+    const colors=['#00f3ff','#ff00ff','#ccff00','#00aaff','#fff'];
+    for(let i=0;i<14;i++){
+        const p=document.createElement('div');
+        p.className='particle';
+        const angle=(Math.PI*2/14)*i;
+        const dist=rand(25,65);
+        p.style.left=cx+'px';p.style.top=cy+'px';
+        p.style.width=rand(3,6)+'px';p.style.height=p.style.width;
+        p.style.background=colors[i%colors.length];
+        p.style.boxShadow=`0 0 6px ${colors[i%colors.length]}`;
+        p.style.setProperty('--dx',Math.cos(angle)*dist+'px');
+        p.style.setProperty('--dy',Math.sin(angle)*dist+'px');
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),700);
+    }
+}
+
+function laserSweep(){
+    const el=document.createElement('div');
+    el.className='laser-sweep';
+    document.getElementById('gridWrap').appendChild(el);
+    setTimeout(()=>el.remove(),500);
+}
+
+function showToast(text,type){
+    const old=document.querySelector('.toast');if(old)old.remove();
+    const t=document.createElement('div');
+    t.className=`toast ${type}`;t.textContent=text;
+    document.body.appendChild(t);
+    requestAnimationFrame(()=>t.classList.add('show'));
+    setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},1200);
+}
+
+// --- SOUND ---
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
+function playChime(){
+    if(muted)return;initAudio();
+    // Synthesized digital chime — rising tones
+    [600,800,1000].forEach((freq,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type='sine';o.frequency.setValueAtTime(freq,audioCtx.currentTime+i*0.08);
+        g.gain.setValueAtTime(0.08,audioCtx.currentTime+i*0.08);
+        g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+i*0.08+0.25);
+        o.connect(g);g.connect(audioCtx.destination);
+        o.start(audioCtx.currentTime+i*0.08);o.stop(audioCtx.currentTime+i*0.08+0.3);
+    });
+}
+function playBuzz(){
+    if(muted)return;initAudio();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(150,audioCtx.currentTime);
+    g.gain.setValueAtTime(0.06,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.2);
+    o.connect(g);g.connect(audioCtx.destination);
+    o.start();o.stop(audioCtx.currentTime+0.2);
+}
+
+// --- PERSISTENCE ---
+function saveState(){localStorage.setItem('protoCluster2',JSON.stringify({score,level,progress,totalCleared}));}
+
+// --- EVENT LISTENERS ---
+gridEl.addEventListener('touchstart',e=>{e.preventDefault();startDraw(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+gridEl.addEventListener('touchmove',e=>{e.preventDefault();moveDraw(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+gridEl.addEventListener('touchend',e=>{e.preventDefault();endDraw();},{passive:false});
+gridEl.addEventListener('mousedown',e=>startDraw(e.clientX,e.clientY));
+document.addEventListener('mousemove',e=>{if(isDrawing)moveDraw(e.clientX,e.clientY);});
+document.addEventListener('mouseup',()=>{if(isDrawing)endDraw();});
+muteBtn.addEventListener('click',()=>{muted=!muted;muteBtn.textContent=muted?'🔇 MUTED':'🔊 AUDIO';});
+window.addEventListener('resize',resizeCanvas);
+
+// --- INIT ---
+updateHUD();
+fillGrid();
+</script>
+</body>
+</html>

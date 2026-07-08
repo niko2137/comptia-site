@@ -4,28 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Port Match — Connect the Pairs | CompTIA A+ Study Hub</title>
-    <meta name="description" content="Match port numbers to their protocols in this interactive Wordwall-style matching game. Practice for the CompTIA A+ exam.">
-    <link rel="stylesheet" href="../css/style.css">
+    <meta name="description" content="Match port numbers to their protocols in this interactive matching game. Practice for the CompTIA A+ exam.">
     <style>
-        /* ===== PORT MATCH GAME STYLES ===== */
-        .game-wrapper {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+        /* ===== DARK TERMINAL THEME ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a1a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        .game-header {
-            text-align: center;
-            margin-bottom: 24px;
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 240, 255, 0.015) 3px, rgba(0, 240, 255, 0.015) 4px);
+            pointer-events: none;
+            z-index: 9999;
         }
-        .game-header h1 {
-            font-size: 2em;
-            margin-bottom: 8px;
-            color: var(--navy);
+
+        /* NAV */
+        nav {
+            background: #0f1628;
+            border-bottom: 1px solid #1e3050;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .game-header p {
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
+        .nav-brand { font-weight: 700; font-size: 1rem; color: #fff; }
+        .nav-brand span { color: #00f0ff; }
+        .nav-links { display: flex; gap: 16px; list-style: none; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.7); font-size: 0.85rem; transition: color 0.2s; text-decoration: none; }
+        .nav-links a:hover { color: #00f0ff; }
+        .nav-cta { background: #00f0ff; color: #0a0a1a !important; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
+        .nav-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; }
+        .container { display: flex; align-items: center; justify-content: space-between; }
+
+        .game-wrapper { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .game-header { text-align: center; margin-bottom: 24px; }
+        .game-header h1 { font-size: 1.8em; margin-bottom: 8px; color: #00f0ff; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+        .game-header p { color: #64748b; margin-bottom: 16px; font-size: 0.9em; }
 
         /* Difficulty buttons */
         .difficulty-bar {
@@ -36,23 +59,23 @@
         }
         .diff-btn {
             padding: 8px 24px;
-            border: 2px solid var(--navy);
-            border-radius: 20px;
+            border: 1px solid #00f0ff;
+            border-radius: 6px;
             background: transparent;
-            color: var(--navy);
+            color: #00f0ff;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.85em;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: 'Courier New', monospace;
         }
         .diff-btn:hover {
-            background: var(--navy);
-            color: #fff;
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
         .diff-btn.active {
-            background: var(--navy);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(31, 73, 125, 0.3);
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
         }
 
         /* Stats bar */
@@ -63,28 +86,13 @@
             gap: 32px;
             margin-bottom: 24px;
             padding: 12px 24px;
-            background: var(--bg-section);
+            background: rgba(0, 240, 255, 0.03);
             border-radius: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid #1e3050;
         }
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: var(--navy);
-        }
-        .stat-label {
-            font-size: 0.8em;
-            color: var(--text-muted);
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-value {
-            font-size: 1.4em;
-            font-variant-numeric: tabular-nums;
-        }
+        .stat { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .stat-label { font-size: 0.75em; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-size: 1.4em; color: #00ff88; font-variant-numeric: tabular-nums; }
 
         /* Game area */
         .game-area {
@@ -116,7 +124,7 @@
         /* Cards */
         .match-card {
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 600;
             font-size: 1em;
             cursor: pointer;
@@ -125,50 +133,52 @@
             position: relative;
             min-width: 120px;
             text-align: center;
+            font-family: 'Courier New', monospace;
         }
         .card-left {
-            background: var(--navy);
-            color: #fff;
-            border: 2px solid var(--navy);
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            border: 2px solid #00f0ff;
             font-size: 1.2em;
+            text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
         }
         .card-left:hover:not(.matched):not(.selected) {
-            background: var(--navy-dark);
+            background: rgba(0, 240, 255, 0.2);
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(31, 73, 125, 0.3);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
         }
         .card-right {
-            background: #fff;
-            color: var(--navy);
-            border: 2px solid var(--navy);
+            background: rgba(0, 255, 136, 0.05);
+            color: #00ff88;
+            border: 2px solid rgba(0, 255, 136, 0.4);
         }
         .card-right:hover:not(.matched):not(.selected) {
-            background: var(--bg-section);
+            background: rgba(0, 255, 136, 0.15);
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(31, 73, 125, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
         }
 
         /* Selected state */
         .card-left.selected {
-            box-shadow: 0 0 0 3px #00e5ff, 0 0 20px rgba(0, 229, 255, 0.4);
-            animation: pulse-left 1s infinite;
+            box-shadow: 0 0 0 3px #00f0ff, 0 0 20px rgba(0, 240, 255, 0.5);
+            animation: pulse-left 1.5s ease-in-out infinite;
         }
         .card-right.selected {
-            box-shadow: 0 0 0 3px #ff9800, 0 0 20px rgba(255, 152, 0, 0.4);
-            animation: pulse-right 1s infinite;
+            box-shadow: 0 0 0 3px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5);
+            animation: pulse-right 1.5s ease-in-out infinite;
         }
         @keyframes pulse-left {
-            0%, 100% { box-shadow: 0 0 0 3px #00e5ff, 0 0 20px rgba(0, 229, 255, 0.4); }
-            50% { box-shadow: 0 0 0 5px #00e5ff, 0 0 30px rgba(0, 229, 255, 0.6); }
+            0%, 100% { box-shadow: 0 0 0 3px #00f0ff, 0 0 20px rgba(0, 240, 255, 0.5); }
+            50% { box-shadow: 0 0 0 4px #00f0ff, 0 0 30px rgba(0, 240, 255, 0.7); }
         }
         @keyframes pulse-right {
-            0%, 100% { box-shadow: 0 0 0 3px #ff9800, 0 0 20px rgba(255, 152, 0, 0.4); }
-            50% { box-shadow: 0 0 0 5px #ff9800, 0 0 30px rgba(255, 152, 0, 0.6); }
+            0%, 100% { box-shadow: 0 0 0 3px #00ff88, 0 0 20px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 0 4px #00ff88, 0 0 30px rgba(0, 255, 136, 0.7); }
         }
 
         /* Matched state */
         .match-card.matched {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: default;
             transform: scale(0.95);
         }
@@ -177,8 +187,8 @@
             position: absolute;
             top: -6px;
             right: -6px;
-            background: var(--green);
-            color: #fff;
+            background: #00ff88;
+            color: #0a0a1a;
             width: 22px;
             height: 22px;
             border-radius: 50%;
@@ -194,7 +204,7 @@
         }
         @keyframes wrong-flash {
             0%, 100% { background: inherit; }
-            25%, 75% { background: #ff4444; border-color: #ff4444; color: #fff; }
+            25%, 75% { background: rgba(255, 68, 68, 0.4); border-color: #ff4444; }
         }
         /* Correct pulse */
         .match-card.correct-pulse {
@@ -213,10 +223,11 @@
             stroke-linecap: round;
         }
         .line-correct {
-            stroke: var(--green);
+            stroke: #00ff88;
             stroke-dasharray: 200;
             stroke-dashoffset: 200;
             animation: draw-line 0.5s forwards;
+            filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
         }
         .line-wrong {
             stroke: #ff4444;
@@ -236,7 +247,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(5, 5, 15, 0.9);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -250,13 +261,14 @@
             to { opacity: 1; }
         }
         .completion-card {
-            background: #fff;
-            border-radius: 16px;
+            background: #0f1628;
+            border: 2px solid #00ff88;
+            border-radius: 12px;
             padding: 48px;
             text-align: center;
             max-width: 420px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
             animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes pop-in {
@@ -264,9 +276,10 @@
             to { transform: scale(1); opacity: 1; }
         }
         .completion-card h2 {
-            color: var(--navy);
-            font-size: 1.8em;
+            color: #00ff88;
+            font-size: 1.6em;
             margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
         }
 
         .stars {
@@ -274,8 +287,8 @@
             margin: 16px 0;
             letter-spacing: 8px;
         }
-        .stars .star-on { color: #f39c12; }
-        .stars .star-off { color: #ddd; }
+        .stars .star-on { color: #ffaa00; text-shadow: 0 0 8px rgba(255,170,0,0.5); }
+        .stars .star-off { color: #334155; }
         .completion-stats {
             display: flex;
             justify-content: center;
@@ -288,30 +301,32 @@
         .completion-stat .val {
             font-size: 1.6em;
             font-weight: 700;
-            color: var(--navy);
+            color: #00f0ff;
         }
         .completion-stat .lbl {
-            font-size: 0.8em;
-            color: var(--text-muted);
+            font-size: 0.75em;
+            color: #64748b;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .play-again-btn {
             display: inline-block;
             padding: 14px 36px;
-            background: var(--navy);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
+            background: transparent;
+            color: #00ff88;
+            border: 2px solid #00ff88;
+            border-radius: 6px;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             margin-top: 16px;
+            font-family: 'Courier New', monospace;
         }
         .play-again-btn:hover {
-            background: var(--navy-dark);
+            background: rgba(0, 255, 136, 0.15);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(31,73,125,0.3);
         }
 
         /* Confetti */
@@ -328,13 +343,9 @@
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
-        /* Background grid pattern */
+        /* Background — calm gradient */
         .game-bg {
-            background-image:
-                linear-gradient(rgba(31, 73, 125, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(31, 73, 125, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-            min-height: calc(100vh - 60px);
+            min-height: calc(100vh - 50px);
             padding-top: 30px;
             padding-bottom: 60px;
         }
@@ -343,24 +354,24 @@
         .bottom-cta {
             text-align: center;
             margin-top: 48px;
-            padding: 24px;
-            background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-            border-radius: 12px;
-            color: #fff;
+            padding: 20px 24px;
+            background: rgba(0, 240, 255, 0.03);
+            border: 1px solid #1e3050;
+            border-radius: 8px;
         }
         .bottom-cta p {
-            color: #a8c4df;
-            margin-bottom: 12px;
-            font-size: 0.95em;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-size: 0.85em;
         }
         .bottom-cta a {
-            color: #00e5ff;
+            color: #00f0ff;
             font-weight: 600;
             text-decoration: none;
-            font-size: 1.1em;
+            font-size: 0.95em;
         }
         .bottom-cta a:hover {
-            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
         }
 
         /* Mobile responsive */
@@ -379,16 +390,17 @@
                 gap: 16px;
             }
             .difficulty-bar { flex-wrap: wrap; }
-            .game-header h1 { font-size: 1.5em; }
+            .game-header h1 { font-size: 1.4em; }
             .completion-card { padding: 32px 24px; }
             .mobile-indicator {
                 display: block;
                 text-align: center;
                 padding: 8px;
-                background: #fff3cd;
+                background: rgba(0, 240, 255, 0.05);
+                border: 1px solid #1e3050;
                 border-radius: 6px;
-                font-size: 0.85em;
-                color: #856404;
+                font-size: 0.8em;
+                color: #64748b;
                 margin-bottom: 16px;
             }
         }
@@ -401,15 +413,12 @@
 
     <!-- NAVIGATION -->
     <nav>
-        <div class="container">
-            <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
-            <ul class="nav-links">
-                <li><a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Back to Home</a></li>
-                <li><a href="../index.html#pbq">All PBQs</a></li>
-                <li><a href="../book.html" class="nav-cta">Get the Book</a></li>
-            </ul>
-        </div>
+        <div class="nav-brand">CompTIA A+ <span>Study Hub</span></div>
+        <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">&#9776;</button>
+        <ul class="nav-links">
+            <li><a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Back</a></li>
+            <li><a href="../book.html" class="nav-cta">Get the Book</a></li>
+        </ul>
     </nav>
 
     <!-- GAME CONTENT -->
@@ -445,7 +454,7 @@
 
             <!-- Mobile indicator -->
             <div class="mobile-indicator">
-                📱 Tap a port, then tap its matching protocol. Lines are hidden on mobile.
+                &#128241; Tap a port, then tap its matching protocol. Lines are hidden on mobile.
             </div>
 
             <!-- Game area -->
@@ -801,7 +810,7 @@
 
     // ===== CONFETTI =====
     function spawnConfetti() {
-        const colors = ['#e74c3c', '#f39c12', '#27ae60', '#3498db', '#9b59b6', '#00e5ff', '#1F497D'];
+        const colors = ['#00f0ff', '#00ff88', '#ffaa00', '#ff4444', '#8b5cf6', '#ff00aa', '#4488ff'];
         for (let i = 0; i < 80; i++) {
             const piece = document.createElement('div');
             piece.className = 'confetti-piece';

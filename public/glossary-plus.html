@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary+ — Expanded Terms | CompTIA A+ Study Hub</title>
+    <meta name="description" content="Expanded glossary with 100 additional exam-relevant terms for CompTIA A+ Core 1 (220-1201) and Core 2 (220-1202). Supplement to the main 500+ term glossary.">
+    <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --navy: #1a365d;
+        --navy-dark: #0f2440;
+        --blue-accent: #3182ce;
+        --blue-pale: #ebf4ff;
+        --text-body: #2d3748;
+        --text-muted: #718096;
+        --border: #e2e8f0;
+        --red: #e53e3e;
+        --orange: #c8a800;
+        --green: #38a169;
+        --bg-section: #f7fafc;
+        --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--text-body);
+        line-height: 1.6;
+        background: #fff;
+    }
+    a { color: var(--blue-accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV BAR */
+    .navbar {
+        background: var(--navy);
+        color: #fff;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .navbar .brand {
+        font-weight: 700;
+        font-size: 1.1em;
+        color: #fff;
+        text-decoration: none;
+    }
+    .navbar .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+    .navbar .nav-links a {
+        color: rgba(255,255,255,0.85);
+        font-size: 0.9em;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .navbar .nav-links a:hover { color: #fff; text-decoration: none; }
+
+    /* MAIN CONTENT */
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 60px; }
+    .page-title {
+        font-size: 2em;
+        color: var(--navy);
+        margin-bottom: 8px;
+        text-align: center;
+    }
+    .page-subtitle {
+        color: var(--text-muted);
+        text-align: center;
+        margin-bottom: 16px;
+        font-size: 1em;
+    }
+    .glossary-link-banner {
+        text-align: center;
+        margin-bottom: 32px;
+        padding: 12px 20px;
+        background: var(--blue-pale);
+        border-radius: 8px;
+        font-size: 0.95em;
+    }
+    .glossary-link-banner a {
+        font-weight: 600;
+    }
+
+    /* SEARCH */
+    .search-wrapper { position: relative; margin-bottom: 16px; }
+    .search-wrapper .search-icon {
+        position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 1.2em;
+    }
+    .glossary-search {
+        width: 100%; padding: 14px 20px 14px 48px; border: 2px solid var(--border);
+        border-radius: 30px; font-size: 1em; outline: none; transition: border-color 0.2s;
+        font-family: inherit;
+    }
+    .glossary-search:focus { border-color: var(--blue-accent); box-shadow: 0 0 0 3px rgba(49,130,206,0.1); }
+
+    /* FILTER BUTTONS */
+    .filter-bar {
+        display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;
+    }
+    .filter-btn {
+        padding: 8px 18px; border: 1px solid var(--border); border-radius: 20px;
+        background: #fff; cursor: pointer; font-size: 0.85em; font-weight: 600;
+        transition: all 0.2s; font-family: inherit;
+    }
+    .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .filter-btn:hover { border-color: var(--navy); }
+    .filter-btn .count {
+        display: inline-block; background: rgba(0,0,0,0.1); padding: 1px 6px;
+        border-radius: 10px; font-size: 0.8em; margin-left: 4px;
+    }
+    .filter-btn.active .count { background: rgba(255,255,255,0.2); }
+
+    /* COUNTER */
+    .results-counter {
+        text-align: center; color: var(--text-muted); font-size: 0.9em; margin-bottom: 20px;
+    }
+
+    /* GLOSSARY GRID */
+    .glossary-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .glossary-card {
+        background: #fff; border: 1px solid var(--border); border-radius: 8px;
+        padding: 16px 20px; border-left: 4px solid var(--red);
+        transition: all 0.2s; box-shadow: var(--shadow);
+    }
+    .glossary-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+    .glossary-card.priority-med { border-left-color: var(--orange); }
+    .glossary-card.priority-low { border-left-color: var(--green); }
+    .glossary-card h4 { margin: 0 0 6px; font-size: 1em; color: var(--navy); }
+    .glossary-card p { margin: 0; font-size: 0.85em; color: var(--text-muted); line-height: 1.5; }
+
+    /* LOAD MORE */
+    .load-more-btn {
+        display: block; margin: 24px auto 0; padding: 12px 32px;
+        background: var(--navy); color: #fff; border: none; border-radius: 8px;
+        font-size: 0.95em; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        font-family: inherit;
+    }
+    .load-more-btn:hover { background: var(--blue-accent); transform: translateY(-1px); }
+    .load-more-btn.hidden { display: none; }
+
+    /* FOOTER */
+    .site-footer {
+        background: var(--navy-dark);
+        color: rgba(255,255,255,0.7);
+        text-align: center;
+        padding: 24px;
+        font-size: 0.85em;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+        .glossary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+        .glossary-grid { grid-template-columns: 1fr; }
+        .page-title { font-size: 1.5em; }
+        .navbar .brand { font-size: 0.95em; }
+        .navbar .nav-links { gap: 12px; }
+        .navbar .nav-links a { font-size: 0.8em; }
+    }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="../members.html" class="brand">CompTIA A+ Study Hub</a>
+        <div class="nav-links">
+            <a href="../members.html">&#8592; Back to Members</a>
+            <a href="../index.html">Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">&#128214; Glossary+ &#8212; Expanded Terms</h1>
+        <p class="page-subtitle">Additional exam-relevant terms from the CompTIA A+ 220-1200 Series Complete Study Guide</p>
+
+        <div class="glossary-link-banner">
+            Looking for the main glossary? &#8594; <a href="glossary.html">View 500+ Term Glossary</a>
+        </div>
+
+        <div class="search-wrapper">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search expanded terms...">
+        </div>
+
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="all">All <span class="count" id="countAll">100</span></button>
+            <button class="filter-btn" data-filter="high">HIGH <span class="count" id="countHigh">0</span></button>
+            <button class="filter-btn" data-filter="medium">MEDIUM <span class="count" id="countMed">0</span></button>
+            <button class="filter-btn" data-filter="low">LOW <span class="count" id="countLow">0</span></button>
+        </div>
+
+        <p class="results-counter" id="resultsCounter">Showing 50 of 100 terms</p>
+
+        <div class="glossary-grid" id="glossaryGrid"></div>
+
+        <button class="load-more-btn" id="loadMoreBtn">Load More Terms</button>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 Niko Williams. All rights reserved. CompTIA A+ is a registered trademark of CompTIA, Inc.
+    </footer>
+
+    <script>
+    (function() {
+        const glossaryData = [
+{term:'Field-Replaceable Unit (FRU)',priority:'high',def:'Component designed to be replaced by a technician without returning the device to the manufacturer. Examples: RAM, HDD, Wi-Fi card, battery, keyboard, I/O board.'},
+{term:'SO-DIMM vs DIMM',priority:'high',def:'SO-DIMM (260-pin DDR4) is for laptops; DIMM (288-pin DDR4) is for desktops. Different physical sizes, NOT interchangeable.'},
+{term:'Unitary Construction',priority:'medium',def:'Smartphone design where all components are sealed together. Not field-serviceable. Opening typically voids warranty.'},
+{term:'PPG (Photoplethysmography)',priority:'low',def:'Technology used in fitness trackers and smartwatches to measure heart rate using light sensors on the wrist.'},
+{term:'watchOS',priority:'medium',def:'Apple\'s operating system for Apple Watch. Supports notifications, NFC payments, LTE, and health monitoring.'},
+{term:'Wear OS',priority:'medium',def:'Google\'s operating system for smartwatches. Previously called Android Wear. Works with Android and iOS phones.'},
+{term:'Fire OS',priority:'medium',def:'Amazon\'s modified Android operating system used on Fire tablets and Fire TV devices. Uses Amazon Appstore instead of Google Play.'},
+{term:'Lightning Port',priority:'medium',def:'Apple\'s proprietary 8-pin connector used on older iPhones/iPads. Now largely obsolete as Apple transitions to USB-C.'},
+{term:'Spudger',priority:'medium',def:'Plastic prying tool used to open device cases and disconnect ribbon cables without causing damage or ESD.'},
+{term:'Ribbon Cable',priority:'medium',def:'Flat, flexible cable connecting internal components in laptops. Delicate connectors with plastic clamps. Not designed for frequent disconnection.'},
+{term:'I/O Board',priority:'medium',def:'Small separate circuit board in laptops controlling external ports (USB, audio). Connected to motherboard via ribbon cable. Common FRU.'},
+{term:'Thermal Conductor',priority:'medium',def:'Copper heat pipe transferring heat from CPU to fan assembly in laptops. Part of the cooling system.'},
+{term:'In-Place Clone',priority:'medium',def:'Storage migration method that copies entire drive sector-by-sector to new drive. Fastest migration method.'},
+{term:'Backup and Restore (migration)',priority:'medium',def:'Storage migration using backup software to image old drive then restore to new drive. Safest method but slower.'},
+{term:'Mini PCI / M.2 (wireless)',priority:'medium',def:'Expansion card slots for laptop wireless cards. Modern laptops use M.2 Key E slot for Wi-Fi/Bluetooth combo cards.'},
+{term:'WWAN Card',priority:'medium',def:'Cellular data card installed in laptop M.2 slot providing mobile broadband. Requires SIM card and carrier plan.'},
+{term:'IKEv2/IPSec',priority:'medium',def:'VPN protocol offering strong encryption and stability. Good for mobile devices that switch between Wi-Fi and cellular.'},
+{term:'L2TP/IPSec',priority:'medium',def:'Legacy VPN protocol combining L2TP tunneling with IPSec encryption. Being replaced by more modern solutions.'},
+{term:'PPTP',priority:'medium',def:'Oldest VPN protocol. Very weak encryption (broken). Should never be used for security. Only acceptable for non-sensitive tunneling.'},
+{term:'Wi-Fi 6E',priority:'high',def:'Extension of Wi-Fi 6 (802.11ax) adding the 6 GHz band. Less interference, more channels, lower latency. Requires 6E-capable devices.'},
+{term:'OFDMA (Wi-Fi)',priority:'medium',def:'Orthogonal Frequency Division Multiple Access. Wi-Fi 6 technology dividing channels into resource units for simultaneous multi-user transmission.'},
+{term:'Target Wake Time (TWT)',priority:'low',def:'Wi-Fi 6 feature scheduling when devices wake to send/receive data. Improves battery life for IoT and mobile devices.'},
+{term:'MLO (Multi-Link Operation)',priority:'low',def:'Wi-Fi 7 feature allowing simultaneous transmission across multiple bands (2.4/5/6 GHz). Dramatically increases throughput and reliability.'},
+{term:'BSS Coloring',priority:'low',def:'Wi-Fi 6 technique marking frames with color identifiers to reduce interference from overlapping networks in dense environments.'},
+{term:'SSID Broadcasting',priority:'high',def:'Router setting that makes the network name visible to nearby devices. Disabling hides network but doesn\'t provide real security.'},
+{term:'Channel Bonding',priority:'medium',def:'Combining adjacent Wi-Fi channels (20/40/80/160 MHz) for higher throughput. Wider channels = faster but fewer available in the band.'},
+{term:'Omnidirectional Antenna',priority:'medium',def:'Wi-Fi antenna radiating signal equally in all directions (360\u00B0). Standard in most consumer routers and access points.'},
+{term:'Directional Antenna',priority:'medium',def:'Focuses Wi-Fi signal in one direction for longer range. Used for point-to-point links or targeting specific coverage areas.'},
+{term:'802.1X',priority:'high',def:'IEEE standard for port-based network access control. Authenticates devices before granting LAN/WLAN access. Used with RADIUS in enterprise.'},
+{term:'RADIUS',priority:'high',def:'Remote Authentication Dial-In User Service. Centralized AAA server for network authentication. Ports 1812/1813. Backend for WPA2/3-Enterprise.'},
+{term:'ISP (Internet Service Provider)',priority:'medium',def:'Company providing internet connectivity. Common types: cable, DSL, fiber, satellite, cellular. Assigns public IP via DHCP to customer router.'},
+{term:'Coaxial Cable (RG-6)',priority:'medium',def:'Cable used for cable internet and TV. Single copper core with braided shielding. F-type connector. Maximum ~1 Gbps (DOCSIS 3.1).'},
+{term:'DSL (Digital Subscriber Line)',priority:'medium',def:'Internet over phone lines. ADSL=asymmetric speeds. Slower than cable/fiber. Speed degrades with distance from CO (Central Office).'},
+{term:'Fiber to the Premises (FTTP)',priority:'medium',def:'Fiber optic cable running directly to customer location. Fastest residential option. Symmetrical upload/download speeds possible.'},
+{term:'DOCSIS',priority:'low',def:'Data Over Cable Service Interface Specification. Standard for cable internet. DOCSIS 3.1 supports up to 10 Gbps download.'},
+{term:'Crossover Cable',priority:'medium',def:'Ethernet cable with TX/RX pairs swapped at one end. Legacy use: connecting two similar devices directly. Modern devices use Auto-MDI-X instead.'},
+{term:'Auto-MDI-X',priority:'medium',def:'Modern switch/NIC feature automatically detecting cable type and adjusting pin assignments. Eliminates need for crossover cables.'},
+{term:'T568A / T568B',priority:'high',def:'Wiring standards for RJ-45 Ethernet connectors. T568B is most common in commercial installations. Both ends must match for straight-through.'},
+{term:'Punch-Down Block (66/110)',priority:'medium',def:'Termination point for network cables in wiring closets. 66 block = legacy phone. 110 block = modern data/voice. Used with patch panels.'},
+{term:'Patch Panel',priority:'medium',def:'Central connection point in a network closet. Wall ports terminate on back; patch cables connect front to switch ports. Organized cable management.'},
+{term:'OTDR',priority:'low',def:'Optical Time Domain Reflectometer. Tests fiber optic cables for breaks, splices, and signal loss by sending light pulses and measuring reflections.'},
+{term:'SC / LC / ST Connectors',priority:'medium',def:'Fiber optic connector types. SC=square (push-pull). LC=small form-factor (most common). ST=round (bayonet twist). Not interchangeable.'},
+{term:'SFP / SFP+ Transceiver',priority:'medium',def:'Small Form-factor Pluggable module converting electrical signals to fiber optic. SFP=1G, SFP+=10G. Hot-swappable in switch slots.'},
+{term:'PoE+ / PoE++',priority:'medium',def:'Enhanced Power over Ethernet. PoE=15.4W (802.3af), PoE+=30W (802.3at), PoE++=60-100W (802.3bt). Powers cameras, WAPs, phones.'},
+{term:'Managed vs Unmanaged Switch',priority:'high',def:'Managed switches support VLANs, QoS, port mirroring, SNMP. Unmanaged are plug-and-play with no configuration options. Enterprise uses managed.'},
+{term:'Port Mirroring / SPAN',priority:'medium',def:'Copies traffic from one switch port to another for monitoring/analysis. Used by IDS/IPS and packet capture tools.'},
+{term:'SNMP Trap',priority:'medium',def:'Unsolicited alert sent from network device to SNMP management station when a threshold is exceeded or event occurs. UDP port 162.'},
+{term:'Syslog',priority:'medium',def:'Standard protocol for sending log messages to a central server. UDP port 514. Used for event monitoring across network devices.'},
+{term:'NetBIOS',priority:'medium',def:'Legacy Windows networking protocol for name resolution and file sharing on local networks. Ports 137-139. Being replaced by DNS/SMB.'},
+{term:'WINS',priority:'low',def:'Windows Internet Name Service. Legacy NetBIOS name resolution. Replaced by DNS in modern networks but may appear on exam.'},
+{term:'mDNS (Multicast DNS)',priority:'medium',def:'Zero-configuration name resolution for local networks without DNS server. Used by Apple Bonjour and Linux Avahi. Port 5353.'},
+{term:'APFS',priority:'medium',def:'Apple File System. Default on modern macOS/iOS. Optimized for SSD. Supports snapshots, encryption, space sharing. Replaced HFS+.'},
+{term:'ext4',priority:'medium',def:'Fourth Extended Filesystem. Default Linux file system. Supports journaling, files up to 16TB, volumes up to 1EB. Linux equivalent of NTFS.'},
+{term:'Swap Partition / Page File',priority:'medium',def:'Disk space used as virtual memory overflow when RAM is full. Linux=swap partition. Windows=pagefile.sys. Excessive use indicates low RAM.'},
+{term:'Disk Quota',priority:'medium',def:'NTFS feature limiting storage space per user on shared volumes. Prevents single users from filling shared drives. Set via drive properties.'},
+{term:'EFS (Encrypting File System)',priority:'medium',def:'Windows file-level encryption on NTFS. Tied to user certificate. Different from BitLocker (whole volume). Pro/Enterprise only.'},
+{term:'Volume Shadow Copy (VSS)',priority:'high',def:'Windows service creating point-in-time snapshots of files. Powers System Restore and Previous Versions file recovery. NTFS only.'},
+{term:'DaaS (Desktop as a Service)',priority:'medium',def:'Cloud-hosted virtual desktops streamed to thin clients. Provider manages infrastructure. Examples: Amazon WorkSpaces, Azure Virtual Desktop.'},
+{term:'Thin Client',priority:'high',def:'Lightweight endpoint with minimal local processing that connects to a server for its desktop environment. Low cost, centrally managed, secure.'},
+{term:'VDI (Virtual Desktop Infrastructure)',priority:'medium',def:'On-premises hosted virtual desktops running on organization\'s own servers. More control than DaaS but requires own hardware management.'},
+{term:'Metered Utilization',priority:'medium',def:'Cloud billing model where customers pay only for resources actually consumed. Core advantage of cloud computing economics.'},
+{term:'Rapid Elasticity',priority:'high',def:'Cloud capability to quickly scale resources up or down based on demand. Appears unlimited to the consumer. Key cloud advantage on exam.'},
+{term:'Resource Pooling',priority:'medium',def:'Cloud provider serving multiple tenants from shared physical resources. Resources dynamically assigned based on demand. Multi-tenant model.'},
+{term:'Measured Service',priority:'medium',def:'Cloud systems automatically controlling and optimizing resource use. Provides transparency for both provider and consumer via monitoring.'},
+{term:'On-Demand Self-Service',priority:'medium',def:'Cloud consumer can provision resources (storage, VMs) automatically without requiring human interaction with service provider.'},
+{term:'Community Cloud',priority:'low',def:'Cloud infrastructure shared by organizations with common concerns (security, compliance, jurisdiction). Between public and private cloud.'},
+{term:'Imaging Drum (OPC)',priority:'high',def:'Photosensitive cylinder in laser printers. Light from laser creates electrostatic image. Scratches cause repeating defects. Light-sensitive component.'},
+{term:'Fuser Assembly',priority:'high',def:'Laser printer component using heat (~200\u00B0C) and pressure to permanently bond toner to paper. Failure = loose toner rubbing off. Let cool before replacing.'},
+{term:'Transfer Roller',priority:'medium',def:'Laser printer roller with positive charge that pulls toner from imaging drum onto paper during the transfer step.'},
+{term:'Charging Roller',priority:'medium',def:'Applies uniform negative charge to the imaging drum surface during the charging step of laser printing. Replaced older corona wire.'},
+{term:'Pickup Roller',priority:'high',def:'Rubber roller that grips paper from tray and feeds it into printer. Worn/glazed rollers cause paper jams and no-feed errors. Clean with IPA.'},
+{term:'Separation Pad',priority:'medium',def:'Friction pad preventing multiple sheets from feeding simultaneously. Worn pad = multi-page feeds. Replace together with pickup roller.'},
+{term:'Maintenance Kit',priority:'medium',def:'Scheduled replacement set for laser printers (typically every 200K pages). Includes fuser, rollers, separation pad. Resets page counter.'},
+{term:'Virtual Printing',priority:'medium',def:'Printing to file or cloud rather than physical printer. Examples: Print to PDF, XPS, cloud print services. No physical output device needed.'},
+{term:'Microcontroller',priority:'medium',def:'Single-chip computer designed for specific tasks in embedded systems. Contains CPU, memory, I/O on one chip. Arduino is a common example.'},
+{term:'SCADA',priority:'high',def:'Supervisory Control and Data Acquisition. Industrial control system managing critical infrastructure (power, water). Must be air-gapped from internet.'},
+{term:'SoC (System on a Chip)',priority:'medium',def:'Single chip integrating CPU, GPU, memory controller, and I/O. Used in smartphones (Snapdragon, Apple M-series). Highly efficient.'},
+{term:'RTOS (Real-Time OS)',priority:'medium',def:'Operating system guaranteeing response within specific time constraints. Used in medical devices, automotive, industrial controllers.'},
+{term:'Zigbee',priority:'medium',def:'Low-power mesh protocol for smart home devices (lights, sensors). 2.4 GHz, 250 Kbps. Requires hub for IP network integration.'},
+{term:'Z-Wave',priority:'medium',def:'Proprietary low-power mesh protocol for home automation. Sub-1 GHz (less interference). Range 30-100m per hop. Up to 232 devices.'},
+{term:'Matter Protocol',priority:'medium',def:'Universal smart home standard developed by Apple, Google, Amazon, Samsung. Unifies IoT device ecosystems for interoperability over IP.'},
+{term:'OTA Update (Over-the-Air)',priority:'medium',def:'Firmware or OS update delivered wirelessly to devices. Standard for smartphones and IoT. No physical access required.'},
+{term:'Air Gap',priority:'high',def:'Physically isolating a system from all networks including internet. Strongest possible security. Required for SCADA, military, classified systems.'},
+{term:'WinRE (Windows Recovery)',priority:'high',def:'Windows Recovery Environment. Boot menu with Startup Repair, Reset This PC, System Restore, Command Prompt. Accessed via failed boots or install media.'},
+{term:'Startup Repair',priority:'high',def:'Automated WinRE tool fixing boot configuration problems (missing/corrupt bootloader, BCD errors). First step when Windows fails to start.'},
+{term:'Reset This PC',priority:'high',def:'Windows recovery option reinstalling the OS. "Keep my files" preserves documents. "Remove everything" for resale. Removes all installed apps.'},
+{term:'Windows Memory Diagnostic',priority:'medium',def:'Built-in tool (mdsched.exe) testing RAM for errors. Requires reboot to run. Results available in Event Viewer after next login.'},
+{term:'Clean Boot',priority:'high',def:'Starting Windows with minimal startup programs and services using msconfig Selective Startup. More granular than Safe Mode for isolating conflicts.'},
+{term:'Fast Startup (Hybrid Boot)',priority:'medium',def:'Windows feature saving kernel state to disk during shutdown for faster next boot. Can cause issues with dual-boot and some drivers. Disable in Power Options.'},
+{term:'CSM (Compatibility Support Module)',priority:'medium',def:'UEFI setting enabling legacy BIOS boot compatibility. Must be disabled for Secure Boot and GPT booting. May be needed for older OS.'},
+{term:'Incident Response Plan',priority:'high',def:'Documented procedures for detecting, containing, eradicating, and recovering from security incidents. Defines roles, escalation, and communication paths.'},
+{term:'Scope Creep',priority:'medium',def:'Gradual unauthorized expansion of project requirements beyond original agreement. In IT: simple fix ticket evolving into full system rebuild.'},
+{term:'Rollback Plan',priority:'high',def:'Pre-defined procedure for reverting a system to its previous state if a change causes problems. Required part of change management before implementation.'},
+{term:'Maintenance Window',priority:'medium',def:'Pre-scheduled time period for IT changes and reboots with minimal user impact. Typically nights/weekends. Defined in SLA.'},
+{term:'MTTR (Mean Time to Repair)',priority:'medium',def:'Average time to restore a failed system to operation. Lower MTTR = better incident response capability. Key IT performance metric.'},
+{term:'MTBF (Mean Time Between Failures)',priority:'medium',def:'Average operating time between hardware failures. Higher MTBF = more reliable component. Used for replacement scheduling and capacity planning.'},
+{term:'Triage',priority:'medium',def:'Process of quickly assessing and prioritizing incoming support tickets based on severity, impact, and urgency. Determines handling order.'},
+{term:'Escalation Matrix',priority:'medium',def:'Document defining who to contact as issues increase in severity or remain unresolved past SLA thresholds. Part of ticket management procedures.'},
+{term:'Active Listening',priority:'medium',def:'Communication technique of fully concentrating on the speaker before responding. Builds rapport with users and reduces misunderstandings in support.'},
+{term:'Generative AI',priority:'high',def:'AI that creates new content (text, images, code) from training data patterns. Examples: ChatGPT, Copilot, DALL-E. Tested on 220-1202.'},
+{term:'AI Hallucination',priority:'high',def:'When AI generates confident but factually incorrect or fabricated information. Critical to verify AI outputs against trusted sources.'},
+{term:'LLM (Large Language Model)',priority:'medium',def:'AI model trained on massive text datasets powering chatbots and content generation. Base technology behind ChatGPT, Copilot, Gemini.'},
+{term:'Prompt Injection',priority:'medium',def:'Security attack where malicious input overrides AI system instructions. Can cause AI to bypass safety controls or leak information.'},
+{term:'Deepfake',priority:'high',def:'AI-generated fake audio or video impersonating real people. Used for social engineering, fraud, and misinformation. Increasingly realistic.'},
+{term:'Training Data Bias',priority:'medium',def:'AI producing skewed or discriminatory outputs because training data contained imbalanced or prejudiced content. Leads to unfair recommendations.'},
+{term:'Public vs Private AI',priority:'high',def:'Public AI (ChatGPT, Gemini) = shared service, never input secrets/PII. Private AI = deployed internally, data stays in organization. Know the difference.'},
+{term:'Memory Leak',priority:'medium',def:'Software defect where application gradually consumes more RAM without releasing it back. Symptoms: increasing slowness over time. Fix: restart app, update.'},
+{term:'Thermal Throttling',priority:'high',def:'Automatic CPU/GPU speed reduction when maximum temperature reached. Causes noticeable performance loss. Fix: clean dust, improve cooling, reapply thermal paste.'},
+{term:'Driver Roll Back',priority:'high',def:'Device Manager feature reverting a device driver to its previously installed version. Used when a new driver causes instability or hardware failures.'},
+{term:'Event ID',priority:'medium',def:'Unique number identifying each event type in Windows Event Viewer. Used to research specific errors online. Example: Event ID 41 = unexpected shutdown.'},
+{term:'Network Reset (Windows)',priority:'medium',def:'Nuclear option removing and reinstalling all network adapters and resetting networking components to defaults. Last resort for persistent connectivity issues.'}
+];
+
+        // Count by priority
+        const highCount = glossaryData.filter(i => i.priority === 'high').length;
+        const medCount = glossaryData.filter(i => i.priority === 'medium').length;
+        const lowCount = glossaryData.filter(i => i.priority === 'low').length;
+        document.getElementById('countAll').textContent = glossaryData.length;
+        document.getElementById('countHigh').textContent = highCount;
+        document.getElementById('countMed').textContent = medCount;
+        document.getElementById('countLow').textContent = lowCount;
+
+        const grid = document.getElementById('glossaryGrid');
+        const counter = document.getElementById('resultsCounter');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        let displayCount = 50;
+
+        function renderCards() {
+            grid.innerHTML = '';
+            const query = (document.getElementById('glossarySearch').value || '').toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+
+            let filtered = glossaryData.filter(item => {
+                const matchesSearch = !query || item.term.toLowerCase().includes(query) || item.def.toLowerCase().includes(query);
+                const matchesFilter = activeFilter === 'all' || item.priority === activeFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            const showing = filtered.slice(0, displayCount);
+            showing.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'glossary-card' + (item.priority === 'medium' ? ' priority-med' : '') + (item.priority === 'low' ? ' priority-low' : '');
+                card.innerHTML = '<h4>' + item.term + '</h4><p>' + item.def + '</p>';
+                grid.appendChild(card);
+            });
+
+            counter.textContent = 'Showing ' + showing.length + ' of ' + filtered.length + ' terms';
+            loadMoreBtn.classList.toggle('hidden', filtered.length <= displayCount);
+        }
+
+        renderCards();
+
+        loadMoreBtn.addEventListener('click', function() { displayCount += 50; renderCards(); });
+
+        document.getElementById('glossarySearch').addEventListener('input', function() { displayCount = 50; renderCards(); });
+
+        document.querySelectorAll('.filter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                displayCount = 50;
+                renderCards();
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

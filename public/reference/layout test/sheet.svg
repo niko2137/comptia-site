@@ -1,0 +1,43 @@
+<svg width="1536" height="1024" viewBox="0 0 1536 1024"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Glow filter -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- === ROW 1: IDLE (4 frames) === -->
+  <!-- Frame 1 -->
+  <g transform="translate(0,0)">
+    <line x1="128" y1="0" x2="128" y2="200" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <circle cx="128" cy="70" r="18" fill="#05010A" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="88" x2="128" y2="150" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="100" x2="160" y2="80" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="100" x2="96" y2="80" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="150" x2="150" y2="190" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="150" x2="106" y2="190" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+  </g>
+
+  <!-- Frame 2 -->
+  <g transform="translate(256,0)">
+    <line x1="128" y1="0" x2="128" y2="200" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <circle cx="128" cy="68" r="18" fill="#05010A" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="88" x2="128" y2="150" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="100" x2="160" y2="82" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="100" x2="96" y2="82" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="150" x2="150" y2="190" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="150" x2="106" y2="190" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+  </g>
+
+  <!-- Frame 3 -->
+  <g transform="translate(512,0)">
+    <line x1="128" y1="0" x2="128" y2="200" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <circle cx="128" cy="70" r="18" fill="#05010A" stroke="#00F6FF" stroke-width="8" filter="url(#glow)" />
+    <line x1="128" y1="88" x2="128" y2="150" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />
+    <line x1="128" y1="100" x2="160" y2="80" stroke="#00F6FF" stroke-width="6" filter="url(#glow)" />

@@ -372,16 +372,18 @@ gameOver=false;paused=false;bsodActive=false;questionActive=false;
 dropInterval=800;dropTimer=0;questionTimer=0;usedQuestions=[];
 currentPiece=newPiece();lastTime=performance.now();
 updateUI();requestAnimationFrame(gameLoop);
+startMusic();
 }
 
 function endGame(){
+stopMusic();
 saveHighScore(score);
 let msg=`SYSTEM COMPROMISED!\n\nFinal Score: ${score}\nLevel: ${level}\nIntegrity: ${integrity}%\n\nPress OK to restart.`;
 setTimeout(()=>{alert(msg);startGame();},100);
 }
 
 function togglePause(){if(!questionActive&&!bsodActive)paused=!paused;}
-function toggleMute(){muted=!muted;}
+function toggleMute(){muted=!muted;if(muted){stopMusic();}else if(!gameOver){startMusic();}}
 
 // High scores
 function getHighScores(){return JSON.parse(localStorage.getItem('terminalTakedownScores')||'[]');}
@@ -408,7 +410,22 @@ else if(type==='question'){osc.frequency.value=440;osc.type='square';gain.gain.s
 }
 
 // Music loader
-try{let s=document.createElement('script');s.src='../js/music/Terminal-Takedown-music.js';s.onload=()=>{musicLoaded=true;};document.head.appendChild(s);}catch(e){}
+let ttMusic = null;
+let musicStarted = false;
+try{let s=document.createElement('script');s.src='../audio/games/Terminal-Takedown-Music.js';s.onload=()=>{musicLoaded=true;ttMusic=new TerminalTakedownMusic();};document.head.appendChild(s);}catch(e){}
+
+function startMusic(){
+    if(muted||!ttMusic||musicStarted)return;
+    musicStarted=true;
+    function loopMusic(){if(!muted&&!gameOver&&ttMusic)ttMusic.start(loopMusic);}
+    loopMusic();
+}
+function stopMusic(){if(ttMusic)ttMusic.stop();musicStarted=false;}
+
+// Start music on first user interaction (required by browser autoplay policy)
+function tryStartMusic(){if(!musicStarted&&!muted&&!gameOver&&ttMusic)startMusic();}
+document.addEventListener('keydown',tryStartMusic,{once:false});
+document.addEventListener('click',tryStartMusic,{once:false});
 
 // Keyboard controls
 document.addEventListener('keydown',e=>{

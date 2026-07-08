@@ -1,0 +1,44 @@
+<svg width="256" height="256" viewBox="0 0 256 256"
+     xmlns="http://www.w3.org/2000/svg">
+  <!-- Background transparent -->
+  <rect x="0" y="0" width="256" height="256" fill="none"/>
+
+  <!-- Rope -->
+  <line x1="128" y1="0" x2="128" y2="200"
+        stroke="#00F6FF"
+        stroke-width="4"
+        stroke-linecap="round"
+        filter="url(#glow)" />
+
+  <!-- Climber body (simplified) -->
+  <circle cx="128" cy="80" r="16"
+          fill="#05010A"
+          stroke="#00F6FF"
+          stroke-width="4"
+          filter="url(#glow)" />
+
+  <path d="M 128 96 L 128 140"
+        stroke="#00F6FF"
+        stroke-width="4"
+        stroke-linecap="round"
+        filter="url(#glow)" />
+
+  <!-- Arms / legs will change per frame -->
+  <!-- Example arm -->
+  <path d="M 128 110 L 150 90"
+        stroke="#00F6FF"
+        stroke-width="4"
+        stroke-linecap="round"
+        filter="url(#glow)" />
+
+  <!-- Glow filter -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

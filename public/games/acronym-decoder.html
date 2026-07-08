@@ -116,7 +116,32 @@ const acronyms = [
 {acronym:"IaaS",correct:"Infrastructure as a Service",wrong:["Internet as a Service","Integration as a Solution","Interface as a Standard"],category:"cloud",explanation:"Cloud-based virtual computing resources"},
 {acronym:"MDM",correct:"Mobile Device Management",wrong:["Master Data Module","Media Distribution Manager","Memory Diagnostic Monitor"],category:"security",explanation:"Software to manage and secure mobile devices"},
 {acronym:"WPA",correct:"Wi-Fi Protected Access",wrong:["Wireless Protocol Authentication","Web Protection Algorithm","Wide Protected Area"],category:"security",explanation:"Security protocol for wireless networks"},
-{acronym:"ACL",correct:"Access Control List",wrong:["Advanced Configuration Layer","Application Control Logic","Automated Command List"],category:"security",explanation:"Rules defining who can access resources"}
+{acronym:"ACL",correct:"Access Control List",wrong:["Advanced Configuration Layer","Application Control Logic","Automated Command List"],category:"security",explanation:"Rules defining who can access resources"},
+{acronym:"APIPA",correct:"Automatic Private IP Addressing",wrong:["Advanced Protocol IP Assignment","Automatic Protocol Internet Address","Application Private IP Allocation"],category:"networking",explanation:"Self-assigned 169.254.x.x address when DHCP fails"},
+{acronym:"LDAP",correct:"Lightweight Directory Access Protocol",wrong:["Local Data Access Protocol","Linked Directory Application Process","Logical Domain Access Protocol"],category:"networking",explanation:"Queries Active Directory and other directory services"},
+{acronym:"SLA",correct:"Service Level Agreement",wrong:["System License Authorization","Standard Level Access","Software License Agreement"],category:"operations",explanation:"Contract defining expected service response and uptime"},
+{acronym:"RTO",correct:"Recovery Time Objective",wrong:["Real-Time Operation","Runtime Transfer Object","Recovery Transfer Operation"],category:"operations",explanation:"Maximum acceptable downtime after a disruption"},
+{acronym:"RPO",correct:"Recovery Point Objective",wrong:["Remote Protocol Operation","Recovery Process Order","Redundant Point of Origin"],category:"operations",explanation:"Maximum acceptable data loss measured in time"},
+{acronym:"PII",correct:"Personally Identifiable Information",wrong:["Protected Internet Information","Private Internal Interface","Personal Internet Identity"],category:"security",explanation:"Data that can identify a specific individual"},
+{acronym:"PHI",correct:"Protected Health Information",wrong:["Personal Hardware Identifier","Private Host Interface","Public Health Index"],category:"security",explanation:"Medical data protected under HIPAA regulations"},
+{acronym:"BYOD",correct:"Bring Your Own Device",wrong:["Build Your Own Database","Backup Your Own Data","Base Your Own Design"],category:"security",explanation:"Policy allowing personal devices for work use"},
+{acronym:"UAC",correct:"User Account Control",wrong:["Universal Access Configuration","Unified Authentication Center","User Application Controller"],category:"security",explanation:"Windows feature prompting before system changes"},
+{acronym:"EFS",correct:"Encrypting File System",wrong:["Extended File Service","External Format System","Enterprise File Storage"],category:"security",explanation:"Windows file-level encryption on NTFS volumes"},
+{acronym:"WinRE",correct:"Windows Recovery Environment",wrong:["Windows Runtime Engine","Windows Remote Execution","Windows Resource Editor"],category:"troubleshooting",explanation:"Boot environment with repair tools for Windows"},
+{acronym:"DISM",correct:"Deployment Image Servicing and Management",wrong:["Disk Integrity System Monitor","Digital Image Service Module","Device Installation Service Manager"],category:"troubleshooting",explanation:"Repairs Windows component store before running SFC"},
+{acronym:"SFC",correct:"System File Checker",wrong:["Secure File Configuration","Standard Format Controller","System Firmware Check"],category:"troubleshooting",explanation:"Scans and repairs corrupted Windows system files"},
+{acronym:"PXE",correct:"Preboot Execution Environment",wrong:["Protocol Exchange Engine","Private Extension Environment","Portable Execution Extension"],category:"networking",explanation:"Network boot protocol using DHCP and TFTP"},
+{acronym:"KVM",correct:"Keyboard Video Mouse",wrong:["Kernel Virtual Manager","Key Verification Module","Kernel Volume Monitor"],category:"hardware",explanation:"Switch allowing one set of peripherals for multiple PCs"},
+{acronym:"DIMM",correct:"Dual Inline Memory Module",wrong:["Direct Internal Memory Module","Dynamic Integrated Memory Mechanism","Dual Input Memory Manager"],category:"hardware",explanation:"Standard desktop RAM form factor"},
+{acronym:"SO-DIMM",correct:"Small Outline Dual Inline Memory Module",wrong:["System Optimized DIMM","Standard Output DIMM","Serial Output Dual Input Module"],category:"hardware",explanation:"Laptop RAM form factor smaller than desktop DIMM"},
+{acronym:"POST",correct:"Power-On Self-Test",wrong:["Protocol Output System Transfer","Primary Operating System Test","Processor Operation Status Test"],category:"hardware",explanation:"Hardware check performed by BIOS/UEFI at boot"},
+{acronym:"CMOS",correct:"Complementary Metal-Oxide Semiconductor",wrong:["Central Memory Operating System","Computer Management Operating Software","Core Module Output System"],category:"hardware",explanation:"Chip storing BIOS settings powered by coin battery"},
+{acronym:"ATX",correct:"Advanced Technology eXtended",wrong:["Automatic Transfer Extension","Advanced Terminal Exchange","Application Technology Extension"],category:"hardware",explanation:"Standard motherboard form factor (305x244mm)"},
+{acronym:"PCIe",correct:"Peripheral Component Interconnect Express",wrong:["Processor Connection Interface Express","Primary Component Integration Express","Portable Computing Interface Extension"],category:"hardware",explanation:"High-speed expansion bus for GPUs and NVMe SSDs"},
+{acronym:"SATA",correct:"Serial Advanced Technology Attachment",wrong:["System Automatic Transfer Architecture","Standard Advanced Terminal Adapter","Serial Application Transfer Array"],category:"hardware",explanation:"Storage interface supporting HDDs and SSDs at 6 Gbps"},
+{acronym:"DDoS",correct:"Distributed Denial of Service",wrong:["Direct Data Operating System","Dynamic Domain of Service","Directed Denial of Systems"],category:"security",explanation:"Attack overwhelming a target with traffic from many sources"},
+{acronym:"SSID",correct:"Service Set Identifier",wrong:["Secure System Identity","Standard Service Internet Domain","System Security ID"],category:"networking",explanation:"The broadcast name of a wireless network"},
+{acronym:"QoS",correct:"Quality of Service",wrong:["Query of System","Queue of Storage","Quota of Speed"],category:"networking",explanation:"Prioritizes certain network traffic types for performance"}
 ];
 
 const studyRefs = {
@@ -124,7 +149,9 @@ const studyRefs = {
   hardware: "\u{1F4D6} Study: Module - Desktop PC Hardware",
   security: "\u{1F4D6} Study: Module - Security",
   cloud: "\u{1F4D6} Study: Module - Virtualization & Cloud",
-  storage: "\u{1F4D6} Study: Module - Hard Drives & Storage"
+  storage: "\u{1F4D6} Study: Module - Hard Drives & Storage",
+  operations: "\u{1F4D6} Study: Module - Troubleshooting Methodology & Procedures",
+  troubleshooting: "\u{1F4D6} Study: Module - Software Troubleshooting / WinRE"
 };
 
 let currentIndex = 0;
