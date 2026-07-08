@@ -1,179 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 521 850" style="enable-background:new 0 0 521 850;" xml:space="preserve">
+	 viewBox="0 0 500 850" style="enable-background:new 0 0 500 850;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#2980B9;}
+	.st0{fill:#1F497D;}
 	.st1{font-family:'SegoeUI-Bold';}
 	.st2{font-size:20px;}
-	.st3{font-family:'SegoeUI';}
-	.st4{font-size:14px;}
-	.st5{fill:#FFFFFF;stroke:#7F1D1D;stroke-width:3;}
-	.st6{fill:#7F1D1D;}
-	.st7{fill:#FFFFFF;}
-	.st8{font-family:'Arial-BoldMT';}
-	.st9{fill:#333333;}
-	.st10{font-family:'ArialNarrow';}
+	.st3{fill:#7F8C8D;}
+	.st4{font-family:'SegoeUI';}
+	.st5{font-size:11px;}
+	.st6{fill:#FFFFFF;stroke:#7F1D1D;stroke-width:3;}
+	.st7{fill:#7F1D1D;}
+	.st8{fill:#FFFFFF;}
+	.st9{font-size:13px;}
+	.st10{fill:#333333;}
 	.st11{opacity:0.3;fill:#7F1D1D;enable-background:new    ;}
-	.st12{fill:#FFFFFF;stroke:#217C34;stroke-width:3;}
-	.st13{fill:#1B682C;}
+	.st12{font-size:8px;}
+	.st13{fill:#FFFFFF;stroke:#1F497D;stroke-width:3;}
 	.st14{opacity:0.3;fill:#1F497D;enable-background:new    ;}
-	.st15{font-family:'ArialNarrow-Bold';}
-	.st16{font-size:11px;}
-	.st17{fill:#FFFFFF;stroke:#E67E22;stroke-width:3;}
-	.st18{fill:#E67E22;}
+	.st15{fill:#27AE60;}
+	.st16{font-size:9px;}
+	.st17{fill:#FFFFFF;stroke:#366092;stroke-width:3;}
+	.st18{fill:#366092;}
 	.st19{opacity:0.3;fill:#366092;enable-background:new    ;}
-	.st20{fill:#FFFFFF;stroke:#548DD4;stroke-width:3;}
-	.st21{fill:#548DD4;}
-	.st22{opacity:0.3;fill:#548DD4;enable-background:new    ;}
-	.st23{fill:none;stroke:#2980B9;stroke-width:4;stroke-miterlimit:10;stroke-dasharray:3,3;}
+	.st20{fill:#E67E22;}
+	.st21{fill:#FFFFFF;stroke:#548DD4;stroke-width:3;}
+	.st22{fill:#548DD4;}
+	.st23{opacity:0.3;fill:#548DD4;enable-background:new    ;}
 	.st24{fill:#FFFFFF;stroke:#1F497D;stroke-width:2;}
-	.st25{fill:#1F497D;}
-	.st26{fill:none;}
-	.st27{fill:#366092;}
-	.st28{font-family:'ArialMT';}
-	.st29{font-size:13px;}
+	.st25{fill:#C0392B;}
+	.st26{font-size:10px;}
+	.st27{opacity:0.3;fill:none;stroke:#1F497D;stroke-miterlimit:10;stroke-dasharray:3,3;enable-background:new    ;}
+	.st28{fill:#7D8589;}
 </style>
-<g>
-	<text transform="matrix(1 0 0 1 104.3481 35)" class="st0 st1 st2">Motherboard Form Factors</text>
-	<text transform="matrix(1 0 0 1 55.0571 55)" class="st0 st3 st4">Drawn to relative scale - smaller boards fit in larger cases</text>
-	<g>
-		<path class="st5" d="M16.5,75h428c3.3,0,6,2.7,6,6v138c0,3.3-2.7,6-6,6h-428c-3.3,0-6-2.7-6-6V81C10.5,77.7,13.2,75,16.5,75z"/>
-		<path class="st6" d="M16.5,75h428c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6h-428c-3.3,0-6-2.7-6-6V81C10.5,77.7,13.2,75,16.5,75z"/>
-	</g>
-	<text transform="matrix(1 0 0 1 156.7896 94)" class="st7 st8 st4">E-ATX (Extended ATX)</text>
-	<text transform="matrix(1 0 0 1 30.5493 125)" class="st9 st10 st4">Size:</text>
-	<text transform="matrix(1 0 0 1 70.5493 125)" class="st9 st10 st4">305 x 330 mm (12&quot; x 13&quot;)</text>
-	<text transform="matrix(1 0 0 1 30.5493 145)" class="st9 st10 st4">Slots:</text>
-	<text transform="matrix(1 0 0 1 70.5493 145)" class="st9 st10 st4">8+ expansion slots</text>
-	<text transform="matrix(1 0 0 1 30.5493 165)" class="st9 st10 st4">Use:</text>
-	<text transform="matrix(1 0 0 1 70.5493 165)" class="st9 st10 st4">High-end, servers, maximum PCIe lanes</text>
-	<text transform="matrix(1 0 0 1 30.5493 185)" class="st9 st10 st4">Case:</text>
-	<text transform="matrix(1 0 0 1 70.5493 185)" class="st9 st10 st4">Full Tower only</text>
-	<path class="st11" d="M332.5,115h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C330.5,115.9,331.4,115,332.5,115z"
-		/>
-	<path class="st11" d="M332.5,127h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C330.5,127.9,331.4,127,332.5,127z"
-		/>
-	<path class="st11" d="M332.5,139h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C330.5,139.9,331.4,139,332.5,139z"
-		/>
-	<path class="st11" d="M332.5,151h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C330.5,151.9,331.4,151,332.5,151z"
-		/>
-	<path class="st11" d="M332.5,163h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C330.5,163.9,331.4,163,332.5,163z"
-		/>
-	<path class="st11" d="M332.5,175h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C330.5,175.9,331.4,175,332.5,175z"
-		/>
-	<path class="st11" d="M332.5,187h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C330.5,187.9,331.4,187,332.5,187z"
-		/>
-	<path class="st11" d="M332.5,199h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C330.5,199.9,331.4,199,332.5,199z"
-		/>
-	<g>
-		<path class="st12" d="M16.5,240h388c3.3,0,6,2.7,6,6v138c0,3.3-2.7,6-6,6h-388c-3.3,0-6-2.7-6-6V246C10.5,242.7,13.2,240,16.5,240
-			z"/>
-		<path class="st13" d="M16.5,240h388c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6h-388c-3.3,0-6-2.7-6-6v-16C10.5,242.7,13.2,240,16.5,240z
-			"/>
-	</g>
-	<text transform="matrix(1 0 0 1 160.124 259)" class="st7 st8 st4">ATX (Standard)</text>
-	<text transform="matrix(1 0 0 1 30.5493 290)" class="st9 st10 st4">Size:</text>
-	<text transform="matrix(1 0 0 1 70.5493 290)" class="st9 st10 st4">305 x 244 mm (12&quot; x 9.6&quot;)</text>
-	<text transform="matrix(1 0 0 1 30.5493 310)" class="st9 st10 st4">Slots:</text>
-	<text transform="matrix(1 0 0 1 70.5493 310)" class="st9 st10 st4">4-7 expansion slots</text>
-	<text transform="matrix(1 0 0 1 30.5493 330)" class="st9 st10 st4">Use:</text>
-	<text transform="matrix(1 0 0 1 70.5493 330)" class="st9 st10 st4">Full desktop towers, gaming, workstations</text>
-	<text transform="matrix(1 0 0 1 30.5493 350)" class="st9 st10 st4">Case:</text>
-	<text transform="matrix(1 0 0 1 70.5493 350)" class="st9 st10 st4">Full Tower or Mid Tower</text>
-	<path class="st14" d="M302.5,280h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C300.5,280.9,301.4,280,302.5,280z"
-		/>
-	<path class="st14" d="M302.5,292h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C300.5,292.9,301.4,292,302.5,292z"
-		/>
-	<path class="st14" d="M302.5,304h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C300.5,304.9,301.4,304,302.5,304z"
-		/>
-	<path class="st14" d="M302.5,316h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C300.5,316.9,301.4,316,302.5,316z"
-		/>
-	<path class="st14" d="M302.5,328h41c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-41c-1.1,0-2-0.9-2-2v-4C300.5,328.9,301.4,328,302.5,328z"
-		/>
-	<path class="st14" d="M302.5,340h41c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-41c-1.1,0-2-0.9-2-2v-4C300.5,340.9,301.4,340,302.5,340z"
-		/>
-	<path class="st14" d="M302.5,352h41c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-41c-1.1,0-2-0.9-2-2v-4C300.5,352.9,301.4,352,302.5,352z"
-		/>
-	<g>
-		<path class="st6" d="M28.5,198h92c5,0,9,4,9,9l0,0c0,5-4,9-9,9h-92c-5,0-9-4-9-9l0,0C19.5,202,23.5,198,28.5,198z"/>
-		<text transform="matrix(1 0 0 1 29.5344 211)" class="st7 st15 st16">MOST EXPANDABLE</text>
-	</g>
-	<g>
-		<path class="st17" d="M16.5,405h318c3.3,0,6,2.7,6,6v138c0,3.3-2.7,6-6,6h-318c-3.3,0-6-2.7-6-6V411C10.5,407.7,13.2,405,16.5,405
-			z"/>
-		<path class="st18" d="M16.5,405h318c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6h-318c-3.3,0-6-2.7-6-6v-16C10.5,407.7,13.2,405,16.5,405z
-			"/>
-	</g>
-	<text transform="matrix(1 0 0 1 99.5496 424)" class="st7 st8 st4">Micro-ATX (mATX)</text>
-	<text transform="matrix(1 0 0 1 30.5493 455)" class="st9 st10 st4">Size:</text>
-	<text transform="matrix(1 0 0 1 70.5493 455)" class="st9 st10 st4">244 x 244 mm (9.6&quot; x 9.6&quot;) - Square</text>
-	<text transform="matrix(1 0 0 1 30.5493 475)" class="st9 st10 st4">Slots:</text>
-	<text transform="matrix(1 0 0 1 70.5493 475)" class="st9 st10 st4">2-4 expansion slots</text>
-	<text transform="matrix(1 0 0 1 30.5493 495)" class="st9 st10 st4">Use:</text>
-	<text transform="matrix(1 0 0 1 70.5493 495)" class="st9 st10 st4">Mid-size builds, pre-built systems</text>
-	<text transform="matrix(1 0 0 1 30.5493 515)" class="st9 st10 st4">Case:</text>
-	<text transform="matrix(1 0 0 1 70.5493 515)" class="st9 st10 st4">Mid Tower (also fits in ATX cases)</text>
-	<path class="st19" d="M263.5,450h66c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-66c-1.1,0-2-0.9-2-2v-4C261.5,450.9,262.4,450,263.5,450z"
-		/>
-	<path class="st19" d="M263.5,462h66c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-66c-1.1,0-2-0.9-2-2v-4C261.5,462.9,262.4,462,263.5,462z"
-		/>
-	<path class="st19" d="M263.5,474h31c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-31c-1.1,0-2-0.9-2-2v-4C261.5,474.9,262.4,474,263.5,474z"
-		/>
-	<path class="st19" d="M263.5,486h31c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-31c-1.1,0-2-0.9-2-2v-4C261.5,486.9,262.4,486,263.5,486z"
-		/>
-	<g>
-		<path class="st13" d="M28.5,364h102c5,0,9,4,9,9l0,0c0,5-4,9-9,9h-102c-5,0-9-4-9-9l0,0C19.5,368,23.5,364,28.5,364z"/>
-		<text transform="matrix(1 0 0 1 44.2209 377)" class="st7 st15 st16">MOST COMMON</text>
-	</g>
-	<g>
-		<path class="st18" d="M28.5,529h102c5,0,9,4,9,9l0,0c0,5-4,9-9,9h-102c-5,0-9-4-9-9l0,0C19.5,533,23.5,529,28.5,529z"/>
-		<text transform="matrix(1 0 0 1 34.948 542)" class="st7 st15 st16">2nd MOST COMMON</text>
-	</g>
-	<g>
-		<path class="st20" d="M16.5,570h228c3.3,0,6,2.8,6,6.3V715c0,3.5-2.7,6.3-6,6.3h-228c-3.3,0-6-2.8-6-6.3V576.3
-			C10.5,572.8,13.2,570,16.5,570z"/>
-		<path class="st21" d="M16.5,570h228c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6h-228c-3.3,0-6-2.7-6-6v-16C10.5,572.7,13.2,570,16.5,570z
-			"/>
-	</g>
-	<text transform="matrix(1 0 0 1 99.5493 589)" class="st7 st8 st4">Mini-ITX</text>
-	<text transform="matrix(1 0 0 1 30.5493 620)" class="st9 st10 st4">Size:</text>
-	<text transform="matrix(1 0 0 1 70.5493 620)" class="st9 st10 st4">170 x 170 mm (6.7&quot; x 6.7&quot;)</text>
-	<text transform="matrix(1 0 0 1 30.5493 640)" class="st9 st10 st4">Slots:</text>
-	<text transform="matrix(1 0 0 1 70.5493 640)" class="st9 st10 st4">1 expansion slot only</text>
-	<text transform="matrix(1 0 0 1 30.5493 660)" class="st9 st10 st4">Use:</text>
-	<text transform="matrix(1 0 0 1 70.5493 660)" class="st9 st10 st4">SFF/compact builds, HTPCs</text>
-	<text transform="matrix(1 0 0 1 30.5493 680)" class="st9 st10 st4">Case:</text>
-	<text transform="matrix(1 0 0 1 70.5493 680)" class="st9 st10 st4">Mini Tower / SFF</text>
-	<path class="st22" d="M187.5,633h51c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-51c-1.1,0-2-0.9-2-2v-4C185.5,633.9,186.4,633,187.5,633z"
-		/>
-	<g>
-		<path class="st21" d="M28.5,695h82c5,0,9,4,9,9l0,0c0,5-4,9-9,9h-82c-5,0-9-4-9-9l0,0C19.5,699,23.5,695,28.5,695z"/>
-		<text transform="matrix(1 0 0 1 45.2478 708)" class="st7 st15 st16">SMALLEST</text>
-	</g>
-	<text transform="matrix(6.123234e-17 1 -1 6.123234e-17 498.5488 296.9644)" class="st0 st1 st4">Relative size (not exact scale)</text>
-	<g>
-		<g>
-			<line class="st23" x1="480.5" y1="77" x2="480.5" y2="719.3"/>
-			<g>
-				<rect x="467.5" y="75" class="st0" width="26" height="4"/>
-			</g>
-			<g>
-				<rect x="467.5" y="717.3" class="st0" width="26" height="4"/>
-			</g>
-		</g>
-	</g>
-	<g>
-		<path class="st24" d="M17.2,743h474.7c3.7,0,6.7,2.8,6.7,6.2v90.6c0,3.4-3,6.2-6.7,6.2H17.2c-3.7,0-6.7-2.8-6.7-6.2v-90.6
-			C10.5,745.8,13.5,743,17.2,743z"/>
-		<path class="st25" d="M17.2,743h474.7c3.7,0,6.7,2.7,6.7,6v14c0,3.3-3,6-6.7,6H17.2c-3.7,0-6.7-2.7-6.7-6v-14
-			C10.5,745.7,13.5,743,17.2,743z"/>
-		<text transform="matrix(1 0 0 1 215.2463 760)" class="st7 st1 st16">Exam Key Facts</text>
-		<rect x="24" y="774.5" class="st26" width="461" height="63.5"/>
-		<text transform="matrix(1 0 0 1 24.0493 783.8076)" class="st27 st28 st29">• Smaller boards fit in larger cases (Mini-ITX and Micro-ATX fit in ATX cases). </text>
-		<text transform="matrix(1 0 0 1 24.0493 801.8076)" class="st27 st28 st29">• E-ATX requires a Full Tower,  it will NOT fit in a Mid Tower.</text>
-		<text transform="matrix(1 0 0 1 24.0493 819.8076)" class="st27 st28 st29">• Mini-ITX only has 1 PCIe slot, almost always used by the Graphics Card.</text>
-		<text transform="matrix(1 0 0 1 24.0493 837.8076)" class="st27 st28 st29">• All four form factors use the same ATX power supply standard.</text>
-	</g>
-</g>
+<text transform="matrix(1 0 0 1 123.7988 35)" class="st0 st1 st2">Motherboard Form Factors</text>
+<text transform="matrix(1 0 0 1 112.1133 55)" class="st3 st4 st5">Drawn to relative scale - smaller boards fit in larger cases</text>
+<path class="st6" d="M36,75h428c3.3,0,6,2.7,6,6v138c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6V81C30,77.7,32.7,75,36,75z"/>
+<path class="st7" d="M36,75h428c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6V81C30,77.7,32.7,75,36,75z"/>
+<text transform="matrix(1 0 0 1 182.6165 94)" class="st8 st1 st9">E-ATX (Extended ATX)</text>
+<text transform="matrix(1 0 0 1 50 125)" class="st10 st1 st5">Size:</text>
+<text transform="matrix(1 0 0 1 90 125)" class="st10 st4 st5">305 x 330 mm (12&quot; x 13&quot;)</text>
+<text transform="matrix(1 0 0 1 50 145)" class="st10 st1 st5">Slots:</text>
+<text transform="matrix(1 0 0 1 90 145)" class="st10 st4 st5">8+ expansion slots</text>
+<text transform="matrix(1 0 0 1 50 165)" class="st10 st1 st5">Use:</text>
+<text transform="matrix(1 0 0 1 90 165)" class="st10 st4 st5">High-end workstations, servers, maximum PCIe lanes</text>
+<text transform="matrix(1 0 0 1 50 185)" class="st10 st1 st5">Case:</text>
+<text transform="matrix(1 0 0 1 90 185)" class="st10 st4 st5">Full Tower only</text>
+<path class="st11" d="M352,115h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C350,115.9,350.9,115,352,115z"/>
+<path class="st11" d="M352,127h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C350,127.9,350.9,127,352,127z"/>
+<path class="st11" d="M352,139h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C350,139.9,350.9,139,352,139z"/>
+<path class="st11" d="M352,151h96c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-96c-1.1,0-2-0.9-2-2v-4C350,151.9,350.9,151,352,151z"/>
+<path class="st11" d="M352,163h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C350,163.9,350.9,163,352,163z"/>
+<path class="st11" d="M352,175h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C350,175.9,350.9,175,352,175z"/>
+<path class="st11" d="M352,187h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C350,187.9,350.9,187,352,187z"/>
+<path class="st11" d="M352,199h46c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-46c-1.1,0-2-0.9-2-2v-4C350,199.9,350.9,199,352,199z"/>
+<text transform="matrix(1 0 0 1 432.9058 215)" class="st7 st4 st12">8+ slots</text>
+<path class="st13" d="M36,240h388c3.3,0,6,2.7,6,6v138c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6V246C30,242.7,32.7,240,36,240z"/>
+<path class="st0" d="M36,240h388c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6v-16C30,242.7,32.7,240,36,240z"/>
+<text transform="matrix(1 0 0 1 183.6875 259)" class="st8 st1 st9">ATX (Standard)</text>
+<text transform="matrix(1 0 0 1 50 290)" class="st10 st1 st5">Size:</text>
+<text transform="matrix(1 0 0 1 90 290)" class="st10 st4 st5">305 x 244 mm (12&quot; x 9.6&quot;)</text>
+<text transform="matrix(1 0 0 1 50 310)" class="st10 st1 st5">Slots:</text>
+<text transform="matrix(1 0 0 1 90 310)" class="st10 st4 st5">7 expansion slots</text>
+<text transform="matrix(1 0 0 1 50 330)" class="st10 st1 st5">Use:</text>
+<text transform="matrix(1 0 0 1 90 330)" class="st10 st4 st5">Full desktop towers, gaming, workstations</text>
+<text transform="matrix(1 0 0 1 50 350)" class="st10 st1 st5">Case:</text>
+<text transform="matrix(1 0 0 1 90 350)" class="st10 st4 st5">Full Tower or Mid Tower</text>
+<path class="st14" d="M322,280h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C320,280.9,320.9,280,322,280z"/>
+<path class="st14" d="M322,292h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C320,292.9,320.9,292,322,292z"/>
+<path class="st14" d="M322,304h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C320,304.9,320.9,304,322,304z"/>
+<path class="st14" d="M322,316h86c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-86c-1.1,0-2-0.9-2-2v-4C320,316.9,320.9,316,322,316z"/>
+<path class="st14" d="M322,328h41c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-41c-1.1,0-2-0.9-2-2v-4C320,328.9,320.9,328,322,328z"/>
+<path class="st14" d="M322,340h41c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-41c-1.1,0-2-0.9-2-2v-4C320,340.9,320.9,340,322,340z"/>
+<path class="st14" d="M322,352h41c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-41c-1.1,0-2-0.9-2-2v-4C320,352.9,320.9,352,322,352z"/>
+<text transform="matrix(1 0 0 1 391.7728 378)" class="st0 st4 st12">7 slots</text>
+<path class="st15" d="M259,365h92c5,0,9,4,9,9l0,0c0,5-4,9-9,9h-92c-5,0-9-4-9-9l0,0C250,369,254,365,259,365z"/>
+<text transform="matrix(1 0 0 1 262.2346 378)" class="st8 st1 st16">MOST EXPANDABLE</text>
+<path class="st17" d="M36,405h318c3.3,0,6,2.7,6,6v138c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6V411C30,407.7,32.7,405,36,405z"/>
+<path class="st18" d="M36,405h318c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6v-16C30,407.7,32.7,405,36,405z"/>
+<text transform="matrix(1 0 0 1 137.76 424)" class="st8 st1 st9">Micro-ATX (mATX)</text>
+<text transform="matrix(1 0 0 1 50 455)" class="st10 st1 st5">Size:</text>
+<text transform="matrix(1 0 0 1 90 455)" class="st10 st4 st5">244 x 244 mm (9.6&quot; x 9.6&quot;) - Square</text>
+<text transform="matrix(1 0 0 1 50 475)" class="st10 st1 st5">Slots:</text>
+<text transform="matrix(1 0 0 1 90 475)" class="st10 st4 st5">4 expansion slots</text>
+<text transform="matrix(1 0 0 1 50 495)" class="st10 st1 st5">Use:</text>
+<text transform="matrix(1 0 0 1 90 495)" class="st10 st4 st5">Mid-size builds, pre-built systems</text>
+<text transform="matrix(1 0 0 1 50 515)" class="st10 st1 st5">Case:</text>
+<text transform="matrix(1 0 0 1 90 515)" class="st10 st4 st5">Mid Tower (also fits in ATX cases)</text>
+<path class="st19" d="M272,450h66c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-66c-1.1,0-2-0.9-2-2v-4C270,450.9,270.9,450,272,450z"/>
+<path class="st19" d="M272,462h66c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-66c-1.1,0-2-0.9-2-2v-4C270,462.9,270.9,462,272,462z"/>
+<path class="st19" d="M272,474h31c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-31c-1.1,0-2-0.9-2-2v-4C270,474.9,270.9,474,272,474z"/>
+<path class="st19" d="M272,486h31c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-31c-1.1,0-2-0.9-2-2v-4C270,486.9,270.9,486,272,486z"/>
+<text transform="matrix(1 0 0 1 326.3377 543)" class="st18 st4 st12">4 slots</text>
+<path class="st20" d="M209,530h102c5,0,9,4,9,9l0,0c0,5-4,9-9,9H209c-5,0-9-4-9-9l0,0C200,534,204,530,209,530z"/>
+<text transform="matrix(1 0 0 1 224.134 543)" class="st8 st1 st16">MOST COMMON</text>
+<path class="st21" d="M36,570h228c3.3,0,6,2.8,6,6.3v138.7c0,3.5-2.7,6.3-6,6.3H36c-3.3,0-6-2.8-6-6.3V576.3
+	C30,572.8,32.7,570,36,570z"/>
+<path class="st22" d="M36,570h228c3.3,0,6,2.7,6,6v16c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6v-16C30,572.7,32.7,570,36,570z"/>
+<text transform="matrix(1 0 0 1 123.4097 589)" class="st8 st1 st9">Mini-ITX</text>
+<text transform="matrix(1 0 0 1 50 620)" class="st10 st1 st5">Size:</text>
+<text transform="matrix(1 0 0 1 90 620)" class="st10 st4 st5">170 x 170 mm (6.7&quot; x 6.7&quot;)</text>
+<text transform="matrix(1 0 0 1 50 640)" class="st10 st1 st5">Slots:</text>
+<text transform="matrix(1 0 0 1 90 640)" class="st10 st4 st5">1 expansion slot only</text>
+<text transform="matrix(1 0 0 1 50 660)" class="st10 st1 st5">Use:</text>
+<text transform="matrix(1 0 0 1 90 660)" class="st10 st4 st5">SFF/compact builds, HTPCs</text>
+<text transform="matrix(1 0 0 1 50 680)" class="st10 st1 st5">Case:</text>
+<text transform="matrix(1 0 0 1 90 680)" class="st10 st4 st5">Mini Tower / SFF</text>
+<path class="st23" d="M207,633h51c1.1,0,2,0.9,2,2v4c0,1.1-0.9,2-2,2h-51c-1.1,0-2-0.9-2-2v-4C205,633.9,205.9,633,207,633z"/>
+<text transform="matrix(1 0 0 1 240.5567 706)" class="st22 st4 st12">1 slot</text>
+<path class="st22" d="M139,695h82c5,0,9,4,9,9l0,0c0,5-4,9-9,9h-82c-5,0-9-4-9-9l0,0C130,699,134,695,139,695z"/>
+<text transform="matrix(1 0 0 1 157.8516 708)" class="st8 st1 st16">SMALLEST</text>
+<path class="st24" d="M36,735h428c3.3,0,6,2.7,6,6v88c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6v-88C30,737.7,32.7,735,36,735z"/>
+<path class="st0" d="M36,735h428c3.3,0,6,2.7,6,6v14c0,3.3-2.7,6-6,6H36c-3.3,0-6-2.7-6-6v-14C30,737.7,32.7,735,36,735z"/>
+<text transform="matrix(1 0 0 1 210.697 752)" class="st8 st1 st5">Exam Key Facts</text>
+<text transform="matrix(1 0 0 1 50 778)" class="st25 st1 st26">1.</text>
+<text transform="matrix(1 0 0 1 65 778)" class="st10 st4 st26">Smaller boards fit in larger cases (Mini-ITX fits in ATX case).</text>
+<text transform="matrix(1 0 0 1 50 798)" class="st25 st1 st26">2.</text>
+<text transform="matrix(1 0 0 1 65 798)" class="st10 st4 st26">Larger boards do NOT fit in smaller cases (ATX won&apos;t fit Mini-ITX case).</text>
+<text transform="matrix(1 0 0 1 50 818)" class="st25 st1 st26">3.</text>
+<text transform="matrix(1 0 0 1 65 818)" class="st10 st4 st26">mATX is most common in pre-built systems. ATX for custom/gaming builds.</text>
+<line class="st27" x1="480" y1="90" x2="480" y2="710"/>
+<text transform="matrix(6.123234e-17 1 -1 6.123234e-17 488 400)" class="st28 st4 st16">Relative size (not exact scale)</text>
 </svg>

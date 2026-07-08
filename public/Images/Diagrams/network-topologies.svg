@@ -2,155 +2,153 @@
 <!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1"
 	 id="svg83" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 774.2 577"
-	 style="enable-background:new 0 0 774.2 577;" xml:space="preserve">
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 763.2 588"
+	 style="enable-background:new 0 0 763.2 588;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#2980B9;}
+	.st0{fill:#2C3E50;}
 	.st1{font-family:'Arial-BoldMT';}
 	.st2{font-size:22px;}
-	.st3{fill:#FFFFFF;stroke:#3498DB;stroke-width:2;}
-	.st4{font-size:16px;}
-	.st5{fill:#3498DB;}
-	.st6{fill:#FFFFFF;}
-	.st7{font-family:'ArialMT';}
-	.st8{font-size:8px;}
-	.st9{fill:none;stroke:#3498DB;stroke-width:2;}
-	.st10{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
-	.st11{fill:#27AE60;}
-	.st12{fill:none;stroke:#27AE60;stroke-width:1.5;}
-	.st13{fill:none;}
-	.st14{fill:#555555;}
-	.st15{font-family:'ArialNarrow-Bold';}
-	.st16{font-size:16.8505px;}
-	.st17{fill:#FFFFFF;stroke:#E67E22;stroke-width:2;}
-	.st18{fill:#E67E22;}
-	.st19{fill:none;stroke:#E67E22;stroke-width:4;}
-	.st20{fill:#C0392B;}
-	.st21{fill:#2C3E50;}
-	.st22{fill:none;stroke:#E67E22;stroke-width:2;}
-	.st23{font-size:14.9775px;}
-	.st24{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
-	.st25{fill:#8E44AD;}
-	.st26{fill:none;stroke:#8364AB;stroke-width:2;}
-	.st27{opacity:0.8;fill:#EEEEEE;stroke:#000000;stroke-width:1.1;stroke-opacity:0.5;enable-background:new    ;}
-	.st28{fill:none;stroke:#DEE2E6;}
-	.st29{font-family:'ArialNarrow';}
+	.st3{opacity:0.8;fill:#F2F2F2;stroke:#000000;stroke-width:1.1;stroke-opacity:0.5;enable-background:new    ;}
+	.st4{fill:none;stroke:#DEE2E6;}
+	.st5{font-size:16px;}
+	.st6{fill:#2980B9;}
+	.st7{fill:#27AE60;}
+	.st8{fill:#E67E22;}
+	.st9{fill:#8E44AD;}
+	.st10{fill:#555555;}
+	.st11{font-family:'ArialNarrow';}
+	.st12{fill:#C0392B;}
+	.st13{fill:#FFFFFF;stroke:#3498DB;stroke-width:2;}
+	.st14{fill:#3498DB;}
+	.st15{fill:#FFFFFF;}
+	.st16{font-family:'ArialMT';}
+	.st17{font-size:8px;}
+	.st18{fill:none;stroke:#3498DB;stroke-width:2;}
+	.st19{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
+	.st20{fill:none;stroke:#27AE60;stroke-width:1.5;}
+	.st21{fill:none;}
+	.st22{font-family:'ArialNarrow-Bold';}
+	.st23{font-size:16.8505px;}
+	.st24{fill:#FFFFFF;stroke:#E67E22;stroke-width:2;}
+	.st25{fill:none;stroke:#E67E22;stroke-width:4;}
+	.st26{fill:none;stroke:#E67E22;stroke-width:2;}
+	.st27{font-size:14.9775px;}
+	.st28{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
+	.st29{fill:none;stroke:#8364AB;stroke-width:2;}
 </style>
 <sodipodi:namedview  bordercolor="#000000" borderopacity="0.25" id="namedview83" inkscape:current-layer="g17" inkscape:cx="406.12639" inkscape:cy="304.48526" inkscape:deskcolor="#d1d1d1" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:showpageshadow="2" inkscape:window-height="1009" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="1912" inkscape:window-y="-8" inkscape:zoom="1.1412703" pagecolor="#ffffff">
 	</sodipodi:namedview>
-<text id="text2" transform="matrix(1 0 0 1 254.6865 46)" class="st0 st1 st2">Network Topologies</text>
+<text id="text2" transform="matrix(1 0 0 1 249.1787 41)" class="st0 st1 st2">Network Topologies</text>
+<path id="rect17" class="st3" d="M10,378.4h743.2c5.5,0,10,4.5,10,10v164.9c0,5.5-4.5,10-10,10H10c-5.5,0-10-4.5-10-10V388.4
+	C0,382.8,4.5,378.4,10,378.4z"/>
+<line id="line67" class="st4" x1="14.4" y1="429" x2="754.4" y2="429"/>
+<text id="text64" transform="matrix(1 0 0 1 14.0002 410.6056)" class="st0 st1 st5">Topology</text>
+<text id="text68" transform="matrix(1 0 0 1 14.0002 458.4103)" class="st6 st1 st5">Star</text>
+<text id="text72" transform="matrix(1 0 0 1 14.0002 488.4103)" class="st7 st1 st5">Mesh</text>
+<text id="text76" transform="matrix(1 0 0 1 14.0002 518.4103)" class="st8 st1 st5">Bus</text>
+<text id="text80" transform="matrix(1 0 0 1 14.0002 548.4103)" class="st9 st1 st5">Ring</text>
+<text id="text65" transform="matrix(1 0 0 1 115.3676 410.6056)" class="st0 st1 st5">Advantages</text>
+<text id="text69" transform="matrix(1 0 0 1 115.3676 458.4103)" class="st10 st11 st5">Easy to add devices, isolate faults</text>
+<text id="text73" transform="matrix(1 0 0 1 115.3676 488.4103)" class="st10 st11 st5">Highly redundant, fault tolerant</text>
+<text id="text77" transform="matrix(1 0 0 1 115.3676 518.4103)" class="st10 st11 st5">Simple, inexpensive, easy install</text>
+<text id="text81" transform="matrix(1 0 0 1 115.3676 548.4103)" class="st10 st11 st5">Equal access, predictable performance</text>
+<text id="text66" transform="matrix(1 0 0 1 372.131 410.6056)" class="st0 st1 st5">Disadvantages</text>
+<text id="text70" transform="matrix(1 0 0 1 372.131 458.4103)" class="st10 st11 st5">Central device failure = total failure</text>
+<text id="text74" transform="matrix(1 0 0 1 372.131 488.4103)" class="st10 st11 st5">Expensive, complex cabling</text>
+<text id="text78" transform="matrix(1 0 0 1 372.131 518.4103)" class="st10 st11 st5">Cable break = network down</text>
+<text id="text82" transform="matrix(1 0 0 1 372.131 548.4103)" class="st10 st11 st5">One device failure disrupts ring</text>
+<text id="text67" transform="matrix(1 0 0 1 599.2656 410.6056)" class="st0 st1 st5">Point of Failure</text>
+<text id="text71" transform="matrix(1 0 0 1 599.2656 458.6056)" class="st12 st1 st5">Central switch/hub</text>
+<text id="text75" transform="matrix(1 0 0 1 599.2656 488.6056)" class="st7 st1 st5">None (full mesh)</text>
+<text id="text79" transform="matrix(1 0 0 1 599.2656 518.6056)" class="st12 st1 st5">Backbone cable</text>
+<text id="text83" transform="matrix(1 0 0 1 599.2656 548.6057)" class="st12 st1 st5">Any single node</text>
 <g>
-	<path id="rect3" class="st3" d="M13.3,83h160.9c4.3,0,7.8,4,7.8,8.9v226.3c0,4.9-3.5,8.9-7.8,8.9H13.3c-4.3,0-7.8-4-7.8-8.9V91.9
-		C5.5,87,9,83,13.3,83z"/>
-	<text id="text3" transform="matrix(1 0 0 1 76.5298 108)" class="st0 st1 st4">Star</text>
-	<path id="rect4" class="st5" d="M79.1,176h26c2.2,0,4,1.8,4,4v16c0,2.2-1.8,4-4,4h-26c-2.2,0-4-1.8-4-4v-16
-		C75.1,177.8,76.9,176,79.1,176z"/>
-	<text id="text4" transform="matrix(1 0 0 1 85.6489 192)" class="st6 st7 st8">SW</text>
-	<line id="line9" class="st9" x1="92.1" y1="140" x2="92.1" y2="176"/>
-	<line id="line10" class="st9" x1="137.5" y1="160" x2="104.1" y2="180"/>
-	<line id="line11" class="st9" x1="135.4" y1="216" x2="101.5" y2="194"/>
-	<line id="line12" class="st9" x1="92.1" y1="236" x2="92.1" y2="200"/>
-	<line id="line13" class="st9" x1="48.3" y1="213.6" x2="80.1" y2="194"/>
-	<line id="line14" class="st9" x1="48.3" y1="160" x2="80.1" y2="182"/>
-	<path id="rect15" class="st10" d="M205.1,83h164c4.4,0,8,4,8,8.9v226.3c0,4.9-3.6,8.9-8,8.9h-164c-4.4,0-8-4-8-8.9V91.9
-		C197.1,87,200.7,83,205.1,83z"/>
-	<text id="text16" transform="matrix(1 0 0 1 266.6431 108)" class="st11 st1 st4">Mesh</text>
-	<line id="line20" class="st12" x1="287.1" y1="127.7" x2="337.1" y2="171"/>
-	<line id="line21" class="st12" x1="287.1" y1="130.1" x2="327.1" y2="228"/>
-	<line id="line22" class="st12" x1="287.1" y1="130.1" x2="247.1" y2="228"/>
-	<line id="line23" class="st12" x1="287.1" y1="130.1" x2="240.7" y2="165.1"/>
-	<line id="line24" class="st12" x1="337.1" y1="180" x2="327.1" y2="216"/>
-	<line id="line25" class="st12" x1="337.1" y1="168" x2="247.1" y2="228"/>
-	<line id="line26" class="st12" x1="337.1" y1="168" x2="237.1" y2="168"/>
-	<line id="line27" class="st12" x1="327.1" y1="228" x2="247.1" y2="228"/>
-	<line id="line28" class="st12" x1="327.1" y1="228" x2="237.1" y2="168"/>
-	<line id="line29" class="st12" x1="247.1" y1="228" x2="237.1" y2="168"/>
-	<rect id="rect1" x="207.1" y="284" class="st13" width="161" height="43"/>
-	<text id="text1" transform="matrix(1 0 0 1 213.7339 297.7275)" class="st14 st15 st4">Every device connected </text>
-	<text id="text5" transform="matrix(0.9016 0 0 1 229.311 316.9272)" class="st14 st15 st16">to every other device</text>
-	<path id="rect30" class="st17" d="M400.1,83h164c4.4,0,8,4,8,8.9v226.3c0,4.9-3.6,8.9-8,8.9h-164c-4.4,0-8-4-8-8.9V91.9
-		C392.1,87,395.7,83,400.1,83z"/>
-	<text id="text31" transform="matrix(1 0 0 1 466.979 108)" class="st18 st1 st4">Bus</text>
-	<line id="line31" class="st19" x1="417.1" y1="188" x2="547.1" y2="188"/>
-	<rect id="rect31" x="409.1" y="182" class="st20" width="12" height="12"/>
-	<rect id="rect32" x="543.1" y="182" class="st20" width="12" height="12"/>
-	<circle id="circle32" class="st21" cx="442.1" cy="148" r="12"/>
-	<circle id="circle33" class="st21" cx="482.1" cy="148" r="12"/>
-	<circle id="circle34" class="st21" cx="522.1" cy="148" r="12"/>
-	<circle id="circle35" class="st21" cx="442.1" cy="228" r="12"/>
-	<circle id="circle36" class="st21" cx="482.1" cy="228" r="12"/>
-	<circle id="circle37" class="st21" cx="522.1" cy="228" r="12"/>
-	<line id="line37" class="st22" x1="442.1" y1="160" x2="442.1" y2="188"/>
-	<line id="line38" class="st22" x1="482.1" y1="160" x2="482.1" y2="188"/>
-	<line id="line39" class="st22" x1="522.1" y1="160" x2="522.1" y2="188"/>
-	<line id="line40" class="st22" x1="442.1" y1="216" x2="442.1" y2="188"/>
-	<line id="line41" class="st22" x1="482.1" y1="216" x2="482.1" y2="188"/>
-	<line id="line42" class="st22" x1="522.1" y1="216" x2="522.1" y2="188"/>
-	<rect id="rect5" x="402.3" y="284" class="st13" width="161.8" height="43.4"/>
-	<text id="text6" transform="matrix(1 0 0 1 430.9878 297.7275)" class="st14 st15 st4">All devices share a </text>
-	<text id="text7" transform="matrix(1.1412 0 0 1 410.1709 316.9277)" class="st14 st15 st23">single backbone cable</text>
-	<path id="rect45" class="st24" d="M594.9,83h165.9c4.3,0,7.9,4,7.9,8.9v226.3c0,4.9-3.5,8.9-7.9,8.9H594.9c-4.3,0-7.9-4-7.9-8.9
-		V91.9C587.1,87,590.6,83,594.9,83z"/>
-	<text id="text46" transform="matrix(1 0 0 1 661.3188 108)" class="st25 st1 st4">Ring</text>
-	<line id="line52" class="st26" x1="729.1" y1="180" x2="729.1" y2="211"/>
-	<line id="line51" class="st26" x1="683.8" y1="127.7" x2="725.1" y2="157.7"/>
-	<line id="line53" class="st26" x1="725.1" y1="232.7" x2="683.8" y2="252.7"/>
-	<line id="line55" class="st26" x1="629.1" y1="211" x2="629.1" y2="180"/>
-	<line id="line54" class="st26" x1="673" y1="252.7" x2="631.7" y2="231.2"/>
-	<line id="line56" class="st26" x1="631.7" y1="157.7" x2="671.5" y2="127.7"/>
-	<polygon id="polygon57" class="st25" points="729.1,196 733.1,193 725.1,193 	"/>
-	<polygon id="polygon57_1_" class="st25" points="648.8,140 654.4,145.7 653.7,140.7 	"/>
-	<polygon id="polygon57_4_" class="st25" points="706.6,144.9 707.3,140 701.6,145.7 	"/>
-	<polygon id="polygon57_2_" class="st25" points="649.9,245.7 652.6,238.2 648.4,240.9 	"/>
-	<polygon id="polygon57_3_" class="st25" points="704.4,242.9 708.6,245.7 705.9,238.2 	"/>
-	<polygon id="polygon60" class="st25" points="629.1,196 633.1,199 625.1,199 	"/>
-	<rect id="rect7" x="597.1" y="284" class="st13" width="166" height="43.4"/>
-	<text id="text8" transform="matrix(1 0 0 1 621.7565 296.8513)" class="st14 st15 st4">Data travels in one </text>
-	<text id="text9" transform="matrix(0.9016 0 0 1 620.6084 316.0513)" class="st14 st15 st16">direction around ring</text>
-	<circle id="circle46" class="st21" cx="679.1" cy="128" r="12"/>
-	<circle id="circle47" class="st21" cx="729.1" cy="168" r="12"/>
-	<circle id="circle48" class="st21" cx="729.1" cy="223" r="12"/>
-	<circle id="circle49" class="st21" cx="679.1" cy="258" r="12"/>
-	<circle id="circle50" class="st21" cx="629.1" cy="223" r="12"/>
-	<circle id="circle51" class="st21" cx="629.1" cy="168" r="12"/>
-	<circle id="circle16" class="st21" cx="287.1" cy="128" r="12"/>
-	<circle id="circle17" class="st21" cx="337.1" cy="168" r="12"/>
-	<circle id="circle18" class="st21" cx="327.1" cy="228" r="12"/>
-	<circle id="circle19" class="st21" cx="247.1" cy="228" r="12"/>
-	<circle id="circle20" class="st21" cx="237.1" cy="168" r="12"/>
-	<circle id="circle4" class="st21" cx="92.1" cy="128" r="12"/>
-	<circle id="circle5" class="st21" cx="142.1" cy="158" r="12"/>
-	<circle id="circle6" class="st21" cx="142.1" cy="218" r="12"/>
-	<circle id="circle7" class="st21" cx="92.1" cy="248" r="12"/>
-	<circle id="circle8" class="st21" cx="42.1" cy="218" r="12"/>
-	<circle id="circle9" class="st21" cx="42.1" cy="158" r="12"/>
-	<rect id="rect9" x="12.1" y="284" class="st13" width="157" height="43.4"/>
-	<text transform="matrix(1 0 0 1 14.2434 293.7037)" class="st14 st15 st4">Central device connects</text>
-	<text transform="matrix(1 0 0 1 61.2434 312.9037)" class="st14 st15 st4">all nodes</text>
-</g>
-<g>
-	<path id="rect17" class="st27" d="M15.5,356.4h743.2c5.5,0,10,4.5,10,10v164.9c0,5.5-4.5,10-10,10H15.5c-5.5,0-10-4.5-10-10V366.4
-		C5.5,360.8,10,356.4,15.5,356.4z"/>
-	<line id="line67" class="st28" x1="19.9" y1="407" x2="759.9" y2="407"/>
-	<text id="text64" transform="matrix(1 0 0 1 19.5002 388.6056)" class="st21 st1 st4">Topology</text>
-	<text id="text68" transform="matrix(1 0 0 1 19.5002 436.4103)" class="st0 st1 st4">Star</text>
-	<text id="text72" transform="matrix(1 0 0 1 19.5002 466.4103)" class="st11 st1 st4">Mesh</text>
-	<text id="text76" transform="matrix(1 0 0 1 19.5002 496.4103)" class="st18 st1 st4">Bus</text>
-	<text id="text80" transform="matrix(1 0 0 1 19.5002 526.4103)" class="st25 st1 st4">Ring</text>
-	<text id="text65" transform="matrix(1 0 0 1 120.8676 388.6056)" class="st21 st1 st4">Advantages</text>
-	<text id="text69" transform="matrix(1 0 0 1 120.8676 436.4103)" class="st14 st29 st4">Easy to add devices, isolate faults</text>
-	<text id="text73" transform="matrix(1 0 0 1 120.8676 466.4103)" class="st14 st29 st4">Highly redundant, fault tolerant</text>
-	<text id="text77" transform="matrix(1 0 0 1 120.8676 496.4103)" class="st14 st29 st4">Simple, inexpensive, easy install</text>
-	<text id="text81" transform="matrix(1 0 0 1 120.8676 526.4103)" class="st14 st29 st4">Equal access, predictable performance</text>
-	<text id="text66" transform="matrix(1 0 0 1 377.631 388.6056)" class="st21 st1 st4">Disadvantages</text>
-	<text id="text70" transform="matrix(1 0 0 1 377.631 436.4103)" class="st14 st29 st4">Central device failure = total failure</text>
-	<text id="text74" transform="matrix(1 0 0 1 377.631 466.4103)" class="st14 st29 st4">Expensive, complex cabling</text>
-	<text id="text78" transform="matrix(1 0 0 1 377.631 496.4103)" class="st14 st29 st4">Cable break = network down</text>
-	<text id="text82" transform="matrix(1 0 0 1 377.631 526.4103)" class="st14 st29 st4">One device failure disrupts ring</text>
-	<text id="text67" transform="matrix(1 0 0 1 604.7656 388.6056)" class="st21 st1 st4">Point of Failure</text>
-	<text id="text71" transform="matrix(1 0 0 1 604.7656 436.6056)" class="st20 st1 st4">Central switch/hub</text>
-	<text id="text75" transform="matrix(1 0 0 1 604.7656 466.6056)" class="st11 st1 st4">None (full mesh)</text>
-	<text id="text79" transform="matrix(1 0 0 1 604.7656 496.6056)" class="st20 st1 st4">Backbone cable</text>
-	<text id="text83" transform="matrix(1 0 0 1 604.7656 526.6057)" class="st20 st1 st4">Any single node</text>
+	<path id="rect3" class="st13" d="M7.8,89h160.9c4.3,0,7.8,4,7.8,8.9v226.3c0,4.9-3.5,8.9-7.8,8.9H7.8c-4.3,0-7.8-4-7.8-8.9V97.9
+		C0,93,3.5,89,7.8,89z"/>
+	<text id="text3" transform="matrix(1 0 0 1 71.0298 114)" class="st6 st1 st5">Star</text>
+	<path id="rect4" class="st14" d="M73.6,182h26c2.2,0,4,1.8,4,4v16c0,2.2-1.8,4-4,4h-26c-2.2,0-4-1.8-4-4v-16
+		C69.6,183.8,71.4,182,73.6,182z"/>
+	<text id="text4" transform="matrix(1 0 0 1 80.1489 198)" class="st15 st16 st17">SW</text>
+	<line id="line9" class="st18" x1="86.6" y1="146" x2="86.6" y2="182"/>
+	<line id="line10" class="st18" x1="132" y1="166" x2="98.6" y2="186"/>
+	<line id="line11" class="st18" x1="129.9" y1="222" x2="96" y2="200"/>
+	<line id="line12" class="st18" x1="86.6" y1="242" x2="86.6" y2="206"/>
+	<line id="line13" class="st18" x1="42.8" y1="219.6" x2="74.6" y2="200"/>
+	<line id="line14" class="st18" x1="42.8" y1="166" x2="74.6" y2="188"/>
+	<path id="rect15" class="st19" d="M199.6,89h164c4.4,0,8,4,8,8.9v226.3c0,4.9-3.6,8.9-8,8.9h-164c-4.4,0-8-4-8-8.9V97.9
+		C191.6,93,195.2,89,199.6,89z"/>
+	<text id="text16" transform="matrix(1 0 0 1 261.1431 114)" class="st7 st1 st5">Mesh</text>
+	<line id="line20" class="st20" x1="281.6" y1="133.7" x2="331.6" y2="177"/>
+	<line id="line21" class="st20" x1="281.6" y1="136.1" x2="321.6" y2="234"/>
+	<line id="line22" class="st20" x1="281.6" y1="136.1" x2="241.6" y2="234"/>
+	<line id="line23" class="st20" x1="281.6" y1="136.1" x2="235.2" y2="171.1"/>
+	<line id="line24" class="st20" x1="331.6" y1="186" x2="321.6" y2="222"/>
+	<line id="line25" class="st20" x1="331.6" y1="174" x2="241.6" y2="234"/>
+	<line id="line26" class="st20" x1="331.6" y1="174" x2="231.6" y2="174"/>
+	<line id="line27" class="st20" x1="321.6" y1="234" x2="241.6" y2="234"/>
+	<line id="line28" class="st20" x1="321.6" y1="234" x2="231.6" y2="174"/>
+	<line id="line29" class="st20" x1="241.6" y1="234" x2="231.6" y2="174"/>
+	<rect id="rect1" x="201.6" y="290" class="st21" width="161" height="43"/>
+	<text id="text1" transform="matrix(1 0 0 1 208.2339 303.7275)" class="st10 st22 st5">Every device connected </text>
+	<text id="text5" transform="matrix(0.9016 0 0 1 223.8111 322.9272)" class="st10 st22 st23">to every other device</text>
+	<path id="rect30" class="st24" d="M394.6,89h164c4.4,0,8,4,8,8.9v226.3c0,4.9-3.6,8.9-8,8.9h-164c-4.4,0-8-4-8-8.9V97.9
+		C386.6,93,390.2,89,394.6,89z"/>
+	<text id="text31" transform="matrix(1 0 0 1 461.479 114)" class="st8 st1 st5">Bus</text>
+	<line id="line31" class="st25" x1="411.6" y1="194" x2="541.6" y2="194"/>
+	<rect id="rect31" x="403.6" y="188" class="st12" width="12" height="12"/>
+	<rect id="rect32" x="537.6" y="188" class="st12" width="12" height="12"/>
+	<circle id="circle32" class="st0" cx="436.6" cy="154" r="12"/>
+	<circle id="circle33" class="st0" cx="476.6" cy="154" r="12"/>
+	<circle id="circle34" class="st0" cx="516.6" cy="154" r="12"/>
+	<circle id="circle35" class="st0" cx="436.6" cy="234" r="12"/>
+	<circle id="circle36" class="st0" cx="476.6" cy="234" r="12"/>
+	<circle id="circle37" class="st0" cx="516.6" cy="234" r="12"/>
+	<line id="line37" class="st26" x1="436.6" y1="166" x2="436.6" y2="194"/>
+	<line id="line38" class="st26" x1="476.6" y1="166" x2="476.6" y2="194"/>
+	<line id="line39" class="st26" x1="516.6" y1="166" x2="516.6" y2="194"/>
+	<line id="line40" class="st26" x1="436.6" y1="222" x2="436.6" y2="194"/>
+	<line id="line41" class="st26" x1="476.6" y1="222" x2="476.6" y2="194"/>
+	<line id="line42" class="st26" x1="516.6" y1="222" x2="516.6" y2="194"/>
+	<rect id="rect5" x="396.8" y="290" class="st21" width="161.8" height="43.4"/>
+	<text id="text6" transform="matrix(1 0 0 1 425.4878 303.7275)" class="st10 st22 st5">All devices share a </text>
+	<text id="text7" transform="matrix(1.1412 0 0 1 404.6704 322.9277)" class="st10 st22 st27">single backbone cable</text>
+	<path id="rect45" class="st28" d="M589.4,89h165.9c4.3,0,7.9,4,7.9,8.9v226.3c0,4.9-3.5,8.9-7.9,8.9H589.4c-4.3,0-7.9-4-7.9-8.9
+		V97.9C581.6,93,585.1,89,589.4,89z"/>
+	<text id="text46" transform="matrix(1 0 0 1 655.8189 114)" class="st9 st1 st5">Ring</text>
+	<line id="line52" class="st29" x1="723.6" y1="186" x2="723.6" y2="217"/>
+	<line id="line51" class="st29" x1="678.3" y1="133.7" x2="719.6" y2="163.7"/>
+	<line id="line53" class="st29" x1="719.6" y1="238.7" x2="678.3" y2="258.7"/>
+	<line id="line55" class="st29" x1="623.6" y1="217" x2="623.6" y2="186"/>
+	<line id="line54" class="st29" x1="667.5" y1="258.7" x2="626.2" y2="237.2"/>
+	<line id="line56" class="st29" x1="626.2" y1="163.7" x2="666" y2="133.7"/>
+	<polygon id="polygon57" class="st9" points="723.6,202 727.6,199 719.6,199 	"/>
+	<polygon id="polygon57_1_" class="st9" points="643.3,146 648.9,151.7 648.2,146.7 	"/>
+	<polygon id="polygon57_4_" class="st9" points="701.1,150.9 701.8,146 696.1,151.7 	"/>
+	<polygon id="polygon57_2_" class="st9" points="644.4,251.7 647.1,244.2 642.9,246.9 	"/>
+	<polygon id="polygon57_3_" class="st9" points="698.9,248.9 703.1,251.7 700.4,244.2 	"/>
+	<polygon id="polygon60" class="st9" points="623.6,202 627.6,205 619.6,205 	"/>
+	<rect id="rect7" x="591.6" y="290" class="st21" width="166" height="43.4"/>
+	<text id="text8" transform="matrix(1 0 0 1 616.2565 302.8513)" class="st10 st22 st5">Data travels in one </text>
+	<text id="text9" transform="matrix(0.9016 0 0 1 615.1089 322.0513)" class="st10 st22 st23">direction around ring</text>
+	<circle id="circle46" class="st0" cx="673.6" cy="134" r="12"/>
+	<circle id="circle47" class="st0" cx="723.6" cy="174" r="12"/>
+	<circle id="circle48" class="st0" cx="723.6" cy="229" r="12"/>
+	<circle id="circle49" class="st0" cx="673.6" cy="264" r="12"/>
+	<circle id="circle50" class="st0" cx="623.6" cy="229" r="12"/>
+	<circle id="circle51" class="st0" cx="623.6" cy="174" r="12"/>
+	<circle id="circle16" class="st0" cx="281.6" cy="134" r="12"/>
+	<circle id="circle17" class="st0" cx="331.6" cy="174" r="12"/>
+	<circle id="circle18" class="st0" cx="321.6" cy="234" r="12"/>
+	<circle id="circle19" class="st0" cx="241.6" cy="234" r="12"/>
+	<circle id="circle20" class="st0" cx="231.6" cy="174" r="12"/>
+	<circle id="circle4" class="st0" cx="86.6" cy="134" r="12"/>
+	<circle id="circle5" class="st0" cx="136.6" cy="164" r="12"/>
+	<circle id="circle6" class="st0" cx="136.6" cy="224" r="12"/>
+	<circle id="circle7" class="st0" cx="86.6" cy="254" r="12"/>
+	<circle id="circle8" class="st0" cx="36.6" cy="224" r="12"/>
+	<circle id="circle9" class="st0" cx="36.6" cy="164" r="12"/>
+	<rect id="rect9" x="6.6" y="290" class="st21" width="157" height="43.4"/>
+	<text transform="matrix(1 0 0 1 8.7434 299.7037)" class="st10 st22 st5">Central device connects</text>
+	<text transform="matrix(1 0 0 1 55.7434 318.9037)" class="st10 st22 st5">all nodes</text>
 </g>
 </svg>

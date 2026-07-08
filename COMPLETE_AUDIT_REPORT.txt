@@ -1,0 +1,617 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║         COMPLETE PUBLISHING AUDIT REPORT                           ║
+║         CompTIA A+ 220-1200 Series Study Guide                     ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+======================================================================
+AUDITING: KDP
+======================================================================
+Paragraphs: 4080
+Tables: 0
+Sections: 7
+
+──────────────────────────────────────────────────
+PART 1: STRUCTURE, FORMATTING, SPACING
+──────────────────────────────────────────────────
+  ✓ Zero tables
+  ✓ No page breaks
+  ✓ Headers/footers clear
+  ✓ No double spaces
+  ⚠ 29 paragraphs with leading whitespace
+      Para 30 [Normal]: ' Access Your FREE Online Study Portal. Scan the QR'
+      Para 32 [Normal]: ' Interactive PBQs — Practice exam-style performanc'
+      Para 33 [Normal]: ' Printable Reference Sheets — Downloadable study a'
+      Para 34 [Normal]: ' Arcade & Puzzle Games — Reinforce knowledge with '
+      Para 831 [Image Caption]: ' '
+  ⚠ Max 3 consecutive blanks (at paras: [2740])
+  ✓ No hidden/invisible characters
+
+──────────────────────────────────────────────────
+PART 2: WORD MERGING & SPELLING ISSUES
+──────────────────────────────────────────────────
+  ❌ 59 merged words detected:
+      'ASUSTeK' (para 11): ASUS, TUF Gaming, and the ASUS TUF Gaming Z590-PLUS WIFI pro
+      'toModule' (para 29): Study modules in order. Pay attention toModule Objectives as
+      'UnderstandingMobile' (para 78): Module: UnderstandingMobile Devices
+      'MacBook' (para 168): Touch Bar (Apple-specific) — A dynamic OLED strip that repla
+      'ExpressCard' (para 216): ExpressCard: Replaced older PCMCIA/CardBus standards. Added 
+      'CardBus' (para 216): ExpressCard: Replaced older PCMCIA/CardBus standards. Added 
+      'eSATA' (para 217): eSATA: External storage interface (faster than USB 2.0). Mos
+      'mSATA' (para 220): M.2 Cards: Modern replacement for mSATA. Used for SSDs and w
+      'iBeacons' (para 311): Bluetooth (iBeacons): Can leverage localized transmission po
+      'iTunes' (para 350): iTunes/Finder Backup: Connect iPhone to Mac/PC for local bac
+      'BitTorrent' (para 438): Peer-to-Peer (P2P)
+Description: Devices connect directly and
+      'VoIP' (para 471): • UDP (User Datagram Protocol): Used for: video streaming, V
+      'NetBIOS' (para 487): • Key Protocols & Devices: NetBIOS, RPC, SMB session setup
+      'vCPU' (para 726): CPU (vCPU)
+What to Configure: Number of virtual CPU cores as
+      'vCPUs' (para 726): CPU (vCPU)
+What to Configure: Number of virtual CPU cores as
+      'microATX' (para 813): Differentiate between motherboard form factors (ATX, microAT
+      'FormFactors' (para 819): Motherboard FormFactors
+      'SuperSpeed' (para 864): I. USB 3.2 Gen 1 Type-A
+Exam Notes: 5 Gbps. Blue colored. Mo
+      'andSP5' (para 939): SP3 / SP5
+Manufacturer: AMD (Server)
+Notes: SP3 is used for 
+      'sRGB' (para 1059): Color Gamut
+Definition: Range of visible colors a monitor ca
+  ✓ No common misspellings detected
+  ✓ No missing spaces after periods
+
+──────────────────────────────────────────────────
+PART 3: IMAGE AUDIT
+──────────────────────────────────────────────────
+  Total images found: 68
+  ❌ 1 images NOT centered:
+      Para 4072 'Picture 21' near: Unlock your Members-Only Portal with the
+  ❌ 1 images missing alt text:
+      Para 3555 'Picture' near: Trust your preparation, read every quest
+
+  Image inventory:
+    [✓C ✓A] Picture 68                               | Alt: QR code linking to CompTIA Study Hub for
+    [✓C ✓A] Picture 21                               | Alt: A step-by-step guide for removing a lapt
+    [✓C ✓A] Picture 16                               | Alt: Modern connectivity standards reference 
+    [✓C ✓A] Picture 20                               | Alt: Network topologies reference chart showi
+    [✓C ✓A] Picture 23                               | Alt: TCP and UDP protocols at Layer 4 (Transp
+    [✓C ✓A] Picture 21                               | Alt: OSI reference model 7-layer diagram with
+    [✓C ✓A] Picture 22                               | Alt: OSI reference model 7-layer diagram with
+    [✓C ✓A] Picture 23                               | Alt: IPv4 addressing structure, classes, and 
+    [✓C ✓A] Picture 25                               | Alt: DHCP DORA process diagram showing the 4-
+    [✓C ✓A] Picture 26                               | Alt: NAT and PAT network address translation 
+    [✓C ✓A] Picture 27                               | Alt: Network diagram illustrating VLAN segmen
+    [✓C ✓A] Picture 28                               | Alt: Motherboard form factor comparison chart
+    [✓C ✓A] Picture 65                               | Alt: A computer motherboard with labeled comp
+    [✓C ✓A] Picture 29                               | Alt: DDR RAM comparison chart for DDR3, DDR4,
+    [✓C ✓A] Picture 30                               | Alt: A detailed CompTIA A+ study infographic 
+    [✓C ✓A] Picture 33                               | Alt: Diagram illustrating five PSU connector 
+    [✓C ✓A] Picture                                  | Alt: A detailed CompTIA A+ study infographic 
+    [✓C ✓A] Picture 31                               | Alt: CPU socket type comparison chart detaili
+    [✓C ✓A] Arrow: Chevron 11                        | Alt: Arrow: Chevron 11 - CompTIA A+ Study Gui
+    [✓C ✓A] Picture 1                                | Alt: Intel LGA 1700 Socket. Identification of
+    [✓C ✓A] Text Box 2                               | Alt: Text Box 2 - CompTIA A+ Study Guide
+    [✓C ✓A] Connector: Elbow 3                       | Alt: Connector: Elbow 3 - CompTIA A+ Study Gu
+    [✓C ✓A] Picture 2                                | Alt: AMD Ryzen Processor. Identification of t
+    [✓C ✓A] Text Box 2                               | Alt: Text Box 2 - CompTIA A+ Study Guide
+    [✓C ✓A] Arrow: Chevron 11                        | Alt: Arrow: Chevron 11 - CompTIA A+ Study Gui
+    [✓C ✓A] Connector: Elbow 4                       | Alt: Connector: Elbow 4 - CompTIA A+ Study Gu
+    [✓C ✓A] Picture 32                               | Alt: Storage Drive Comparison: HDD vs SSD vs 
+    [✓C ✓A] Picture 67                               | Alt: RAID levels comparison chart covering RA
+    [✓C ✓A] Picture 36                               | Alt: Laser electrophotographic printing proce
+    [✓C ✓A] Picture 37                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture                                  | Alt: CompTIA 6-step troubleshooting methodolo
+    [✓C ✓A] Picture 33                               | Alt: Fire safety essentials infographic defin
+    [✓C ✓A] Picture 18                               | Alt: A flowchart detailing an 8-step ticket l
+    [✓C ✓A] Picture                                  | Alt: A three-part infographic titled Ticket P
+    [✓C ✓A] Picture 19                               | Alt: An 11-panel reference grid titled 'Essen
+    [✓C ✓A] Picture 22                               | Alt: Common scripting errors diagnosis guide,
+    [✓C ✓A] Picture 40                               | Alt: Data destruction and disposal methods ma
+    [✓C ✓A] Picture 34                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 42                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 49                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 35                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 36                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 46                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture 37                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 39                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 40                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 41                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 42                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 43                               | Alt: A comparative infographic illustrating t
+    [✓C ✓A] Picture 49                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 51                               | Alt: PSU connector types reference chart show
+    [✓C ✓A] Picture 50                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 61                               | Alt: Comparison of computer case form factors
+    [✓C ✓A] Picture 57                               | Alt: Diagram explaining power supply unit (PS
+    [✓C ✓A] Picture 54                               | Alt: PSU connector types reference chart show
+    [✓C ✓A] Picture 60                               | Alt: Comparison of computer case form factors
+    [✓C ✓A] Picture 63                               | Alt: Diagram comparing Mini-ITX, Micro-ATX, a
+    [✓C ✓A] Picture 59                               | Alt: A colorful infographic chart titled "A+ 
+    [✓C ✓A] Picture 58                               | Alt: A comparison chart of RAID levels for Co
+    [✓C ✓A] Picture 44                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture 45                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture 47                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 48                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 38                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 64                               | Alt: Diagram explaining fire safety essential
+    [✓C ✗A] Picture                                  | Alt: 
+    [✗C ✓A] Picture 21                               | Alt: QR code linking to CompTIA Study Hub for
+    [✓C ✓A] Picture 11                               | Alt: Access Code is Case Sensitive 
+
+──────────────────────────────────────────────────
+PART 4: COMPTIA A+ CONTENT ACCURACY (220-1201/1202)
+──────────────────────────────────────────────────
+  Checking critical facts present in document:
+    ✓ Core 1 exam number should be 220-1201 (found 7x)
+    ✓ Core 2 exam number should be 220-1202 (found 8x)
+    ✓ Each exam is 90 minutes (found 1x)
+    ✓ Each exam is max 90 questions (found 1x)
+    ✓ Passing score is 675 for Core 1 (found 1x)
+    ✓ Passing score is 700 for Core 2 (found 8x)
+    ✓ FTP data port (found 3x)
+    ✓ FTP control port (found 2x)
+    ✓ SSH/SFTP port (found 13x)
+    ✓ Telnet port (found 4x)
+    ✓ SMTP port (found 3x)
+    ✓ DNS port (found 3x)
+    ✓ HTTP port (found 1x)
+    ✓ POP3 port (found 3x)
+    ✓ IMAP port (found 3x)
+    ✓ HTTPS port (found 2x)
+    ✓ SMB port (found 3x)
+    ✓ RDP port (found 9x)
+    ✓ Latest Wi-Fi security standard (found 16x)
+    ✓ Wi-Fi 6E (6 GHz band) (found 27x)
+    ✓ 802.11ax standard (found 9x)
+    ✓ USB4 standard (found 1x)
+    ✓ Thunderbolt standard (found 21x)
+    ✓ DDR5 RAM (found 27x)
+    ✓ PCIe 4.0 (found 3x)
+    ✓ NVMe storage (found 27x)
+    ❌ NOT FOUND: TPM 2.0 requirement (searched: 'TPM 2.0')
+    ✓ Windows 11 covered (found 9x)
+    ✓ Windows 10 covered (found 21x)
+    ✓ DHCP DORA process (found 10x)
+    ✓ 7-step malware removal OR 7 layers (found 5x)
+    ✓ 6-step troubleshooting (found 7x)
+
+  Checking for outdated/incorrect info:
+    ✓ No '220-1001' found
+    ✓ No '220-1002' found
+    ✓ No '220-1101' found
+    ✓ No '220-1102' found
+    ⚠ FOUND 'Windows 8' (1x) - Windows 8 (no longer on exam)
+    ✓ No 'Windows 7' found
+
+  Checking exam domain weights:
+    ✓ Core 1 - Mobile Devices: 13%
+    ✓ Core 1 - Networking: 23%
+    ⚠ Core 1 - Hardware: 27% not found as-is (verify)
+    ⚠ Core 1 - Virtualization: 12% not found as-is (verify)
+    ✓ Core 1 - Troubleshooting: 25%
+    ✓ Core 2 - Operating Systems: 28%
+    ✓ Core 2 - Security: 28%
+    ⚠ Core 2 - Software Troubleshooting: 16% not found as-is (verify)
+    ✓ Core 2 - Operational Procedures: 28%
+
+──────────────────────────────────────────────────
+PART 5: PRACTICE QUESTIONS & ANSWERS
+──────────────────────────────────────────────────
+  Questions found: 0
+  Answers found: 0
+  ⚠ No numbered questions detected
+  ⚠ No answer key detected
+
+──────────────────────────────────────────────────
+PART 6: MODULE ORDER & OBJECTIVE MATCHING
+──────────────────────────────────────────────────
+  Total Heading 1 entries: 44
+
+  Module order:
+    1. Important Information First
+    2. Module: UnderstandingMobile Devices
+    3. Module: Working on Laptops
+    4. Module: Mobile Input Devices
+    5. Module: Laptop System Board
+    6. Module: Mobile Expansion Cards and Radios
+    7. Module: Wireless and Cellular Connectivity
+    8. Module: Mobile Device Synchronization
+    9. Module: Networking Fundamentals
+    10. Module: Virtualization & Cloud Computing
+    11. Module: Desktop PC Hardware
+    12. Module: Computer Displays
+    13. Module: Hard Drives & Storage Technologies
+    14. Module: Windows File Systems
+    15. Module: Cables, Connectors, & Adapters
+    16. Module: Printers & Multifunction Devices
+    17. Module: Embedded Systems and IoT
+
+  === CORE 2 (220-1202) ===
+    18. CORE 2 - EXAM 220-1202
+    19. Module: Windows Editions & Features
+    20. Module: Operating Systems (Windows, macOS, Linux)
+    21. Module: Security
+    22. Module: Browser Security & Settings
+    23. Module: SOHO Network Security
+    24. Module: Mobile Device Management (MDM)
+    25. Module: Remote Access Technologies
+    26. Module: Windows Recovery Environment (WinRE)
+    27. Module: Workstation Backup & Recovery
+    28. Module: Troubleshooting Methodology & Procedures
+    29. Module: Physical Safety & Environmental Controls
+    30. Module: Customer Service & Ticket Lifecycle
+    31. Module: Software Troubleshooting
+    32. Module: Hardware Troubleshooting
+    33. Module: Networking Troubleshooting
+    34. Module: Scripting Overview
+    35. Module: Data Destruction & Disposal
+    36. Module: Licensing & Regulated Data
+    37. Module: Asset Management & Documentation
+    38. Module: Artificial Intelligence (AI) Basics
+    39. EXAM PREPARATION & STUDY TOOLS
+    40. Practice Test
+    41. Skills Test - Performance-Based Scenarios
+    42. TheNext Steps
+    43. CompTIA A+ 220-1200 Series: Glossary
+    44. About The Author
+
+  ⚠ No 'CORE 1' section divider found
+
+  Checking each module has objectives:
+  ✓ All modules have objectives
+
+  Checking required topic coverage:
+  ✓ All 31 required topics present
+
+──────────────────────────────────────────────────
+PART 7: EMOJI & CALLOUTS
+──────────────────────────────────────────────────
+  ⚠ 3 headings with emoji/variation selectors
+      [Heading 2] ⚠️Additional Safety Guidelines
+      [Heading 2] ⚠️ AI Limitations ToUnderstand
+      [Heading 2] ⚠️ Exam Traps & Wrong Answers
+  Callout counts: Trap=34, Exam=17, Pro=15
+  ✓ All callouts standardized
+  Glossary bullets: {'FF0000': 229, 'FFC000': 251, '00B300': 23}
+  ✓ All 3 priority colors present
+
+======================================================================
+AUDITING: HARDBACK
+======================================================================
+Paragraphs: 2987
+Tables: 202
+Sections: 11
+
+──────────────────────────────────────────────────
+PART 1: STRUCTURE, FORMATTING, SPACING
+──────────────────────────────────────────────────
+  ❌ 202 tables found
+  ℹ 29 page breaks (expected for print)
+  ℹ 11 headers/footers (expected for print)
+  ⚠ 6 paragraphs with double spaces
+      Para 656: 'An IPv6 address consists of 8 groups of 16-bit hexadecimal v'
+      Para 658: 'Leading zeros within a group can be omitted.  '
+      Para 869: '💡 Pro Tip:  APU" (Accelerated Processing Unit) is AMD's term'
+      Para 1233: 'gpupdate /force — Forces Group Policy to reapply immediately'
+      Para 1522: '💡 Exam Tip: The "SIU" Formula To remember how ticket Priorit'
+  ✓ No leading whitespace
+  ⚠ Max 6 consecutive blanks (at paras: [831, 993, 1788, 2986])
+  ✓ No hidden/invisible characters
+
+──────────────────────────────────────────────────
+PART 2: WORD MERGING & SPELLING ISSUES
+──────────────────────────────────────────────────
+  ❌ 32 merged words detected:
+      'ASUSTeK' (para 11): ASUS, TUF Gaming, and the ASUS TUF Gaming Z590-PLUS WIFI pro
+      'ExpressCard' (para 456): ExpressCard: Replaced older PCMCIA/CardBus standards. Added 
+      'CardBus' (para 456): ExpressCard: Replaced older PCMCIA/CardBus standards. Added 
+      'eSATA' (para 457): eSATA: External storage interface (faster than USB 2.0). Mos
+      'mSATA' (para 460): M.2 Cards: Modern replacement for mSATA. Used for SSDs and w
+      'iBeacons' (para 521): Bluetooth (iBeacons): Can leverage localized transmission po
+      'iTunes' (para 548): iTunes/Finder Backup: Connect iPhone to Mac/PC for local bac
+      'VoIP' (para 737): TCP is connection-oriented and guarantees delivery, order, a
+      'microATX' (para 799): Differentiate between motherboard form factors (ATX, microAT
+      'AirPrint' (para 1056): Protocols: AirPrint (Apple), Cloud Printing, SMB, IPP, LPR.
+      'IIoT' (para 1101): Industrial (IIoT): SCADA systems (critical infrastructure), 
+      'HomePod' (para 1134): Thread Border Router: A device that bridges the Thread netwo
+      'UPnP' (para 1151): Disable unused features (UPnP, remote access, cloud features
+      'AppLocker' (para 1188): Home edition lacks all business features; Pro adds domain jo
+      'RestoreHealth' (para 1231): DISM /Online /Cleanup-Image /RestoreHealth— DISM repairs the
+      'RemoteSigned' (para 1232): RemoteSigned— Local scripts run freely; downloaded scripts m
+      'iDRAC' (para 1364): ⚠️ Exam Trap: RDP Port 3389, never exposed directly; always 
+      'WinRM' (para 1375): 💡 Pro Tip: VNC = cross-platform screen sharing, port 5900. -
+      'DaaS' (para 2053): DaaS (Desktop as a Service)
+      'DirectAccess' (para 2340): A large hospital network that needs to centrally manage 2,00
+  ✓ No common misspellings detected
+  ✓ No missing spaces after periods
+
+──────────────────────────────────────────────────
+PART 3: IMAGE AUDIT
+──────────────────────────────────────────────────
+  Total images found: 67
+  ❌ 18 images NOT centered:
+      Para 27 'Picture 68' near: The free portal includes:
+      Para 612 'Picture 20' near: 
+      Para 632 'Picture 22' near: 
+      Para 808 'Picture 28' near: 
+      Para 849 'Picture' near: 
+  ❌ 7 images missing alt text:
+      Para 858 'Arrow: Chevron 11' near: 
+      Para 858 'Text Box 2' near: 
+      Para 859 'Connector: Elbow 3' near: 
+      Para 860 'Text Box 2' near: 
+      Para 861 'Arrow: Chevron 11' near: 
+
+  Image inventory:
+    [✗C ✓A] Picture 68                               | Alt: QR code linking to CompTIA Study Hub for
+    [✓C ✓A] Picture 21                               | Alt: A step-by-step guide for removing a lapt
+    [✓C ✓A] Picture 16                               | Alt: Modern connectivity standards reference 
+    [✗C ✓A] Picture 20                               | Alt: Network topologies reference chart showi
+    [✓C ✓A] Picture 23                               | Alt: TCP and UDP protocols at Layer 4 (Transp
+    [✓C ✓A] Picture 21                               | Alt: OSI reference model 7-layer diagram with
+    [✗C ✓A] Picture 22                               | Alt: OSI reference model 7-layer diagram with
+    [✓C ✓A] Picture 23                               | Alt: IPv4 addressing structure, classes, and 
+    [✓C ✓A] Picture 25                               | Alt: DHCP DORA process diagram showing the 4-
+    [✓C ✓A] Picture 26                               | Alt: NAT and PAT network address translation 
+    [✓C ✓A] Picture 27                               | Alt: Network diagram illustrating VLAN segmen
+    [✗C ✓A] Picture 28                               | Alt: Motherboard form factor comparison chart
+    [✓C ✓A] Picture 65                               | Alt: A computer motherboard with labeled comp
+    [✓C ✓A] Picture 29                               | Alt: DDR RAM comparison chart for DDR3, DDR4,
+    [✓C ✓A] Picture 30                               | Alt: A detailed CompTIA A+ study infographic 
+    [✓C ✓A] Picture 33                               | Alt: Diagram illustrating five PSU connector 
+    [✗C ✓A] Picture                                  | Alt: A detailed CompTIA A+ study infographic 
+    [✓C ✓A] Picture 31                               | Alt: CPU socket type comparison chart detaili
+    [✗C ✗A] Arrow: Chevron 11                        | Alt: 
+    [✗C ✓A] Picture 1                                | Alt: Intel LGA 1700 Socket. Identification of
+    [✗C ✗A] Text Box 2                               | Alt: 
+    [✗C ✗A] Connector: Elbow 3                       | Alt: 
+    [✗C ✓A] Picture 2                                | Alt: AMD Ryzen Processor. Identification of t
+    [✗C ✗A] Text Box 2                               | Alt: 
+    [✗C ✗A] Arrow: Chevron 11                        | Alt: 
+    [✗C ✗A] Connector: Elbow 4                       | Alt: 
+    [✓C ✓A] Picture 32                               | Alt: Storage Drive Comparison: HDD vs SSD vs 
+    [✗C ✓A] Picture 67                               | Alt: RAID levels comparison chart covering RA
+    [✓C ✓A] Picture 36                               | Alt: Laser electrophotographic printing proce
+    [✗C ✓A] Picture 37                               | Alt: Printer types reference graphic showcasi
+    [✗C ✓A] Picture                                  | Alt: CompTIA 6-step troubleshooting methodolo
+    [✗C ✓A] Picture 33                               | Alt: Fire safety essentials infographic defin
+    [✓C ✓A] Picture 18                               | Alt: A flowchart detailing an 8-step ticket l
+    [✓C ✓A] Picture                                  | Alt: A three-part infographic titled Ticket P
+    [✗C ✓A] Picture 19                               | Alt: An 11-panel reference grid titled 'Essen
+    [✓C ✓A] Picture 22                               | Alt: Common scripting errors diagnosis guide,
+    [✓C ✓A] Picture 40                               | Alt: Data destruction and disposal methods ma
+    [✓C ✓A] Picture 34                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 42                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 49                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 35                               | Alt: A six-step flowchart illustrating the Co
+    [✓C ✓A] Picture 36                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 46                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture 37                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 39                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 40                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 41                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 42                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 43                               | Alt: A comparative infographic illustrating t
+    [✓C ✓A] Picture 49                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 51                               | Alt: PSU connector types reference chart show
+    [✓C ✓A] Picture 50                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 61                               | Alt: Comparison of computer case form factors
+    [✓C ✓A] Picture 57                               | Alt: Diagram explaining power supply unit (PS
+    [✓C ✓A] Picture 54                               | Alt: PSU connector types reference chart show
+    [✓C ✓A] Picture 60                               | Alt: Comparison of computer case form factors
+    [✓C ✓A] Picture 63                               | Alt: Diagram comparing Mini-ITX, Micro-ATX, a
+    [✓C ✓A] Picture 59                               | Alt: A colorful infographic chart titled "A+ 
+    [✓C ✓A] Picture 58                               | Alt: A comparison chart of RAID levels for Co
+    [✓C ✓A] Picture 44                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture 45                               | Alt: Printer types reference graphic showcasi
+    [✓C ✓A] Picture 47                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 48                               | Alt: A side-by-side comparison chart mapping 
+    [✓C ✓A] Picture 38                               | Alt: A network diagram contrasting Network Ad
+    [✓C ✓A] Picture 64                               | Alt: Diagram explaining fire safety essential
+    [✓C ✗A] Picture                                  | Alt: 
+    [✓C ✓A] Picture 21                               | Alt: QR code linking to CompTIA Study Hub for
+
+──────────────────────────────────────────────────
+PART 4: COMPTIA A+ CONTENT ACCURACY (220-1201/1202)
+──────────────────────────────────────────────────
+  Checking critical facts present in document:
+    ✓ Core 1 exam number should be 220-1201 (found 6x)
+    ✓ Core 2 exam number should be 220-1202 (found 7x)
+    ❌ NOT FOUND: Each exam is 90 minutes (searched: '90 minutes')
+    ❌ NOT FOUND: Each exam is max 90 questions (searched: '90 questions')
+    ❌ NOT FOUND: Passing score is 675 for Core 1 (searched: '675')
+    ✓ Passing score is 700 for Core 2 (found 3x)
+    ❌ NOT FOUND: FTP data port (searched: 'port 20')
+    ❌ NOT FOUND: FTP control port (searched: 'port 21')
+    ✓ SSH/SFTP port (found 8x)
+    ✓ Telnet port (found 2x)
+    ✓ SMTP port (found 1x)
+    ✓ DNS port (found 2x)
+    ✓ HTTP port (found 1x)
+    ✓ POP3 port (found 1x)
+    ✓ IMAP port (found 1x)
+    ✓ HTTPS port (found 2x)
+    ✓ SMB port (found 1x)
+    ✓ RDP port (found 7x)
+    ✓ Latest Wi-Fi security standard (found 12x)
+    ✓ Wi-Fi 6E (6 GHz band) (found 22x)
+    ✓ 802.11ax standard (found 6x)
+    ❌ NOT FOUND: USB4 standard (searched: 'USB4')
+    ✓ Thunderbolt standard (found 8x)
+    ✓ DDR5 RAM (found 21x)
+    ✓ PCIe 4.0 (found 1x)
+    ✓ NVMe storage (found 15x)
+    ❌ NOT FOUND: TPM 2.0 requirement (searched: 'TPM 2.0')
+    ✓ Windows 11 covered (found 8x)
+    ✓ Windows 10 covered (found 15x)
+    ✓ DHCP DORA process (found 10x)
+    ✓ 7-step malware removal OR 7 layers (found 6x)
+    ✓ 6-step troubleshooting (found 8x)
+
+  Checking for outdated/incorrect info:
+    ✓ No '220-1001' found
+    ✓ No '220-1002' found
+    ✓ No '220-1101' found
+    ✓ No '220-1102' found
+    ✓ No 'Windows 8' found
+    ✓ No 'Windows 7' found
+
+  Checking exam domain weights:
+    ⚠ Core 1 - Mobile Devices: 13% not found as-is (verify)
+    ✓ Core 1 - Networking: 23%
+    ⚠ Core 1 - Hardware: 27% not found as-is (verify)
+    ⚠ Core 1 - Virtualization: 12% not found as-is (verify)
+    ✓ Core 1 - Troubleshooting: 25%
+    ✓ Core 2 - Operating Systems: 28%
+    ✓ Core 2 - Security: 28%
+    ⚠ Core 2 - Software Troubleshooting: 16% not found as-is (verify)
+    ✓ Core 2 - Operational Procedures: 28%
+
+──────────────────────────────────────────────────
+PART 5: PRACTICE QUESTIONS & ANSWERS
+──────────────────────────────────────────────────
+  Questions found: 0
+  Answers found: 0
+  ⚠ No numbered questions detected
+  ⚠ No answer key detected
+
+──────────────────────────────────────────────────
+PART 6: MODULE ORDER & OBJECTIVE MATCHING
+──────────────────────────────────────────────────
+  Total Heading 1 entries: 43
+
+  Module order:
+    1. 📘 Important Information First
+    2. 📱 Module: Understanding Mobile Devices
+    3. 🔧 Module: Working on Laptops
+    4. ⌨️ Module: Mobile Input Devices
+    5. 🖥️ Module: Laptop System Board
+    6. 📡 Module: Mobile Expansion Cards and Radios
+    7. 📶 Module: Wireless and Cellular Connectivity
+    8. 🔄 Module: Mobile Device Synchronization
+    9. 🌐 Module: Networking Fundamentals
+    10. ☁️ Module: Virtualization & Cloud Computing
+    11. 🖥️ Module: Desktop PC Hardware
+    12. 🖥️ Module: Computer Displays
+    13. 💾 Module: Hard Drives & Storage Technologies
+    14. 💾 Module: Windows File Systems
+    15. 🔌 Module: Cables, Connectors, & Adapters
+    16. 🖨️ Module: Printers & Multifunction Devices
+    17. 🌐 Module: Embedded Systems and IoT
+
+  === CORE 2 (220-1202) ===
+    18. CORE 2 - EXAM 220-1202
+    19. 🪟 Module: Windows Editions & Features
+    20. 💻 Module: Operating Systems (Windows, macOS, Linux)
+    21. 🔐 Module: Security
+    22. 🌐 Module: Browser Security & Settings
+    23. 🏠 Module: SOHO Network Security
+    24. 📲 Module: Mobile Device Management (MDM)
+    25. 🌐 Module: Remote Access Technologies
+    26. 🔧 Module: Windows Recovery Environment (WinRE)
+    27. 💾 Module: Workstation Backup & Recovery
+    28. 📋 Module: Troubleshooting Methodology & Procedures
+    29. 🛡️ Module: Physical Safety & Environmental Controls
+    30. 🎧 Module: Customer Service & Ticket Lifecycle
+    31. 🛠️ Module: Software Troubleshooting
+    32. 🔧 Module: Hardware Troubleshooting
+    33. 🔍 Module: Networking Troubleshooting
+    34. 📝 Module: Scripting Overview
+    35. 🗑️ Module: Data Destruction & Disposal
+    36. ⚖️ Module: Licensing & Regulated Data
+    37. 📋 Module: Asset Management & Documentation
+    38. 🤖 Module: Artificial Intelligence (AI) Basics
+    39. 📝 EXAM PREPARATION & STUDY TOOLS
+    40. 🧪 Skills Test - Performance-Based Scenarios
+    41. 🚀 The Next Steps
+    42. CompTIA A+ 220-1200 Series: Glossary
+    43. About The Author
+
+  ⚠ No 'CORE 1' section divider found
+
+  Checking each module has objectives:
+  ✓ All modules have objectives
+
+  Checking required topic coverage:
+  ✓ All 31 required topics present
+
+──────────────────────────────────────────────────
+PART 7: EMOJI & CALLOUTS
+──────────────────────────────────────────────────
+  ⚠ 378 headings with emoji/variation selectors
+      [Heading 5] 📖 How to Use This Guide
+      [Heading 1] 📘 Important Information First
+      [Heading 2] 🏅 What is The CompTIA A+ Certification?
+      [Heading 3] 📋 Core 1 (220-1201) and Core 2 (220-1202) Overview
+      [Heading 3] 📊 Exam Format and Scoring
+  Callout counts: Trap=34, Exam=17, Pro=15
+  ❌ 16 callouts not standardized:
+      Trap missing ⚠️: Note: Ribbon cable connectors are delicate and not
+      Pro missing ✔: 💡 Pro Tip: Think of 6 GHz as a "dedicated express 
+      Pro missing ✔: 💡 Pro Tip: Be Aware of security considerations. Lo
+      Pro missing ✔: 💡 Pro Tip: Satellite's biggest exam trait is high 
+      Pro missing ✔: 💡 Pro Tip: When troubleshooting IPv6 connectivity,
+  Glossary bullets: {'FF0000': 229, 'FFC000': 251, '00B300': 23}
+  ✓ All 3 priority colors present
+
+
+══════════════════════════════════════════════════════════════════════
+FINAL AUDIT SUMMARY & PUBLISH READINESS
+══════════════════════════════════════════════════════════════════════
+
+────────────────────────────────────────
+  KDP
+────────────────────────────────────────
+  Critical Issues: 4
+    ❌ 59 unique merged words found
+    ❌ 1 images not centered
+    ❌ 1 images without alt text
+    ❌ 1 critical facts missing
+
+  Warnings: 10
+    ⚠ 29 paragraphs with leading whitespace
+    ⚠ Max 3 consecutive blank paragraphs
+    ⚠ 'Windows 8' found 1x - verify context
+    ⚠ Core 1 Hardware weight 27% not found explicitly
+    ⚠ Core 1 Virtualization weight 12% not found explicitly
+    ⚠ Core 2 Software Troubleshooting weight 16% not found
+    ⚠ No numbered questions found
+    ⚠ No answer key found
+    ⚠ No explicit CORE 1 section marker found
+    ⚠ 3 headings with emoji remnants
+
+  PUBLISH READINESS:
+    🔴 NOT READY - 4 issues require attention
+    Significant corrections needed before publishing.
+
+────────────────────────────────────────
+  HARDBACK
+────────────────────────────────────────
+  Critical Issues: 6
+    ❌ 202 tables remain (should be 0 for KDP)
+    ❌ 32 unique merged words found
+    ❌ 18 images not centered
+    ❌ 7 images without alt text
+    ❌ 7 critical facts missing
+    ❌ 16 callouts not standardized
+
+  Warnings: 10
+    ⚠ 6 paragraphs with double spaces
+    ⚠ Max 6 consecutive blank paragraphs
+    ⚠ Core 1 Mobile Devices weight 13% not found explicitly
+    ⚠ Core 1 Hardware weight 27% not found explicitly
+    ⚠ Core 1 Virtualization weight 12% not found explicitly
+    ⚠ Core 2 Software Troubleshooting weight 16% not found
+    ⚠ No numbered questions found
+    ⚠ No answer key found
+    ⚠ No explicit CORE 1 section marker found
+    ⚠ 378 headings with emoji remnants
+
+  PUBLISH READINESS:
+    🔴 NOT READY - 6 issues require attention
+    Significant corrections needed before publishing.
+
+══════════════════════════════════════════════════════════════════════
+END OF AUDIT
+══════════════════════════════════════════════════════════════════════
