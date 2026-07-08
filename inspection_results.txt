@@ -1,0 +1,2284 @@
+================================================================================
+V3 DOCUMENT INSPECTION
+================================================================================
+
+Paragraphs: 2988
+Tables: 203
+Sections: 11
+
+================================================================================
+STYLES IN USE
+================================================================================
+  Normal: 1193
+  Heading 2: 249
+  Glossary Medium: 249
+  toc 2: 240
+  Glossary High: 229
+  Compact: 217
+  Heading 3: 178
+  First Paragraph: 169
+  toc 1: 46
+  Heading 1: 43
+  Tip -Trap: 34
+  Glossary Low: 22
+  ag-paragraph: 21
+  Tip -Exam: 17
+  Heading 4: 15
+  Block Text: 15
+  Tip -Pro: 14
+  Captioned Figure: 11
+  Body Text: 10
+  List 2: 5
+  Caption1: 3
+  Divider: 2
+  Title: 1
+  Subtitle: 1
+  Heading 5: 1
+  Image Caption: 1
+  Glossary Key: 1
+  Bonuscode: 1
+
+================================================================================
+TABLE ANALYSIS
+================================================================================
+
+  Table 1/203:
+    Rows: 7, Unique Cols: 1
+    Headers: Examination Coverage
+    Has Images: False
+    Has Merged Cells: True
+    Has Checkmarks: False
+    Preceding: 
+    Sample Row: Core 1 - 220-1201 | Mobile Devices · Networking · Hardware ·
+    Sample Row: Core 2 - 220-1202 | Operating Systems · Security · Software 
+
+  Table 2/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Detail | Core 1 (220-1201) / Core 2 (220-1202)
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📊 Exam Format and Scoring📊 Exam Format and Scoring📊 Exam Format and Scoring
+    Sample Row: Time limit | 90 minutes each
+    Sample Row: Max questions | 90 questions each
+
+  Table 3/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Core 1 (220-1201) Domain | Weight
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚖️ Exam Domain Weights⚖️ Exam Domain Weights⚖️ Exam Domain Weights
+    Sample Row: Mobile Devices | 13%
+    Sample Row: Networking | 23%
+
+  Table 4/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Core 2 (220-1202) Domain | Weight
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 
+    Sample Row: Operating Systems | 28%
+    Sample Row: Security | 28%
+
+  Table 5/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Type | Key Features
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Wearable technology refers to compact, body-worn computing devices designed for 
+    Sample Row: Smartwatches | Run specialized OS (e.g., watchOS, Wear 
+    Sample Row: Fitness Trackers | Focused on biometric monitoring (heart r
+
+  Table 6/203:
+    Rows: 4, Unique Cols: 2
+    Headers: OS Type | Examples & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Tablets are mid-sized mobile devices that operate primarily via touchscreen inpu
+    Sample Row: Mobile OS | Apple iOS and Google Android dominate th
+    Sample Row: Full OS | Windows tablets run Windows 10/11 and ar
+
+  Table 7/203:
+    Rows: 3, Unique Cols: 2
+    Headers: Type | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Laptops are mobile computers with integrated keyboards and the ability to run fu
+    Sample Row: Detachable | Physical keyboard can be removed (e.g., 
+    Sample Row: Convertible | Keyboard folds behind screen via a 360° 
+
+  Table 8/203:
+    Rows: 5, Unique Cols: 4
+    Headers: Technology | Range | Primary Use | Common Devices
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Mobile devices rely on a variety of wireless technologies to communicate, transf
+    Sample Row: Wi-Fi | Medium (~100–300 ft indoors) | Internet access, local network connectiv | Smartphones, tablets, laptops, e-readers
+    Sample Row: Bluetooth | Short (~30 ft typical) | Pairing peripherals (headsets, keyboards | Smartphones, wearables, tablets, laptops
+
+  Table 9/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Assembly | Components
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧩 Key Laptop Hardware Components🧩 Key Laptop Hardware Components🧩 Key Laptop Har
+    Sample Row: Display Assembly | Screen (LCD or OLED), Webcam, Microphone
+    Sample Row: Base Assembly | Motherboard, CPU, RAM (SO-DIMM), Storage
+
+  Table 10/203:
+    Rows: 4, Unique Cols: 4
+    Headers: Power State | Description | Recovery Time | Data Storage / Safety
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔋 Laptop Power Management States🔋 Laptop Power Management States🔋 Laptop Power M
+    Sample Row: Sleep/Standby | Low-power state. CPU is off, but RAM rem | Fastest (instant) | RAM (Vulnerable to power loss)
+    Sample Row: Hibernate | The system writes the current state of R | Slow (must read data from disk) | HDD/SSD (Safe from power loss)
+
+  Table 11/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Type | Key Characteristics
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧑‍💻 Common Mobile Input Devices🧑🧑‍‍💻💻 Common Mobile Input Devices Common Mobile 
+    Sample Row: Integrated Keyboard | Standardized within product lines. Typic
+    Sample Row: Virtual Keyboard | A software-based keyboard displayed on t
+
+  Table 12/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Trend | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📐 System Board Design Trends📐 System Board Design Trends📐 System Board Design Tr
+    Sample Row: Slimmer Profiles | Modern laptops feature ultra-thin design
+    Sample Row: Flat Ribbon Cables | Frequently used for internal connections
+
+  Table 13/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Term | Speed | Definition / Feature
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📶 Modern Connectivity Standards📶 📶 Modern Connectivity StandardsModern Connectiv
+    Sample Row: Bluetooth | Short-range | Short-range radio standard for pairing d
+    Sample Row: Wi-Fi 5 (802.11ac) | Up to 3.5 Gbps | Works in the 5 GHz band only.
+
+  Table 14/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Term | Full Name | Definition and Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🆔 Cellular Identification Terminology🆔🆔 Cellular Identification Terminology Cell
+    Sample Row: IMEI | International Mobile Equipment Identity | A 15 digit identifier for the cell phone
+    Sample Row: ICCID | Integrated Circuit Card Identifier | A 19-to-22-digit number unique to the SI
+
+  Table 15/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Feature | Wi-Fi 6 (2.4/5 GHz) | Wi-Fi 6E (6 GHz)
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 
+    Sample Row: Spectrum | Shared with Wi-Fi 4/5 devices | Exclusive to Wi-Fi 6E devices only
+    Sample Row: Interference | High (Bluetooth, microwaves, cordless ph | Very low - pristine, uncongested band
+
+  Table 16/203:
+    Rows: 4, Unique Cols: 2
+    Headers: VPN Protocol | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Android - VPN Setup: Settings → Network & Internet → VPN → + (Add) → select type
+    Sample Row: IKEv2/IPSec | Most secure and stable. Preferred for co
+    Sample Row: L2TP/IPSec | Common and widely supported. Slightly ol
+
+  Table 17/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Class | Range
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 
+    Sample Row: Class 3 | Up to 1 meter (3.3 feet); minimal power 
+    Sample Row: Class 2 | Up to 10 meters (33 feet); most common f
+
+  Table 18/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Platform | Ecosystem & Synced Data
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ☁️ Cloud Synchronization Platforms☁️☁️ Cloud Synchronization Platforms Cloud Syn
+    Sample Row: iCloud (Apple) | Apple ecosystem. Syncs: photos, contacts
+    Sample Row: Google Account / Google One | Android and cross-platform. Syncs: Gmail
+
+  Table 19/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Protocol | Configuration Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Authentication method (username/password, OAuth, certificate).Authentication met
+    Sample Row: IMAP (Recommended) | Keeps email on the server. Syncs across 
+    Sample Row: POP3 (Legacy) | Downloads email to the device and typica
+
+  Table 20/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Standard | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📅 Contacts & Calendar Synchronization📅📅 Contacts & Calendar Synchronization Cont
+    Sample Row: CardDAV | Protocol for synchronizing contacts with
+    Sample Row: CalDAV | Protocol for synchronizing calendars wit
+
+  Table 21/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Problem | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Common Sync Troubleshooting🚨🚨 Common Sync Troubleshooting Common Sync Troubles
+    Sample Row: Email not receiving / syncing | Check internet connection. Verify server
+    Sample Row: Contacts / Calendar not syncing | Check sync is enabled for that account. 
+
+  Table 22/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Network Type | Description & Examples
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌐 Network Types🌐 Network Types🌐 Network Types
+    Sample Row: PAN (Personal Area Network) | Very short range, typically within a few
+    Sample Row: LAN (Local Area Network) | Covers a single building or campus. Exam
+
+  Table 23/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Type | Description | Key Trait
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌐 Internet Connection Types🌐🌐 Internet Connection Types Internet Connection Type
+    Sample Row: Cable | Uses coaxial cable via ISP; shared bandw | Widely available, variable speeds during
+    Sample Row: DSL | Uses existing phone lines | Speed decreases with distance from provi
+
+  Table 24/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Topology | Description & Key Characteristics
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: A network topology describes how devices are physically or logically arranged an
+    Sample Row: Star | All devices connect to a central hub or 
+    Sample Row: Bus | All devices share a single communication
+
+  Table 25/203:
+    Rows: 3, Unique Cols: 3
+    Headers: Architecture | Description | Examples
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖥️ Network Architectures🖥️ Network Architectures🖥️ Network Architectures
+    Sample Row: Client-Server | A dedicated server provides resources (f | Corporate Active Directory domain, web s
+    Sample Row: Peer-to-Peer (P2P) | Devices connect directly and share resou | Home workgroup, small office file sharin
+
+  Table 26/203:
+    Rows: 5, Unique Cols: 4
+    Headers: Layer | Name | Function | Example Protocols
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: The TCP/IP model is the foundational framework that defines how data is transmit
+    Sample Row: 4 | Application | Provides network services directly to en | HTTP, HTTPS, FTP, DNS, DHCP, SMTP, POP3,
+    Sample Row: 3 | Transport | Manages end-to-end communication, error  | TCP (reliable), UDP (fast, connectionles
+
+  Table 27/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Feature | TCP (Transmission Control Protocol) | UDP (User Datagram Protocol)
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔀 TCP vs. UDP🔀🔀  TCP vs. UDPTCP vs. UDP
+    Sample Row: Connection Type | Connection-oriented: establishes a conne | Connectionless: sends data without estab
+    Sample Row: Reliability | Reliable: guarantees delivery, order, an | Unreliable: no guarantee of delivery or 
+
+  Table 28/203:
+    Rows: 8, Unique Cols: 4
+    Headers: Layer | Name | Function | Key Protocols & Devices
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📐 The 7 Layers of the OSI Model📐 The 7 Layers of the OSI Model📐 The 7 Layers of 
+    Sample Row: 7 | Application | Provides network services directly to us | HTTP, HTTPS, FTP, DNS, DHCP, SMTP, POP3,
+    Sample Row: 6 | Presentation | Translate data between the application a | TLS/SSL encryption, JPEG, ASCII, Unicode
+
+  Table 29/203:
+    Rows: 8, Unique Cols: 3
+    Headers: OSI Layer | OSI Layer Name | TCP/IP Layer
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: The TCP/IP model collapses the 7 OSI layers into 4. Understanding this mapping i
+    Sample Row: 7 | Application | Application
+    Sample Row: 6 | Presentation | Application
+
+  Table 30/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Exam Fact | Why It Matters
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🎯 The 3 OSI Facts the Exam Tests Most🎯 The 3 OSI Facts the Exam Tests Most🎯 The 
+    Sample Row: Switches operate at Layer 2 (Data Link) | Switches forward frames using MAC addres
+    Sample Row: Routers operate at Layer 3 (Network) | Routers forward packets using IP address
+
+  Table 31/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Address Class / Type | Range & Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: IPv4 addresses are 32-bit numbers written in dotted decimal notation (e.g., 192.
+    Sample Row: Class A | 1.0.0.0 – 126.255.255.255. Large network
+    Sample Row: Class B | 128.0.0.0 – 191.255.255.255. Medium netw
+
+  Table 32/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Subnet Mask | CIDR Notation | Hosts per Subnet
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: A subnet mask identifies which portion of an IP address is the network ID and wh
+    Sample Row: 255.255.255.0 | /24 | 254 hosts
+    Sample Row: 255.255.255.128 | /25 | 126 hosts
+
+  Table 33/203:
+    Rows: 6, Unique Cols: 2
+    Headers: IPv6 Feature | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: IPv6 addresses are 128-bit numbers written in hexadecimal notation, separated by
+    Sample Row: Address format | 128-bit hexadecimal, 8 groups of 4 hex d
+    Sample Row: Loopback | ::1 (equivalent to 127.0.0.1 in IPv4).
+
+  Table 34/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Prefix | Purpose | Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🏠 Common IPv6 Prefix Types🏠🏠 Common IPv6 Prefix Types Common IPv6 Prefix Types
+    Sample Row: fe80::/10 | Link-Local | Auto-configured on every IPv6 interface.
+    Sample Row: 2001::/32 | Global Unicast (IANA allocation) | Routable internet addresses assigned by 
+
+  Table 35/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Scenario | Example / Description | Result / Impact
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: A subnet mask defines which devices are considered “local.” If the mask is wrong
+    Sample Row: Wrong mask prevents communication | PC1: 192.168.1.10/24 → sees network as 1 | Devices believe they’re on different sub
+    Sample Row: Overlapping subnets | Two DHCP scopes overlap (e.g., one set t | Devices may receive conflicting IPs, cau
+
+  Table 36/203:
+    Rows: 20, Unique Cols: 4
+    Headers: Protocol | Port(s) | TCP/UDP | Function
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: The A+ exam expects you to know these protocol names, their function, and their 
+    Sample Row: HTTP | 80 | TCP | Hypertext Transfer Protocol — unencrypte
+    Sample Row: HTTPS | 443 | TCP | HTTP Secure - encrypted web browsing usi
+
+  Table 37/203:
+    Rows: 10, Unique Cols: 2
+    Headers: Device | Function & Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔧 Network Hardware🔧 Network Hardware🔧 Network Hardware
+    Sample Row: Hub | Legacy device that broadcasts all incomi
+    Sample Row: Switch | Forwards frames only to the correct dest
+
+  Table 38/203:
+    Rows: 8, Unique Cols: 2
+    Headers: DNS Record Type | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: DNS (Domain Name System) is the “phone book” of the internet - it translates hum
+    Sample Row: A Record | Maps a hostname to an IPv4 address. Exam
+    Sample Row: AAAA Record | Maps a hostname to an IPv6 address.
+
+  Table 39/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Step | What Happens
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: DHCP automatically assigns IP addresses to devices. The process uses four steps,
+    Sample Row: D - Discover | The client broadcasts a DHCPDISCOVER mes
+    Sample Row: O - Offer | The DHCP server responds with a DHCPOFFE
+
+  Table 40/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Concept | Explanation
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: NAT (Network Address Translation) allows multiple devices on a private network t
+    Sample Row: PAT (Port Address Translation) | A form of NAT that uses unique port numb
+    Sample Row: Private IP ranges | 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/1
+
+  Table 41/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Feature | Type 1 Hypervisor (Bare Metal) | Type 2 Hypervisor (Hosted)
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧱 Hypervisor Types🧱🧱 Hypervisor Types Hypervisor Types
+    Sample Row: Architecture | Runs directly on hardware without a host | Runs on top of a host OS (Windows, macOS
+    Sample Row: Efficiency & Use Case | Most efficient - enterprise/server envir | Easier to install - ideal for students a
+
+  Table 42/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Resource | What to Configure | Key Considerations
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔧 VM Resource Allocation🔧🔧 VM Resource Allocation VM Resource Allocation
+    Sample Row: CPU (vCPU) | Number of virtual CPU cores assigned to  | Never allocate more vCPUs than the host 
+    Sample Row: RAM | Amount of host RAM dedicated to the VM. | The VM’s RAM is reserved from the host w
+
+  Table 43/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Feature | Snapshot | Clone
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Snapshots and clones are two critical VM management tools that every A+ technici
+    Sample Row: What it does | Captures the exact state of the VM (disk | Creates a complete independent copy of t
+    Sample Row: Use case | Before making changes - allows you to in | Deploying multiple identical VMs from a 
+
+  Table 44/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Mode | Description | Use Case
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌐 Virtual Networking in VMs🌐🌐 Virtual Networking in VMs Virtual Networking in VM
+    Sample Row: NAT | VM shares host’s IP via translation. | Safest, easiest setup.
+    Sample Row: Bridged | VM receives its own IP from the network. | Needed for servers or lab networks.
+
+  Table 45/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Model | Meaning | Examples
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📦 Cloud Service Models📦📦 Cloud Service Models Cloud Service Models
+    Sample Row: SaaS
+(Software as a Service) | Software is delivered fully online. | Microsoft 365, Gmail, Salesforce.
+    Sample Row: PaaS
+(Platform as a Service) | Platform for building applications. | Azure App Service, Google App Engine.
+
+  Table 46/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Deployment Model | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🏗️ Cloud Deployment Models🏗️🏗️ Cloud Deployment Models Cloud Deployment Models
+    Sample Row: Public Cloud | Shared infrastructure managed by provide
+    Sample Row: Private Cloud | Organization-owned cloud infrastructure.
+
+  Table 47/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Availability | Downtime per Year | Common Name
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: High Availability refers to a system or service designed to remain operational w
+    Sample Row: 99% | ~87.6 hours | Two nines
+    Sample Row: 99.9% | ~8.76 hours | Three nines
+
+  Table 48/203:
+    Rows: 8, Unique Cols: 5
+    Headers: Responsibility | On-Premises | IaaS | PaaS | SaaS
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: The shared responsibility model defines who is responsible for securing what in 
+    Sample Row: Physical datacenter & hardware | Customer | Provider | Provider | Provider
+    Sample Row: Network infrastructure | Customer | Provider | Provider | Provider
+
+  Table 49/203:
+    Rows: 5, Unique Cols: 4
+    Headers: Form Factor | Dimensions | PCIe Slots | Best Use Case
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: The form factor determines the motherboard’s physical size, screw hole positions
+    Sample Row: ATX | 305 × 244 mm | 7 expansion slots | Full desktop towers — maximum expandabil
+    Sample Row: Micro-ATX (mATX) | 244 × 244 mm | 4 expansion slots | Mid-size builds balancing size and expan
+
+  Table 50/203:
+    Rows: 36, Unique Cols: 4
+    Headers: # | Component | Exam Notes | Priority
+    Has Images: False
+    Has Merged Cells: True
+    Has Checkmarks: False
+    Preceding: 
+    Sample Row: Board Components (1–22)
+    Sample Row: 1 | CPU Socket LGA 1200 | Intel 10th/11th gen. LGA = pins on mothe | High
+
+  Table 51/203:
+    Rows: 5, Unique Cols: 4
+    Headers: DDR Type | Speed Range | Voltage | Key Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📋 RAM Types📋 RAM Types📋 RAM Types
+    Sample Row: DDR4 | 2133–3200+ MHz | 1.2V | Current mainstream standard. Most deskto
+    Sample Row: DDR5 | 4800–7200+ MHz | 1.1V | Current high-performance standard. Requi
+
+  Table 52/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Specification | Details & Exam Relevance
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📊 PSU Form Factors & Ratings📊 PSU Form Factors & Ratings📊 PSU Form Factors & Rat
+    Sample Row: ATX PSU | Standard desktop PSU. Uses a 24-pin ATX 
+    Sample Row: SFX PSU | Small Form Factor PSU. Used in compact c
+
+  Table 53/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Connector | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔌 PSU Connector Types🔌 PSU Connector Types🔌 PSU Connector Types
+    Sample Row: 8-pin EPS (4+4 pin) | CPU power. Provides dedicated 12V power 
+    Sample Row: 24-pin ATX | Main motherboard power connector. Provid
+
+  Table 54/203:
+    Rows: 5, Unique Cols: 4
+    Headers: PCIe Version | Speed per Lane (x1) | Speed at x16 | Common Use
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📐 PCIe Slot Versions & Speeds📐 PCIe Slot Versions & Speeds📐 PCIe Slot Versions &
+    Sample Row: PCIe 3.0 | ~1 GB/s | ~16 GB/s | GPUs, NVMe SSDs (still common in many sy
+    Sample Row: PCIe 4.0 | ~2 GB/s | ~32 GB/s | High-performance NVMe SSDs, modern GPUs.
+
+  Table 55/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Card Type | Purpose & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🃏 Common Expansion Card Types🃏 Common Expansion Card Types🃏 Common Expansion Car
+    Sample Row: GPU (Video Card) | Handles display output and graphics rend
+    Sample Row: Sound Card | Dedicated audio processing. Used when on
+
+  Table 56/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Cooling Concept | Explanation
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Proper airflow is critical for system stability. Poor cooling leads to thermal t
+    Sample Row: Positive vs. Negative Pressure | Positive pressure: more intake than exha
+    Sample Row: Front-to-Back Airflow | Standard airflow pattern: cool air enter
+
+  Table 57/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Case Type | Compatible Motherboards & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📦 Case / Chassis Form Factors📦 Case / 📦 Case / Chassis FormChassis Form Factors 
+    Sample Row: Full Tower | Supports E-ATX, ATX, mATX, Mini-ITX. Max
+    Sample Row: Mid Tower | Supports ATX, mATX, Mini-ITX. Most commo
+
+  Table 58/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Socket | Manufacturer | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: The CPU socket on the motherboard must match the CPU’s socket type. Sockets are 
+    Sample Row: LGA 1700 | Intel | Used by Intel 12th, 13th, and 14th gen C
+    Sample Row: LGA 1851 | Intel | Launched 2024 for Arrow Lake ("Core Ultr
+
+  Table 59/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Cooling Type | Description & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ❄️ CPU Cooling Solutions❄️ CPU Cooling Solutions❄️ CPU Cooling Solutions
+    Sample Row: Stock / Boxed Cooler | Included with most non-K Intel and AMD C
+    Sample Row: Aftermarket Air Cooler | Third-party heatsink + fan. Better therm
+
+  Table 60/203:
+    Rows: 3, Unique Cols: 3
+    Headers: Type | Description | Key Detail
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖥️ Integrated vs. Discrete Graphics🖥️🖥️ Integrated vs. Discrete Graphics Integra
+    Sample Row: Integrated (Onboard/APU) | GPU built into the CPU or motherboard ch | Shares system RAM; lower power draw; suf
+    Sample Row: Discrete (Dedicated) | Separate expansion card with its own GPU | Required for gaming, video editing, 3D r
+
+  Table 61/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Component | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔌 Expansion Slot & Installation🔌🔌 Expansion Slot & Installation Expansion Slot &
+    Sample Row: PCIe x16 slot | Standard interface for discrete graphics
+    Sample Row: Auxiliary power | Higher-end cards require additional powe
+
+  Table 62/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Method | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌬️ Cooling🌬️🌬️ Cooling Cooling
+    Sample Row: Air (Blower) | Single fan channels hot air out the back
+    Sample Row: Air (Open-air) | Multiple fans vent heat into the case in
+
+  Table 63/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Symptom | Likely Cause / Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🛠️ Common Troubleshooting Symptoms🛠️🛠️ Common Troubleshooting Symptoms Common Tr
+    Sample Row: No display output | Check card seating in the slot, auxiliar
+    Sample Row: Artifacts or glitches on screen | Often a driver issue, overheating, or a 
+
+  Table 64/203:
+    Rows: 8, Unique Cols: 3
+    Headers: Build Type | Priority Components | Key Consideration
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖥️ Custom PC Configurations🖥️🖥️ Custom PC Configurations Custom PC Configuration
+    Sample Row: Graphic/CAD Workstation | High-end multi-core CPU, large RAM, prof | Precision over speed; often needs ECC RA
+    Sample Row: Audio/Video Editing | Fast multi-core CPU, large/fast storage  | High storage throughput and capacity
+
+  Table 65/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Technology | Description | Variants / Features
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖥️ Display Technologies🖥️🖥️ Display Technologies Display Technologies
+    Sample Row: LCD (Liquid Crystal Display) | Uses liquid crystals between polarized g | TN: Fastest, cheapest, worst color. IPS:
+    Sample Row: LED | Technically an LCD that uses LEDs for ba | More power efficient. LEDs are DC device
+
+  Table 66/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Connector | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Projectors use the same standard video connectors as monitors: Projectors use th
+    Sample Row: HDMI | Most common on modern projectors; carrie
+    Sample Row: VGA | Still common on older/budget projectors;
+
+  Table 67/203:
+    Rows: 10, Unique Cols: 2
+    Headers: Symptom | Likely Cause / Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Common Troubleshooting SymptomsCommon Troubleshooting SymptomsCommon Troubleshoo
+    Sample Row: Intermittent shutdown | Overheating. Check for a clogged/dirty a
+    Sample Row: Burnt-out bulb (lamp) | Lamps have a limited lifespan and dim/fa
+
+  Table 68/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Attribute | Definition | Key Detail
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📐 Display Attributes📐📐 Display Attributes Display Attributes
+    Sample Row: Resolution | Number of pixels horizontally × vertical | Native Resolution is the one at which th
+    Sample Row: Pixel Density | Number of pixels per linear unit (e.g.,  | Higher density = greater perceived detai
+
+  Table 69/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Mode | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖧 Multiple Display Setup🖧🖧 Multiple Display Setup Multiple Display Setup
+    Sample Row: Internal Display Only | Uses only the laptop screen.
+    Sample Row: Duplicate / Clone | The external display shows the same cont
+
+  Table 70/203:
+    Rows: 6, Unique Cols: 5
+    Headers: Feature | HDD | SSD (SATA) | SSHD - Hybrid | M.2 NVMe SSD
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📊 Storage Drive Comparison📊 Storage Drive Comparison📊 Storage Drive Comparison
+    Sample Row: Technology | Mechanical (spinning platters, moving re | Electronic (NAND flash memory chips) | Combines a traditional spinning HDD with | Electronic (NAND flash memory chips) con
+    Sample Row: Cost | More affordable per GB | More expensive per GB | Mid-range — more than HDD, less than SSD | Most expensive per GB of consumer drives
+
+  Table 71/203:
+    Rows: 8, Unique Cols: 4
+    Headers: Connection | Speed Range | Form Factor | Best Use Cases
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔌 Storage Interfaces & Form Factors🔌 🔌 Storage Interfaces & Form FactorsStorage 
+    Sample Row: SATA III | Up to 6 Gb/s | 2.5”, 3.5” | General storage, OS drives on older syst
+    Sample Row: M.2 SATA | Up to 6 Gb/s | M.2 slot | Ultrabooks, slim PCs needing SATA perfor
+
+  Table 72/203:
+    Rows: 9, Unique Cols: 3
+    Headers: Feature | MBR (Master Boot Record) | GPT (GUID Partition Table)
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📋 MBR vs. GPT Comparison📋 MBR vs. GPT Comparison📋 MBR vs. GPT Comparison
+    Sample Row: Full Name | Master Boot Record | GUID Partition Table
+    Sample Row: Age / Origin | Legacy - introduced with IBM PC DOS in 1 | Modern - part of the UEFI standard (2000
+
+  Table 73/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Scenario | Tool & Method
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔄 Converting Between MBR and GPT🔄🔄 Converting Between MBR and GPT Converting Bet
+    Sample Row: During Windows installation | Windows Setup → “Drive Options (Advanced
+    Sample Row: From Windows (non-destructive, Windows 1 | mbr2gpt /convert command - converts with
+
+  Table 74/203:
+    Rows: 7, Unique Cols: 4
+    Headers: RAID Level | Technique | Fault Tolerance | Best Use Cases
+    Has Images: False
+    Has Merged Cells: True
+    Has Checkmarks: False
+    Preceding: 🧱 RAID Configurations🧱 RAID Configurations🧱 RAID Configurations
+    Sample Row: RAID 0 | Striping only | None — one drive failure loses all data. | Video editing, scratch disks, temporary 
+    Sample Row: RAID 1 | Mirroring | Survives one drive failure. | Small servers, OS volumes needing high r
+
+  Table 75/203:
+    Rows: 11, Unique Cols: 4
+    Headers: Feature | NTFS | FAT32 | exFAT
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📊 File System Comparison📊 File System Comparison📊 File System Comparison
+    Sample Row: Max File Size | 16 TB | 4 GB (hard limit) | 16 EB (unlimited)
+    Sample Row: Max Volume Size | 256 TB | 2 TB | 128 PB
+
+  Table 76/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Symptom | Likely Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧩 File System Troubleshooting🧩 File System Troubleshooting🧩 File System Troubles
+    Sample Row: “File is too large for the destination f | Drive is FAT32; file exceeds 4 GB | Reformat drive to exFAT or NTFS
+    Sample Row: Cannot set file permissions on external  | Drive is FAT32 or exFAT | Reformat to NTFS if permissions needed
+
+  Table 77/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Conversion | Method | Data Loss?
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔄 Converting Between File Systems🔄 Converting Between File Systems🔄 Converting B
+    Sample Row: FAT32 to NTFS | convert X: /fs:ntfs (command line)  X=Dr | No (non- destructive)
+    Sample Row: NTFS to FAT32 | Must reformat the drive | Yes (all data erased)
+
+  Table 78/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Category | Speed and Distance | Shielding & Jacket Types
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔗 Ethernet Cable Categories🔗 Ethernet Cable Categories🔗 Ethernet Cable Categorie
+    Sample Row: Cat 5e | Supports 1 Gbps up to 100 m. | UTP (Unshielded Twisted Pair): No protec
+    Sample Row: Cat 6 | Supports 1 Gbps up to 100 m or 10 Gbps u | STP (Shielded Twisted Pair): Protective 
+
+  Table 79/203:
+    Rows: 3, Unique Cols: 3
+    Headers: Type | Description | Connectors
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 💡 Fiber Optic Cables💡 Fiber Optic Cables💡 Fiber Optic Cables
+    Sample Row: Single-mode | A single ray of light travels down the c | More expensive transceivers; used for lo
+    Sample Row: Multimode | Multiple light beams travel down a large | Less expensive transceivers; often used 
+
+  Table 80/203:
+    Rows: 7, Unique Cols: 4
+    Headers: Standard | Version (Speed) | Connector Type | Key Feature / Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚡ USB & Thunderbolt Standards⚡ USB & Thunderbolt Standards⚡ USB & Thunderbolt St
+    Sample Row: USB 2.0 | 480 Mbps (2001) | Type A, B, Mini, Micro | Cables max out at 5 m.
+    Sample Row: USB 3.x | SuperSpeed (5/10 Gbps) | Type A, B, Micro, Type C | 3.x connectors are usually blue.
+
+  Table 81/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Version | Max Power | Use Cases
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: USB Power Delivery (USB PD) is a charging protocol that allows for significantly
+    Sample Row: USB PD 2.0 | Up to 100W (20V @ 5A) | Laptops, tablets, monitors
+    Sample Row: USB PD 3.0 | Up to 100W (20V @ 5A) | Same as 2.0, with improved communication
+
+  Table 82/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Cable / Port | Standard | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🎥 Video Cables & Adapters🎥 Video Cables & Adapters🎥 Video Cables & Adapters
+    Sample Row: HDMI | Most common digital port. | Manages both video and audio over a 19-p
+    Sample Row: DisplayPort (DP) | Replacement for VGA/DVI. | Uses a 20-pin latching connector. Can tr
+
+  Table 83/203:
+    Rows: 4, Unique Cols: 5
+    Headers: Standard | Full Name | Speed | Connector | Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔌 Hard Drive Cabling Standards🔌 Hard Drive Cabling Standards🔌 Hard Drive Cabling
+    Sample Row: IDE / PATA | Integrated Drive Electronics / Parallel  | Up to 133 MB/s | 40-pin wide ribbon cable | Legacy. Supports 2 drives per cable (mas
+    Sample Row: SATA | Serial ATA | Up to 600 MB/s (SATA III) | 7-pin data + 15-pin power (L-shaped) | Modern standard for consumer HDDs and SS
+
+  Table 84/203:
+    Rows: 9, Unique Cols: 2
+    Headers: Component | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔧 Laser Printer Components🔧 Laser Printer Components🔧 Laser Printer Components
+    Sample Row: Imaging Drum | Holds the electrostatic image
+    Sample Row: Primary Corona / Charging Roller | Charges the drum
+
+  Table 85/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Symptom | Likely Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Laser Printer Troubleshooting🚨 Laser Printer Troubleshooting🚨 Laser Printer Tr
+    Sample Row: Streaks / vertical lines | Dirty corona, scratched drum | Replace toner/drum
+    Sample Row: Ghosted images | Bad fuser | Replace fuser assembly
+
+  Table 86/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Symptom | Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Inkjet Troubleshooting🚨 Inkjet Troubleshooting🚨 Inkjet Troubleshooting
+    Sample Row: Streaks / missing colors | Clogged nozzles | Run print head cleaning
+    Sample Row: Faded print | Low ink | Replace cartridges
+
+  Table 87/203:
+    Rows: 3, Unique Cols: 3
+    Headers: Symptom | Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Thermal Troubleshooting🚨 Thermal Troubleshooting🚨 Thermal Troubleshooting
+    Sample Row: Faded or blank prints | Dirty heating element | Clean the heating element with isopropyl
+    Sample Row: Blank prints | Paper inserted upside down | Ensure the paper is inserted correctly (
+
+  Table 88/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Symptom | Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Impact Troubleshooting🚨 Impact Troubleshooting🚨 Impact Troubleshooting
+    Sample Row: Light/faded text | Worn ink ribbon | Replace the faded ink ribbon.
+    Sample Row: Missing lines/gaps | Stuck or broken pins | Clean or replace the printhead.
+
+  Table 89/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Symptom | Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 3D Printer Troubleshooting🚨 3D Printer Troubleshooting🚨 3D Printer Troubleshoo
+    Sample Row: Clogged nozzle | Filament buildup/blockage | Clean or replace the extruder tip.
+    Sample Row: Poor bed adhesion | Unlevel bed or lack of adhesion | Re-level the print bed or apply an adhes
+
+  Table 90/203:
+    Rows: 3, Unique Cols: 3
+    Headers: Symptom | Likely Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔧 Virtual Printer Troubleshooting🔧🔧 Virtual Printer Troubleshooting Virtual Prin
+    Sample Row: "Print to PDF" produces a blank or corru | Driver conflict or insufficient disk spa | Update/reinstall virtual printer driver;
+    Sample Row: Print to File job won't replay on real p | Wrong printer driver used when generatin | Re-capture using the driver that matches
+
+  Table 91/203:
+    Rows: 11, Unique Cols: 3
+    Headers: Feature | Embedded System | General-Purpose PC
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: An embedded system is a purpose-built computer designed for a specific, dedicate
+    Sample Row: Purpose | Single dedicated function | Any user-installed software
+    Sample Row: OS | Specialized / RTOS / embedded Linux | Windows, macOS, full Linux
+
+  Table 92/203:
+    Rows: 10, Unique Cols: 5
+    Headers: Protocol | Range | Speed | Power | Use Cases
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📶 IoT Connectivity Protocols📶 IoT Connectivity Protocols📶 IoT Connectivity Proto
+    Sample Row: Wi-Fi | Medium (~50m) | High (Mbps) | High | Cameras, printers, anything needing band
+    Sample Row: Bluetooth/BLE | Short (10-100m) | Low-Med | Very Low | Wearables, sensors, locks, beacons
+
+  Table 93/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Feature | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Key Characteristics:Key Characteristics:Key Characteristics:
+    Sample Row: Network Type | IPv6-based mesh network
+    Sample Row: Power Consumption | Low-power - designed for battery-operate
+
+  Table 94/203:
+    Rows: 6, Unique Cols: 6
+    Headers: Protocol | Power Usage | Range | IP-Based | Security | Best Use Case
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Thread vs. Other IoT Protocols:Thread vs. Other IoT Protocols:Thread vs. Other I
+    Sample Row: Thread | Low | Medium (mesh extends it) | Yes (IPv6) | High | Smart home devices, sensors
+    Sample Row: Zigbee | Low | Medium (mesh) | No | Medium | Legacy smart home devices
+
+  Table 95/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Issue | Likely Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🛠️ IoT Troubleshooting🛠️ IoT Troubleshooting🛠️ IoT Troubleshooting
+    Sample Row: IoT device won’t connect to Wi-Fi | Wrong password, 5 GHz incompatibility (m | Verify password; check if device only su
+    Sample Row: Device connected but unresponsive in app | Cloud service outage, hub/bridge offline | Check manufacturer status page; restart 
+
+  Table 96/203:
+    Rows: 16, Unique Cols: 4
+    Headers: Feature | Home | Pro | Enterprise
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: True
+    Preceding: 📊 Windows 10/11 Edition Comparison📊 Windows 10/11 Edition Comparison📊 Windows 10
+    Sample Row: BitLocker Full Disk Encryption | ❌ | ✅ | ✅
+    Sample Row: Domain Join (Active Directory) | ❌ | ✅ | ✅
+
+  Table 97/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Upgrade Path | Method & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔄 Windows Upgrade Paths🔄🔄 Windows Upgrade Paths Windows Upgrade Paths
+    Sample Row: Home → Pro | Can be done directly within Windows: Set
+    Sample Row: Pro → Enterprise | Requires a Volume License or Microsoft 3
+
+  Table 98/203:
+    Rows: 5, Unique Cols: 2
+    Headers: OS | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖥️ Understanding Operating Systems🖥️ Understanding Operating Systems🖥️ Understan
+    Sample Row: Windows 10/11 | Most used in business; supports Group Po
+    Sample Row: macOS | Apple desktop OS with tight hardware-sof
+
+  Table 99/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Install Type | Description | When to Use
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🪛 Installing and Upgrading OS🪛 Installing and Upgrading OS🪛 Installing and Upgra
+    Sample Row: Clean Installation | Installs a fresh OS on a formatted drive | Replacing a corrupted OS, deploying a ne
+    Sample Row: Upgrade Installation | Moves to a newer OS version while keepin | Example: Windows 10 → Windows 11.
+
+  Table 100/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Aspect | 32-bit | 64-bit
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 32-bit vs. 64-bit32-bit vs. 64-bit32-bit vs. 64-bit
+    Sample Row: Max RAM supported | ~4 GB | 128 GB+ (edition dependent)
+    Sample Row: Software compatibility | Runs only 32-bit apps | Runs both 32-bit and 64-bit apps
+
+  Table 101/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Method | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Installation MethodsInstallation MethodsInstallation Methods
+    Sample Row: In-place Upgrade | Installs new OS over existing one; keeps
+    Sample Row: Clean Install | Wipes drive and installs fresh; no legac
+
+  Table 102/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Tool | Purpose | Common Uses
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚙️ Windows System Tools⚙️ Windows System Tools⚙️ Windows System Tools
+    Sample Row: Task Manager | View CPU/RAM usage, stop unresponsive ap | Slow performance, malware-like behavior.
+    Sample Row: Event Viewer | Displays system logs to diagnose issues. | Boot issues, application crashes, driver
+
+  Table 103/203:
+    Rows: 23, Unique Cols: 2
+    Headers: Command | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📟 Command-Line Tools📟📟 Command-Line Tools Command-Line Tools
+    Sample Row: cd | Changes the current directory.
+    Sample Row: dir | Lists files and folders in the current d
+
+  Table 104/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Common Windows Groups | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Windows uses groups to simplify management. Instead of assigning permissions to 
+    Sample Row: Administrators | Members have full control over the syste
+    Sample Row: Users (Standard Users) | Members have limited permissions and can
+
+  Table 105/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Concept | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖧 Windows Networking Configuration🖧🖧 Windows Networking Configuration Windows Ne
+    Sample Row: Workgroup | Peer-to-peer network model; each PC mana
+    Sample Row: Domain | Centralized network model where a server
+
+  Table 106/203:
+    Rows: 30, Unique Cols: 2
+    Headers: Command | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🐧 Essential Linux Commands🐧 Essential Linux Commands🐧 Essential Linux Commands
+    Sample Row: ls | List files in a directory.
+    Sample Row: pwd | Show current directory.
+
+  Table 107/203:
+    Rows: 15, Unique Cols: 2
+    Headers: Tool / Feature | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🍎 macOS Essentials🍎 macOS Essentials🍎 macOS Essentials
+    Sample Row: Finder | The macOS file manager used to navigate 
+    Sample Row: System Settings | Central location for configuring network
+
+  Table 108/203:
+    Rows: 10, Unique Cols: 2
+    Headers: Malware Type | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🦠 Common Types of Malware🦠 Common Types of 🦠 Common Types of MalwareMalware
+    Sample Row: Virus | Attaches to legitimate files and spreads
+    Sample Row: Worm | Self-replicates across networks without 
+
+  Table 109/203:
+    Rows: 8, Unique Cols: 3
+    Headers: Step | Action | 🎯 Exam Focus & Critical Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memorizing the exact chronological order of this process is non-negotiable for t
+    Sample Row: 1 | Identify and research malware symptoms. | Do not assume; verify. Ask the user what
+    Sample Row: 2 | Quarantine the infected system. | Disconnect the network cable and disable
+
+  Table 110/203:
+    Rows: 5, Unique Cols: 3
+    Headers: Security Protocol | Description | Security Level
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔒 Wi-Fi Security Protocols🔒 Wi-Fi Security Protocols🔒 Wi-Fi Security Protocols
+    Sample Row: WEP | Very old; easily cracked; should never b | 🔴 Very Weak
+    Sample Row: WPA | Early improvement over WEP, but outdated | 🟠 Weak
+
+  Table 111/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Attack Type | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧑‍💼 Social Engineering Attack Types🧑‍💼 Social Engineering Attack Types🧑‍💼 Social
+    Sample Row: Phishing / Spear-Phishing / Whaling / Qu | Fraudulent messages designed to trick us
+    Sample Row: Vishing | Voice-based phishing using phone calls t
+
+  Table 112/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Control | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚧 Deterrent Controls🚧 Deterrent Controls🚧 Deterrent Controls
+    Sample Row: Security Signage | Warns unauthorized users to stay out.
+    Sample Row: Visible Cameras | Reduces attempted theft or intrusion.
+
+  Table 113/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Control | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔒 Preventive Controls🔒 Preventive Controls🔒 Preventive Controls
+    Sample Row: Badge / Keycard Access | Restricts entry to authorized employees.
+    Sample Row: Biometric Locks | Fingerprint or facial authentication.
+
+  Table 114/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Control | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🕵️ Detective Controls🕵️ Detective Controls🕵️ Detective Controls
+    Sample Row: CCTV Monitoring | Records activity for investigation.
+    Sample Row: Motion Sensors | Detects unauthorized movement.
+
+  Table 115/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Feature | Function
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Key Windows Security FeaturesKey Windows Security FeaturesKey Windows Security F
+    Sample Row: BitLocker | Full-disk encryption built into Windows 
+    Sample Row: Windows Defender Firewall | Built-in host-based firewall controlling
+
+  Table 116/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Concept | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Authentication ConceptsAuthentication ConceptsAuthentication Concepts
+    Sample Row: MFA (Multi-Factor Authentication) | Requires two or more verification method
+    Sample Row: Biometrics | Authentication using fingerprint, facial
+
+  Table 117/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Policy | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Password PoliciesPassword PoliciesPassword Policies
+    Sample Row: Expiration | Forces password changes after a set peri
+    Sample Row: History | Prevents reusing recent passwords (e.g.,
+
+  Table 118/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Certificate Concept | Explanation
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: When you visit a site with HTTPS, the browser verifies the site’s SSL/TLS certif
+    Sample Row: SSL/TLS Certificate | A digital certificate issued by a Certif
+    Sample Row: Certificate Authority (CA) | A trusted organization that issues and v
+
+  Table 119/203:
+    Rows: 9, Unique Cols: 2
+    Headers: Setting / Feature | Purpose & Best Practice
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚙️ Key Browser Security Settings⚙️⚙️ Key Browser Security Settings Key Browser S
+    Sample Row: Pop-up Blocker | Prevents unsolicited pop-up windows - a 
+    Sample Row: Private / Incognito Mode | Does NOT save browsing history, cookies,
+
+  Table 120/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Attack | Description & Defense
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🦠 Browser-Based Attack Vectors🦠🦠 Browser-Based Attack Vectors Browser-Based Atta
+    Sample Row: Browser Hijacking | Malware changes the browser’s homepage, 
+    Sample Row: Drive-By Download | Malware automatically downloads when a u
+
+  Table 121/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Mistake | Risk & Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔴 Common SOHO Security Mistakes🔴🔴 Common SOHO Security Mistakes Common SOHO Secu
+    Sample Row: Using default admin credentials | CRITICAL. Default passwords (admin/admin
+    Sample Row: Using default SSID | The default SSID (e.g., “NETGEAR-5G” or 
+
+  Table 122/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Guest Network Feature | Why It Matters
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: A properly configured guest network is one of the most important security measur
+    Sample Row: Network Isolation (Client Isolation) | Prevents devices on the guest network fr
+    Sample Row: Separate SSID & Password | Guest network has its own name and passw
+
+  Table 123/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Firewall Feature | Configuration Guidance
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔥 SOHO Firewall Configuration🔥🔥 SOHO Firewall Configuration SOHO Firewall Config
+    Sample Row: SPI (Stateful Packet Inspection) Firewal | Built into most consumer routers. Tracks
+    Sample Row: Port Forwarding | Opens specific ports to allow inbound co
+
+  Table 124/203:
+    Rows: 3, Unique Cols: 3
+    Headers: Ownership Model | Definition | MDM Control Level
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🆔 Device Ownership Models🆔 Device Ownership Models🆔 Device Ownership Models
+    Sample Row: Corporate-Owned Devices | Devices purchased and supplied by the co | Full Control. MDM can enforce strict pol
+    Sample Row: Bring Your Own Device (BYOD) | Employees use their personal mobile devi | Limited Control. MDM uses MAM, focusing 
+
+  Table 125/203:
+    Rows: 9, Unique Cols: 2
+    Headers: Feature | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📋 Key MDM Features📋 Key MDM Features📋 Key MDM Features
+    Sample Row: Remote Wipe | Erases all data on a lost or stolen devi
+    Sample Row: Remote Lock | Locks device to prevent unauthorized acc
+
+  Table 126/203:
+    Rows: 6, Unique Cols: 2
+    Headers: What MDM Can See | What MDM Cannot See
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: (What MDM Can vs. Cannot See on BYOD)(What MDM Can vs. Cannot See on BYOD)(What 
+    Sample Row: Device model & serial number | Personal photos
+    Sample Row: OS version & security patch level | Personal text messages or phone call log
+
+  Table 127/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Technology | Description & Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🖥️ Remote Desktop Technologies🖥️🖥️ Remote Desktop Technologies Remote Desktop Te
+    Sample Row: RDP (Remote Desktop Protocol) | Microsoft’s built-in protocol for graphi
+    Sample Row: VNC (Virtual Network Computing) | Cross-platform screen-sharing protocol. 
+
+  Table 128/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Technology | Description & Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔒 Secure Remote Access Methods🔒🔒 Secure Remote Access Methods Secure Remote Acce
+    Sample Row: VPN (Virtual Private Network) | Creates an encrypted tunnel between a re
+    Sample Row: SSH (Secure Shell) | Encrypted command-line remote access. Po
+
+  Table 129/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Technology | Description & Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🛠️ IT Remote Management Tools🛠️🛠️ IT Remote Management Tools IT Remote Managemen
+    Sample Row: RMM (Remote Monitoring and Management) | Enterprise platforms allowing MSPs and I
+    Sample Row: WinRM (Windows Remote Management) | Microsoft’s command-line remote manageme
+
+  Table 130/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Technology | Description & Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🤝 Sharing & Collaboration Tools🤝🤝 Sharing & Collaboration Tools Sharing & Collab
+    Sample Row: TeamViewer | Popular cross-platform remote support an
+    Sample Row: AnyDesk | Remote desktop tool similar to TeamViewe
+
+  Table 131/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Method | Steps
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚪 How to Access WinRE🚪🚪 How to Access WinRE How to Access WinRE
+    Sample Row: From within Windows | Settings, System, Recovery, Advanced Sta
+    Sample Row: Shift + Restart | Hold Shift while clicking Restart (Start
+
+  Table 132/203:
+    Rows: 8, Unique Cols: 3
+    Headers: Tool | Purpose | Data Loss?
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🛠️ WinRE Recovery Tools🛠️🛠️ WinRE Recovery Tools WinRE Recovery Tools
+    Sample Row: Startup Repair | Automatically fixes common boot problems | No
+    Sample Row: Startup Settings | Access Safe Mode, boot logging, disable  | No
+
+  Table 133/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Option | Description and Use
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🛡️ Safe Mode Options🛡️🛡️ Safe Mode Options Safe Mode Options
+    Sample Row: Safe Mode | Essential drivers only. No networking. D
+    Sample Row: Safe Mode with Networking | Includes network drivers and internet. D
+
+  Table 134/203:
+    Rows: 3, Unique Cols: 5
+    Headers: Option | What It Does | Files | Apps | OS
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔄 Reset This PC🔄🔄 Reset This PC Reset This PC
+    Sample Row: Keep my files | Reinstalls Windows, removes all apps, ke | Kept | Removed | Reset
+    Sample Row: Remove everything | Wipes drive and reinstalls Windows from  | Deleted | Removed | Reset
+
+  Table 135/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Command | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📋 WinRE Command Prompt Reference📋📋 WinRE Command Prompt Reference WinRE Command 
+    Sample Row: bootrec /fixmbr | Writes new Master Boot Record
+    Sample Row: bootrec /fixboot | Writes new boot sector
+
+  Table 136/203:
+    Rows: 8, Unique Cols: 3
+    Headers: Situation | First Try | If That Fails
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📊 Recovery Method Decision Matrix📊📊 Recovery Method Decision Matrix Recovery Met
+    Sample Row: Won’t boot after Windows Update | Startup Repair, then Uninstall Updates | System Restore
+    Sample Row: Won’t boot after driver install | Safe Mode, roll back driver | System Restore
+
+  Table 137/203:
+    Rows: 5, Unique Cols: 4
+    Headers: Backup Type | What It Backs Up | Speed | Recovery Complexity
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📊 Backup Types📊📊 Backup Types Backup Types
+    Sample Row: Full Backup | Everything - all selected files and fold | Slowest to create | Simplest - restore from the single full 
+    Sample Row: Incremental Backup | Only files changed since the LAST backup | Fastest to create | Most complex — need the last full + ever
+
+  Table 138/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Common Schedule | Description & Use Case
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📅 Backup Schedules📅📅 Backup Schedules Backup Schedules
+    Sample Row: Full Weekly + Daily Incrementals | Full backup every weekend; incremental b
+    Sample Row: Full Weekly + Daily Differentials | Full backup every weekend; differential 
+
+  Table 139/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Location | Pros & Cons
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📍 Backup Storage Locations📍📍 Backup Storage Locations Backup Storage Locations
+    Sample Row: On-Site (Local) | Fast backup and recovery. No internet de
+    Sample Row: Off-Site (Physical) | Protected from on-site disasters. Tapes/
+
+  Table 140/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Tool | Purpose & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔧 Windows Backup Tools🔧🔧 Windows Backup Tools Windows Backup Tools
+    Sample Row: File History | Automatically backs up personal files (D
+    Sample Row: Windows Backup (System Image) | Creates a complete image of the entire d
+
+  Table 141/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Tool | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🍎 macOS Backup Tools🍎🍎 macOS Backup Tools macOS Backup Tools
+    Sample Row: Time Machine | Apple’s built-in backup solution. Backs 
+    Sample Row: iCloud Drive | Syncs Desktop and Documents folders to i
+
+  Table 142/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Step | Official Action | 🎯 Deep Dive & Exam Focus
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memorizing this exact sequence is mandatory. CompTIA will routinely present a sc
+    Sample Row: 1 | Identify the Problem | Question the user to find out what recen
+    Sample Row: 2 | Establish a Theory of Probable Cause | Start by questioning the obvious (e.g., 
+
+  Table 143/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Factor | Recommended Range & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌡️ Environmental Standards🌡️🌡️ Environmental Standards Environmental Standards
+    Sample Row: Temperature | 18–27°C (64–80°F) for server rooms.
+    Sample Row: Humidity | 40–60%. Lower humidity increases ESD ris
+
+  Table 144/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Class | Use For | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔥 Fire Safety Essentials🔥🔥 Fire Safety Essentials Fire Safety Essentials
+    Sample Row: Class A | Wood, paper, cloth | Common combustibles.
+    Sample Row: Class B | Flammable liquids | Grease, gasoline, solvents.
+
+  Table 145/203:
+    Rows: 7, Unique Cols: 2
+    Headers: ❌ Avoid Saying (Defensive/Negative) | ✅ Say Instead (Collaborative/Positive)
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: True
+    Preceding: 🎤 Professional Translation Matrix🎤🎤 Professional Translation Matrix Professional
+    Sample Row: “You did it wrong.” | “Let’s walk through the steps together.”
+    Sample Row: “That’s not my department.” | I’ll connect you with the right resource
+
+  Table 146/203:
+    Rows: 9, Unique Cols: 2
+    Headers: Step | Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Every support interaction in a help desk environment follows a structured path f
+    Sample Row: 1. Ticket Creation (Intake) | Username, contact info, device/asset ID,
+    Sample Row: 2. Categorization & Prioritization | P1 Critical (Outage), P2 High (Major fun
+
+  Table 147/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Metric | 🎯 The Definition | 🔍 Real-World Example
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Technicians use a structured prioritization matrix to objectively calculate a ti
+    Sample Row: 🛠️ Severity | The Technical Degree of Failure. How bad | A totally fried motherboard is a High Se
+    Sample Row: 💥 Impact | The Scope of the Damage. How much of the | A single broken printer in a cubicle has
+
+  Table 148/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Symptom / Error | Likely Cause | Recommended Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Common Windows Error Screens & Startup Problems🚨 Common Windows Error Screens 
+    Sample Row: Blue Screen of Death (BSOD) | Driver failure, RAM error, corrupted sys | Note the error code. Run memory diagnost
+    Sample Row: “No Boot Device Found” / “No Operating S | Corrupted bootloader, missing boot parti | Boot to Safe Mode. Run sfc /scannow. Che
+
+  Table 149/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Performance Symptom | Diagnostic Steps & Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📈 Windows Performance Issues📈 Windows Performance Issues📈 Windows Performance Is
+    Sample Row: High CPU usage | Open Task Manager → Processes tab. Ident
+    Sample Row: High RAM usage | Task Manager → Performance tab. Identify
+
+  Table 150/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Issue | Likely Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📦 Installation & Update Problems📦 Installation & Update Problems📦 Installation &
+    Sample Row: Application fails to install | Insufficient disk space, missing depende | Free disk space. Run installer as admini
+    Sample Row: Application won’t update | Corrupted update cache, network issue, i | Clear application cache/temp files. Re-r
+
+  Table 151/203:
+    Rows: 10, Unique Cols: 3
+    Headers: 🚨 Symptom | 🔍 Root Cause & Concept | 🛠️ Technician's Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: When a user submits a ticket regarding browser issues, a technician must quickly
+    Sample Row: Browser won't load pages (internet works | Cache/Cookie Corruption or Proxy Misconf | Clear cache and cookies. Check proxy set
+    Sample Row: Specific sites won't load | DNS Resolution Failure or Hosts File Tam | Check the hosts file (%SystemRoot%\Syste
+
+  Table 152/203:
+    Rows: 9, Unique Cols: 3
+    Headers: Issue | Likely Cause | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📱 Common Mobile Software Issues📱 Common Mobile Software Issues📱 Common Mobile So
+    Sample Row: App crashes immediately | Corrupt app data, incompatible OS versio | Clear app cache (Android: Settings → App
+    Sample Row: Device running slowly / freezing | Too many background apps, low storage, o | Close background apps. Restart device. F
+
+  Table 153/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Reset Type | Description & When to Use
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: When software issues cannot be resolved through normal troubleshooting, a reset 
+    Sample Row: Soft Reset | Restarting or rebooting the device. Reso
+    Sample Row: Network Settings Reset | Resets all Wi-Fi, Bluetooth, cellular, a
+
+  Table 154/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Symptom | Possible Security Cause & Action
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Some software issues are symptoms of a security compromise rather than a hardwar
+    Sample Row: Antivirus suddenly disabled or uninstall | Malware often disables AV to prevent det
+    Sample Row: New, unexpected user accounts appear | Possible backdoor or unauthorized accoun
+
+  Table 155/203:
+    Rows: 11, Unique Cols: 2
+    Headers: Tool | Purpose & Use Case
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧰 Software Troubleshooting Tools🧰 Software Troubleshooting Tools🧰 Software Troub
+    Sample Row: Task Manager | Monitor CPU/RAM/Disk/Network usage. Kill
+    Sample Row: Event Viewer | View application, system, and security l
+
+  Table 156/203:
+    Rows: 8, Unique Cols: 3
+    Headers: Issue | Symptoms & Likely Causes | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧩 Common Hardware Symptoms🧩🧩 Common Hardware Symptoms Common Hardware Symptoms
+    Sample Row: No Power / System Won’t Turn On | No fans, no lights, no display, no beeps | Test with known-good PSU. Reseat power c
+    Sample Row: POST Errors & Beep Codes | Causes: Bad RAM, missing CPU fan, no GPU | Reseat/replace RAM modules. Ensure CPU f
+
+  Table 157/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Symptom | Indicates
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Warning Signs of Hardware Failure🚨🚨 Warning Signs of Hardware Failure Warning 
+    Sample Row: Burning smell | PSU or motherboard failure.
+    Sample Row: Clicking sounds | HDD head crash.
+
+  Table 158/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Symptom | Likely Causes | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌐 Common Network Symptoms🌐🌐 Common Network Symptoms Common Network Symptoms
+    Sample Row: No Connectivity | “No Internet” message, Red X on network  | Check cable connection. Reset router. En
+    Sample Row: Limited or Intermittent Connectivity | Frequent disconnects, slow loading, Wi-F | Move closer to AP. Change Wi-Fi channel.
+
+  Table 159/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Command | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 💻 Windows Command-Line Tools💻💻 Windows Command-Line Tools Windows Command-Line T
+    Sample Row: ipconfig | Shows IP info; renew DHCP leases.
+    Sample Row: ping | Tests connectivity to a host.
+
+  Table 160/203:
+    Rows: 12, Unique Cols: 2
+    Headers: Tool | Purpose
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔧 Essential Hardware Troubleshooting Tools🔧🔧 Essential Hardware Troubleshooting 
+    Sample Row: Multimeter | Test voltage, continuity, power rails.
+    Sample Row: Power Supply Tester | Quickly checks PSU health.
+
+  Table 161/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Language | Purpose | File Type
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🗣️ Common Scripting Languages🗣️🗣️ Common Scripting Languages Common Scripting La
+    Sample Row: PowerShell | Windows automation and administrative ta | .ps1
+    Sample Row: Bash | Linux/macOS system and file operations. | .sh
+
+  Table 162/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Concept | Definition
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧩 Core Scripting Concepts🧩🧩 Core Scripting Concepts Core Scripting Concepts
+    Sample Row: Variables | Store data for use in scripts.
+    Sample Row: Conditionals | Allow scripts to perform different actio
+
+  Table 163/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Error Type | Symptom | Fix
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🚨 Common Scripting Errors🚨🚨 Common Scripting Errors Common Scripting Errors
+    Sample Row: Syntax Error | Script fails immediately with a parsing  | Review the flagged line. Check for missi
+    Sample Row: Permission Error | “Access denied,” “permission denied,” or | Windows: Run PowerShell as administrator
+
+  Table 164/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Method | Description & When to Use
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Physical destruction is the most thorough and irreversible method. Used when the
+    Sample Row: Shredding | Industrial shredders physically destroy 
+    Sample Row: Drilling / Punching | Drilling holes through a hard drive plat
+
+  Table 165/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Method | Description & Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Software methods overwrite data on the drive, making it unrecoverable without ph
+    Sample Row: Zero Fill (Single-Pass Overwrite) | Overwrites every bit on the drive with z
+    Sample Row: Multi-Pass Overwrite (DoD 5220.22-M) | Overwrites data multiple times (3 or 7 p
+
+  Table 166/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Scenario | Recommended Method | Why
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📋 Choosing the Right Method📋 Choosing the Right Method📋 Choosing the Right Metho
+    Sample Row: Reselling a corporate laptop with an HDD | Multi-pass overwrite or Zero Fill | Drive will be reused — physical destruct
+    Sample Row: Disposing of an old SSD from an HR works | Secure Erase or physical shredding | Multi-pass overwrite is unreliable on SS
+
+  Table 167/203:
+    Rows: 9, Unique Cols: 2
+    Headers: License Type | Description & Key Details
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 💿 Software Licensing Types💿 Software Licensing Types💿 Software Licensing Types
+    Sample Row: OEM (Original Equipment Manufacturer) | Software licensed to a specific piece of
+    Sample Row: Retail / Full Packaged Product | Purchased by a consumer and can be trans
+
+  Table 168/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Data Category | Definition & Regulatory Context
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Certain types of data are subject to legal regulations that impose specific requ
+    Sample Row: PII (Personally Identifiable Information | Any data that can identify a specific in
+    Sample Row: PHI (Protected Health Information) | Any health information that can identify
+
+  Table 169/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Regulation | Key Requirements for IT
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌍 Key Regulations To Know🌍 Key Regulations 🌍 Key Regulations ToTo Know Know
+    Sample Row: GDPR
+(General Data Protection Regulation | EU regulation governing PII of EU reside
+    Sample Row: HIPAA
+(Health Insurance Portability and  | US law protecting PHI. Requires: access 
+
+  Table 170/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Asset Management Component | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: IT asset management (ITAM) tracks hardware and software assets throughout their 
+    Sample Row: Asset Tag / Barcode | A physical label (barcode or QR code) ap
+    Sample Row: Asset Inventory Database | Central repository recording all hardwar
+
+  Table 171/203:
+    Rows: 11, Unique Cols: 2
+    Headers: Document Type | Purpose & Contents
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📄 IT Documentation Types📄 IT Documentation Types📄 IT Documentation Types
+    Sample Row: Network Diagram | Visual map of the network infrastructure
+    Sample Row: Network Topology Map | Shows the physical and logical layout of
+
+  Table 172/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Change Management Step | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Change management is the formal process for requesting, evaluating, approving, i
+    Sample Row: 1. Change Request (RFC) | A formal Request for Change is submitted
+    Sample Row: 2. Impact Assessment | The change is evaluated for potential ri
+
+  Table 173/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Type | Definition & Relevance
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🧠 Key AI Concepts🧠 Key AI Concepts🧠 Key AI Concepts
+    Sample Row: Artificial Intelligence (AI) | The simulation of human intelligence in 
+    Sample Row: Machine Learning (ML) | A subset of AI where systems learn from 
+
+  Table 174/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Public AI Models | Private / Organizational AI Models
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: A critical distinction for IT professionals is understanding the difference betw
+    Sample Row: Accessible to anyone via the internet (e | Deployed internally by an organization, 
+    Sample Row: Data entered may be used to train future | Data stays within the organization’s con
+
+  Table 175/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Limitation | Explanation & Impact
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚠️ AI Limitations To Understand⚠️ AI Limitations ⚠️ AI Limitations ToTo Understa
+    Sample Row: Hallucinations | AI confidently generates information tha
+    Sample Row: Training Data Cutoff | AI models are trained on data up to a ce
+
+  Table 176/203:
+    Rows: 4, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “Send It, Pop It, Map It” - SMTP sends out, POP3 pops down to one d
+    Sample Row: 25 / 587 | SMTP | TCP | Sends outbound email. Port 25 = server-t
+    Sample Row: 110 / 995 | POP3 / POP3S | TCP | Downloads email to one device and remove
+
+  Table 177/203:
+    Rows: 7, Unique Cols: 2
+    Headers: Step | Action
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔄 The 6-Step CompTIA Troubleshooting Process: IETAID🔄 The 6-Step CompTIA Trouble
+    Sample Row: 1 - I | Identify the Problem: Gather information
+    Sample Row: 2 - E | Establish a Theory of Probable Cause: Qu
+
+  Table 178/203:
+    Rows: 4, Unique Cols: 3
+    Headers: Style | Variation 1 | Variation 2
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🗂 The I-E-T-E-V-D Mnemonic Matrix🗂🗂  The I-E-T-E-V-D Mnemonic MatrixThe I-E-T-E-
+    Sample Row: Professional | I Expect To Execute Very Decisively" | "Investigate Every Technical Error Very 
+    Sample Row: Easy to Recall | "I Eat Tacos Every Valentine's Day" | "Impatient Elephants Trample Every Villa
+
+  Table 179/203:
+    Rows: 3, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “80 is plain, 443 is protected” - just two numbers, no phrase neede
+    Sample Row: 80 | HTTP | TCP | Hypertext Transfer Protocol. Unencrypted
+    Sample Row: 443 | HTTPS | TCP | HTTP Secure. Encrypted web browsing usin
+
+  Table 180/203:
+    Rows: 8, Unique Cols: 4
+    Headers: Standard | Name | Max Speed | Key Feature
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 📶 Wi-Fi Standards Quick Reference📶 Wi-Fi Standards Quick Reference📶 Wi-Fi Standa
+    Sample Row: 802.11a | Wi-Fi 1 | 54 Mbps | 5 GHz only. Legacy.
+    Sample Row: 802.11b | Wi-Fi 2 | 11 Mbps | 2.4 GHz. Legacy.
+
+  Table 181/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Address / Range | Type | What it Means on the Exam
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🌐 Crucial IP Addresses Quick Reference🌐 Crucial IP Addresses Quick Reference🌐 Cr
+    Sample Row: 169.254.x.x | APIPA | The device cannot reach the DHCP server.
+    Sample Row: 127.0.0.1 | IPv4 Loopback | Used to ping the local network card to t
+
+  Table 182/203:
+    Rows: 9, Unique Cols: 2
+    Headers: Protocol / Feature | Key Detail
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔐 Security Protocols Quick Reference🔐 Security Protocols Quick Reference🔐 Securi
+    Sample Row: WEP | Broken - cracks in minutes. Never use.
+    Sample Row: WPA (TKIP) | Weak - has known vulnerabilities. Do not
+
+  Table 183/203:
+    Rows: 3, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “21 to connect, 20 to send” - control channel first, then data. SFT
+    Sample Row: 20 / 21 | FTP | TCP | File Transfer Protocol. Port 21 = contro
+    Sample Row: 22 | SFTP | TCP | SSH File Transfer Protocol. Secure file 
+
+  Table 184/203:
+    Rows: 3, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “22 is always secure, 23 is never secure” - one number apart, oppos
+    Sample Row: 22 | SSH | TCP | Secure Shell. Encrypted command-line rem
+    Sample Row: 23 | Telnet | TCP | Unencrypted remote access. Completely ob
+
+  Table 185/203:
+    Rows: 6, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “53 names things, 67/68 assigns addresses, 123 keeps time”Memory ho
+    Sample Row: 53 | DNS | TCP/UDP | Domain Name System. Translates domain na
+    Sample Row: 67 / 68 | DHCP | UDP | Dynamic Host Configuration Protocol. Por
+
+  Table 186/203:
+    Rows: 3, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “3389 = Windows Remote Desktop, 5900 = cross-platform VNC” - always
+    Sample Row: 3389 | RDP | TCP | Remote Desktop Protocol. Windows graphic
+    Sample Row: 5900 | VNC | TCP | Virtual Network Computing. Cross-platfor
+
+  Table 187/203:
+    Rows: 4, Unique Cols: 4
+    Headers: Port | Protocol | TCP/UDP | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Memory hook: “389 looks up people (Active Directory), 445 shares files (Windows)
+    Sample Row: 389 | LDAP | TCP/UDP | Lightweight Directory Access Protocol. Q
+    Sample Row: 636 | LDAPS | TCP | LDAP over SSL. Encrypted version of LDAP
+
+  Table 188/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Pattern | Ports
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Number Patterns to MemorizeNumber Patterns to MemorizeNumber Patterns to Memoriz
+    Sample Row: Always 22 | SSH and SFTP - if it’s secure remote acc
+    Sample Row: Sequential pairs | 20/21 = FTP (control/data) 67/68 = DHCP 
+
+  Table 189/203:
+    Rows: 4, Unique Cols: 2
+    Headers: Model | Memory Hook
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ☁️ Cloud Service Models☁️ Cloud Service Models☁️ Cloud Service Models
+    Sample Row: SaaS — Software as a Service | “You use it — they run it." Like a Coffe
+    Sample Row: PaaS — Platform as a Service | "You build on it — they manage the platf
+
+  Table 190/203:
+    Rows: 17, Unique Cols: 4
+    Headers: Port | Protocol | Transport | Description
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔌 Must-Know Port Numbers🔌🔌 Must-Know Port Numbers Must-Know Port Numbers
+    Sample Row: 20/21 | FTP | TCP | File Transfer Protocol - 21 control, 20 
+    Sample Row: 22 | SSH / SFTP | TCP | Secure Shell - encrypted command line
+
+  Table 191/203:
+    Rows: 5, Unique Cols: 4
+    Headers: Category | Max Speed | Max Distance | Notes
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔌 Cable Categories & Speeds Quick Reference🔌 Cable Categories & Speeds Quick Ref
+    Sample Row: Cat 5e | 1 Gbps | 100 meters | Minimum requirement for Gigabit networks
+    Sample Row: Cat 6 | 10 Gbps | 55 meters | Drops to 1 Gbps at full 100m distance an
+
+  Table 192/203:
+    Rows: 6, Unique Cols: 3
+    Headers: Standard | Max Speed | Connector Types
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚡ USB & Thunderbolt Speeds Quick Reference⚡ USB & Thunderbolt Speeds Quick Refer
+    Sample Row: USB 2.0 | 480 Mbps | Type-A, Type-B, Mini, Micro
+    Sample Row: USB 3.2 Gen 1 (USB 3.0) | 5 Gbps | Type-A, Type-B, Type-C
+
+  Table 193/203:
+    Rows: 7, Unique Cols: 3
+    Headers: Action | Windows Command | Linux / macOS Command
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 💻 Command-Line Rosetta Stone (Windows vs. Linux)💻 Command-Line Rosetta Stone (Wi
+    Sample Row: View IP Address | ipconfig | ifconfig or ip a
+    Sample Row: Trace Network Route | tracert | traceroute
+
+  Table 194/203:
+    Rows: 9, Unique Cols: 3
+    Headers: Command | Tool It Opens | What It’s Used For on the Exam
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Launch these tools directly from the Run dialog (Win + R) or Command PromptLaunc
+    Sample Row: compmgmt.msc | Computer Management | The master console. Accesses Event Viewe
+    Sample Row: devmgmt.msc | Device Manager | Used to update, roll back, or disable ha
+
+  Table 195/203:
+    Rows: 4, Unique Cols: 1
+    Headers: Exam Core Tip: If a command manages a specific sys
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: ⚠️ Exam Trap: Never edit the registry without backing it up first!⚠️⚠️  Exam Tra
+    Sample Row: through a graphical console, it almost a
+    Sample Row: (Microsoft Management Console). If it op
+
+  Table 196/203:
+    Rows: 12, Unique Cols: 3
+    Headers: Command | Tool/Action | What It’s Used For on the Exam
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🐧 Essential Linux Commands Quick Reference
+🐧🐧  Essential Linux Commands Quick Re
+    Sample Row: ls | List files | View directory contents. Equivalent to d
+    Sample Row: pwd | Print working directory | Shows current directory path.
+
+  Table 197/203:
+    Rows: 8, Unique Cols: 2
+    Headers: Command / Tool | What It’s Used For on the Exam
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🍎 Essential macOS Commands & Tools (Quick Reference)🍎🍎 Essential macOS Commands 
+    Sample Row: Finder | File manager for navigation/storage.
+    Sample Row: System Settings | Configure network, users, displays, priv
+
+  Table 198/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Trap | The Correct Answer
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔴 Hardware Traps🔴 Hardware Traps🔴 Hardware Traps
+    Sample Row: Degaussing an SSD to erase data | WRONG - degaussing only works on magneti
+    Sample Row: Formatting a drive before disposal makes | WRONG - format only removes the file sys
+
+  Table 199/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Trap | The Correct Answer
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔴 Networking Traps🔴 Networking Traps🔴 Networking Traps
+    Sample Row: IMEI is used for roaming charges | WRONG - IMSI identifies the subscriber f
+    Sample Row: An APIPA address means the network is wo | WRONG - APIPA (169.254.x.x) means the de
+
+  Table 200/203:
+    Rows: 6, Unique Cols: 2
+    Headers: Trap | The Correct Answer
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔴 OS & Security Traps🔴 OS & Security Traps🔴 OS & Security Traps
+    Sample Row: Remote Desktop works the same on Windows | WRONG - Windows Home can be a Remote Des
+    Sample Row: BitLocker is available on Windows Home | WRONG - BitLocker requires Windows Pro, 
+
+  Table 201/203:
+    Rows: 5, Unique Cols: 2
+    Headers: Trap | The Correct Answer
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: 🔴 Mobile & Cloud Traps🔴 Mobile & Cloud Traps🔴 Mobile & Cloud Traps
+    Sample Row: Remote Wipe should be used first when a  | WRONG - use Remote LOCK first. Remote Wi
+    Sample Row: PRL updates must be done manually by the | WRONG - PRL updates are pushed automatic
+
+  Table 202/203:
+    Rows: 9, Unique Cols: 2
+    Headers: Week | Focus Area & Modules
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: This plan assumes approximately 1-2 hours of study per day. Adjust based on your
+    Sample Row: Week 1 - Core 1 Hardware Foundations | Desktop PC Hardware · Working on Laptops
+    Sample Row: Week 2 - Core 1 Connectivity & Displays | Mobile Devices · Wireless & Cellular Con
+
+  Table 203/203:
+    Rows: 3, Unique Cols: 2
+    Headers: 📖 | Exclusive Glossary Access
+Searchable, filterable b
+    Has Images: False
+    Has Merged Cells: False
+    Has Checkmarks: False
+    Preceding: Unlock your Members-Only Portal with the access code below. Inside you’ll find:4
+    Sample Row: 📁 | Premium Study Resource
+500+ flash cards,
+    Sample Row: 🎮 | Bonus Games Collection
+Extra puzzles and
+
+================================================================================
+IMAGE ANALYSIS
+================================================================================
+
+  Total images in paragraphs: 67
+  Images with alt text: 60
+  Images without alt text: 7
+  Images embedded in tables: 0
+
+  Images missing alt text (context):
+    - near: ''
+    - near: ''
+    - near: ''
+    - near: ''
+    - near: ''
+    - near: ''
+    - near: ''
+
+================================================================================
+EMOJI IN HEADINGS
+================================================================================
+  [Heading 5] 📖 How to Use This Guide
+    Emoji codepoints: ['0x1f4d6']
+  [Heading 1] 📘 Important Information First
+    Emoji codepoints: ['0x1f4d8']
+  [Heading 2] 🏅 What is The CompTIA A+ Certification?
+    Emoji codepoints: ['0x1f3c5']
+  [Heading 3] 📋 Core 1 (220-1201) and Core 2 (220-1202) Overview
+    Emoji codepoints: ['0x1f4cb']
+  [Heading 3] 📊 Exam Format and Scoring
+    Emoji codepoints: ['0x1f4ca']
+  [Heading 3] ⚖️ Exam Domain Weights
+    Emoji codepoints: ['0x2696', '0xfe0f']
+  [Heading 2] 💡 EXAM TIPS
+    Emoji codepoints: ['0x1f4a1']
+  [Heading 3] 🗺️ Logistics and Registration
+    Emoji codepoints: ['0x1f5fa', '0xfe0f']
+  [Heading 3] 📚 Great Ways to Study
+    Emoji codepoints: ['0x1f4da']
+  [Heading 1] 📱 Module: Understanding Mobile Devices
+    Emoji codepoints: ['0x1f4f1']
+  [Heading 2] 🎯 Module Objectives
+    Emoji codepoints: ['0x1f3af']
+  [Heading 2] 🧭 Wearable Technology
+    Emoji codepoints: ['0x1f9ed']
+  [Heading 2] 📲 Smartphones
+    Emoji codepoints: ['0x1f4f2']
+  [Heading 2] 📱 Tablets
+    Emoji codepoints: ['0x1f4f1']
+  [Heading 2] 📖 E-Readers
+    Emoji codepoints: ['0x1f4d6']
+  [Heading 2] 💻 Laptops & Two-in-One Devices
+    Emoji codepoints: ['0x1f4bb']
+  [Heading 2] 🛜 Connectivity Options Overview
+    Emoji codepoints: ['0x1f6dc']
+  [Heading 2] 🛠 Warranty and Repair Considerations
+    Emoji codepoints: ['0x1f6e0']
+  [Heading 1] 🔧 Module: Working on Laptops
+    Emoji codepoints: ['0x1f527']
+  [Heading 2] 🎯 Module Objectives
+    Emoji codepoints: ['0x1f3af']
+  [Heading 2] 🧩 Key Laptop Hardware Components
+    Emoji codepoints: ['0x1f9e9']
+  [Heading 2] 🔋 Laptop Power Management States
+    Emoji codepoints: ['0x1f50b']
+  [Heading 2] 🔨 Essential Tools for Laptop Repair
+    Emoji codepoints: ['0x1f528']
+  [Heading 2] ⚡ Safety & ESD Precautions
+    Emoji codepoints: ['0x26a1']
+  [Heading 2] 🛠️ Maintenance & Repair Considerations
+    Emoji codepoints: ['0x1f6e0', '0xfe0f']
+  [Heading 2] ✅ Quick Checklist Before You Begin
+    Emoji codepoints: ['0x2705']
+  [Heading 1] ⌨️ Module: Mobile Input Devices
+    Emoji codepoints: ['0x2328', '0xfe0f']
+  [Heading 2] 🎯 Module Objectives
+    Emoji codepoints: ['0x1f3af']
+  [Heading 2] 🧑‍💻 Common Mobile Input Devices
+    Emoji codepoints: ['0x1f9d1', '0x200d', '0x1f4bb']
+  [Heading 2] 🔧 Removing a Laptop Keyboard
+    Emoji codepoints: ['0x1f527']
+
+  Total headings with emoji: 378
+
+================================================================================
+EMOJI IN BODY TEXT (sample)
+================================================================================
+  [Normal] Copyright © 2026 Niko Williams. All rights reserved.
+    Emoji codepoints: ['0xa9']
+  [Normal] Study modules in order. Pay attention to 🎯 Module Objectives as they map directly to exam domains. R
+    Emoji codepoints: ['0x1f3af']
+  [Normal] 🌐 Access Your FREE Online Study Portal. Scan the QR code for instant access. 
+    Emoji codepoints: ['0x1f310']
+  [Normal] 🃏 Interactive PBQs — Practice exam-style performance-based questions.
+    Emoji codepoints: ['0x1f0cf']
+  [Normal] 📖 Printable Reference Sheets — Downloadable study aids for quick review.
+    Emoji codepoints: ['0x1f4d6']
+  [Normal] 🎮 Arcade & Puzzle Games — Reinforce knowledge with Port Blaster, Maze Runner, Jeopardy, and more.
+    Emoji codepoints: ['0x1f3ae']
+  [toc 1] 📘 Important Information First	3
+    Emoji codepoints: ['0x1f4d8']
+  [toc 2] 🏅 What is The CompTIA A+ Certification?	3
+    Emoji codepoints: ['0x1f3c5']
+  [toc 2] 💡 EXAM TIPS	4
+    Emoji codepoints: ['0x1f4a1']
+  [toc 1] 📱 Module: Understanding Mobile Devices	11
+    Emoji codepoints: ['0x1f4f1']
+  [toc 2] 🎯 Module Objectives	11
+    Emoji codepoints: ['0x1f3af']
+  [toc 2] 🧭 Wearable Technology	11
+    Emoji codepoints: ['0x1f9ed']
+  [toc 2] 📲 Smartphones	11
+    Emoji codepoints: ['0x1f4f2']
+  [toc 2] 📱 Tablets	12
+    Emoji codepoints: ['0x1f4f1']
+  [toc 2] 📖 E-Readers	12
+    Emoji codepoints: ['0x1f4d6']
+
+  Total body paragraphs with emoji: 369
+
+================================================================================
+CALLOUT STYLES
+================================================================================
+
+  Style: 'Tip -Exam' (showing 5 samples)
+    -> ℹ️ Exam Tip: Most smartphones support all four technologies. Tablets and laptops commonly include Wi-Fi and Bluetooth, w
+    -> ℹ️ Exam Tip: The CompTIA A+ exam expects you to know that Exchange ActiveSync handles email, contacts, AND calendar in a
+    -> ℹ️ Exam Tip: SOHO configuration questions often test the difference between basic setup tasks (this section) and securit
+    -> ℹ️ Exam Tip: The exam tests this in scenario form. If the question mentions a dedicated server, domain, or Active Direct
+    -> ℹ️ Exam Tip: ARP operates at the boundary of Layer 2 and Layer 3. It resolves Layer 3 addresses (IP) to Layer 2 addresse
+
+  Style: 'Tip -Trap' (showing 5 samples)
+    ->  Note: Ribbon cable connectors are delicate and not designed for frequent use. Handle with care.
+    -> ⚠️ Exam Trap: Wi-Fi 6 and Wi-Fi 6E are NOT the same. Wi-Fi 6E requires both new hardware and operates in a different fre
+    -> ⚠️ Exam Trap: VPN configuration on mobile devices is typically pushed automatically via MDM configuration profiles in co
+    -> ⚠️ Exam Trap: While ARP resolves Layer 3 IP addresses to Layer 2 MAC addresses, CompTIA and Cisco traditionally classify
+    -> ⚠️ Exam Trap: fe80:: addresses (link-local) are automatically assigned to all IPv6 interfaces and cannot be removed. If 
+
+  Style: 'Tip -Pro' (showing 5 samples)
+    -> 💡 Pro Tip: Think of 6 GHz as a "dedicated express lane" on the wireless highway. The 2.4 and 5 GHz bands are crowded wit
+    -> 💡 Pro Tip: Be Aware of security considerations. Location data is sensitive. Best practices include granting location acc
+    -> 💡 Pro Tip: Satellite's biggest exam trait is high latency (due to signal distance), not necessarily low speed — don't co
+    -> 💡 Pro Tip: When troubleshooting IPv6 connectivity, use `ipconfig /all` (Windows) or `ip addr show` (Linux) to see both l
+    -> 💡 Pro Tip: USB PD negotiation happens automatically - if a device isn't charging at the expected rate, the issue is usua
+
+================================================================================
+HEADERS & FOOTERS
+================================================================================
+  Section 1:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 2:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 3:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 4:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 5:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 6:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 7:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 8:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 9:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 10:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+  Section 11:
+    Header: CompTIA A+ 220-1200 Series Study Guide | 
+
+================================================================================
+GLOSSARY BULLETS (colored bullet)
+================================================================================
+  Color FF0000: 229 bullets
+    Sample: Priority Key: ● HIGH ● MEDIUM ● LOW
+  Color FFC000: 251 bullets
+    Sample: Priority Key: ● HIGH ● MEDIUM ● LOW
+  Color 00B300: 23 bullets
+    Sample: Priority Key: ● HIGH ● MEDIUM ● LOW
+
+================================================================================
+PAGE BREAKS
+================================================================================
+  pageBreakBefore: 0
+  Explicit page breaks (w:br type=page): 29
+
+================================================================================
+TOC DETECTION
+================================================================================
+  TOC style paragraph: [toc 1] 
+  TOC style paragraph: [toc 1] 📘 Important Information First	3
+  TOC style paragraph: [toc 2] 🏅 What is The CompTIA A+ Certification?	3
+  TOC style paragraph: [toc 2] 💡 EXAM TIPS	4
+  TOC style paragraph: [toc 1] CORE 1 - EXAM 220-1201	10
+
+  Total TOC-styled paragraphs: 286
+  TOC heading found: False
+
+================================================================================
+INSPECTION COMPLETE
+================================================================================
