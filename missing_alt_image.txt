@@ -1,7 +1,0 @@
-MISSING ALT TEXT:
-  Paragraph index: 3555
-  Image name: Picture
-  Para style: Block Text
-  Para text: ''
-  Previous para: 'Trust your preparation, read every question carefully, and systematically elimin'
-  Next para: 'Good luck. You’ve got this!'
