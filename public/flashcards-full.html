@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full Flash Card Deck — 567 Terms | CompTIA A+ Members</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#0f172a;
+  color:#f1f5f9;
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+nav{
+  width:100%;
+  background:#1e293b;
+  border-bottom:1px solid #334155;
+  padding:1rem 2rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+nav a{
+  color:#5b9bd5;
+  text-decoration:none;
+  font-weight:500;
+  transition:color .2s;
+}
+nav a:hover{color:#93c5fd;}
+.container{
+  max-width:800px;
+  width:100%;
+  padding:2rem 1rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  flex:1;
+}
+h1{
+  font-size:1.8rem;
+  margin-bottom:0.3rem;
+  text-align:center;
+}
+.subtitle{
+  color:#94a3b8;
+  margin-bottom:2rem;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="members.html">&#8592; Back to Members</a>
+  <a href="index.html">Home</a>
+</nav>
+<div class="container">
+<h1>Full Flash Card Deck &mdash; 567 Terms</h1>
+<p class="subtitle">All CompTIA A+ terms with shuffle. Members Only.</p>
+
+<div class="progress-bar-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="card-scene" id="cardScene">
+  <div class="card" id="card">
+    <div class="card-face card-front" id="cardFront"></div>
+    <div class="card-face card-back" id="cardBack"></div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="prevBtn" aria-label="Previous card">&#8592; Previous</button>
+  <span class="counter" id="counter">1 / 567</span>
+  <button class="btn" id="nextBtn" aria-label="Next card">Next &#8594;</button>
+  <button class="btn shuffle-btn" id="shuffleBtn" aria-label="Shuffle cards">&#128256; Shuffle</button>
+</div>
+</div>
+
+<style>
+.progress-bar-container{
+  width:100%;
+  height:6px;
+  background:#334155;
+  border-radius:3px;
+  margin-bottom:2rem;
+  overflow:hidden;
+}
+.progress-bar{
+  height:100%;
+  background:linear-gradient(90deg,#5b9bd5,#27ae60);
+  border-radius:3px;
+  transition:width .3s ease;
+  width:0.2%;
+}
+.card-scene{
+  width:100%;
+  max-width:550px;
+  height:320px;
+  perspective:1200px;
+  margin-bottom:2rem;
+  cursor:pointer;
+}
+.card{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.6s cubic-bezier(.4,.2,.2,1);
+}
+.card.flipped{
+  transform:rotateY(180deg);
+}
+.card-face{
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  border-radius:16px;
+  text-align:center;
+  font-size:1.3rem;
+  line-height:1.6;
+}
+.card-front{
+  background:#1e293b;
+  border:2px solid #5b9bd5;
+  color:#5b9bd5;
+  font-size:2rem;
+  font-weight:700;
+}
+.card-back{
+  background:#1e293b;
+  border:2px solid #27ae60;
+  color:#f1f5f9;
+  transform:rotateY(180deg);
+  font-size:1.15rem;
+}
+.controls{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.btn{
+  background:#1e293b;
+  border:1px solid #334155;
+  color:#f1f5f9;
+  padding:0.6rem 1.2rem;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:0.95rem;
+  transition:background .2s, border-color .2s;
+}
+.btn:hover{
+  background:#334155;
+  border-color:#5b9bd5;
+}
+.shuffle-btn{
+  border-color:#27ae60;
+}
+.shuffle-btn:hover{
+  background:#27ae60;
+  color:#0f172a;
+}
+.counter{
+  color:#94a3b8;
+  font-size:1rem;
+  min-width:80px;
+  text-align:center;
+}
+@media(max-width:600px){
+  .card-scene{height:260px;}
+  .card-front{font-size:1.5rem;}
+  .card-back{font-size:1rem;}
+  h1{font-size:1.4rem;}
+}
+</style>
+
+<script>
+const cards = [
+{f:'TCP',b:'Connection-oriented transport protocol guaranteeing delivery, order, and error checking. Used for web, email, file transfers.'},
+{f:'UDP',b:'Connectionless transport protocol with no delivery guarantee. Faster than TCP. Used for streaming, VoIP, gaming, DNS.'},
+{f:'DHCP',b:'Automatically assigns IP addresses. UDP ports 67 (server) / 68 (client). Process: DORA (Discover, Offer, Request, Acknowledge).'},
+{f:'DNS',b:'Translates domain names to IP addresses. Port 53 (TCP/UDP). Queries: A (IPv4), AAAA (IPv6), MX (mail), CNAME (alias).'},
+{f:'APIPA',b:'Fallback IP (169.254.x.x) assigned when device cannot reach DHCP server. Always indicates DHCP failure.'},
+{f:'Default Gateway',b:'IP address of the local router that devices send external traffic to. If misconfigured, LAN works but no internet access.'},
+{f:'NAT',b:'Allows multiple private IPs to share one public IP. Performed by router.'},
+{f:'PAT',b:'Form of NAT using unique port numbers to map multiple private IPs to one public IP.'},
+{f:'IPv4',b:'32-bit addresses in dotted decimal (e.g., 192.168.1.100). ~4.3 billion addresses.'},
+{f:'IPv6',b:'128-bit hexadecimal addresses (e.g., 2001:0db8::1). Solves IPv4 exhaustion.'},
+{f:'Subnet Mask',b:'Defines network vs. host portion of an IP address. Common: 255.255.255.0 (/24) = 254 usable hosts per subnet.'},
+{f:'CIDR Notation',b:'Prefix length expressing subnet mask (e.g., /24 = 255.255.255.0 = 254 hosts).'},
+{f:'VLAN',b:'Logically segments a physical network into separate broadcast domains. Requires Layer 3 device for inter-VLAN routing.'},
+{f:'LAN',b:'Network covering a single building or campus using Ethernet or Wi-Fi. Most common network type on CompTIA exams.'},
+{f:'WAN',b:'Network spanning large geographic distances. Includes the internet, MPLS, leased lines. Connects multiple LANs.'},
+{f:'WLAN',b:'A LAN using Wi-Fi (802.11) instead of cables. Managed by a wireless access point (WAP).'},
+{f:'PAN',b:'Very short-range network (few meters) using Bluetooth or NFC.'},
+{f:'MAN',b:'Network covering a city or large campus.'},
+{f:'WWAN',b:'Wide-area wireless networking using cellular towers.'},
+{f:'Loopback (127.0.0.1)',b:'Always refers to local device. Tests local TCP/IP stack without needing network. IPv6 equivalent: ::1.'},
+{f:'Private IP Ranges',b:'Not routable on internet: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. Require NAT for internet access.'},
+{f:'Link-Local IPv6 (fe80::/10)',b:'Auto-configured IPv6 addresses valid only on local segment.'},
+{f:'SLAAC',b:'IPv6 mechanism for devices to self-assign global addresses using router prefix.'},
+{f:'Star Topology',b:'All devices connect to central switch. Most common. Central failure = full outage.'},
+{f:'Mesh Topology',b:'Every device connects to every other. Highly redundant. Enterprise WANs.'},
+{f:'Bus Topology',b:'All devices share single line. Obsolete. Single point of failure.'},
+{f:'Ring Topology',b:'Devices in closed loop. Rarely used today.'},
+{f:'Client-Server',b:'Dedicated server provides resources. Centrally managed. Scales well.'},
+{f:'Peer-to-Peer (P2P)',b:'Devices share resources directly. No dedicated server.'},
+{f:'Trunk Port',b:'Switch port carrying traffic for multiple VLANs between switches.'},
+{f:'OSI Model',b:'7-layer framework for network communication. Mnemonic: "All People Seem To Need Data Processing."'},
+{f:'Layer 7 - Application',b:'Network services to end-user apps. HTTP, HTTPS, FTP, DNS, DHCP, SMTP, SSH.'},
+{f:'Layer 6 - Presentation',b:'Data formatting, encryption, compression. TLS/SSL, JPEG, ASCII.'},
+{f:'Layer 5 - Session',b:'Establishes, manages, terminates sessions. NetBIOS, RPC.'},
+{f:'Layer 4 - Transport',b:'End-to-end communication using port numbers. TCP (reliable) and UDP (fast). Segmentation and flow control.'},
+{f:'Layer 3 - Network',b:'IP addressing, routing packets. Device: Router. Protocols: IP, ICMP, ARP.'},
+{f:'Layer 2 - Data Link',b:'MAC addresses, frame creation. Device: Switch. Protocols: Ethernet, Wi-Fi. Sublayers: LLC and MAC.'},
+{f:'Layer 1 - Physical',b:'Raw bits over medium. Cables, fiber, radio signals. Devices: Hub, repeater, patch panel. Defines voltages/frequencies.'},
+{f:'MAC Address',b:'Unique 48-bit hardware address for every NIC. Used for local delivery.'},
+{f:'Frame',b:'Layer 2 data unit with source/destination MAC addresses.'},
+{f:'Packet',b:'Layer 3 data unit with source/destination IP addresses.'},
+{f:'Segment',b:'Layer 4 data unit with port numbers and sequence numbers.'},
+{f:'TCP/IP Model',b:'4-layer model (Application, Transport, Internet, Network Access). Runs the internet.'},
+{f:'ARP',b:'Maps known IP address to MAC address on local network.'},
+{f:'ICMP',b:'Diagnostic/error-reporting protocol. Underpins ping and tracert.'},
+{f:'HTTP',b:'Port 80 (TCP). Unencrypted web browsing. Data visible in transit. Being replaced by HTTPS everywhere.'},
+{f:'HTTPS',b:'Port 443 (TCP). Encrypted web browsing using TLS/SSL. Padlock icon in browser. Required for e-commerce and logins.'},
+{f:'FTP',b:'Ports 20/21 (TCP). File transfer. 21=control, 20=data. Unencrypted credentials. Use SFTP or FTPS instead.'},
+{f:'SFTP',b:'Port 22 (TCP). Encrypted file transfer over SSH tunnel. Preferred secure alternative to FTP. Single port simplifies firewall rules.'},
+{f:'SSH',b:'Port 22 (TCP). Encrypted remote command-line access. Replaces Telnet. Used by Linux/Mac admins and SFTP.'},
+{f:'Telnet',b:'Port 23 (TCP). Unencrypted remote access. Obsolete and insecure. Sends passwords in cleartext. Use SSH instead.'},
+{f:'SMTP',b:'Port 25/587 (TCP). Sends outbound email. 587=client submission with STARTTLS.'},
+{f:'POP3',b:'Port 110/995 (TCP). Downloads email to one device, removes from server. 995=encrypted.'},
+{f:'IMAP',b:'Port 143/993 (TCP). Keeps email on server, syncs across devices. 993=encrypted.'},
+{f:'LDAP',b:'Port 389 (TCP/UDP). Queries Active Directory.'},
+{f:'LDAPS',b:'Port 636 (TCP). Encrypted LDAP over SSL/TLS. Secure directory queries for Active Directory.'},
+{f:'SMB',b:'Port 445 (TCP). Windows file and printer sharing. Also used for mapped network drives. Block on firewall from WAN.'},
+{f:'RDP',b:'Port 3389 (TCP). Windows remote desktop. Never expose directly to internet.'},
+{f:'SNMP',b:'Ports 161/162 (UDP). Monitors network devices.'},
+{f:'NTP',b:'Port 123 (UDP). Synchronizes clocks. Wrong clock = SSL errors.'},
+{f:'SIP',b:'Ports 5060/5061 (TCP/UDP). VoIP call setup. 5061=encrypted.'},
+{f:'VNC',b:'Port 5900 (TCP). Cross-platform screen sharing.'},
+{f:'Switch',b:'Forwards frames to correct port using MAC tables. Layer 2. Most common LAN device.'},
+{f:'Router',b:'Routes packets between networks using IP addresses. Layer 3. Connects LAN to WAN. Makes forwarding decisions.'},
+{f:'Hub',b:'Legacy Layer 1. Broadcasts all data to every port. Creates collisions. Replaced by switches.'},
+{f:'WAP (Wireless Access Point)',b:'Connects wireless clients to the wired network. Does not route traffic. Operates at Layer 2 like a switch.'},
+{f:'Modem',b:'Converts ISP signal to usable format for local network.'},
+{f:'Firewall',b:'Controls inbound/outbound traffic based on security rules. Can be hardware appliance or software. Blocks unauthorized access.'},
+{f:'PoE (Power over Ethernet)',b:'Supplies power to devices (cameras, WAPs, phones) through network cables.'},
+{f:'Proxy Server',b:'Intermediary filtering content, caching pages, improving security.'},
+{f:'IDS',b:'Intrusion Detection System. Monitors traffic, alerts on threats.'},
+{f:'IPS',b:'Intrusion Prevention System. Monitors AND blocks threats.'},
+{f:'Cable Tester',b:'Checks Ethernet cable continuity and wiring order.'},
+{f:'Tone Generator & Probe',b:'Identifies cable runs in walls without labels.'},
+{f:'Loopback Plug',b:'Tests NIC transmit/receive by redirecting output to input.'},
+{f:'Crimper',b:'Attaches RJ-45 connectors to network cables.'},
+{f:'Punch-Down Tool',b:'Terminates wires into patch panels or keystone jacks.'},
+{f:'Wi-Fi 4 (802.11n)',b:'Up to 600 Mbps. 2.4 GHz and 5 GHz. First with MIMO.'},
+{f:'Wi-Fi 5 (802.11ac)',b:'Up to 3.5 Gbps. 5 GHz only. MU-MIMO. Wave 2 added multi-user downlink. Standard in most modern routers.'},
+{f:'Wi-Fi 6 (802.11ax)',b:'Up to 9.6 Gbps. OFDMA for dense environments. 2.4/5/6 GHz. Better battery life for clients via Target Wake Time.'},
+{f:'Wi-Fi 7 (802.11be)',b:'Up to 46 Gbps. MLO across multiple bands simultaneously.'},
+{f:'SSID',b:'Broadcast name of a wireless network. Can be hidden but not encrypted.'},
+{f:'WEP',b:'Original wireless security. Uses RC4 encryption. Cracked in minutes with freely available tools. Never use.'},
+{f:'WPA2 (AES/CCMP)',b:'Current baseline wireless security using AES-128 encryption. Personal (PSK) or Enterprise (802.1X/RADIUS) modes.'},
+{f:'WPA3 (SAE)',b:'Latest wireless security. Strongest. Uses Simultaneous Authentication of Equals.'},
+{f:'WPS',b:'Wi-Fi Protected Setup. Known 8-digit PIN vulnerability. Always disable.'},
+{f:'OFDMA',b:'Wi-Fi 6 tech dividing channels into sub-channels for simultaneous transmission.'},
+{f:'MU-MIMO',b:'AP communicates with multiple devices simultaneously.'},
+{f:'Bluetooth Class 1',b:'Range 100m. Industrial use.'},
+{f:'Bluetooth Class 2',b:'Range 10m. Most common consumer devices.'},
+{f:'Bluetooth Class 3',b:'Range 1m. Minimal-power devices.'},
+{f:'NFC',b:'Near Field Communication. Short-range (inches). Tap-to-pay, file transfer.'},
+{f:'IMEI',b:'15-17 digit hardware ID for cell phones. Used to blacklist stolen devices.'},
+{f:'IMSI',b:'15-digit subscriber ID. Used for billing/roaming. Identifies the USER.'},
+{f:'ICCID',b:'19-20 digit number unique to the SIM card or eSIM.'},
+{f:'PRL',b:'Preferred Roaming List. Frequencies/tower settings for roaming. Updated OTA.'},
+{f:'Tethering / Hotspot',b:'Sharing smartphone cellular connection with other devices.'},
+{f:'GPS',b:'Uses 4+ satellites for positioning. Accurate within 5 meters.'},
+{f:'ATX',b:'Standard motherboard (305x244mm). 7 expansion slots. Most common desktop form factor. Uses 24-pin + 8-pin EPS power.'},
+{f:'Micro-ATX',b:'Mid-size board (244x244mm). 4 slots. Most common in pre-built PCs. Backward compatible with ATX cases.'},
+{f:'Mini-ITX',b:'Compact board (170x170mm). 1 slot. Small form factor builds.'},
+{f:'LGA',b:'Land Grid Array. CPU socket with pins on motherboard (not CPU). Used by Intel. Bent pin = motherboard damage.'},
+{f:'AM4',b:'AMD PGA socket for Ryzen 1000-5000 series. Pins on CPU. 1331 contacts.'},
+{f:'AM5',b:'AMD LGA socket for Ryzen 7000+ series. Pins on motherboard. DDR5 and PCIe 5.0 support.'},
+{f:'LGA 1700',b:'Intel socket for 12th-14th gen Core processors.'},
+{f:'DDR4',b:'RAM standard (2133-3200+ MHz, 1.2V). 288 pins. Mainstream 2016-2023. Not compatible with DDR5 slots.'},
+{f:'DDR5',b:'Current RAM (4800-7200+ MHz, 1.1V). 288 pins but different notch position. On-die ECC. Intel 12th gen+ and Ryzen 7000+.'},
+{f:'ECC RAM',b:'Error-Correcting Code RAM. Detects/corrects single-bit errors. Servers only.'},
+{f:'Dual-Channel RAM',b:'Matched pairs in correct color-coded slots (A1+B1 or A2+B2) doubles memory bandwidth. Check motherboard manual.'},
+{f:'SO-DIMM',b:'Laptop/small-form-factor RAM. 260 pins (DDR4) vs desktop DIMM 288 pins. Not interchangeable with desktop RAM.'},
+{f:'24-pin ATX',b:'Main motherboard power connector providing 3.3V, 5V, and 12V rails. System won\'t POST without it connected.'},
+{f:'8-pin EPS',b:'Dedicated 12V CPU power connector near CPU socket. System won\'t boot if missing. Not same as PCIe 8-pin.'},
+{f:'6+2-pin PCIe',b:'Dedicated GPU power connector. 6-pin=75W, 8-pin=150W. GPU also draws 75W from PCIe slot.'},
+{f:'Molex',b:'Legacy 4-pin connector for older HDDs and fans.'},
+{f:'80 PLUS Rating',b:'PSU efficiency: Bronze 82%, Silver 85%, Gold 87%, Platinum 92%.'},
+{f:'Modular PSU',b:'Allows removing unused cables for better airflow.'},
+{f:'PCIe 3.0',b:'~1 GB/s per lane. Common for GPUs and NVMe SSDs.'},
+{f:'PCIe 4.0',b:'~2 GB/s per lane. High-performance NVMe and modern GPUs.'},
+{f:'PCIe 5.0',b:'~4 GB/s per lane. Cutting-edge storage and next-gen GPUs.'},
+{f:'GPU',b:'Graphics Processing Unit. PCIe x16 card for display output and rendering. Requires dedicated power connectors for gaming cards.'},
+{f:'TDP',b:'Thermal Design Power. Max heat in watts the cooler must handle.'},
+{f:'Thermal Paste',b:'Applied between CPU and heatsink for heat transfer. Clean and reapply when reseating.'},
+{f:'AIO Liquid Cooler',b:'Closed-loop liquid cooling with pump, radiator, and fans.'},
+{f:'CMOS Battery',b:'CR2032 coin cell powering BIOS clock/settings. Dead = clock resets every boot.'},
+{f:'POST',b:'Power-On Self-Test. BIOS/UEFI checks CPU, RAM, hardware on boot. Failures = beep codes.'},
+{f:'BIOS',b:'Legacy firmware initializing hardware on boot. Replaced by UEFI. 16-bit, limited to MBR and 2TB drives.'},
+{f:'UEFI',b:'Modern firmware. Supports >2TB drives, GPT, Secure Boot, faster startup.'},
+{f:'TPM',b:'Security chip storing encryption keys. Required by BitLocker and Windows 11.'},
+{f:'HDD',b:'Mechanical storage. Spinning platters. Cheaper per GB. Slower. Clicking = failure.'},
+{f:'SSD',b:'Flash memory storage. Much faster, more durable, lower power than HDDs.'},
+{f:'SATA III',b:'Storage interface at 6 Gb/s (~550 MB/s real-world). Used for 2.5" and 3.5" drives. Same cable for HDD and SSD.'},
+{f:'M.2 NVMe',b:'High-performance SSD connecting directly to motherboard. PCIe interface. 3,500-7,000+ MB/s. Key M slot.'},
+{f:'NVMe',b:'Non-Volatile Memory Express protocol for flash over PCIe bus. Much lower latency than AHCI/SATA protocol.'},
+{f:'MBR',b:'Legacy partition format. 2TB max. 4 partitions max. Requires BIOS boot.'},
+{f:'GPT',b:'GUID Partition Table. Modern format supporting >2TB drives, up to 128 partitions. Requires UEFI boot. Has backup table.'},
+{f:'NTFS',b:'Required for Windows. Supports permissions, encryption, compression, journaling, files >4GB.'},
+{f:'FAT32',b:'Legacy. 4GB max file size. No permissions. Universal compatibility. Used for UEFI ESP.'},
+{f:'exFAT',b:'Designed for flash media (USB/SD). No 4GB file limit. Cross-platform compatible. No permissions or journaling.'},
+{f:'RAID 0',b:'Striping across drives. No fault tolerance. One failure loses ALL data. Fastest read/write but highest risk.'},
+{f:'RAID 1',b:'Mirroring. Identical copy on two drives. Survives one failure. Half usable capacity. Simplest redundancy.'},
+{f:'RAID 5',b:'Striping + parity. Min 3 drives. Survives one failure. Most popular NAS.'},
+{f:'RAID 6',b:'Double parity. Min 4 drives. Survives two failures.'},
+{f:'RAID 10',b:'Mirror + stripe (RAID 1+0). Min 4 drives. Best performance + redundancy. Survives one failure per mirror set.'},
+{f:'S.M.A.R.T.',b:'Drive health monitoring. Predicts imminent failure.'},
+{f:'Secure Erase',b:'SSD firmware command resetting all cells. Correct method for wiping SSDs.'},
+{f:'Degaussing',b:'Magnetic field destroys data on HDDs/tape. NO effect on SSDs or flash.'},
+{f:'Cat 5e',b:'1 Gbps at 100m. Minimum cable category for Gigabit Ethernet. Enhanced version of Cat 5 with reduced crosstalk.'},
+{f:'Cat 6',b:'10 Gbps at 55m or 1 Gbps at 100m. Thicker insulation and tighter twists than Cat 5e. Plastic spine separator.'},
+{f:'Cat 6a',b:'10 Gbps at full 100m distance. "a" = augmented. Thicker shielding eliminates alien crosstalk at longer runs.'},
+{f:'Cat 8',b:'25-40 Gbps over ~30m. Data centers only.'},
+{f:'UTP',b:'Unshielded Twisted Pair. Standard Ethernet cable.'},
+{f:'STP',b:'Shielded Twisted Pair. Protection against EMI.'},
+{f:'Plenum (CMP)',b:'Low-smoke fire-retardant cable jacket for air-handling (HVAC) spaces above drop ceilings. Required by building code.'},
+{f:'Riser (CMR)',b:'Fire-resistant cable for running between floors.'},
+{f:'Single-Mode Fiber',b:'One light ray, narrow core. Long distance.'},
+{f:'Multimode Fiber',b:'Multiple beams, wider core. Shorter distance.'},
+{f:'USB 2.0',b:'480 Mbps (Hi-Speed). Connectors: Type-A, Type-B, Mini-B, Micro-B. Black-colored ports. Standard for keyboards and mice.'},
+{f:'USB 3.2 Gen 1',b:'5 Gbps (SuperSpeed). Usually identified by blue connectors or SS logo. Backward compatible with USB 2.0 ports.'},
+{f:'USB 3.2 Gen 2',b:'10 Gbps (SuperSpeed+). Type-A and Type-C connectors. Red or teal port color on some boards.'},
+{f:'USB 4.0',b:'40 Gbps. Type-C only. Supports alt mode.'},
+{f:'Thunderbolt 3/4',b:'40 Gbps via USB-C connector. Supports daisy-chaining, dual 4K displays, and PCIe tunneling. Lightning bolt icon.'},
+{f:'Thunderbolt 5',b:'80 Gbps. 240W charging. Dual 8K monitors.'},
+{f:'HDMI',b:'Most common digital audio/video connector. 19-pin. Supports 4K/8K, HDR, and ARC for audio return. No latch mechanism.'},
+{f:'DisplayPort',b:'20-pin digital video with locking latch. Supports daisy-chaining monitors. Alt mode delivers DisplayPort over USB-C.'},
+{f:'DVI',b:'Older digital video. DVI-I=digital+analog. DVI-D=digital only.'},
+{f:'VGA',b:'Obsolete 15-pin (DB-15) analog video connector. No audio. Blue-colored. Being phased out on modern hardware.'},
+{f:'LCD',b:'Liquid crystals with backlight. TN=fastest, IPS=best color, VA=best contrast.'},
+{f:'OLED',b:'Self-emissive pixels. True blacks. No backlight needed.'},
+{f:'Inverter',b:'DC-to-AC for CCFL backlights. Dark screen + working external = likely inverter.'},
+{f:'Digitizer',b:'Touchscreen component converting finger/stylus input to coordinates via capacitance changes. Ghost touches = failing digitizer.'},
+{f:'Laser Process',b:'Six steps: Processing, Charging, Exposing, Developing, Transferring, Fusing.'},
+{f:'Fuser Assembly',b:'Melts toner into paper using heat (up to 200C) and pressure. Failure = loose toner smearing off page. Let cool before servicing.'},
+{f:'Imaging Drum',b:'Photosensitive cylinder holding electrostatic image. Scratches cause repeating vertical lines on prints. Light-sensitive.'},
+{f:'Transfer Roller',b:'Positive charge pulls toner from drum onto paper.'},
+{f:'Charging Roller',b:'Applies uniform negative charge to drum.'},
+{f:'Pickup Rollers',b:'Rubber rollers pulling paper from tray into printer. Worn/glazed rollers = paper jams or no-feed. Clean with isopropyl.'},
+{f:'Thermal Printer',b:'Heat-sensitive paper. No ink/toner. Receipts, shipping labels.'},
+{f:'Impact Printer',b:'Pins strike ribbon. Multi-part carbon forms.'},
+{f:'3D Printer (FDM)',b:'Builds objects layer-by-layer with melted filament.'},
+{f:'AirPrint',b:'Apple wireless printing. No drivers needed.'},
+{f:'Print Spooler',b:'Windows service queuing print jobs. Restart via services.msc when stuck.'},
+{f:'IPP',b:'Internet Printing Protocol. Port 631.'},
+{f:'Type 1 Hypervisor',b:'Bare metal. Installs directly on hardware with no host OS. Most efficient. Examples: ESXi, Hyper-V Server, KVM.'},
+{f:'Type 2 Hypervisor',b:'Hosted on top of existing OS. Easier to set up, less efficient. Examples: VirtualBox, VMware Workstation, Parallels.'},
+{f:'VM Snapshot',b:'Point-in-time capture of VM state (RAM, disk, settings) for quick rollback. Not a long-term backup replacement.'},
+{f:'VM Clone',b:'Exact independent copy of a VM. Full clone is standalone; linked clone shares base disk.'},
+{f:'NAT Mode',b:'VM shares host IP address for outbound traffic. Safest default. VM invisible to LAN. Host acts as router.'},
+{f:'Bridged Mode',b:'VM gets its own IP from physical network DHCP. Appears as separate device on LAN. Full network visibility.'},
+{f:'Host-Only Mode',b:'VM communicates only with host machine. No internet access. Used for isolated testing environments.'},
+{f:'Internal Network',b:'VMs talk only to each other. Most isolated.'},
+{f:'SaaS',b:'Software as a Service. Provider manages everything. Microsoft 365, Gmail.'},
+{f:'PaaS',b:'Platform as a Service. Provider manages infrastructure. Azure App Service.'},
+{f:'IaaS',b:'Infrastructure as a Service. Customer manages VMs, OS, apps. Provider manages hardware/network. Most control. Examples: AWS EC2, Azure VMs.'},
+{f:'Public Cloud',b:'Shared infrastructure (AWS, Azure, GCP).'},
+{f:'Private Cloud',b:'Organization-owned, not shared externally.'},
+{f:'Hybrid Cloud',b:'Combination of public and private cloud with data/apps shared between them. Common in enterprise.'},
+{f:'Community Cloud',b:'Shared by similar organizations.'},
+{f:'Elasticity',b:'Cloud ability to automatically scale resources up during demand spikes and down during lulls. Pay only for what you use. Key cloud advantage.'},
+{f:'High Availability',b:'Minimal downtime design. 99.999% = ~5 min downtime/year.'},
+{f:'Shared Responsibility',b:'Customer always owns data and access management regardless of cloud model.'},
+{f:'Smartphone',b:'Compact device. USB-C. iOS or Android. Not field-serviceable.'},
+{f:'Tablet',b:'Mid-sized touchscreen. Mobile OS, full OS, or custom OS.'},
+{f:'E-Reader',b:'Tablet for digital books. ~300 PPI non-glare, low power.'},
+{f:'Smartwatch',b:'Wrist device. watchOS/Wear OS. Notifications, heart rate, NFC.'},
+{f:'AR (Augmented Reality)',b:'Digital information overlaid on real-world view through camera or glasses. Examples: Pok\u00E9mon Go, HoloLens.'},
+{f:'VR (Virtual Reality)',b:'Fully immersive computer-generated environment.'},
+{f:'eSIM',b:'Embedded SIM. Programmable remotely by carrier. No physical card.'},
+{f:'iCloud',b:'Apple cloud sync for photos, contacts, calendars, backups.'},
+{f:'Exchange ActiveSync',b:'Microsoft protocol syncing email + contacts + calendar in one connection. Used by iOS and Android for corporate mail. Supports remote wipe.'},
+{f:'CardDAV',b:'Protocol for contact synchronization with a server.'},
+{f:'CalDAV',b:'Protocol for calendar synchronization with a server.'},
+{f:'Two-Way Sync',b:'Changes flow both directions between devices and server.'},
+{f:'One-Way Sync',b:'Data flows in single direction only. Source pushes to target but target changes do not sync back.'},
+{f:'BitLocker',b:'Windows full-disk encryption (Pro/Enterprise). Requires TPM chip. Recovery key stored in AD or Microsoft account. Encrypts entire volume including OS.'},
+{f:'Group Policy',b:'Centrally manages Windows settings across Active Directory domain via GPOs. Pro/Enterprise only. Applied at OU/domain level. gpupdate /force refreshes.'},
+{f:'Active Directory Domain Join',b:'Connecting a Windows PC to corporate Active Directory domain for centralized management. Requires Pro/Enterprise. Home edition cannot join.'},
+{f:'Hyper-V',b:'Windows built-in Type 1 hypervisor (Pro/Enterprise only). Runs VMs natively. Enable via Windows Features. Conflicts with VirtualBox/VMware.'},
+{f:'Remote Desktop Host',b:'Being connected TO via RDP port 3389. Requires Pro/Enterprise edition to host. Home edition can connect TO others but cannot be connected to.'},
+{f:'Windows Sandbox',b:'Disposable VM for testing suspicious files. Pro/Enterprise.'},
+{f:'Assigned Access',b:'Kiosk mode locking user to single app. Pro/Enterprise.'},
+{f:'AppLocker',b:'Application whitelisting. Enterprise only.'},
+{f:'Task Manager',b:'Windows tool showing CPU/RAM/Disk/Network usage per process. Kill unresponsive apps. Manage startup programs. Ctrl+Shift+Esc to open directly.'},
+{f:'Event Viewer',b:'Windows log viewer (eventvwr.msc). System/Application/Security logs. Filter by Error/Warning. Critical for diagnosing BSODs and service failures.'},
+{f:'Device Manager',b:'Windows tool managing hardware drivers. Yellow triangle = driver problem. Right-click to update, roll back, or disable. devmgmt.msc to launch.'},
+{f:'Disk Management',b:'Windows GUI tool (diskmgmt.msc) for creating/resizing partitions, formatting drives, assigning letters, and converting MBR/GPT.'},
+{f:'Reliability Monitor',b:'Visual timeline of stability, crashes, failed updates.'},
+{f:'Resource Monitor',b:'Detailed per-process CPU, memory, disk, network view.'},
+{f:'msconfig',b:'System Configuration tool. Boot tab: Safe Mode options. Services tab: hide Microsoft services to isolate third-party conflicts. Diagnostic/Selective startup.'},
+{f:'services.msc',b:'Windows Services console. Start/stop/restart background services. Set startup type: Automatic, Manual, Disabled. Fix stuck Print Spooler here.'},
+{f:'regedit',b:'Registry Editor. Always back up before editing.'},
+{f:'Safe Mode',b:'Windows boots with minimal drivers/services only. Isolates third-party driver/software conflicts. Access via msconfig Boot tab or WinRE.'},
+{f:'System Restore',b:'Returns system files and registry to a previous restore point. Does NOT affect personal documents. Does remove recently installed programs/drivers.'},
+{f:'sfc /scannow',b:'System File Checker. Scans all protected Windows files and replaces corrupted ones from cached copies. Run elevated CMD. If fails, run DISM first.'},
+{f:'DISM /RestoreHealth',b:'Repairs Windows component store. Run before retrying failed sfc.'},
+{f:'bootrec',b:'WinRE command repairing Windows boot. /fixmbr=rebuild MBR, /fixboot=write new boot sector, /rebuildbcd=rebuild Boot Configuration Data.'},
+{f:'ipconfig',b:'Shows IP config. /release + /renew for DHCP refresh. /flushdns clears DNS cache. /all shows MAC address and DHCP server. First network troubleshooting command.'},
+{f:'chkdsk',b:'Check Disk utility. /f=fixes file system errors. /r=locates bad sectors and recovers data. Requires reboot on system drive. Run elevated.'},
+{f:'gpupdate /force',b:'Forces Group Policy to reapply immediately.'},
+{f:'diskpart',b:'Advanced command-line disk/partition manager.'},
+{f:'netstat',b:'Shows active connections, listening ports, routing tables.'},
+{f:'tracert',b:'Traces path to destination showing each router hop.'},
+{f:'nslookup',b:'Tests DNS resolution by querying DNS server directly.'},
+{f:'NTFS Permissions',b:'File/folder access controls. When combined with Share permissions, most restrictive wins. Inherited from parent. Full Control, Modify, Read, Write.'},
+{f:'UAC',b:'User Account Control. Prompts before system changes.'},
+{f:'BSOD',b:'Blue Screen of Death. Critical kernel error halting Windows. Note stop code. Check Event Viewer for cause. Common: bad RAM, driver, or disk failure.'},
+{f:'sudo',b:'"Superuser do." Temporarily elevates command to root privileges in Linux/macOS. Requires user password. Logged for audit trail.'},
+{f:'chmod',b:'Linux command changing file permissions. chmod +x = make executable. chmod 755 = owner full, others read/execute. Numeric: read=4, write=2, execute=1.'},
+{f:'chown',b:'Change file/directory ownership in Linux/macOS. Syntax: chown user:group filename.'},
+{f:'ls',b:'List files in directory. Use -la for detailed listing with hidden files and permissions.'},
+{f:'pwd',b:'Print Working Directory. Shows full path of current location in terminal.'},
+{f:'cd',b:'Change directories. cd ~ goes home, cd .. goes up one level.'},
+{f:'apt-get / dpkg',b:'Package management for Debian/Ubuntu Linux.'},
+{f:'yum / dnf',b:'Package management for Red Hat/Fedora Linux.'},
+{f:'ps / top',b:'View running processes. ps shows snapshot; top shows real-time updating list.'},
+{f:'ifconfig / ip',b:'View/configure network settings (Linux).'},
+{f:'Time Machine',b:'macOS automatic backup creating hourly/daily/weekly versioned snapshots to external drive. Browse and restore individual files from any point in time.'},
+{f:'Disk Utility',b:'macOS tool for formatting, partitioning, First Aid.'},
+{f:'Activity Monitor',b:'macOS equivalent of Task Manager. Shows CPU, memory, energy, disk, and network per process.'},
+{f:'FileVault',b:'macOS full-disk encryption using XTS-AES-128. Enabled in System Preferences > Security. Recovery key required if password forgotten.'},
+{f:'Finder',b:'macOS file manager.'},
+{f:'PowerShell (.ps1)',b:'Windows automation and system administration scripting. Cmdlet-based (Verb-Noun). Run as admin for system changes. Extension .ps1.'},
+{f:'Bash (.sh)',b:'Linux/macOS shell scripting for automation. Runs via terminal. Shebang (#!/bin/bash) required at top. chmod +x to make executable.'},
+{f:'Python (.py)',b:'Cross-platform automation scripting. Readable syntax. Used for IT automation and data analysis.'},
+{f:'JavaScript (.js)',b:'Browser and Node.js scripting. Used for web automation, UI interaction, and server-side tasks.'},
+{f:'Variables',b:'Named containers storing data values for reuse in scripts. Syntax varies by language.'},
+{f:'Conditionals',b:'Different actions based on conditions (if/else).'},
+{f:'Loops',b:'Repeat tasks automatically. Types: for, while, do-while. Reduces repetitive code.'},
+{f:'Functions',b:'Reusable named code blocks that accept parameters and return values. Reduces duplication.'},
+{f:'Shebang',b:'Interpreter declaration at top of script (#!/bin/bash).'},
+{f:'Execution Policy',b:'PowerShell script security levels. Restricted=no scripts. RemoteSigned=local OK, downloaded needs signature. Unrestricted=all run. Set via Set-ExecutionPolicy.'},
+{f:'Virus',b:'Malicious code attaching to files, spreads when user runs infected file. Unlike worms, requires user action. Types: boot sector, macro, polymorphic.'},
+{f:'Worm',b:'Self-replicating malware spreading across networks without user action. Unlike viruses, needs no host file. Consumes bandwidth. Example: WannaCry.'},
+{f:'Trojan',b:'Malware disguised as legitimate software. Unlike viruses/worms, does not self-replicate. Users must be tricked into running it. Often creates backdoors.'},
+{f:'Ransomware',b:'Encrypts victim\'s data and demands cryptocurrency payment for decryption key. Response: disconnect network, don\'t pay, restore from clean backup.'},
+{f:'Rootkit',b:'Malware hiding deep in OS kernel or firmware. Extremely difficult to detect with standard antivirus. Often requires complete OS reinstall to remove.'},
+{f:'Spyware',b:'Silently collects passwords and browsing data.'},
+{f:'Adware',b:'Displays unwanted ads. Often bundled with free software. Can redirect browser searches and slow performance.'},
+{f:'Fileless Malware',b:'Lives in memory using legitimate tools. No disk files.'},
+{f:'Keylogger',b:'Records keystrokes to steal credentials.'},
+{f:'7-Step Malware Removal',b:'Identify, Quarantine, Disable Restore, Scan, Schedule, Enable Restore, Educate.'},
+{f:'Phishing',b:'Fraudulent emails/messages impersonating trusted entities to trick users into revealing credentials or clicking malicious links. #1 attack vector.'},
+{f:'Spear-Phishing',b:'Targeted phishing aimed at a specific individual using personal details to appear legitimate. Higher success rate.'},
+{f:'Whaling',b:'Phishing targeting senior executives (CEO, CFO). Often involves wire transfer fraud or credential harvesting.'},
+{f:'Vishing',b:'Voice-based phishing via phone calls. Caller pretends to be bank, IRS, or tech support.'},
+{f:'Smishing',b:'SMS/text-based phishing. Malicious links sent via text message to steal credentials or install malware.'},
+{f:'Tailgating',b:'Unauthorized person following an authorized person through a secured door without authenticating themselves.'},
+{f:'Pretexting',b:'Fabricated scenario to obtain access/information.'},
+{f:'Social Engineering',b:'Manipulating people into revealing confidential information or performing actions that compromise security.'},
+{f:'MFA',b:'Multi-Factor Authentication. Combines two or more: something you know, have, are, or somewhere you are.'},
+{f:'Defense in Depth',b:'Layered security with multiple independent controls.'},
+{f:'Least Privilege',b:'Security principle: users/processes receive only minimum access required to perform their job function.'},
+{f:'Zero Trust',b:'Nothing trusted. Every request verified regardless of location.'},
+{f:'VPN',b:'Virtual Private Network. Creates encrypted tunnel between remote device and corporate network over the internet.'},
+{f:'Mantrap',b:'Two-door entry system (now called Access Control Vestibule) preventing tailgating. Only one door opens at a time.'},
+{f:'Cable Lock',b:'Physical cable securing laptops to fixture.'},
+{f:'SSL/TLS Certificate',b:'Digital certificate verifying website identity and enabling HTTPS encryption. Expired cert = browser warning. Issued by CA.'},
+{f:'Certificate Authority',b:'Trusted org issuing certificates (DigiCert, Let\'s Encrypt).'},
+{f:'Browser Hijacker',b:'Malware that changes homepage, default search engine, or redirects URLs without user consent. Remove via browser reset.'},
+{f:'Drive-By Download',b:'Malware auto-downloading from compromised site.'},
+{f:'Pop-up Blocker',b:'Prevents unsolicited pop-ups. Enable by default.'},
+{f:'Private/Incognito',b:'No local history/cookies saved after closing. Does NOT hide activity from ISP, employer, or network admin.'},
+{f:'Default Credentials',b:'Factory-set admin/password on routers and IoT. #1 SOHO vulnerability. Always change immediately after setup.'},
+{f:'WPS Vulnerability',b:'Wi-Fi Protected Setup 8-digit PIN is brute-forceable in hours. Always disable WPS in router settings.'},
+{f:'Remote Management',b:'WAN access to router admin. Disable unless needed.'},
+{f:'UPnP',b:'Auto-opens router ports. Exploitable by malware. Disable.'},
+{f:'Guest Network',b:'Separate SSID with its own password isolating visitors/IoT devices from main network and shared resources.'},
+{f:'SPI Firewall',b:'Stateful Packet Inspection. Blocks unsolicited inbound traffic.'},
+{f:'Port Forwarding',b:'Opens specific ports to internal device.'},
+{f:'DMZ',b:'Exposes device outside firewall. Very risky.'},
+{f:'SSH (Remote Access)',b:'Port 22 (TCP). Encrypted command-line remote access for Linux/Unix. Key-based auth more secure than passwords.'},
+{f:'IPMI / iDRAC / iLO',b:'Out-of-band server management. Works even when OS is offline.'},
+{f:'RMM',b:'Remote Monitoring & Management for enterprise endpoints.'},
+{f:'TeamViewer / AnyDesk',b:'Cross-platform remote support via cloud relay.'},
+{f:'Quick Assist',b:'Windows 10/11 built-in screen sharing.'},
+{f:'ZTNA',b:'Zero Trust Network Access. App-specific access based on identity.'},
+{f:'Jump Server',b:'Hardened gateway for controlled remote access.'},
+{f:'MDM',b:'Centralized system managing mobile devices. Pushes policies and security.'},
+{f:'Remote Wipe',b:'Erases all data on lost/stolen device remotely. Full wipe or Selective wipe (corporate data only for BYOD).'},
+{f:'Remote Lock',b:'Immediately locks a lost/stolen device screen remotely. Always lock FIRST before deciding whether to wipe.'},
+{f:'BYOD',b:'Bring Your Own Device. Personal devices for work. Limited MDM control.'},
+{f:'MAM',b:'Mobile Application Management. Corporate apps only on personal devices.'},
+{f:'Geofencing',b:'Virtual boundaries triggering actions when device crosses them.'},
+{f:'App Whitelisting',b:'Only approved apps can run on managed devices.'},
+{f:'Configuration Profile',b:'MDM-delivered file enforcing Wi-Fi, VPN, email policies.'},
+{f:'Degaussing (Data Destruction)',b:'Powerful magnetic field permanently destroys data on HDDs and tape. Has NO effect on SSDs or flash storage.'},
+{f:'Secure Erase (Data Destruction)',b:'SSD firmware-level command that resets all memory cells. The correct and complete method for sanitizing SSDs.'},
+{f:'Zero Fill',b:'Overwrites all bits with zeros. NIST approved for HDDs.'},
+{f:'Cryptographic Erasure',b:'Encrypts data then destroys key. Permanently unreadable.'},
+{f:'Physical Shredding',b:'Industrial destruction of storage media into pieces. Gold standard for classified or highly sensitive data disposal.'},
+{f:'Certificate of Destruction',b:'Formal documented proof of compliant media destruction. Required for regulatory compliance and audit trails.'},
+{f:'OEM License',b:'Tied to original hardware. Cannot transfer to another machine. Cheapest license type.'},
+{f:'Volume License',b:'Single agreement for multiple installations.'},
+{f:'Subscription License',b:'Recurring payment. Stops when lapsed. (M365, Adobe)'},
+{f:'Open Source',b:'Source code public. Governed by GPL, MIT, Apache.'},
+{f:'PII',b:'Personally Identifiable Information: name, SSN, email, phone, address. Breach requires notification under most laws.'},
+{f:'PHI',b:'Protected Health Information governed by HIPAA. Includes medical records, insurance info, treatment history.'},
+{f:'PCI-DSS',b:'Payment Card Industry Data Security Standard. 12 requirements for handling credit card data. Annual compliance audits.'},
+{f:'GDPR',b:'EU regulation. Consent, right to erasure, 72-hour breach notification.'},
+{f:'HIPAA',b:'US federal law protecting patient health information. Requires access controls, encryption, audit logs, and staff training.'},
+{f:'Full Backup',b:'Copies everything. Slowest to create but fastest and simplest to restore. Clears archive bit on all files.'},
+{f:'Incremental',b:'Only changes since LAST backup (any type). Fastest to create. Most complex restore: needs full + all incrementals.'},
+{f:'Differential',b:'All changes since last FULL backup. Grows daily. Restore needs only full + latest differential.'},
+{f:'3-2-1 Rule',b:'Backup strategy: 3 total copies, 2 different media types, 1 stored off-site. Industry standard best practice.'},
+{f:'GFS',b:'Grandfather-Father-Son rotation. Daily, weekly, monthly.'},
+{f:'System Image',b:'Complete snapshot of entire drive (OS + apps + data).'},
+{f:'File History',b:'Windows tool auto-backing up personal files.'},
+{f:'WinRE',b:'Windows Recovery Environment accessed via boot menu or install media. Contains Startup Repair, Reset, Command Prompt tools.'},
+{f:'Startup Repair',b:'Automated WinRE tool that fixes boot configuration problems. First step when Windows fails to start normally.'},
+{f:'Reset This PC',b:'Reinstalls Windows keeping or removing personal files. "Keep files" preserves data; "Remove everything" for resale.'},
+{f:'6-Step Troubleshooting',b:'CompTIA method: Identify problem, Establish theory, Test theory, Establish plan, Verify function, Document findings.'},
+{f:'Change Management',b:'Formal process ensuring all IT changes are requested, risk-assessed, approved, documented, and reviewed post-implementation.'},
+{f:'CAB',b:'Change Advisory Board reviewing/approving changes.'},
+{f:'SLA',b:'Service Level Agreement. Contract defining expected response times, uptime guarantees, and penalties for non-compliance.'},
+{f:'SOP',b:'Standard Operating Procedure. Step-by-step instructions.'},
+{f:'Knowledge Base',b:'Searchable docs describing how to resolve specific issues.'},
+{f:'Asset Tag',b:'Physical barcode/QR label tied to inventory database.'},
+{f:'Ticket Escalation',b:'Transferring a ticket to higher-tier support or management when issue exceeds current skill level or SLA threshold.'},
+{f:'P1 Critical',b:'Complete outage affecting entire business. Requires immediate response and all-hands engagement until resolved.'},
+{f:'P2 High',b:'Major impairment with workaround available. Affects large group but business can still function.'},
+{f:'P3 Medium',b:'Non-critical issue affecting small group. Normal queue priority with standard SLA response.'},
+{f:'P4 Low',b:'Minor inconvenience with no measurable productivity impact. Addressed as time permits.'},
+{f:'RTO / RPO',b:'Recovery Time Objective = max acceptable downtime. Recovery Point Objective = max acceptable data loss (time between backups). Both defined in BCP/SLA.'},
+{f:'ESD',b:'Electrostatic Discharge. As little as 100V can damage components (humans feel 3,000V). Always ground yourself first.'},
+{f:'Antistatic Wrist Strap',b:'Prevents ESD damage. Worn on non-dominant wrist, alligator clip attached to unpainted metal chassis ground.'},
+{f:'Antistatic Mat',b:'Grounded work surface dissipating static.'},
+{f:'Class A',b:'Fire extinguisher for combustibles: wood, paper, cloth.'},
+{f:'Class B',b:'For flammable liquids: grease, gasoline.'},
+{f:'Class C',b:'Fire extinguisher for electrical fires. Most important for IT environments. Use CO2 or dry chemical, never water.'},
+{f:'PASS Method',b:'Fire extinguisher technique: Pull pin, Aim at base of fire, Squeeze handle, Sweep side-to-side until extinguished.'},
+{f:'UPS',b:'Uninterruptible Power Supply. Battery backup providing clean power during outages. Allows graceful server shutdown.'},
+{f:'Surge Protector',b:'Protects from voltage spikes. No battery backup.'},
+{f:'Active Listening',b:'Fully concentrating on user before responding.'},
+{f:'Ticket Lifecycle',b:'Full process: Create, Categorize, Assign, Troubleshoot, Escalate if needed, Resolve, Verify with user, Close and document.'},
+{f:'Impact',b:'Measures scope of damage: how many users/systems affected. Combined with urgency to determine overall priority.'},
+{f:'Urgency',b:'Measures time sensitivity: how quickly the business needs a resolution. Drives SLA response time requirements.'},
+{f:'Severity',b:'How badly the hardware/software is broken.'},
+{f:'Documentation',b:'Record symptoms, root cause, steps, preventive measures. Job not done until paperwork finished.'},
+{f:'Artificial Intelligence',b:'Simulation of human intelligence in machines.'},
+{f:'Machine Learning',b:'AI subset learning from data without explicit programming.'},
+{f:'Generative AI',b:'AI that creates new content (text, images, code) from training patterns. Examples: ChatGPT, Copilot, DALL-E.'},
+{f:'LLM',b:'Large Language Model. Trained on massive text. Powers chatbots.'},
+{f:'AI Hallucination',b:'AI confidently generating factually incorrect or fabricated information. Always verify AI output with trusted sources.'},
+{f:'Training Data Cutoff',b:'Fixed date beyond which an AI model has no knowledge. Answers about events after this date may be wrong.'},
+{f:'AI Bias',b:'Skewed outputs from biased training data.'},
+{f:'Prompt Injection',b:'Malicious inputs overriding AI instructions.'},
+{f:'Deepfake',b:'AI-generated fake audio/video impersonating real people. Used for social engineering, fraud, and misinformation.'},
+{f:'Public AI Model',b:'Shared AI services (ChatGPT, Gemini, Copilot). Never input PII, passwords, or proprietary company data.'},
+{f:'Private AI Model',b:'Deployed internally. Data stays in organization.'},
+{f:'802.1X',b:'IEEE standard for port-based network access control. Authenticates devices before granting network access. Used with RADIUS in enterprise Wi-Fi.'},
+{f:'RADIUS',b:'Remote Authentication Dial-In User Service. Centralized authentication for network access. Ports 1812/1813. Works with 802.1X.'},
+{f:'NAC (Network Access Control)',b:'Enforces policies on devices connecting to a network. Checks device health before granting access. Blocks non-compliant devices.'},
+{f:'QoS (Quality of Service)',b:'Prioritizes certain traffic types (voice, video) for consistent performance. Critical for VoIP.'},
+{f:'WPA2-Enterprise',b:'Wi-Fi security using 802.1X/RADIUS authentication. Each user has unique credentials. Required for corporate environments.'},
+{f:'WPA2-Personal (PSK)',b:'Wi-Fi security using a shared Pre-Shared Key (password). Suitable for home/small office. Not scalable for enterprise.'},
+{f:'Captive Portal',b:'Web page displayed when first connecting to a network before granting internet access. Used in hotels, airports, guest networks.'},
+{f:'Split Tunnel VPN',b:'Only corporate traffic goes through VPN tunnel. Personal internet routes directly. Reduces VPN bandwidth load.'},
+{f:'Full Tunnel VPN',b:'ALL traffic routes through VPN tunnel. Maximum security. All traffic inspected by corporate firewall.'},
+{f:'DHCP Reservation',b:'DHCP server always assigns the same IP to a specific device (by MAC address). Provides static IP consistency with DHCP management.'},
+{f:'DHCP Scope',b:'Range of IP addresses a DHCP server distributes to clients. Example: 192.168.1.100-192.168.1.200.'},
+{f:'DHCP Lease',b:'Time period a DHCP-assigned IP is valid. When expired, device must renew. Typical home lease: 24 hours.'},
+{f:'Port Forwarding (Router)',b:'Router redirects incoming traffic on a specific port to a specific internal device. Used for servers, cameras, gaming.'},
+{f:'Wake-on-LAN (WoL)',b:'Powers on a computer remotely by sending a "magic packet" over the network. Requires WoL enabled in BIOS and NIC.'},
+{f:'Latency',b:'Time delay (milliseconds) for data to travel from source to destination. High latency = slow response. Measured with ping.'},
+{f:'Jitter',b:'Variation in latency over time. Causes audio/video quality issues in VoIP and streaming. QoS helps mitigate.'},
+{f:'Bandwidth vs. Throughput',b:'Bandwidth = maximum theoretical capacity. Throughput = actual speed achieved in practice (always less due to overhead).'},
+{f:'Zero-Day Vulnerability',b:'Software vulnerability unknown to the vendor with no available patch. Attackers exploit before defense exists.'},
+{f:'Attack Surface',b:'Total points where unauthorized access could occur (ports, services, accounts, physical access). Smaller = more secure.'},
+{f:'Honeypot',b:'Decoy system appearing vulnerable to attract and trap attackers. Used to study methods and distract from real systems.'},
+{f:'Penetration Testing',b:'Authorized simulated attacks to identify exploitable vulnerabilities. Different from vulnerability scanning (which only identifies, not exploits).'},
+{f:'Vulnerability Scan',b:'Automated scan identifying known weaknesses (missing patches, misconfigurations, open ports). Does not exploit.'},
+{f:'Encryption at Rest',b:'Data encrypted while stored on a drive. Examples: BitLocker, FileVault, EFS. Protects if physical drive is stolen.'},
+{f:'Encryption in Transit',b:'Data encrypted during network transmission. Examples: HTTPS, VPN, SFTP. Protects from interception.'},
+{f:'Man-in-the-Middle (MitM)',b:'Attacker secretly intercepts communication between two parties. VPNs and HTTPS with valid certificates prevent this.'},
+{f:'Brute Force Attack',b:'Systematically tries every password combination until correct one found. Mitigated by lockout policies, long passwords, MFA.'},
+{f:'Dictionary Attack',b:'Tries common words and known passwords from leaked databases. Faster than brute force. Mitigated by complex unique passwords.'},
+{f:'Credential Stuffing',b:'Using stolen username/password pairs from one breach to attempt login on other services. Mitigated by unique passwords and MFA.'},
+{f:'Shoulder Surfing',b:'Observing someone\'s screen or keyboard to steal credentials. Mitigated by privacy screens and awareness.'},
+{f:'Dumpster Diving',b:'Searching trash for sensitive documents or discarded hardware containing data. Mitigated by shredding.'},
+{f:'Evil Twin Attack',b:'Rogue Wi-Fi AP mimicking a legitimate network (same SSID). Users connect unknowingly. Mitigated by VPN on public Wi-Fi.'},
+{f:'Supply Chain Attack',b:'Compromising a trusted vendor to distribute malware through legitimate update channels. Very difficult to detect.'},
+{f:'Insider Threat',b:'Security risk from people within the organization who have authorized access but misuse it. Mitigated by least privilege and monitoring.'},
+{f:'DLP (Data Loss Prevention)',b:'Tools detecting and preventing sensitive data from leaving the organization via email, USB, cloud, or printing.'},
+{f:'Indicators of Compromise (IoC)',b:'Evidence a system has been breached: unusual traffic, unexpected processes, modified files, failed logins, new accounts.'},
+{f:'Chain of Custody',b:'Documented record tracking who handled evidence, when, and why. Required for legal proceedings and compliance audits.'},
+{f:'Fast Startup (Hybrid Boot)',b:'Saves kernel session to disk during shutdown for faster boot. Can cause issues with dual-boot. Disable via Power Options.'},
+{f:'Secure Boot',b:'UEFI feature only allowing OS signed with trusted certificates to boot. Prevents rootkits. Required by Windows 11.'},
+{f:'CSM (Compatibility Support Module)',b:'UEFI backward compatibility with legacy BIOS boot. Must be disabled for Secure Boot and GPT booting.'},
+{f:'PXE Boot',b:'Preboot Execution Environment. Boots a computer from a network server instead of local storage using DHCP for IP assignment and TFTP to download boot image. Used for OS deployment across multiple machines. Requires PXE-capable NIC enabled in BIOS/UEFI boot order.'},
+{f:'Boot Order',b:'UEFI/BIOS setting determining which device boots first. Changed in firmware settings. Critical for booting from USB or network.'},
+{f:'BCD (Boot Configuration Data)',b:'Database containing Windows boot entries. Corrupted BCD = "bootmgr is missing." Repaired with bootrec /rebuildbcd.'},
+{f:'Windows Memory Diagnostic',b:'Built-in tool (mdsched.exe) testing RAM for errors. Requires reboot. Results in Event Viewer after next login.'},
+{f:'Task Scheduler',b:'Automates script/program execution at specified times or events. Used for scheduled backups and maintenance.'},
+{f:'Performance Monitor (perfmon)',b:'Advanced tool collecting detailed performance data over time using counters. More detailed than Task Manager.'},
+{f:'Credential Manager',b:'Stores saved usernames/passwords for websites and networks. Useful for troubleshooting "access denied" errors.'},
+{f:'ext4',b:'Default Linux file system. Supports journaling, large files (16 TB). Linux equivalent of NTFS.'},
+{f:'APFS (Apple File System)',b:'Apple\'s modern file system replacing HFS+. Optimized for SSD. Supports encryption, snapshots. Default on all modern Apple devices.'},
+{f:'Swap / Page File',b:'Disk space used as virtual memory when RAM is full. Windows: pagefile.sys. Excessive swap = insufficient RAM.'},
+{f:'DaaS (Desktop as a Service)',b:'Virtual desktops hosted in cloud, streamed to thin clients. Provider manages infrastructure. Examples: Amazon WorkSpaces, Azure Virtual Desktop.'},
+{f:'Serverless Computing',b:'Cloud model where provider dynamically allocates resources per-request. No servers to manage. Developer only writes code.'},
+{f:'Multi-Tenant',b:'Multiple customers share same physical infrastructure while data remains logically separated. Standard for public cloud.'},
+{f:'Thin Client',b:'Lightweight computer with minimal processing that connects to a server for its desktop. Low cost, easy to manage, secure.'},
+{f:'Container',b:'Lightweight portable package containing an application and dependencies. Shares host OS kernel. Faster than VMs. Example: Docker.'},
+{f:'Live Migration',b:'Moving a running VM from one host to another with zero downtime. Used for maintenance. VMware: vMotion.'},
+{f:'Virtual Switch (vSwitch)',b:'Software network switch inside a hypervisor connecting VMs to each other and physical network.'},
+{f:'Template (VM)',b:'Pre-configured VM image for rapidly deploying new VMs. Faster than building each from scratch.'},
+{f:'Object Storage',b:'Cloud storage managing data as objects (files + metadata) rather than hierarchies. Examples: AWS S3, Azure Blob.'},
+{f:'CDN (Content Delivery Network)',b:'Geographically distributed servers caching content near end users. Reduces latency. Examples: Cloudflare, AWS CloudFront.'},
+{f:'Availability Zone',b:'Physically separate data center within a cloud region. Deploying across multiple AZs provides fault tolerance.'},
+{f:'Auto-Scaling',b:'Automatically increasing/decreasing running instances based on demand metrics. Implements cloud elasticity.'},
+{f:'Memory Leak',b:'Software defect where an application gradually consumes more RAM without releasing it. Fix: restart app; update software.'},
+{f:'Clean Boot',b:'Starting Windows with minimal drivers and startup programs via msconfig Selective Startup. More granular than Safe Mode.'},
+{f:'Baseline',b:'Documented snapshot of normal system performance. Used as comparison when diagnosing future problems.'},
+{f:'Bottleneck',b:'Single component limiting overall system performance. Identified using Task Manager, Resource Monitor, or Performance Monitor.'},
+{f:'Thermal Throttling',b:'Automatic CPU/GPU speed reduction when max temperature reached. Causes performance loss. Fix: improve cooling, clean dust, reapply thermal paste.'},
+{f:'Driver Roll Back',b:'Reverting device driver to previous version via Device Manager when new driver causes problems.'},
+{f:'Event ID',b:'Unique number for each event type in Windows Event Viewer. Used to research specific errors. Example: ID 41 = unexpected restart.'},
+{f:'DISM',b:'Deployment Image Servicing and Management. /RestoreHealth repairs component store sfc relies on. Run before retrying failed sfc.'},
+{f:'Windows Update Troubleshooter',b:'Built-in automated diagnostic fixing common Windows Update problems. Settings, Troubleshoot, Other troubleshooters.'},
+{f:'Network Reset (Windows)',b:'Removes and reinstalls all network adapters, resets networking to defaults. Last resort for persistent network issues.'},
+{f:'Incident Response Plan',b:'Documented procedures for detecting, responding to, containing, and recovering from security incidents. Defines roles and escalation.'},
+{f:'Root Cause Analysis',b:'Systematic process identifying the fundamental cause of a problem (not symptoms). Common method: "5 Whys."'},
+{f:'Scope Creep',b:'Gradual expansion of project requirements beyond original agreement. In IT: a quick fix ticket evolving into full rebuild.'},
+{f:'Escalation Matrix',b:'Chart defining who to contact as issues increase in severity or remain unresolved beyond SLA thresholds.'},
+{f:'Triage',b:'Quickly assessing and prioritizing incoming tickets based on severity and impact. Determines order issues are addressed.'},
+{f:'Rollback Plan',b:'Pre-defined procedure for reverting a system to previous state if a change causes problems. Required before implementation.'},
+{f:'Maintenance Window',b:'Pre-scheduled time period for IT changes and reboots with minimal user impact. Defined in SLA.'},
+{f:'MTTR (Mean Time to Repair)',b:'Average time to repair a failed system. Lower MTTR = better incident response. Key IT performance metric.'},
+{f:'MTBF (Mean Time Between Failures)',b:'Average operating time between failures. Higher MTBF = more reliable. Used for hardware replacement planning.'},
+{f:'e-Waste',b:'Discarded electronics requiring special disposal due to hazardous materials. Must be recycled through certified recyclers, not regular trash.'},
+{f:'MSDS/SDS (Safety Data Sheet)',b:'Document describing hazards, handling, and disposal for chemical substances. Relevant for toner, cleaning chemicals, batteries.'},
+{f:'Separation of Duties',b:'Security principle dividing critical tasks among multiple people so no single person has complete control.'},
+{f:'Journaling',b:'File system feature logging changes before committing to disk. Prevents corruption after unexpected shutdowns. NTFS and ext4 use journaling.'},
+{f:'EFS (Encrypting File System)',b:'Windows file-level encryption on NTFS. Tied to user\'s account. Different from BitLocker (whole volume). Pro/Enterprise only.'},
+{f:'Disk Quota',b:'NTFS feature limiting per-user storage consumption on a shared volume. Prevents single user from filling shared drive.'},
+{f:'Volume Shadow Copy (VSS)',b:'Windows service creating point-in-time snapshots. Powers System Restore and "Previous Versions" file recovery. NTFS only.'},
+{f:'Allocation Unit Size',b:'Smallest disk space unit a file system can allocate. Larger clusters = better performance for large files but waste space for small files.'},
+{f:'ESP (EFI System Partition)',b:'Small FAT32 partition (~100-500 MB) required on GPT drives for UEFI boot. Contains bootloader. Created during Windows install.'},
+{f:'Recovery Partition',b:'Hidden partition containing WinRE tools and/or factory image. Used by Reset This PC. Should not be deleted.'},
+{f:'Storage Spaces',b:'Windows feature pooling multiple drives into single logical pool with mirroring, parity, or simple options. Software RAID alternative.'},
+{f:'Trim (SSD)',b:'Command informing SSD which blocks are no longer used so drive can erase proactively. Maintains write performance. Auto-enabled on modern Windows.'},
+{f:'Wear Leveling',b:'SSD firmware distributing writes evenly across all cells to prevent premature failure. Extends SSD lifespan.'},
+{f:'Dynamic Disk',b:'Windows disk configuration supporting spanning, striping, and mirroring across drives. Less common in consumer systems.'},
+{f:'Basic Disk',b:'Default Windows disk type using standard MBR or GPT partition tables. Most common configuration.'},
+{f:'RTOS (Real-Time OS)',b:'Specialized OS for embedded systems requiring guaranteed response times. Used in medical devices, industrial controllers, automotive.'},
+{f:'SoC (System on a Chip)',b:'Single chip combining CPU, memory, GPU, and I/O. Common in smartphones and IoT devices. Examples: Apple M-series, Snapdragon.'},
+{f:'Firmware',b:'Software stored in flash memory on embedded devices. Updated via firmware update, not traditional installation.'},
+{f:'OTA Update',b:'Over-the-Air update. Firmware delivered wirelessly without physical access. Standard for smartphones and IoT.'},
+{f:'SCADA',b:'Supervisory Control and Data Acquisition. Industrial systems for critical infrastructure. Must be air-gapped from internet.'},
+{f:'PLC',b:'Programmable Logic Controller. Industrial computer controlling manufacturing automation. Must be on isolated networks.'},
+{f:'Air Gap',b:'Physically isolating a system from all networks including internet. Strongest security. Used for SCADA, military, classified.'},
+{f:'Zigbee',b:'Low-power mesh protocol (250 Kbps, 2.4 GHz) for smart lighting and home automation. Requires hub for IP integration.'},
+{f:'Z-Wave',b:'Proprietary low-power mesh protocol for home automation. Sub-1 GHz frequencies. Range 30-100m per hop.'},
+{f:'Matter',b:'Universal smart home standard by Apple, Google, Amazon, Samsung. Unifies IoT ecosystems for device interoperability.'},
+{f:'Thread',b:'IPv6-based low-power mesh networking for IoT. Transport layer for Matter standard. Self-healing mesh.'},
+{f:'Edge Computing',b:'Processing data locally on/near IoT device rather than sending to cloud. Reduces latency and bandwidth usage.'},
+{f:'CAN Bus',b:'Controller Area Network. Communication protocol in vehicles allowing embedded controllers to communicate without central computer.'},
+{f:'Field-Replaceable Unit (FRU)',b:'Component designed to be replaced by a technician without returning the device to the manufacturer. Examples: RAM, HDD, Wi-Fi card, battery, keyboard, I/O board.'},
+{f:'SO-DIMM vs DIMM',b:'SO-DIMM (260-pin DDR4) is for laptops; DIMM (288-pin DDR4) is for desktops. Different physical sizes, NOT interchangeable.'},
+{f:'Unitary Construction',b:'Smartphone design where all components are sealed together. Not field-serviceable. Opening typically voids warranty.'},
+{f:'PPG (Photoplethysmography)',b:'Technology used in fitness trackers and smartwatches to measure heart rate using light sensors on the wrist.'},
+{f:'watchOS',b:'Apple\'s operating system for Apple Watch. Supports notifications, NFC payments, LTE, and health monitoring.'},
+{f:'Wear OS',b:'Google\'s operating system for smartwatches. Previously called Android Wear. Works with Android and iOS phones.'},
+{f:'Fire OS',b:'Amazon\'s modified Android operating system used on Fire tablets and Fire TV devices. Uses Amazon Appstore instead of Google Play.'},
+{f:'Lightning Port',b:'Apple\'s proprietary 8-pin connector used on older iPhones/iPads. Now largely obsolete as Apple transitions to USB-C.'},
+{f:'Spudger',b:'Plastic prying tool used to open device cases and disconnect ribbon cables without causing damage or ESD.'},
+{f:'Ribbon Cable',b:'Flat, flexible cable connecting internal components in laptops. Delicate connectors with plastic clamps. Not designed for frequent disconnection.'},
+{f:'I/O Board',b:'Small separate circuit board in laptops controlling external ports (USB, audio). Connected to motherboard via ribbon cable. Common FRU.'},
+{f:'Thermal Conductor',b:'Copper heat pipe transferring heat from CPU to fan assembly in laptops. Part of the cooling system.'},
+{f:'In-Place Clone',b:'Storage migration method that copies entire drive sector-by-sector to new drive. Fastest migration method.'},
+{f:'Backup and Restore (migration)',b:'Storage migration using backup software to image old drive then restore to new drive. Safest method but slower.'},
+{f:'Mini PCI / M.2 (wireless)',b:'Expansion card slots for laptop wireless cards. Modern laptops use M.2 Key E slot for Wi-Fi/Bluetooth combo cards.'},
+{f:'WWAN Card',b:'Cellular data card installed in laptop M.2 slot providing mobile broadband. Requires SIM card and carrier plan.'},
+{f:'IKEv2/IPSec',b:'VPN protocol offering strong encryption and stability. Good for mobile devices that switch between Wi-Fi and cellular.'},
+{f:'L2TP/IPSec',b:'Legacy VPN protocol combining L2TP tunneling with IPSec encryption. Being replaced by more modern solutions.'},
+{f:'PPTP',b:'Oldest VPN protocol. Very weak encryption (broken). Should never be used for security. Only acceptable for non-sensitive tunneling.'},
+{f:'Wi-Fi 6E',b:'Extension of Wi-Fi 6 (802.11ax) adding the 6 GHz band. Less interference, more channels, lower latency. Requires 6E-capable devices.'},
+{f:'OFDMA (Wi-Fi)',b:'Orthogonal Frequency Division Multiple Access. Wi-Fi 6 technology dividing channels into resource units for simultaneous multi-user transmission.'},
+{f:'Target Wake Time (TWT)',b:'Wi-Fi 6 feature scheduling when devices wake to send/receive data. Improves battery life for IoT and mobile devices.'},
+{f:'MLO (Multi-Link Operation)',b:'Wi-Fi 7 feature allowing simultaneous transmission across multiple bands (2.4/5/6 GHz). Dramatically increases throughput and reliability.'},
+{f:'BSS Coloring',b:'Wi-Fi 6 technique marking frames with color identifiers to reduce interference from overlapping networks in dense environments.'},
+{f:'SSID Broadcasting',b:'Router setting that makes the network name visible to nearby devices. Disabling hides network but doesn\'t provide real security.'},
+{f:'Channel Bonding',b:'Combining adjacent Wi-Fi channels (20/40/80/160 MHz) for higher throughput. Wider channels = faster but fewer available in the band.'},
+{f:'Omnidirectional Antenna',b:'Wi-Fi antenna radiating signal equally in all directions (360\u00B0). Standard in most consumer routers and access points.'},
+{f:'Directional Antenna',b:'Focuses Wi-Fi signal in one direction for longer range. Used for point-to-point links or targeting specific coverage areas.'},
+{f:'ISP (Internet Service Provider)',b:'Company providing internet connectivity. Common types: cable, DSL, fiber, satellite, cellular. Assigns public IP via DHCP to customer router.'},
+{f:'Coaxial Cable (RG-6)',b:'Cable used for cable internet and TV. Single copper core with braided shielding. F-type connector. Maximum ~1 Gbps (DOCSIS 3.1).'},
+{f:'DSL (Digital Subscriber Line)',b:'Internet over phone lines. ADSL=asymmetric speeds. Slower than cable/fiber. Speed degrades with distance from CO (Central Office).'},
+{f:'Fiber to the Premises (FTTP)',b:'Fiber optic cable running directly to customer location. Fastest residential option. Symmetrical upload/download speeds possible.'},
+{f:'DOCSIS',b:'Data Over Cable Service Interface Specification. Standard for cable internet. DOCSIS 3.1 supports up to 10 Gbps download.'},
+{f:'Crossover Cable',b:'Ethernet cable with TX/RX pairs swapped at one end. Legacy use: connecting two similar devices directly. Modern devices use Auto-MDI-X instead.'},
+{f:'Auto-MDI-X',b:'Modern switch/NIC feature automatically detecting cable type and adjusting pin assignments. Eliminates need for crossover cables.'},
+{f:'T568A / T568B',b:'Wiring standards for RJ-45 Ethernet connectors. T568B is most common in commercial installations. Both ends must match for straight-through.'},
+{f:'Punch-Down Block (66/110)',b:'Termination point for network cables in wiring closets. 66 block = legacy phone. 110 block = modern data/voice. Used with patch panels.'},
+{f:'Patch Panel',b:'Central connection point in a network closet. Wall ports terminate on back; patch cables connect front to switch ports. Organized cable management.'},
+{f:'OTDR',b:'Optical Time Domain Reflectometer. Tests fiber optic cables for breaks, splices, and signal loss by sending light pulses and measuring reflections.'},
+{f:'SC / LC / ST Connectors',b:'Fiber optic connector types. SC=square (push-pull). LC=small form-factor (most common). ST=round (bayonet twist). Not interchangeable.'},
+{f:'SFP / SFP+ Transceiver',b:'Small Form-factor Pluggable module converting electrical signals to fiber optic. SFP=1G, SFP+=10G. Hot-swappable in switch slots.'},
+{f:'PoE+ / PoE++',b:'Enhanced Power over Ethernet. PoE=15.4W (802.3af), PoE+=30W (802.3at), PoE++=60-100W (802.3bt). Powers cameras, WAPs, phones.'},
+{f:'Managed vs Unmanaged Switch',b:'Managed switches support VLANs, QoS, port mirroring, SNMP. Unmanaged are plug-and-play with no configuration options. Enterprise uses managed.'},
+{f:'Port Mirroring / SPAN',b:'Copies traffic from one switch port to another for monitoring/analysis. Used by IDS/IPS and packet capture tools.'},
+{f:'SNMP Trap',b:'Unsolicited alert sent from network device to SNMP management station when a threshold is exceeded or event occurs. UDP port 162.'},
+{f:'Syslog',b:'Standard protocol for sending log messages to a central server. UDP port 514. Used for event monitoring across network devices.'},
+{f:'NetBIOS',b:'Legacy Windows networking protocol for name resolution and file sharing on local networks. Ports 137-139. Being replaced by DNS/SMB.'},
+{f:'WINS',b:'Windows Internet Name Service. Legacy NetBIOS name resolution. Replaced by DNS in modern networks but may appear on exam.'},
+{f:'mDNS (Multicast DNS)',b:'Zero-configuration name resolution for local networks without DNS server. Used by Apple Bonjour and Linux Avahi. Port 5353.'},
+{f:'VDI (Virtual Desktop Infrastructure)',b:'On-premises hosted virtual desktops running on organization\'s own servers. More control than DaaS but requires own hardware management.'},
+{f:'Metered Utilization',b:'Cloud billing model where customers pay only for resources actually consumed. Core advantage of cloud computing economics.'},
+{f:'Rapid Elasticity',b:'Cloud capability to quickly scale resources up or down based on demand. Appears unlimited to the consumer. Key cloud advantage on exam.'},
+{f:'Resource Pooling',b:'Cloud provider serving multiple tenants from shared physical resources. Resources dynamically assigned based on demand. Multi-tenant model.'},
+{f:'Measured Service',b:'Cloud systems automatically controlling and optimizing resource use. Provides transparency for both provider and consumer via monitoring.'},
+{f:'On-Demand Self-Service',b:'Cloud consumer can provision resources (storage, VMs) automatically without requiring human interaction with service provider.'},
+{f:'Imaging Drum (OPC)',b:'Photosensitive cylinder in laser printers. Light from laser creates electrostatic image. Scratches cause repeating defects. Light-sensitive component.'},
+{f:'Pickup Roller',b:'Rubber roller that grips paper from tray and feeds it into printer. Worn/glazed rollers cause paper jams and no-feed errors. Clean with IPA.'},
+{f:'Separation Pad',b:'Friction pad preventing multiple sheets from feeding simultaneously. Worn pad = multi-page feeds. Replace together with pickup roller.'},
+{f:'Maintenance Kit',b:'Scheduled replacement set for laser printers (typically every 200K pages). Includes fuser, rollers, separation pad. Resets page counter.'},
+{f:'Virtual Printing',b:'Printing to file or cloud rather than physical printer. Examples: Print to PDF, XPS, cloud print services. No physical output device needed.'},
+{f:'Microcontroller',b:'Single-chip computer designed for specific tasks in embedded systems. Contains CPU, memory, I/O on one chip. Arduino is a common example.'},
+{f:'Matter Protocol',b:'Universal smart home standard developed by Apple, Google, Amazon, Samsung. Unifies IoT device ecosystems for interoperability over IP.'},
+{f:'OTA Update (Over-the-Air)',b:'Firmware or OS update delivered wirelessly to devices. Standard for smartphones and IoT. No physical access required.'},
+{f:'WinRE (Windows Recovery)',b:'Windows Recovery Environment. Boot menu with Startup Repair, Reset This PC, System Restore, Command Prompt. Accessed via failed boots or install media.'},
+{f:'LLM (Large Language Model)',b:'AI model trained on massive text datasets powering chatbots and content generation. Base technology behind ChatGPT, Copilot, Gemini.'},
+{f:'Training Data Bias',b:'AI producing skewed or discriminatory outputs because training data contained imbalanced or prejudiced content. Leads to unfair recommendations.'},
+{f:'Public vs Private AI',b:'Public AI (ChatGPT, Gemini) = shared service, never input secrets/PII. Private AI = deployed internally, data stays in organization. Know the difference.'},
+{f:'DHCP (Ports)',b:'Ports 67/68 (UDP). IP assignment. Server=67, Client=68. DORA process: Discover, Offer, Request, Acknowledge.'},
+{f:'RDP (Remote Access)',b:'Port 3389 (TCP). Windows remote desktop protocol. Never expose directly to internet without VPN. Pro/Enterprise to host.'},
+{f:'VNC (Remote Access)',b:'Port 5900. Cross-platform screen sharing. Needs VPN for security.'},
+{f:'Windows Sandbox (Security)',b:'Lightweight disposable VM in Pro/Enterprise for safely testing suspicious files. Destroyed when closed.'}
+];
+
+let currentIndex = 0;
+let deck = [...cards];
+
+const cardEl = document.getElementById('card');
+const cardFront = document.getElementById('cardFront');
+const cardBack = document.getElementById('cardBack');
+const counter = document.getElementById('counter');
+const progressBar = document.getElementById('progressBar');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const cardScene = document.getElementById('cardScene');
+
+function showCard() {
+  cardEl.classList.remove('flipped');
+  const c = deck[currentIndex];
+  cardFront.textContent = c.f;
+  cardBack.textContent = c.b;
+  counter.textContent = `${currentIndex + 1} / ${deck.length}`;
+  progressBar.style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
+}
+
+function flipCard() {
+  cardEl.classList.toggle('flipped');
+}
+
+function nextCard() {
+  if (currentIndex < deck.length - 1) {
+    currentIndex++;
+    showCard();
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showCard();
+  }
+}
+
+function shuffle() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  currentIndex = 0;
+  showCard();
+}
+
+cardScene.addEventListener('click', flipCard);
+prevBtn.addEventListener('click', prevCard);
+nextBtn.addEventListener('click', nextCard);
+shuffleBtn.addEventListener('click', shuffle);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') prevCard();
+  else if (e.key === 'ArrowRight') nextCard();
+  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+});
+
+showCard();
+</script>
+</body>
+</html>

@@ -1,506 +1,266 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-
-<svg
-   version="1.1"
-   id="Layer_1"
-   x="0px"
-   y="0px"
-   viewBox="0 0 717.44003 963"
-   xml:space="preserve"
-   sodipodi:docname="troubleshooting-methodology.svg"
-   width="717.44"
-   height="963"
-   inkscape:export-filename="troubleshooting-methodology.jpg"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
-   id="defs49" /><sodipodi:namedview
-   id="namedview49"
-   pagecolor="#ffffff"
-   bordercolor="#000000"
-   borderopacity="0.25"
-   inkscape:showpageshadow="2"
-   inkscape:pageopacity="0.0"
-   inkscape:pagecheckerboard="0"
-   inkscape:deskcolor="#d1d1d1"
-   showguides="true"><sodipodi:guide
-     position="590.70634,752.21933"
-     orientation="1,0"
-     id="guide53"
-     inkscape:locked="false" /><inkscape:page
-     x="0"
-     y="0"
-     width="717.44"
-     height="963"
-     id="page2"
-     margin="0"
-     bleed="0" /></sodipodi:namedview>
-<style
-   type="text/css"
-   id="style1">
-	.st0{fill:none;stroke:#C0392B;stroke-width:2;}
-	.st1{fill:none;stroke:#1E8449;stroke-width:2;}
-	.st2{fill:#27AE60;}
-	.st3{fill:#2C3E50;}
-	.st4{font-family:'Arial-BoldMT';}
-	.st5{font-size:22px;}
-	.st6{fill:#7F8C8D;}
-	.st7{font-family:'ArialMT';}
-	.st8{font-size:13px;}
-	.st9{fill:#2980B9;stroke:#1A5276;stroke-width:2;}
-	.st10{fill:#FFFFFF;}
-	.st11{font-size:15px;}
-	.st12{fill:#D6EAF8;}
-	.st13{font-size:11px;}
-	.st14{fill:none;}
-	.st15{fill:#3498DB;}
-	.st16{fill:#E67E22;stroke:#D35400;stroke-width:2;}
-	.st17{font-size:12px;}
-	.st18{fill:#C0392B;}
-	.st19{fill:#E67E22;}
-	.st20{fill:#27AE60;stroke:#1E8449;stroke-width:2;}
-	.st21{fill:#FFFFFF;stroke:#DEE2E6;}
-	.st22{fill:#2980B9;}
-	.st23{fill:#333333;}
-	.st24{font-size:10px;}
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 728.6 942.8" style="enable-background:new 0 0 728.6 942.8;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:none;stroke:#888888;}
+	.st2{fill:#1F497D;}
+	.st3{fill:#888888;}
+	.st4{font-family:'SegoeUI';}
+	.st5{font-size:10.4585px;}
+	.st6{fill:#E67E22;}
+	.st7{fill:none;stroke:#27AE60;stroke-width:2.5;}
+	.st8{fill:#27AE60;}
+	.st9{fill:none;stroke:#C0392B;stroke-width:2.5;}
+	.st10{fill:#C0392B;}
+	.st11{fill:none;stroke:#3498DB;stroke-width:2;stroke-miterlimit:10;}
+	.st12{fill:none;stroke:#27AE60;stroke-width:2;stroke-miterlimit:10;}
+	.st13{fill:none;stroke:#C0392B;stroke-width:2;}
+	.st14{fill:#2980B9;}
+	.st15{font-family:'SegoeUI-Bold';}
+	.st16{font-size:22px;}
+	.st17{font-family:'SegoeUI-Italic';}
+	.st18{font-size:13px;}
+	.st19{fill:#FFFFFF;}
+	.st20{font-size:14px;}
+	.st21{opacity:0.9;fill:#FFFFFF;enable-background:new    ;}
+	.st22{font-size:11px;}
+	.st23{font-size:12px;}
+	.st24{fill:#3498DB;}
+	.st25{font-size:16px;}
+	.st26{enable-background:new    ;}
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<g
-   id="g53"
-   transform="translate(-58.436011,-71)"><line
-     class="st0"
-     x1="213"
-     y1="115"
-     x2="169"
-     y2="115"
-     id="line1" /><g
-     id="g10">
-	<line
-   class="st1"
-   x1="400"
-   y1="116"
-   x2="400"
-   y2="999"
-   id="line2" />
-	<g
-   id="g9">
-		<polygon
-   class="st2"
-   points="400,172.7 388.8,157 411.2,157 "
-   id="polygon2" />
-		<polygon
-   class="st2"
-   points="400,518.7 388.8,503 411.2,503 "
-   id="polygon3" />
-		<polygon
-   class="st2"
-   points="400,627.6 388.8,611.9 411.2,611.9 "
-   id="polygon4" />
-		
-		<polygon
-   class="st2"
-   points="400,973.4 388.8,957.6 411.2,957.6 "
-   id="polygon6" />
-		
-		<polygon
-   class="st2"
-   points="400,277.2 388.8,261.5 411.2,261.5 "
-   id="polygon8" />
-		<polygon
-   class="st2"
-   points="400,381.4 388.8,365.6 411.2,365.6 "
-   id="polygon9" />
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<path class="st0" d=""/>
+<g>
+	<path class="st1" d="M161.1,846H41.6c-8.2,0-14.9-6.7-14.9-14.9v-96.7c0-8.2,6.7-14.9,14.9-14.9h119.5c8.2,0,14.9,6.7,14.9,14.9
+		v96.7C176,839.3,169.3,846,161.1,846z"/>
+	<path class="st2" d="M41.5,729.1h20.9c2.1,0,3.8,1.7,3.8,3.8v5.7c0,2.1-1.7,3.8-3.8,3.8H41.5c-2.1,0-3.8-1.7-3.8-3.8v-5.7
+		C37.7,730.8,39.4,729.1,41.5,729.1z"/>
+	<text transform="matrix(1 0 0 1 73.0727 739.603)" class="st3 st4 st5">Process Step</text>
+	<polygon class="st6" points="37.7,801.8 47.2,795.2 56.7,801.8 47.2,808.5 	"/>
+	<text transform="matrix(1 0 0 1 73.0727 805.6166)" class="st3 st4 st5">Decision Point</text>
+	<g>
+		<line class="st7" x1="37.7" y1="757.1" x2="66.2" y2="757.1"/>
+		<polygon class="st8" points="63.3,754.2 69,757.1 63.3,759.9 		"/>
 	</g>
-</g><text
-     class="st3 st4 st5"
-     id="text10"
-     x="-741.91699"
-     y="106.76194"
-     transform="rotate(-90)"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#2c3e50">CompTIA Troubleshooting Methodology</text><path
-     class="st9"
-     d="m 245,80 h 310 c 11,0 20,9 20,20 v 30 c 0,11 -9,20 -20,20 H 245 c -11,0 -20,-9 -20,-20 v -30 c 0,-11 9,-20 20,-20 z"
-     id="path11" /><text
-     class="st10 st4 st11"
-     id="text12"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="313.42969"
-     y="108">Step 1: Identify the Problem</text><text
-     class="st12 st7 st13"
-     id="text13"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="257.61328"
-     y="126">Gather info, question users, identify changes,</text><text
-     class="st12 st7 st13"
-     id="text14"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="257.47266"
-     y="143">reproduce the problem, check documentation</text><path
-     class="st9"
-     d="m 245,182 h 310 c 11,0 20,9 20,20 v 30 c 0,11 -9,20 -20,20 H 245 c -11,0 -20,-9 -20,-20 v -30 c 0,-11 9,-20 20,-20 z"
-     id="path15" /><text
-     class="st10 st4 st11"
-     id="text15"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="258.56641"
-     y="210">Step 2: Establish a Theory of Probable Cause</text><text
-     class="st12 st7 st13"
-     id="text16"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="234.67578"
-     y="228">Question the obvious, consider multiple approaches,</text><text
-     class="st12 st7 st13"
-     id="text17"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="243.86328"
-     y="245">research based on symptoms (simple to complex)</text><path
-     class="st9"
-     d="m 245,285 h 310 c 11,0 20,9 20,20 v 30 c 0,11 -9,20 -20,20 H 245 c -11,0 -20,-9 -20,-20 v -30 c 0,-11 9,-20 20,-20 z"
-     id="path18" /><text
-     transform="scale(0.97220467,1.02859)"
-     class="st10 st4 st11"
-     id="text18"
-     x="275.96335"
-     y="304.30008"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.972205">Step 3: Test the Theory to Determine Cause</text><text
-     class="st12 st7 st13"
-     id="text19"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="275.75781"
-     y="331">Confirm theory, test to verify root cause</text><text
-     class="st12 st7 st13"
-     id="text20"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="251.29297"
-     y="348">If theory not confirmed, re-establish new theory</text><path
-     marker-end="url(#arrow-down)"
-     class="st15"
-     d="M 400,385"
-     id="path21" /><polygon
-     class="st16"
-     points="400,390 510,440 400,490 290,440 "
-     id="polygon21"
-     style="fill:#f9f9f9" /><text
-     class="st18 st4 st17"
-     id="text23"
-     style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#c0392b"
-     x="459.00391"
-     y="445">No</text><line
-     class="st0"
-     x1="510"
-     y1="440"
-     x2="620"
-     y2="440"
-     id="line23" /><line
-     class="st0"
-     x1="620"
-     y1="440"
-     x2="620"
-     y2="216"
-     id="line24" /><path
-     marker-end="url(#arrow-left)"
-     class="st19"
-     d="M 400,216"
-     id="path25" /><text
-     transform="rotate(90)"
-     class="st18 st7 st17"
-     id="text25"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#c0392b"
-     x="240.85075"
-     y="-636.56451">Re-establish theory</text><g
-     id="g49"
-     transform="translate(-3.6504517,-8.9329309)"><text
-       class="st10 st4 st17"
-       id="text21"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
-       x="378.09766"
-       y="435">Theory</text><text
-       class="st10 st4 st17"
-       id="text22"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
-       x="368.83014"
-       y="452">Confirmed?</text></g><text
-     class="st2 st4 st17"
-     id="text26"
-     style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#27ae60"
-     x="380.92767"
-     y="467.06708">Yes</text><path
-     class="st9"
-     d="m 245,532 h 310 c 11,0 20,9 20,20 v 30 c 0,11 -9,20 -20,20 H 245 c -11,0 -20,-9 -20,-20 v -30 c 0,-11 9,-20 20,-20 z"
-     id="path27" /><text
-     class="st10 st4 st11"
-     id="text27"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="296.17969"
-     y="557">Step 4: Establish a Plan of Action</text><text
-     class="st12 st7 st13"
-     id="text28"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="295.36719"
-     y="577">Plan the fix, notify affected users,</text><text
-     class="st12 st7 st13"
-     id="text29"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="248.47656"
-     y="594">consider impacts, refer to vendor docs if needed</text><path
-     class="st9"
-     d="m 245,637 h 310 c 11,0 20,9 20,20 v 30 c 0,11 -9,20 -20,20 H 245 c -11,0 -20,-9 -20,-20 v -30 c 0,-11 9,-20 20,-20 z"
-     id="path30" /><text
-     class="st10 st4 st11"
-     id="text30"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="266.95703"
-     y="663">Step 5: Implement the Solution or Escalate</text><text
-     class="st12 st7 st13"
-     id="text31"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="279.78516"
-     y="681">Apply fix, escalate if beyond expertise,</text><text
-     class="st12 st7 st13"
-     id="text32"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="301.42188"
-     y="698">test to verify the solution works</text><polygon
-     class="st16"
-     points="400,740 510,790 400,840 290,790 "
-     id="polygon32"
-     style="fill:#f9f9f9" /><text
-     class="st18 st4 st17"
-     id="text35"
-     style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#c0392b"
-     x="309.00391"
-     y="797">No</text><line
-     class="st0"
-     x1="290"
-     y1="790"
-     x2="170"
-     y2="790"
-     id="line35" /><line
-     class="st0"
-     x1="170"
-     y1="790"
-     x2="170"
-     y2="115"
-     id="line36" /><polygon
-     class="st2"
-     points="388.8,852.6 411.2,852.6 400,868.4 "
-     id="polygon7-0"
-     style="fill:#27ae60"
-     transform="translate(0,-3.1197101)" /><polygon
-     class="st19"
-     points="206,105 220,115 206,125 "
-     id="polygon36" /><polygon
-     class="st19"
-     points="220,115 206,125 206,105 "
-     id="polygon36-8"
-     style="fill:#e67e22"
-     transform="translate(237.18959,323.42837)" /><path
-     marker-end="url(#arrow-right)"
-     class="st19"
-     d="M 400,115"
-     id="path37" /><text
-     transform="rotate(-90)"
-     class="st18 st7 st17"
-     id="text37"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#c0392b"
-     x="-588.62653"
-     y="155">Start over - re-identify problem</text><g
-     id="g50"
-     transform="translate(-9.5599657,3.0716264)"><text
-       class="st10 st4 st17"
-       id="text33"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
-       x="374.88022"
-       y="783">Problem</text><text
-       class="st10 st4 st17"
-       id="text34"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
-       x="370.64062"
-       y="800">Resolved?</text></g><text
-     class="st2 st4 st17"
-     id="text38"
-     style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:18.6667px;font-family:Arial;-inkscape-font-specification:'Arial, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#27ae60"
-     x="382.00778"
-     y="828.53125">Yes</text><path
-     marker-end="url(#arrow-down)"
-     class="st15"
-     d="M 400,870"
-     id="path39" /><path
-     class="st9"
-     d="m 245,877 h 310 c 11,0 20,9 20,20 v 30 c 0,11 -9,20 -20,20 H 245 c -11,0 -20,-9 -20,-20 v -30 c 0,-11 9,-20 20,-20 z"
-     id="path40" /><text
-     class="st10 st4 st11"
-     id="text40"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="277.00781"
-     y="903">Step 6: Verify Full System Functionality</text><text
-     class="st12 st7 st13"
-     id="text41"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="236.10938"
-     y="923">Confirm resolution, implement preventive measures,</text><text
-     class="st12 st7 st13"
-     id="text42"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="264.40234"
-     y="940">document findings, communicate with user</text><path
-     marker-end="url(#arrow-down)"
-     class="st15"
-     d="M 400,975"
-     id="path43" /><path
-     class="st20"
-     d="m 345,982 h 110 c 11,0 20,9 20,20 v 0 c 0,11 -9,20 -20,20 H 345 c -11,0 -20,-9 -20,-20 v 0 c 0,-11 9,-20 20,-20 z"
-     id="path44" /><text
-     class="st10 st4 st8"
-     id="text44"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Bold Condensed';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-     x="364.24219"
-     y="1007">RESOLVED</text><line
-     class="st0"
-     x1="620"
-     y1="217"
-     x2="589"
-     y2="217"
-     id="line48" /><polygon
-     class="st19"
-     points="594,206 580,216 594,226 "
-     id="polygon48" /><polygon
-     class="st19"
-     points="594,226 594,206 580,216 "
-     id="polygon48-3"
-     style="fill:#e67e22"
-     transform="rotate(90,242.88908,143.11092)" /><polygon
-     class="st19"
-     points="580,216 594,226 594,206 "
-     id="polygon48-3-9"
-     style="fill:#e67e22"
-     transform="rotate(90,528.68959,307.31041)" /><polygon
-     class="st19"
-     points="594,206 580,216 594,226 "
-     id="polygon48-3-7"
-     style="fill:#e67e22"
-     transform="translate(-242.05204,574.42837)" /><g
-     id="g52"
-     transform="matrix(0.76526635,0,0,1,179.41197,2.0796738)"><path
-       class="st22"
-       d="m 627.70632,77.568776 h 6 c 3.9,0 7,3.1 7,7 v 0 c 0,3.9 -3.1,7 -7,7 h -6 c -3.9,0 -7,-3.1 -7,-7 v 0 c 0,-3.9 3.1,-7 7,-7 z"
-       id="path46" /><text
-       class="st23 st7 st24"
-       id="text46"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-       x="650.70636"
-       y="88.568764">Process Step</text><polygon
-       class="st19"
-       points="30,142 40,137 50,142 40,147 "
-       id="polygon46"
-       style="fill:#ffffff;fill-opacity:0.988235;stroke:#d76114;stroke-width:1.1;stroke-dasharray:none;stroke-opacity:1"
-       transform="translate(590.70632,-36.431224)" /><text
-       class="st23 st7 st24"
-       id="text47"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-       x="650.70636"
-       y="109.56876">Decision Point</text><line
-       class="st0"
-       x1="620.70636"
-       y1="125.56876"
-       x2="640.70636"
-       y2="125.56876"
-       id="line47" /><text
-       class="st23 st7 st24"
-       id="text48"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-       x="650.70636"
-       y="129.56876">Loop Back (No)</text><line
-       class="st1"
-       x1="620.70636"
-       y1="145.56876"
-       x2="640.70636"
-       y2="145.56876"
-       id="line49" /><text
-       class="st23 st7 st24"
-       id="text49"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
-       x="650.70636"
-       y="149.56888">Process (Yes)</text><polygon
-       class="st19"
-       points="594,226 594,206 580,216 "
-       id="polygon48-3-0"
-       style="fill:#e67e22"
-       transform="matrix(0,1,-1.3067346,0,1242.736,-474.07967)" /></g></g>
+	<text transform="matrix(1 0 0 1 73.0727 760.8793)" class="st3 st4 st5">Yes / Forward Flow</text>
+	<g>
+		<line class="st9" x1="37.7" y1="823.1" x2="66.2" y2="823.1"/>
+		<polygon class="st10" points="63.3,820.2 69,823.1 63.3,825.9 		"/>
+	</g>
+	<text transform="matrix(1 0 0 1 73.0727 826.894)" class="st3 st4 st5">No / Loop Back</text>
+	<path class="st8" d="M43.4,773.3h17.1c3.2,0,5.7,2.6,5.7,5.7l0,0c0,3.2-2.6,5.7-5.7,5.7H43.4c-3.2,0-5.7-2.6-5.7-5.7l0,0
+		C37.7,775.8,40.2,773.3,43.4,773.3z"/>
+	<text transform="matrix(1 0 0 1 73.0727 782.7729)" class="st3 st4 st5">Resolution Complete</text>
+</g>
+<g>
+	<line id="line36_2_" class="st11" x1="391.7" y1="366" x2="391.7" y2="102.5"/>
+	<line id="line36_5_" class="st12" x1="391.7" y1="896.3" x2="391.7" y2="440"/>
+	<line id="line36_4_" class="st11" x1="391.7" y1="598.9" x2="391.7" y2="522.8"/>
+	<line id="line36_3_" class="st11" x1="391.7" y1="789.3" x2="391.7" y2="752.8"/>
+	<line id="line35" class="st13" x1="308.7" y1="621.3" x2="90.7" y2="621.3"/>
+	<line id="line35_1_" class="st13" x1="330.2" y1="400.3" x2="157.2" y2="400.3"/>
+	<text transform="matrix(1 0 0 1 145.4927 35.7732)" class="st14 st15 st16">CompTIA 6-Step Troubleshooting Methodology</text>
+	<text transform="matrix(1 0 0 1 191.4207 55.7732)" class="st3 st17 st18">Official CompTIA A+ Core 2 Exam Process — Memorize this exact order</text>
+	<path class="st2" d="M203.7,75.8h376c6.6,0,12,5.4,12,12v46c0,6.6-5.4,12-12,12h-376c-6.6,0-12-5.4-12-12v-46
+		C191.7,81.1,197,75.8,203.7,75.8z"/>
+	<text transform="matrix(1 0 0 1 298.9688 98.7732)" class="st19 st15 st20">Step 1: Identify the Problem</text>
+	<text transform="matrix(1 0 0 1 264.0355 116.7732)" class="st21 st4 st22">Gather information, question users, identify changes,</text>
+	<text transform="matrix(1 0 0 1 280.2803 132.7732)" class="st21 st4 st22">reproduce the problem, check documentation</text>
+	<path class="st2" d="M391.7,165.8"/>
+	<path class="st2" d="M203.7,165.8h376c6.6,0,12,5.4,12,12v46c0,6.6-5.4,12-12,12h-376c-6.6,0-12-5.4-12-12v-46
+		C191.7,171.1,197,165.8,203.7,165.8z"/>
+	<text transform="matrix(1 0 0 1 246.168 188.7732)" class="st19 st15 st20">Step 2: Establish a Theory of Probable Cause</text>
+	<text transform="matrix(1 0 0 1 264.3497 206.7732)" class="st21 st4 st22">Question the obvious, consider multiple approaches,</text>
+	<text transform="matrix(1 0 0 1 271.6033 222.7732)" class="st21 st4 st22">research based on symptoms (simple to complex)</text>
+	<path class="st2" d="M391.7,255.8"/>
+	<path class="st2" d="M203.7,255.8h376c6.6,0,12,5.4,12,12v46c0,6.6-5.4,12-12,12h-376c-6.6,0-12-5.4-12-12v-46
+		C191.7,261.1,197,255.8,203.7,255.8z"/>
+	<text transform="matrix(1 0 0 1 249.7672 278.7731)" class="st19 st15 st20">Step 3: Test the Theory to Determine Cause</text>
+	<text transform="matrix(1 0 0 1 294.1002 296.7731)" class="st21 st4 st22">Confirm theory, test to verify root cause.</text>
+	<text transform="matrix(1 0 0 1 291.8497 312.7731)" class="st21 st4 st22">If not confirmed, re-establish new theory.</text>
+	<path class="st2" d="M391.7,355.8"/>
+	<polygon class="st6" points="391.7,355.8 481.7,400.8 391.7,445.8 301.7,400.8 	"/>
+	<text transform="matrix(1 0 0 1 371.7623 396.7731)" class="st19 st15 st23">Theory</text>
+	<text transform="matrix(1 0 0 1 359.1236 411.7731)" class="st19 st15 st23">Confirmed?</text>
+	<path class="st8" d="M391.7,475.8"/>
+	<text transform="matrix(1 0 0 1 403.6607 465.7731)" class="st8 st15 st22">YES</text>
+	<polygon class="st10" points="169.2,192 194.2,200.8 169.2,209.5 	"/>
+	<path class="st10" d="M191.7,200.8"/>
+	<text transform="matrix(1 0 0 1 185.0339 390.7731)" class="st10 st15 st22">NO</text>
+	<path class="st2" d="M203.7,475.8h376c6.6,0,12,5.8,12,13.1v50.1c0,7.2-5.4,13.1-12,13.1h-376c-6.6,0-12-5.8-12-13.1v-50.1
+		C191.7,481.6,197,475.8,203.7,475.8z"/>
+	<text transform="matrix(1 0 0 1 284.2442 495.7731)" class="st19 st15 st20">Step 4: Establish a Plan of Action</text>
+	<text transform="matrix(1 0 0 1 299.2457 511.7731)" class="st19 st15 st20">and Implement the Solution</text>
+	<text transform="matrix(1 0 0 1 268.2571 530.7731)" class="st21 st4 st22">Plan the fix, notify affected users, consider impacts,</text>
+	<text transform="matrix(1 0 0 1 292.0941 543.7732)" class="st21 st4 st22">apply the fix, escalate if beyond expertise</text>
+	<path class="st2" d="M391.7,575.8"/>
+	<polygon class="st6" points="391.7,575.8 481.7,620.8 391.7,665.8 301.7,620.8 	"/>
+	<text transform="matrix(1 0 0 1 367.775 616.7732)" class="st19 st15 st23">Problem</text>
+	<text transform="matrix(1 0 0 1 363.8521 631.7732)" class="st19 st15 st23">Resolved?</text>
+	<path class="st8" d="M391.7,695.8"/>
+	<text transform="matrix(1 0 0 1 403.6607 685.7732)" class="st8 st15 st22">YES</text>
+	<polygon class="st10" points="169.2,102 194.2,110.8 169.2,119.5 	"/>
+	<path class="st10" d="M191.7,110.8"/>
+	<text transform="matrix(1 0 0 1 185.0337 612.7732)" class="st10 st15 st22">NO</text>
+	<path class="st2" d="M203.7,695.8h376c6.6,0,12,5.4,12,12v46c0,6.6-5.4,12-12,12h-376c-6.6,0-12-5.4-12-12v-46
+		C191.7,701.1,197,695.8,203.7,695.8z"/>
+	<text transform="matrix(1 0 0 1 263.8355 718.7732)" class="st19 st15 st20">Step 5: Verify Full System Functionality</text>
+	<text transform="matrix(1 0 0 1 267.2017 736.7732)" class="st21 st4 st22">Confirm resolution with user, implement preventive</text>
+	<text transform="matrix(1 0 0 1 314.8943 752.7732)" class="st21 st4 st22">measures to prevent recurrence</text>
+	<polygon class="st24" points="398.7,772.8 391.7,792.8 384.7,772.8 	"/>
+	<path class="st2" d="M391.7,790.8"/>
+	<path class="st2" d="M203.7,790.8h376c6.6,0,12,5.4,12,12v46c0,6.6-5.4,12-12,12h-376c-6.6,0-12-5.4-12-12v-46
+		C191.7,796.1,197,790.8,203.7,790.8z"/>
+	<text transform="matrix(1 0 0 1 223.671 813.7732)" class="st19 st15 st20">Step 6: Document Findings, Actions, and Outcomes</text>
+	<text transform="matrix(1 0 0 1 261.5809 831.7732)" class="st21 st4 st22">Record symptoms, root cause, steps taken, resolution,</text>
+	<text transform="matrix(1 0 0 1 279.2813 847.7732)" class="st21 st4 st22">preventive measures. Update knowledge base.</text>
+	<polygon class="st8" points="400.4,863.3 391.7,888.3 382.9,863.3 	"/>
+	<path class="st8" d="M391.7,885.8"/>
+	<path class="st8" d="M336.7,885.8h110c11,0,20,9,20,20l0,0c0,11-9,20-20,20h-110c-11,0-20-9-20-20l0,0
+		C316.7,894.7,325.6,885.8,336.7,885.8z"/>
+	<text transform="matrix(1 0 0 1 352.5045 910.7732)" class="st19 st15 st25">RESOLVED</text>
+	<line id="line1" class="st13" x1="188" y1="200.8" x2="157.2" y2="200.8"/>
+	<line id="line36" class="st13" x1="90.7" y1="621.3" x2="90.7" y2="110.8"/>
+	<line id="line1_1_" class="st13" x1="176" y1="110.8" x2="90.7" y2="110.8"/>
+	<line id="line36_1_" class="st13" x1="157.2" y1="400.3" x2="157.2" y2="200.8"/>
+	<g id="text37">
+		<g>
+			<g>
+				<path class="st10" d="M98.1,641.9h-1.6l-1.3-2.2c-0.2-0.4-0.4-0.7-0.6-0.8s-0.4-0.2-0.7-0.2h-0.7v3.3h-1.4v-8.4h2.7
+					c0.9,0,1.6,0.2,2.1,0.6s0.7,1,0.7,1.7c0,0.6-0.2,1.1-0.5,1.5s-0.8,0.7-1.3,0.9v0c0.2,0.1,0.4,0.2,0.6,0.4s0.3,0.4,0.5,0.7
+					L98.1,641.9z M93.2,634.6v2.8h1.1c0.4,0,0.8-0.1,1.1-0.4s0.4-0.6,0.4-1.1c0-0.4-0.1-0.7-0.4-1s-0.6-0.3-1.1-0.3H93.2z"/>
+				<path class="st10" d="M104.4,639.1h-4.2c0,0.6,0.2,1,0.5,1.3s0.7,0.5,1.3,0.5c0.2,0,0.5,0,0.8-0.1s0.6-0.2,0.9-0.4l0.6,0.9
+					c-0.4,0.3-0.8,0.5-1.2,0.6s-0.8,0.2-1.3,0.2c-1,0-1.7-0.3-2.2-0.8s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.8-2.4s1.3-0.9,2.1-0.9
+					c0.8,0,1.5,0.3,1.9,0.8s0.7,1.3,0.7,2.2V639.1z M103.1,638.2c0-0.5-0.1-0.9-0.4-1.2s-0.6-0.4-1-0.4c-0.4,0-0.7,0.1-1,0.4
+					s-0.4,0.7-0.5,1.2H103.1z"/>
+				<path class="st10" d="M105.8,639.1v-1h3.2v1H105.8z"/>
+				<path class="st10" d="M111.5,634.6c-0.3,0-0.5-0.1-0.6-0.2s-0.2-0.4-0.2-0.6c0-0.2,0.1-0.4,0.2-0.6s0.4-0.2,0.6-0.2
+					s0.5,0.1,0.6,0.2s0.3,0.4,0.3,0.6c0,0.2-0.1,0.4-0.3,0.6S111.7,634.6,111.5,634.6z M112.1,641.9h-1.4v-6.1h1.4V641.9z"/>
+				<path class="st10" d="M118.3,640.9c-0.2,0.4-0.5,0.6-0.8,0.8s-0.7,0.3-1.2,0.3c-0.8,0-1.4-0.3-1.9-0.8s-0.7-1.3-0.7-2.3
+					c0-1,0.3-1.8,0.8-2.4s1.2-0.9,2-0.9c0.4,0,0.8,0.1,1.1,0.2s0.5,0.4,0.7,0.7h0V633h1.4v8.9h-1.4L118.3,640.9L118.3,640.9z
+					 M115.1,638.9c0,0.6,0.1,1.1,0.4,1.5s0.7,0.5,1.2,0.5c0.5,0,0.9-0.2,1.2-0.5s0.4-0.8,0.4-1.4v-0.7c0-0.5-0.1-0.8-0.4-1.1
+					s-0.6-0.5-1.1-0.5c-0.5,0-0.9,0.2-1.2,0.6S115.1,638.2,115.1,638.9z"/>
+				<path class="st10" d="M126.8,639.1h-4.2c0,0.6,0.2,1,0.5,1.3s0.7,0.5,1.3,0.5c0.2,0,0.5,0,0.8-0.1s0.6-0.2,0.9-0.4l0.6,0.9
+					c-0.4,0.3-0.8,0.5-1.2,0.6s-0.8,0.2-1.3,0.2c-1,0-1.7-0.3-2.2-0.8s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.8-2.4s1.3-0.9,2.1-0.9
+					c0.8,0,1.5,0.3,1.9,0.8s0.7,1.3,0.7,2.2V639.1z M125.4,638.2c0-0.5-0.1-0.9-0.4-1.2s-0.6-0.4-1-0.4c-0.4,0-0.7,0.1-1,0.4
+					s-0.4,0.7-0.5,1.2H125.4z"/>
+				<path class="st10" d="M133.7,641.9h-1.4v-3.5c0-0.6-0.1-1-0.3-1.3s-0.5-0.4-0.9-0.4c-0.4,0-0.8,0.2-1,0.5s-0.4,0.7-0.4,1.2v3.5
+					h-1.4v-6.1h1.4v1h0c0.2-0.4,0.5-0.7,0.8-0.9s0.7-0.3,1.2-0.3c0.7,0,1.2,0.2,1.5,0.6s0.5,1.1,0.5,1.9V641.9z"/>
+				<path class="st10" d="M138.8,641.8c-0.2,0.1-0.4,0.1-0.6,0.2s-0.4,0.1-0.6,0.1c-0.6,0-1-0.2-1.3-0.5s-0.5-0.8-0.5-1.4v-3.4h-1
+					v-1.1h1v-1.4l1.4-0.4v1.8h1.5v1.1h-1.5v3.3c0,0.3,0.1,0.5,0.2,0.7s0.3,0.2,0.5,0.2c0.1,0,0.2,0,0.3,0s0.2-0.1,0.3-0.1
+					L138.8,641.8z"/>
+				<path class="st10" d="M140.7,634.6c-0.3,0-0.5-0.1-0.6-0.2s-0.2-0.4-0.2-0.6c0-0.2,0.1-0.4,0.2-0.6s0.4-0.2,0.6-0.2
+					s0.5,0.1,0.6,0.2s0.3,0.4,0.3,0.6c0,0.2-0.1,0.4-0.3,0.6S140.9,634.6,140.7,634.6z M141.4,641.9H140v-6.1h1.4V641.9z"/>
+				<path class="st10" d="M146.6,634c-0.1,0-0.2-0.1-0.3-0.1s-0.2,0-0.3,0c-0.3,0-0.5,0.1-0.7,0.2s-0.2,0.4-0.2,0.7v0.8h1.4v1.1
+					h-1.4v5.1h-1.4v-5.1h-1v-1.1h1v-0.9c0-0.6,0.2-1.1,0.6-1.5s0.9-0.5,1.6-0.5c0.2,0,0.4,0,0.5,0s0.3,0.1,0.5,0.1L146.6,634z"/>
+				<path class="st10" d="M153,635.7l-2.8,7.3c-0.2,0.6-0.5,1-0.9,1.3s-0.8,0.4-1.4,0.4c-0.2,0-0.3,0-0.4,0s-0.3,0-0.4-0.1l0.3-1.1
+					c0.1,0,0.2,0.1,0.3,0.1s0.2,0,0.3,0c0.2,0,0.4-0.1,0.6-0.2s0.3-0.3,0.4-0.5l0.5-1.1l-2.4-6.1h1.5l1.4,4.3c0,0.1,0,0.2,0.1,0.3
+					s0,0.2,0.1,0.4h0c0-0.1,0-0.2,0.1-0.3s0.1-0.2,0.1-0.3l1.5-4.3H153z"/>
+				<path class="st10" d="M158.8,641L158.8,641l0,3.6h-1.4v-8.9h1.4v1h0c0.2-0.4,0.5-0.7,0.9-0.9s0.7-0.3,1.2-0.3
+					c0.8,0,1.4,0.3,1.9,0.8s0.7,1.3,0.7,2.2c0,1-0.3,1.9-0.8,2.5s-1.2,0.9-2,0.9c-0.4,0-0.7-0.1-1-0.2S159,641.4,158.8,641z
+					 M158.7,638.6v0.7c0,0.5,0.1,0.9,0.4,1.2s0.6,0.5,1.1,0.5c0.5,0,0.9-0.2,1.2-0.6s0.4-1,0.4-1.7c0-0.6-0.1-1.1-0.4-1.4
+					s-0.6-0.5-1.1-0.5c-0.5,0-0.9,0.2-1.2,0.5S158.7,638,158.7,638.6z"/>
+				<path class="st10" d="M168.2,636.9c-0.1,0-0.2,0-0.2,0s-0.2,0-0.3,0c-0.5,0-0.9,0.2-1.1,0.6s-0.4,0.9-0.4,1.5v3h-1.4v-6.1h1.4
+					v1.2h0c0.1-0.4,0.4-0.7,0.6-1s0.6-0.3,1-0.3c0.1,0,0.2,0,0.3,0s0.2,0,0.3,0.1L168.2,636.9z"/>
+				<path class="st10" d="M172.2,642c-1,0-1.7-0.3-2.3-0.9s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.9-2.4s1.4-0.9,2.4-0.9
+					c1,0,1.7,0.3,2.3,0.8s0.8,1.3,0.8,2.3c0,1-0.3,1.8-0.9,2.4S173.2,642,172.2,642z M172.3,640.9c0.6,0,1-0.2,1.3-0.5
+					s0.4-0.9,0.4-1.6c0-0.7-0.1-1.2-0.4-1.6s-0.7-0.5-1.3-0.5c-0.6,0-1,0.2-1.3,0.6s-0.5,0.9-0.5,1.6s0.2,1.2,0.5,1.5
+					S171.7,640.9,172.3,640.9z"/>
+				<path class="st10" d="M178.3,641.1L178.3,641.1l0,0.8h-1.4V633h1.4v3.7h0c0.2-0.4,0.5-0.7,0.9-0.9s0.7-0.3,1.2-0.3
+					c0.8,0,1.4,0.3,1.8,0.8s0.7,1.3,0.7,2.2c0,1-0.3,1.9-0.8,2.5s-1.2,0.9-2,0.9c-0.4,0-0.7-0.1-1-0.2S178.5,641.4,178.3,641.1z
+					 M178.3,638.5v0.7c0,0.5,0.1,0.9,0.4,1.2s0.6,0.5,1.1,0.5c0.5,0,0.9-0.2,1.2-0.6s0.4-1,0.4-1.7c0-0.6-0.1-1.1-0.4-1.4
+					s-0.6-0.5-1.1-0.5c-0.5,0-0.9,0.2-1.2,0.5S178.3,638,178.3,638.5z"/>
+				<path class="st10" d="M184.4,641.9V633h1.4v8.9H184.4z"/>
+				<path class="st10" d="M192.8,639.1h-4.2c0,0.6,0.2,1,0.5,1.3s0.7,0.5,1.3,0.5c0.2,0,0.5,0,0.8-0.1s0.6-0.2,0.9-0.4l0.6,0.9
+					c-0.4,0.3-0.8,0.5-1.2,0.6s-0.8,0.2-1.3,0.2c-1,0-1.7-0.3-2.2-0.8s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.8-2.4s1.3-0.9,2.1-0.9
+					c0.8,0,1.5,0.3,1.9,0.8s0.7,1.3,0.7,2.2V639.1z M191.5,638.2c0-0.5-0.1-0.9-0.4-1.2s-0.6-0.4-1-0.4c-0.4,0-0.7,0.1-1,0.4
+					s-0.4,0.7-0.5,1.2H191.5z"/>
+				<path class="st10" d="M203.4,641.9h-1.4v-3.5c0-0.6-0.1-1-0.3-1.3s-0.5-0.4-0.9-0.4c-0.4,0-0.7,0.2-0.9,0.5s-0.4,0.7-0.4,1.2
+					v3.5h-1.4v-3.6c0-0.5-0.1-0.9-0.3-1.2s-0.5-0.4-0.9-0.4c-0.4,0-0.7,0.2-0.9,0.5s-0.4,0.7-0.4,1.3v3.5h-1.4v-6.1h1.4v1h0
+					c0.2-0.4,0.5-0.6,0.8-0.8s0.7-0.3,1.1-0.3s0.8,0.1,1.1,0.3s0.5,0.5,0.7,0.9c0.2-0.4,0.5-0.7,0.9-0.9s0.7-0.3,1.2-0.3
+					c0.7,0,1.2,0.2,1.5,0.6s0.5,1,0.5,1.9V641.9z"/>
+			</g>
+		</g>
+	</g>
+	<g id="text25">
+		<g id="text25_1_" class="st26">
+			<path class="st10" d="M164.7,421.6h-1.6l-1.3-2.2c-0.2-0.4-0.4-0.7-0.6-0.8s-0.4-0.2-0.7-0.2h-0.7v3.3h-1.4v-8.4h2.7
+				c0.9,0,1.6,0.2,2.1,0.6s0.7,1,0.7,1.7c0,0.6-0.2,1.1-0.5,1.5s-0.8,0.7-1.3,0.9v0c0.2,0.1,0.4,0.2,0.6,0.4s0.3,0.4,0.5,0.7
+				L164.7,421.6z M159.8,414.4v2.8h1.1c0.4,0,0.8-0.1,1.1-0.4s0.4-0.6,0.4-1.1c0-0.4-0.1-0.7-0.4-1s-0.6-0.3-1.1-0.3H159.8z"/>
+			<path class="st10" d="M171,418.9h-4.2c0,0.6,0.2,1,0.5,1.3s0.7,0.5,1.3,0.5c0.2,0,0.5,0,0.8-0.1s0.6-0.2,0.9-0.4l0.6,0.9
+				c-0.4,0.3-0.8,0.5-1.2,0.6s-0.8,0.2-1.3,0.2c-1,0-1.7-0.3-2.2-0.8s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.8-2.4s1.3-0.9,2.1-0.9
+				c0.8,0,1.5,0.3,1.9,0.8s0.7,1.3,0.7,2.2V418.9z M169.6,418c0-0.5-0.1-0.9-0.4-1.2s-0.6-0.4-1-0.4c-0.4,0-0.7,0.1-1,0.4
+				s-0.4,0.7-0.5,1.2H169.6z"/>
+			<path class="st10" d="M172.4,418.8v-1h3.2v1H172.4z"/>
+			<path class="st10" d="M182.5,418.9h-4.2c0,0.6,0.2,1,0.5,1.3s0.7,0.5,1.3,0.5c0.2,0,0.5,0,0.8-0.1s0.6-0.2,0.9-0.4l0.6,0.9
+				c-0.4,0.3-0.8,0.5-1.2,0.6s-0.8,0.2-1.3,0.2c-1,0-1.7-0.3-2.2-0.8s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.8-2.4s1.3-0.9,2.1-0.9
+				c0.8,0,1.5,0.3,1.9,0.8s0.7,1.3,0.7,2.2V418.9z M181.2,418c0-0.5-0.1-0.9-0.4-1.2s-0.6-0.4-1-0.4c-0.4,0-0.7,0.1-1,0.4
+				s-0.4,0.7-0.5,1.2H181.2z"/>
+			<path class="st10" d="M183.4,421.2l0.6-1c0.2,0.2,0.5,0.3,0.8,0.4s0.6,0.2,0.9,0.2c0.3,0,0.6-0.1,0.8-0.2s0.3-0.3,0.3-0.6
+				c0-0.2-0.1-0.4-0.2-0.5s-0.4-0.2-0.8-0.3c-0.8-0.2-1.3-0.4-1.6-0.7s-0.5-0.7-0.5-1.2c0-0.6,0.2-1,0.7-1.4s1-0.5,1.7-0.5
+				c0.3,0,0.7,0,1,0.1s0.6,0.2,0.9,0.4l-0.6,1c-0.3-0.2-0.5-0.3-0.7-0.4s-0.4-0.1-0.7-0.1c-0.3,0-0.6,0.1-0.8,0.2s-0.3,0.3-0.3,0.5
+				s0.1,0.4,0.3,0.5s0.5,0.2,0.9,0.3c0.7,0.2,1.2,0.4,1.5,0.7s0.5,0.7,0.5,1.2c0,0.6-0.2,1.1-0.7,1.4s-1,0.5-1.8,0.5
+				c-0.4,0-0.8-0.1-1.1-0.2S183.7,421.4,183.4,421.2z"/>
+			<path class="st10" d="M192.7,421.5c-0.2,0.1-0.4,0.1-0.6,0.2s-0.4,0.1-0.6,0.1c-0.6,0-1-0.2-1.3-0.5s-0.5-0.8-0.5-1.4v-3.4h-1
+				v-1.1h1v-1.4l1.4-0.4v1.8h1.5v1.1h-1.5v3.3c0,0.3,0.1,0.5,0.2,0.7s0.3,0.2,0.5,0.2c0.1,0,0.2,0,0.3,0s0.2-0.1,0.3-0.1
+				L192.7,421.5z"/>
+			<path class="st10" d="M198.6,421.6h-1.3v-0.9h0c-0.2,0.4-0.5,0.6-0.8,0.8s-0.7,0.3-1.1,0.3c-0.6,0-1-0.2-1.4-0.5
+				s-0.5-0.8-0.5-1.3c0-0.6,0.2-1,0.5-1.4s0.9-0.6,1.6-0.7l1.6-0.2v-0.1c0-0.4-0.1-0.7-0.3-0.9s-0.5-0.3-0.9-0.3
+				c-0.3,0-0.6,0.1-0.9,0.2s-0.6,0.3-0.9,0.5l-0.6-0.8c0.4-0.3,0.8-0.5,1.2-0.6s0.8-0.2,1.3-0.2c0.8,0,1.4,0.2,1.8,0.6
+				s0.6,1,0.6,1.8V421.6z M197.3,419.1v-0.5l-1.3,0.2c-0.4,0.1-0.7,0.2-0.9,0.3s-0.3,0.4-0.3,0.7c0,0.3,0.1,0.5,0.3,0.7
+				s0.4,0.3,0.7,0.3c0.4,0,0.8-0.2,1.1-0.5S197.3,419.6,197.3,419.1z"/>
+			<path class="st10" d="M201.8,420.9L201.8,420.9l0,0.8h-1.4v-8.9h1.4v3.7h0c0.2-0.4,0.5-0.7,0.9-0.9s0.7-0.3,1.2-0.3
+				c0.8,0,1.4,0.3,1.8,0.8s0.7,1.3,0.7,2.2c0,1-0.3,1.9-0.8,2.5s-1.2,0.9-2,0.9c-0.4,0-0.7-0.1-1-0.2S202,421.2,201.8,420.9z
+				 M201.8,418.3v0.7c0,0.5,0.1,0.9,0.4,1.2s0.6,0.5,1.1,0.5c0.5,0,0.9-0.2,1.2-0.6s0.4-1,0.4-1.7c0-0.6-0.1-1.1-0.4-1.4
+				s-0.6-0.5-1.1-0.5c-0.5,0-0.9,0.2-1.2,0.5S201.8,417.8,201.8,418.3z"/>
+			<path class="st10" d="M207.9,421.6v-8.9h1.4v8.9H207.9z"/>
+			<path class="st10" d="M211.8,414.4c-0.3,0-0.5-0.1-0.6-0.2s-0.2-0.4-0.2-0.6c0-0.2,0.1-0.4,0.2-0.6s0.4-0.2,0.6-0.2
+				s0.5,0.1,0.6,0.2s0.3,0.4,0.3,0.6c0,0.2-0.1,0.4-0.3,0.6S212.1,414.4,211.8,414.4z M212.5,421.6h-1.4v-6.1h1.4V421.6z"/>
+			<path class="st10" d="M213.9,421.2l0.6-1c0.2,0.2,0.5,0.3,0.8,0.4s0.6,0.2,0.9,0.2c0.3,0,0.6-0.1,0.8-0.2s0.3-0.3,0.3-0.6
+				c0-0.2-0.1-0.4-0.2-0.5s-0.4-0.2-0.8-0.3c-0.8-0.2-1.3-0.4-1.6-0.7s-0.5-0.7-0.5-1.2c0-0.6,0.2-1,0.7-1.4s1-0.5,1.7-0.5
+				c0.3,0,0.7,0,1,0.1s0.6,0.2,0.9,0.4l-0.6,1c-0.3-0.2-0.5-0.3-0.7-0.4s-0.4-0.1-0.7-0.1c-0.3,0-0.6,0.1-0.8,0.2s-0.3,0.3-0.3,0.5
+				s0.1,0.4,0.3,0.5s0.5,0.2,0.9,0.3c0.7,0.2,1.2,0.4,1.5,0.7s0.5,0.7,0.5,1.2c0,0.6-0.2,1.1-0.7,1.4s-1,0.5-1.8,0.5
+				c-0.4,0-0.8-0.1-1.1-0.2S214.3,421.4,213.9,421.2z"/>
+			<path class="st10" d="M225.3,421.6H224v-3.5c0-0.6-0.1-1-0.3-1.3s-0.5-0.4-0.9-0.4s-0.8,0.2-1,0.5s-0.4,0.7-0.4,1.2v3.5h-1.4
+				v-8.9h1.4v3.7h0c0.2-0.4,0.5-0.7,0.8-0.8s0.7-0.3,1.1-0.3c0.7,0,1.2,0.2,1.6,0.6s0.5,1,0.5,1.9V421.6z"/>
+			<path class="st10" d="M233.8,421.5c-0.2,0.1-0.4,0.1-0.6,0.2s-0.4,0.1-0.6,0.1c-0.6,0-1-0.2-1.3-0.5s-0.5-0.8-0.5-1.4v-3.4h-1
+				v-1.1h1v-1.4l1.4-0.4v1.8h1.5v1.1h-1.5v3.3c0,0.3,0.1,0.5,0.2,0.7s0.3,0.2,0.5,0.2c0.1,0,0.2,0,0.3,0s0.2-0.1,0.3-0.1
+				L233.8,421.5z"/>
+			<path class="st10" d="M240.4,421.6H239v-3.5c0-0.6-0.1-1-0.3-1.3s-0.5-0.4-0.9-0.4s-0.8,0.2-1,0.5s-0.4,0.7-0.4,1.2v3.5H235v-8.9
+				h1.4v3.7h0c0.2-0.4,0.5-0.7,0.8-0.8s0.7-0.3,1.1-0.3c0.7,0,1.2,0.2,1.6,0.6s0.5,1,0.5,1.9V421.6z"/>
+			<path class="st10" d="M247.4,418.9h-4.2c0,0.6,0.2,1,0.5,1.3s0.7,0.5,1.3,0.5c0.2,0,0.5,0,0.8-0.1s0.6-0.2,0.9-0.4l0.6,0.9
+				c-0.4,0.3-0.8,0.5-1.2,0.6s-0.8,0.2-1.3,0.2c-1,0-1.7-0.3-2.2-0.8s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.8-2.4s1.3-0.9,2.1-0.9
+				c0.8,0,1.5,0.3,1.9,0.8s0.7,1.3,0.7,2.2V418.9z M246.1,418c0-0.5-0.1-0.9-0.4-1.2s-0.6-0.4-1-0.4c-0.4,0-0.7,0.1-1,0.4
+				s-0.4,0.7-0.5,1.2H246.1z"/>
+			<path class="st10" d="M251.5,421.8c-1,0-1.7-0.3-2.3-0.9s-0.8-1.3-0.8-2.3c0-1,0.3-1.8,0.9-2.4s1.4-0.9,2.4-0.9
+				c1,0,1.7,0.3,2.3,0.8s0.8,1.3,0.8,2.3c0,1-0.3,1.8-0.9,2.4S252.5,421.8,251.5,421.8z M251.6,420.7c0.6,0,1-0.2,1.3-0.5
+				s0.4-0.9,0.4-1.6c0-0.7-0.1-1.2-0.4-1.6s-0.7-0.5-1.3-0.5c-0.6,0-1,0.2-1.3,0.6s-0.5,0.9-0.5,1.6s0.2,1.2,0.5,1.5
+				S251,420.7,251.6,420.7z"/>
+			<path class="st10" d="M259.6,416.7c-0.1,0-0.2,0-0.2,0s-0.2,0-0.3,0c-0.5,0-0.9,0.2-1.1,0.6s-0.4,0.9-0.4,1.5v3h-1.4v-6.1h1.4
+				v1.2h0c0.1-0.4,0.4-0.7,0.6-1s0.6-0.3,1-0.3c0.1,0,0.2,0,0.3,0s0.2,0,0.3,0.1L259.6,416.7z"/>
+			<path class="st10" d="M266.2,415.5l-2.8,7.3c-0.2,0.6-0.5,1-0.9,1.3s-0.8,0.4-1.4,0.4c-0.2,0-0.3,0-0.4,0s-0.3,0-0.4-0.1l0.3-1.1
+				c0.1,0,0.2,0.1,0.3,0.1s0.2,0,0.3,0c0.2,0,0.4-0.1,0.6-0.2s0.3-0.3,0.4-0.5l0.5-1.1l-2.4-6.1h1.5l1.4,4.3c0,0.1,0,0.2,0.1,0.3
+				s0,0.2,0.1,0.4h0c0-0.1,0-0.2,0.1-0.3s0.1-0.2,0.1-0.3l1.5-4.3H266.2z"/>
+		</g>
+	</g>
+	<polygon class="st10" points="197.8,627.2 189.3,621.3 197.8,615.3 	"/>
+	<polygon class="st10" points="197.8,406.2 189.3,400.3 197.8,394.3 	"/>
+	<polygon class="st24" points="398.7,557.8 391.7,577.8 384.7,557.8 	"/>
+	<polygon class="st8" points="400.4,673.3 391.7,698.3 382.9,673.3 	"/>
+	<polygon class="st8" points="400.4,453.3 391.7,478.3 382.9,453.3 	"/>
+	<polygon class="st24" points="398.7,337.8 391.7,357.8 384.7,337.8 	"/>
+	<polygon class="st24" points="398.7,147.8 391.7,167.8 384.7,147.8 	"/>
+	<polygon class="st24" points="398.7,237.8 391.7,257.8 384.7,237.8 	"/>
+</g>
 </svg>

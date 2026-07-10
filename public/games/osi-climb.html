@@ -22,7 +22,13 @@ body{background:#0a0a1a;overflow:hidden;font-family:'Courier New',monospace;disp
             <div id="q-layer" style="font-size:22px;font-weight:bold;color:#00ffaa;margin-top:4px;">—</div>
         </div>
         <div id="q-box" style="background:#1a1a3a;border:1px solid #333;border-radius:10px;padding:18px;margin-bottom:15px;min-height:80px;">
-            <div id="q-text" style="font-size:14px;line-height:1.6;color:#eee;">Press START to begin climbing!</div>
+            <div id="q-text" style="font-size:14px;line-height:1.6;color:#eee;">
+                <div style="color:#00ccff;font-weight:bold;margin-bottom:8px;">HOW TO PLAY</div>
+                Answer questions about each OSI layer to climb the mountain.<br>
+                Get it right = climb up. Get it wrong = lose a life.<br>
+                Reach Layer 7 (Application) to summit!<br><br>
+                <span style="color:#64748b;font-size:12px;">Select your difficulty, then press START.</span>
+            </div>
         </div>
         <div id="q-answers" style="display:flex;flex-direction:column;gap:10px;"></div>
         <div id="q-feedback" style="text-align:center;margin-top:12px;font-size:13px;min-height:20px;"></div>
@@ -264,6 +270,10 @@ function askQuestion(){
     const pool=getFilteredQuestions(currentLayer);
     if(pool.length===0)return;
     currentQuestion=pool[Math.floor(Math.random()*pool.length)];
+    // Shuffle answer choices and update correct index
+    const correctText = currentQuestion.a[currentQuestion.c];
+    const shuffled = [...currentQuestion.a].sort(() => Math.random() - 0.5);
+    currentQuestion = {...currentQuestion, a: shuffled, c: shuffled.indexOf(correctText)};
     answered=false;
     
     // Update question UI

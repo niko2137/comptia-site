@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How-to Guides — CompTIA A+ Study Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;min-height:100vh}
+a{color:#5b9bd5;text-decoration:none}
+a:hover{color:#7db4e6}
+.nav{background:#0f172a;padding:12px 24px;border-bottom:1px solid #334155;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav a{color:#94a3b8;font-size:0.9rem;font-weight:500}
+.nav a:hover{color:#fff}
+.container{max-width:860px;margin:0 auto;padding:40px 24px 60px}
+h1{font-size:2rem;color:#f1f5f9;margin-bottom:8px;text-align:center}
+.subtitle{color:#94a3b8;text-align:center;margin-bottom:40px;font-size:1rem}
+.guide{background:#1e293b;border:1px solid #334155;border-radius:10px;margin-bottom:20px;overflow:hidden}
+.guide-header{padding:18px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s}
+.guide-header:hover{background:#253349}
+.guide-header h3{font-size:1rem;color:#f1f5f9;display:flex;align-items:center;gap:10px}
+.guide-header .tag{font-size:0.7rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
+.tag-troubleshoot{background:rgba(239,68,68,0.15);color:#f87171}
+.tag-config{background:rgba(91,155,213,0.15);color:#93c5fd}
+.tag-security{background:rgba(168,85,247,0.15);color:#c084fc}
+.guide-header .arrow{color:#64748b;transition:transform 0.3s}
+.guide.open .arrow{transform:rotate(180deg)}
+.guide-body{display:none;padding:0 24px 24px;border-top:1px solid #334155}
+.guide.open .guide-body{display:block}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #1e3050}
+.step:last-child{border-bottom:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:#1F497D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-content{flex:1}
+.step-content strong{color:#f1f5f9;display:block;margin-bottom:4px}
+.step-content p{color:#94a3b8;font-size:0.88rem;line-height:1.5}
+.step-content code{background:#0f172a;padding:2px 6px;border-radius:3px;font-size:0.82rem;color:#5b9bd5}
+.tip{margin-top:16px;padding:12px 16px;background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2);border-radius:6px;font-size:0.85rem;color:#6ee7b7}
+.tip::before{content:'💡 ';font-size:1rem}
+.footer{text-align:center;padding:24px;color:rgba(255,255,255,0.3);font-size:0.75rem;border-top:1px solid #334155;margin-top:40px}
+@media(max-width:600px){h1{font-size:1.5rem}.guide-header{padding:14px 16px}.guide-body{padding:0 16px 16px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a href="../members.html">&larr; Back to Members</a>
+<a href="../index.html">Home</a>
+</nav>
+<div class="container">
+<h1>&#128295; How-to Guides</h1>
+<p class="subtitle">Step-by-step troubleshooting and configuration guides for real-world IT scenarios</p>
+
+<!-- GUIDE 1 -->
+<div class="guide open">
+<div class="guide-header" onclick="this.parentElement.classList.toggle('open')">
+    <h3><span class="tag tag-troubleshoot">Troubleshooting</span> PC Won't Boot — Systematic Diagnosis</h3>
+    <span class="arrow">&#9660;</span>
+</div>
+<div class="guide-body">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Check power supply</strong><p>Verify the power cable is connected, PSU switch is ON, and the outlet works. Listen for fan spin. No lights at all = PSU or motherboard failure.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Listen for POST beep codes</strong><p>One short beep = successful POST. Repeated beeps or patterns indicate specific failures (RAM, GPU, CPU). Consult your motherboard manual for codes.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Check display connection</strong><p>Ensure monitor cable is firmly connected. Try a different port (HDMI vs DisplayPort). If using discrete GPU, connect to GPU not motherboard.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Reseat RAM and GPU</strong><p>Power off, unplug, ground yourself. Remove and firmly reseat RAM sticks and GPU. Try one RAM stick at a time to isolate faulty module.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content"><strong>Check BIOS/boot order</strong><p>If POST succeeds but OS won't load: enter BIOS, verify boot drive is listed and set as first priority. Check for <code>No boot device found</code> errors.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content"><strong>Use WinRE if needed</strong><p>Boot from Windows install media → Repair your computer → Startup Repair. If that fails: <code>bootrec /rebuildbcd</code> from Command Prompt.</p></div></div>
+    <div class="tip">Always work through the CompTIA 6-step troubleshooting methodology: Identify → Theory → Test → Plan → Verify → Document.</div>
+</div>
+</div>
+
+<!-- GUIDE 2 -->
+<div class="guide">
+<div class="guide-header" onclick="this.parentElement.classList.toggle('open')">
+    <h3><span class="tag tag-troubleshoot">Troubleshooting</span> No Internet — Network Connectivity Diagnosis</h3>
+    <span class="arrow">&#9660;</span>
+</div>
+<div class="guide-body">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Check physical connection</strong><p>Ethernet: verify cable is plugged in, check link lights. Wi-Fi: confirm connected to correct SSID, check airplane mode is off.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Check IP configuration</strong><p>Run <code>ipconfig</code> (Windows) or <code>ip addr</code> (Linux). If you see 169.254.x.x (APIPA), DHCP failed. Try <code>ipconfig /release</code> then <code>ipconfig /renew</code>.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Ping loopback</strong><p><code>ping 127.0.0.1</code> — if this fails, TCP/IP stack is broken. Reinstall network adapter or run <code>netsh winsock reset</code>.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Ping default gateway</strong><p><code>ping [gateway IP]</code> — if fails, local network issue (cable, switch, router). Check other devices on same network.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content"><strong>Ping external IP</strong><p><code>ping 8.8.8.8</code> — if fails but gateway works, router can't reach internet. Check ISP connection, reboot modem/router.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content"><strong>Test DNS</strong><p><code>nslookup google.com</code> — if IP ping works but names don't resolve, DNS is the issue. Try <code>ipconfig /flushdns</code> or change DNS to 8.8.8.8.</p></div></div>
+    <div class="tip">This flow isolates the problem layer by layer: Physical → IP → Local → WAN → DNS. Master this for the exam.</div>
+</div>
+</div>
+
+<!-- GUIDE 3 -->
+<div class="guide">
+<div class="guide-header" onclick="this.parentElement.classList.toggle('open')">
+    <h3><span class="tag tag-security">Security</span> Malware Removal — 7-Step Process</h3>
+    <span class="arrow">&#9660;</span>
+</div>
+<div class="guide-body">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Investigate and verify symptoms</strong><p>Slow performance, pop-ups, unexpected processes, browser redirects, disabled antivirus. Confirm infection before acting.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Quarantine the system</strong><p>Disconnect from network immediately to prevent spread. Disable Wi-Fi and unplug Ethernet. Do NOT power off (preserves evidence in RAM).</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Disable System Restore</strong><p>Prevents malware from hiding in restore points. Delete existing restore points that may be infected.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Remediate — scan and remove</strong><p>Boot to Safe Mode (F8 or msconfig). Run full scan with updated antimalware. Use multiple tools: Windows Defender + Malwarebytes. Remove all detected threats.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content"><strong>Schedule follow-up scans</strong><p>Set antimalware to run automatic daily/weekly scans. Update all definitions. Check that real-time protection is re-enabled.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content"><strong>Re-enable System Restore</strong><p>Create a new clean restore point. Delete old (potentially infected) restore points.</p></div></div>
+    <div class="step"><div class="step-num">7</div><div class="step-content"><strong>Educate the user</strong><p>Explain how infection occurred. Train on safe browsing, email link awareness, download sources. This is the FINAL step — always.</p></div></div>
+    <div class="tip">CompTIA's exact order: Investigate → Quarantine → Disable Restore → Remediate → Schedule scans → Enable Restore → Educate. Memorize this.</div>
+</div>
+</div>
+
+<!-- GUIDE 4 -->
+<div class="guide">
+<div class="guide-header" onclick="this.parentElement.classList.toggle('open')">
+    <h3><span class="tag tag-config">Configuration</span> Secure a SOHO Wireless Router</h3>
+    <span class="arrow">&#9660;</span>
+</div>
+<div class="guide-body">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Change default credentials</strong><p>Default admin/admin is the #1 SOHO vulnerability. Set a strong unique password for the admin panel immediately.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>Update firmware</strong><p>Check manufacturer site for latest firmware. Updates patch known vulnerabilities. Enable auto-update if available.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Set WPA3 (or WPA2-AES minimum)</strong><p>Never use WEP or WPA-TKIP. Set a strong passphrase (12+ characters). If WPA3 isn't supported by all devices, use WPA2-AES.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Disable WPS</strong><p>Wi-Fi Protected Setup has a known PIN vulnerability (brute-forceable). Always disable it in router settings.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-content"><strong>Disable remote management</strong><p>WAN-side admin access lets attackers configure your router from the internet. Disable unless specifically needed.</p></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-content"><strong>Set up guest network</strong><p>Isolate IoT devices and visitors on a separate SSID. Prevents guests from accessing your main network resources.</p></div></div>
+    <div class="step"><div class="step-num">7</div><div class="step-content"><strong>Disable UPnP</strong><p>Universal Plug and Play auto-opens ports — exploitable by malware. Disable and manually forward only needed ports.</p></div></div>
+    <div class="tip">Exam loves this topic. Remember: change defaults, update firmware, WPA3, disable WPS, disable remote mgmt, guest network, disable UPnP.</div>
+</div>
+</div>
+
+<!-- GUIDE 5 -->
+<div class="guide">
+<div class="guide-header" onclick="this.parentElement.classList.toggle('open')">
+    <h3><span class="tag tag-troubleshoot">Troubleshooting</span> Windows System File Repair</h3>
+    <span class="arrow">&#9660;</span>
+</div>
+<div class="guide-body">
+    <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Run SFC first</strong><p>Open elevated Command Prompt. Run <code>sfc /scannow</code>. Wait for completion. If it reports "found corrupt files and repaired" — done.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-content"><strong>If SFC fails → run DISM</strong><p>If SFC says "could not fix some files," the component store is corrupted. Run: <code>DISM /Online /Cleanup-Image /RestoreHealth</code></p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-content"><strong>Retry SFC after DISM</strong><p>DISM repairs the source that SFC uses. After DISM completes, run <code>sfc /scannow</code> again. It should now succeed.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-content"><strong>Check Event Viewer</strong><p>Look in Windows Logs → System for related errors. CBS.log at <code>C:\Windows\Logs\CBS\CBS.log</code> has detailed SFC results.</p></div></div>
+    <div class="tip">The order matters: SFC first → DISM if SFC fails → SFC again. Never skip straight to DISM.</div>
+</div>
+</div>
+
+</div>
+<footer class="footer">&copy; 2026 Niko Williams. All rights reserved.</footer>
+</body>
+</html>

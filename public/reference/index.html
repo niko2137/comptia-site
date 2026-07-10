@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reference Sheets — CompTIA A+ Study Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;min-height:100vh}
+a{color:#5b9bd5;text-decoration:none}
+a:hover{color:#7db4e6}
+.nav{background:#0f172a;padding:12px 24px;border-bottom:1px solid #334155;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav a{color:#94a3b8;font-size:0.9rem;font-weight:500}
+.nav a:hover{color:#fff}
+.container{max-width:900px;margin:0 auto;padding:40px 24px 60px}
+h1{font-size:2rem;color:#f1f5f9;margin-bottom:8px;text-align:center}
+.subtitle{color:#94a3b8;text-align:center;margin-bottom:40px;font-size:1rem}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:24px;transition:all 0.2s;display:flex;flex-direction:column}
+.card:hover{border-color:#5b9bd5;box-shadow:0 4px 20px rgba(91,155,213,0.15);transform:translateY(-2px)}
+.card-icon{font-size:2rem;margin-bottom:10px}
+.card h3{font-size:1.05rem;color:#f1f5f9;margin-bottom:6px}
+.card p{font-size:0.85rem;color:#94a3b8;flex:1;margin-bottom:12px}
+.card-link{display:inline-block;padding:8px 18px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:0.82rem;font-weight:600;transition:all 0.2s}
+.card-link:hover{background:#366092;color:#fff}
+.footer{text-align:center;padding:24px;color:rgba(255,255,255,0.3);font-size:0.75rem;border-top:1px solid #334155;margin-top:40px}
+@media(max-width:600px){h1{font-size:1.5rem}.card-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a href="../members.html">&larr; Back to Members</a>
+<a href="../index.html">Home</a>
+</nav>
+<div class="container">
+<h1>&#128203; Reference Sheets</h1>
+<p class="subtitle">All printable cheat sheets and quick-reference guides in one place</p>
+
+<div class="card-grid">
+    <div class="card">
+        <div class="card-icon">&#128225;</div>
+        <h3>Network Ports &amp; Protocols</h3>
+        <p>All essential port numbers mapped to protocols — TCP/UDP, common services, security ports.</p>
+        <a href="ports.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">&#128421;</div>
+        <h3>OS Commands (Win/Linux/Mac)</h3>
+        <p>Essential CLI commands for Windows, Linux, and macOS with switches and use cases. Filterable by OS.</p>
+        <a href="commands.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">&#128268;</div>
+        <h3>Cable Types &amp; Speeds</h3>
+        <p>Ethernet categories, fiber optic, coaxial — speeds, distances, and connector types.</p>
+        <a href="cables.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">&#9881;</div>
+        <h3>BIOS/UEFI Settings</h3>
+        <p>Boot order, Secure Boot, TPM, virtualization settings, and firmware configuration.</p>
+        <a href="bios.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">&#128230;</div>
+        <h3>Resource Center</h3>
+        <p>48+ free tools, video training platforms, practice labs, and utilities for exam prep.</p>
+        <a href="resources.html" class="card-link">Browse Resources</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">&#128208;</div>
+        <h3>Diagram Images</h3>
+        <p>All original SVG/PNG diagrams from the book — view full-size or download for offline study.</p>
+        <a href="cheat-sheets.html" class="card-link">View Diagrams</a>
+    </div>
+</div>
+</div>
+<footer class="footer">&copy; 2026 Niko Williams. All rights reserved.</footer>
+</body>
+</html>

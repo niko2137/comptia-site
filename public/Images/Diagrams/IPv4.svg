@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 734.1 650" style="enable-background:new 0 0 734.1 650;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;stroke:#1F497D;stroke-width:2;}
+	.st1{fill:#1F497D;}
+	.st2{font-family:'Arial-BoldMT';}
+	.st3{font-size:13px;}
+	.st4{fill:#C6D9F0;stroke:#366092;}
+	.st5{fill:#333333;}
+	.st6{font-size:12px;}
+	.st7{fill:#666666;}
+	.st8{font-size:16px;}
+	.st9{fill:#DBE5F1;stroke:#548DD4;}
+	.st10{fill:#366092;}
+	.st11{font-size:10px;}
+	.st12{fill:#548DD4;}
+	.st13{fill:#C0392B;}
+	.st14{font-size:14px;}
+	.st15{fill:#FFE5E9;}
+	.st16{fill:#FFFFFF;}
+	.st17{font-family:'ArialMT';}
+	.st18{fill:none;}
+	.st19{fill:#FFFFFF;stroke:#E67E22;stroke-width:2;}
+	.st20{fill:#E67E22;}
+	.st21{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
+	.st22{fill:#27AE60;}
+	.st23{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
+	.st24{fill:#8E44AD;}
+	.st25{fill:#C6D9F0;}
+	.st26{font-family:'ArialNarrow';}
+	.st27{font-size:22px;}
+</style>
+<g>
+	<path class="st0" d="M13,55.1h708c3.3,0,6,3,6,6.7v76c0,3.7-2.7,6.7-6,6.7H13c-3.3,0-6-3-6-6.7v-76C7,58.1,9.7,55.1,13,55.1z"/>
+	<text transform="matrix(1 0 0 1 187.3584 78.1246)" class="st1 st2 st3">IPv4 Address Structure: 32 bits in dotted decimal notation</text>
+	<path class="st4" d="M51,92.1h142c2.2,0,4,1.8,4,4v22c0,2.2-1.8,4-4,4H51c-2.2,0-4-1.8-4-4v-22C47,93.9,48.8,92.1,51,92.1z"/>
+	<text transform="matrix(1 0 0 1 111.69 112.1246)" class="st5 st2 st6">192</text>
+	<text transform="matrix(1 0 0 1 200.3091 112.1246)" class="st7 st2 st8">.</text>
+	<path class="st4" d="M216,92.1h142c2.2,0,4,1.8,4,4v22c0,2.2-1.8,4-4,4H216c-2.2,0-4-1.8-4-4v-22C212,93.9,213.8,92.1,216,92.1z"/>
+	<text transform="matrix(1 0 0 1 276.6899 112.1246)" class="st5 st2 st6">168</text>
+	<text transform="matrix(1 0 0 1 365.3091 112.1246)" class="st7 st2 st8">.</text>
+	<path class="st4" d="M381,92.1h142c2.2,0,4,1.8,4,4v22c0,2.2-1.8,4-4,4H381c-2.2,0-4-1.8-4-4v-22C377,93.9,378.8,92.1,381,92.1z"/>
+	<text transform="matrix(1 0 0 1 448.5923 112.1246)" class="st5 st2 st6">1</text>
+	<text transform="matrix(1 0 0 1 530.3091 112.1246)" class="st7 st2 st8">.</text>
+	<path class="st9" d="M546,92.1h142c2.2,0,4,1.8,4,4v22c0,2.2-1.8,4-4,4H546c-2.2,0-4-1.8-4-4v-22C542,93.9,543.8,92.1,546,92.1z"/>
+	<text transform="matrix(1 0 0 1 606.69 112.1246)" class="st5 st2 st6">100</text>
+	<text transform="matrix(1 0 0 1 280.5859 133.1246)" class="st10 st2 st11">Network portion</text>
+	<text transform="matrix(1 0 0 1 606.7481 133.1246)" class="st12 st2 st11">Host</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 204.0746 344.7853)" class="st13 st2 st14">Private IP Ranges (NOT routable on internet)</text>
+	<path class="st13" d="M11,356.8h712c2.2,0,4,1.8,4,4v20c0,2.2-1.8,4-4,4H11c-2.2,0-4-1.8-4-4v-20C7,358.6,8.8,356.8,11,356.8z"/>
+	<rect x="7" y="384.8" class="st15" width="720" height="26"/>
+	<rect x="7" y="410.8" class="st16" width="720" height="26"/>
+	<rect x="7" y="436.8" class="st15" width="720" height="26"/>
+	<g>
+		<g>
+			<text transform="matrix(1 0 0 1 36.2562 374.7853)" class="st16 st17 st14">Class</text>
+			<text transform="matrix(1 0 0 1 45.5026 401.7853)" class="st5 st17 st14">A</text>
+			<text transform="matrix(1 0 0 1 45.8974 427.7853)" class="st5 st17 st14">B</text>
+			<text transform="matrix(1 0 0 1 45.6449 453.7853)" class="st5 st17 st14">C</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 143.7102 374.7853)" class="st16 st17 st14">Private Range</text>
+			<text transform="matrix(1 0 0 1 114.7707 401.7853)" class="st13 st17 st14">10.0.0.0 - 10.255.255.255</text>
+			<text transform="matrix(1 0 0 1 108.4436 427.7853)" class="st13 st17 st14">172.16.0.0 - 172.31.255.255</text>
+			<text transform="matrix(1 0 0 1 102.1164 453.7853)" class="st13 st17 st14">192.168.0.0 - 192.168.255.255</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 356.4483 374.7853)" class="st16 st17 st14">CIDR</text>
+			<text transform="matrix(1 0 0 1 345.7598 401.7853)" class="st5 st17 st14">10.0.0.0/8</text>
+			<text transform="matrix(1 0 0 1 336.8653 427.7853)" class="st5 st17 st14">172.16.0.0/12</text>
+			<text transform="matrix(1 0 0 1 333.9004 453.7853)" class="st5 st17 st14">192.168.0.0/16</text>
+		</g>
+		<g>
+			<rect x="539.6" y="362.8" class="st18" width="112.1" height="16.6"/>
+			<text transform="matrix(1 0 0 1 552.8764 374.7853)" class="st16 st17 st14">Common Use</text>
+			<rect x="521.9" y="389.8" class="st18" width="160.1" height="16.6"/>
+			<text transform="matrix(1 0 0 1 540.822 401.7853)" class="st5 st17 st14">Corporate networks</text>
+			<rect x="522.3" y="415.8" class="st18" width="162.1" height="16.6"/>
+			<text transform="matrix(1 0 0 1 541.539 427.7853)" class="st5 st17 st14">Medium businesses</text>
+			<rect x="512" y="441.8" class="st18" width="186.6" height="16.6"/>
+			<text transform="matrix(1 0 0 1 534.0554 453.7853)" class="st5 st17 st14">Home/SOHO networks</text>
+		</g>
+	</g>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 254.8382 503.8978)" class="st1 st2 st14">Special Addresses to Memorize</text>
+	<g>
+		<g>
+			<path class="st19" d="M13.4,515.9h218c3.3,0,6,2.7,6,6v43c0,3.3-2.7,6-6,6h-218c-3.3,0-6-2.7-6-6v-43
+				C7.4,518.6,10.1,515.9,13.4,515.9z"/>
+			<text transform="matrix(1 0 0 1 67.1208 537.8978)" class="st20 st2 st6">169.254.x.x (APIPA)</text>
+			<text transform="matrix(1 0 0 1 22.4318 557.8978)" class="st5 st17 st6">DHCP failure! Auto-assigned fallback.</text>
+		</g>
+		<g>
+			<path class="st21" d="M258,515.9h218c3.3,0,6,2.7,6,6v43c0,3.3-2.7,6-6,6H258c-3.3,0-6-2.7-6-6v-43
+				C252,518.6,254.7,515.9,258,515.9z"/>
+			<text transform="matrix(1 0 0 1 308.0221 537.8978)" class="st22 st2 st6">127.0.0.1 (Loopback)</text>
+			<text transform="matrix(1 0 0 1 279.3053 557.8978)" class="st5 st17 st6">Tests local TCP/IP. &quot;This device.&quot;</text>
+		</g>
+		<g>
+			<path class="st23" d="M502.7,515.9h218c3.3,0,6,2.7,6,6v43c0,3.3-2.7,6-6,6h-218c-3.3,0-6-2.7-6-6v-43
+				C496.7,518.6,499.4,515.9,502.7,515.9z"/>
+			<text transform="matrix(1 0 0 1 556.3732 537.8978)" class="st24 st2 st6">::1 (IPv6 Loopback)</text>
+			<text transform="matrix(1 0 0 1 537.3278 557.8978)" class="st5 st17 st6">IPv6 equivalent of 127.0.0.1</text>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<path class="st1" d="M11,197.7h712c2.2,0,4,1.8,4,4v20c0,2.2-1.8,4-4,4H11c-2.2,0-4-1.8-4-4v-20C7,199.5,8.8,197.7,11,197.7z"/>
+		<rect x="7" y="225.7" class="st25" width="720" height="26"/>
+		<rect x="7" y="251.7" class="st16" width="720" height="26"/>
+		<rect x="7" y="277.7" class="st25" width="720" height="26"/>
+	</g>
+	<text transform="matrix(1 0 0 1 290.1697 185.6726)" class="st1 st2 st14">IPv4 Address Classes</text>
+	<g>
+		<g>
+			<text transform="matrix(1 0 0 1 36.9487 215.6726)" class="st16 st17 st14">Class</text>
+			<text transform="matrix(1 0 0 1 46.1951 242.6726)" class="st5 st17 st14">A</text>
+			<text transform="matrix(1 0 0 1 46.5899 268.6726)" class="st5 st17 st14">B</text>
+			<text transform="matrix(1 0 0 1 46.3374 294.6726)" class="st5 st17 st14">C</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 152.2848 215.6726)" class="st16 st17 st14">Range</text>
+			<text transform="matrix(1 0 0 1 108.7387 242.6726)" class="st5 st17 st14">1.0.0.0 - 126.255.255.255</text>
+			<text transform="matrix(1 0 0 1 102.809 268.6726)" class="st5 st17 st14">128.0.0.0 - 191.255.255.255</text>
+			<text transform="matrix(1 0 0 1 102.809 294.6726)" class="st5 st17 st14">192.0.0.0 - 223.255.255.255</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 346.3528 215.6726)" class="st16 st17 st14">Default Mask</text>
+			<text transform="matrix(1 0 0 1 349.4171 242.6726)" class="st5 st17 st14">255.0.0.0 (/8)</text>
+			<text transform="matrix(1 0 0 1 340.5225 268.6726)" class="st5 st17 st14">255.255.0.0 (/16)</text>
+			<text transform="matrix(1 0 0 1 334.5928 294.6726)" class="st5 st17 st14">255.255.255.0 (/24)</text>
+		</g>
+		<g>
+			<text transform="matrix(1 0 0 1 563.68 215.6726)" class="st16 st17 st14">Purpose</text>
+			<text transform="matrix(1 0 0 1 517.7249 242.6726)" class="st5 st17 st14">Large networks (16M hosts)</text>
+			<text transform="matrix(1 0 0 1 512.6519 268.6726)" class="st5 st17 st14">Medium networks (65K hosts)</text>
+			<text transform="matrix(1 0 0 1 519.9915 294.6726)" class="st5 st17 st14">Small networks (254 hosts)</text>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 334.3999 278.8767)" class="st5 st26 st6">• </text>
+</g>
+<g>
+	<path class="st9" d="M13,600h708c3.3,0,6,2.7,6,6v38c0,3.3-2.7,6-6,6H13c-3.3,0-6-2.7-6-6v-38C7,602.7,9.7,600,13,600z"/>
+	<text transform="matrix(1 0 0 1 166.4065 622)" class="st1 st17 st6">Exam Tip: 169.254.x.x on a device = ALWAYS &quot;DHCP server unreachable&quot;</text>
+	<text transform="matrix(1 0 0 1 140.467 640)" class="st5 st17 st6">Private IPs (10.x, 172.16-31.x, 192.168.x) are NEVER routable on the public internet.</text>
+</g>
+<text transform="matrix(1 0 0 1 187.2731 18.879)" class="st1 st17 st27">IPv4 Addressing and Private Ranges</text>
+</svg>

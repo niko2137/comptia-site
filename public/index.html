@@ -468,7 +468,7 @@
                 </div>
                 <div class="card">
                     <div class="card-icon">&#128421;</div>
-                    <h3>Windows Commands</h3>
+                    <h3>OS Commands</h3>
                     <p>Essential CLI commands for troubleshooting and management.</p>
                     <a href="reference/commands.html" class="btn-card">View Guide</a>
                 </div>
@@ -486,7 +486,7 @@
     <section class="section section--dark" id="flashcards">
         <div class="section-inner">
             <h2 class="section-title">&#127183; Flash Card Preview</h2>
-            <p class="section-subtitle">50 free cards — full 500-term deck in the Members Area</p>
+            <p class="section-subtitle">50 randomly selected cards — full 567-term deck in the Members Area</p>
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard" onclick="flipCard()">
                     <div class="flashcard-face flashcard-front" id="cardFront">SSH</div>
@@ -500,7 +500,7 @@
             </div>
             <p class="flashcard-hint">Click card to flip &middot; Use arrows to navigate</p>
             <div class="flashcard-cta">
-                <a href="flashcards.html">View All 50 Free Cards</a>
+                <a href="members.html">Want all 567 terms? Join Members Area →</a>
             </div>
         </div>
     </section>
@@ -519,13 +519,13 @@
             <div>
                 <h4>Free Resources</h4>
                 <a href="#games">Study Games</a>
-                <a href="flashcards.html">Flash Cards (50)</a>
+                <a href="#flashcards">Flash Cards (50)</a>
                 <a href="#reference">Reference Guides</a>
                 <a href="#pbqs">Practice PBQs</a>
             </div>
             <div>
                 <h4>Members Only</h4>
-                <a href="members.html">Full 500 Flash Cards</a>
+                <a href="members.html">Full 567 Flash Cards</a>
                 <a href="members.html">Searchable Glossary</a>
                 <a href="members.html">All Arcade Games</a>
                 <a href="members.html">Study Tools</a>
@@ -562,8 +562,9 @@
         const el=document.getElementById('hitCount');
         if(el)el.textContent=count.toLocaleString();
     })();
-    <script>
-    const cards = [
+
+    // Flash Card Preview — 50 random cards from glossary pool
+    const allCards = [
         {f:'SSH',b:'Port 22. Encrypted remote CLI access. Replaces Telnet.'},
         {f:'HTTPS',b:'Port 443. Encrypted web (TLS/SSL). Padlock icon.'},
         {f:'DHCP',b:'Ports 67/68 (UDP). Auto-assigns IPs. DORA process.'},
@@ -613,8 +614,37 @@
         {f:'Secure Boot',b:'UEFI feature. Only signed OS boots. Required Win11.'},
         {f:'ESD',b:'Electrostatic Discharge. Ground yourself first. 100V damages.'},
         {f:'3-2-1 Backup',b:'3 copies, 2 media types, 1 offsite.'},
-        {f:'Incremental',b:'Changes since LAST backup. Fastest. Complex restore.'}
+        {f:'Incremental',b:'Changes since LAST backup. Fastest. Complex restore.'},
+        {f:'TCP',b:'Connection-oriented. Reliable delivery. Web, email, files.'},
+        {f:'UDP',b:'Connectionless. Fast. Streaming, VoIP, gaming, DNS.'},
+        {f:'Worm',b:'Self-replicating across networks. No user action needed.'},
+        {f:'Trojan',b:'Malware disguised as legitimate software. Backdoors.'},
+        {f:'Rootkit',b:'Hides in OS kernel. Hard to detect. Reinstall OS.'},
+        {f:'VLAN',b:'Logically segments a switch into broadcast domains.'},
+        {f:'Switch',b:'Layer 2. Forwards frames using MAC table.'},
+        {f:'Router',b:'Layer 3. Routes packets between networks.'},
+        {f:'PoE',b:'Power over Ethernet. Powers cameras, WAPs, phones.'},
+        {f:'Subnet Mask',b:'Defines network vs host. /24 = 254 hosts.'},
+        {f:'POST',b:'Power-On Self-Test. Beep codes = hardware failure.'},
+        {f:'CMOS Battery',b:'CR2032. Dead = clock resets, settings lost.'},
+        {f:'Thermal Paste',b:'CPU to heatsink. Clean and reapply when reseating.'},
+        {f:'SSD',b:'Solid state. Flash memory. Faster, no moving parts.'},
+        {f:'HDD',b:'Spinning platters. Cheaper per GB. Clicking = failure.'},
+        {f:'USB 3.2 Gen 1',b:'5 Gbps. Blue connectors. SuperSpeed.'},
+        {f:'Firewall',b:'Controls traffic via rules. Hardware or software.'},
+        {f:'RAID 10',b:'Mirror + stripe. Min 4 drives. Best performance.'},
+        {f:'System Restore',b:'Reverts system files/registry. Not documents.'},
+        {f:'bootrec',b:'WinRE boot repair. /fixmbr /fixboot /rebuildbcd.'},
+        {f:'WPA2',b:'AES/CCMP encryption. Personal or Enterprise modes.'},
+        {f:'Default Gateway',b:'Router IP. Wrong = LAN works but no internet.'},
+        {f:'6-Step Troubleshooting',b:'Identify, Theory, Test, Plan, Verify, Document.'},
+        {f:'Class C Fire',b:'Electrical. CO2 or dry chemical. Never water.'},
+        {f:'PII',b:'Personally Identifiable Info. Name, SSN, email.'},
+        {f:'Change Management',b:'Request, assess, approve, implement, document.'}
     ];
+    // Shuffle and pick 50
+    const shuffled = [...allCards].sort(() => Math.random() - 0.5);
+    const cards = shuffled.slice(0, 50);
     let cur = 0, flipped = false;
     function updateCard() {
         flipped = false;
@@ -627,6 +657,7 @@
     function nextCard() { cur=(cur+1)%cards.length; updateCard(); }
     function prevCard() { cur=(cur-1+cards.length)%cards.length; updateCard(); }
     document.addEventListener('keydown', e => { if(e.key==='ArrowRight') nextCard(); if(e.key==='ArrowLeft') prevCard(); if(e.key===' ') { e.preventDefault(); flipCard(); } });
+    updateCard();
     </script>
 </body>
 </html>

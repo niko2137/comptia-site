@@ -191,6 +191,11 @@ function startGame(){
 function askQuestion(){
     if(questionPool.length===0) questionPool=[...QUESTIONS].sort(()=>Math.random()-0.5);
     currentQ=questionPool.pop();
+    // Shuffle answer choices while tracking correct answer
+    const correctText = currentQ.a[currentQ.c];
+    const shuffled = [...currentQ.a].sort(() => Math.random() - 0.5);
+    currentQ.a = shuffled;
+    currentQ.c = shuffled.indexOf(correctText);
     selectedAnswer=-1;answerResult=null;answerTimer=0;
     state=ST.QUESTION;
 }

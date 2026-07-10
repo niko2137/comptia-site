@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows Troubleshooting Commands — CompTIA A+ Study Hub</title>
+    <title>Commands Reference — Windows, Linux & macOS | CompTIA A+ Study Hub</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         /* Reference page specific styles */
@@ -167,8 +167,17 @@
 
     <section class="ref-page">
         <div class="container">
-            <h1>Windows Troubleshooting Commands</h1>
-            <p class="subtitle">Essential CLI commands for the CompTIA A+ 220-1200 exam — know what each does and when to use it</p>
+            <h1>Commands Reference</h1>
+            <p class="subtitle">Essential CLI commands for Windows, Linux &amp; macOS — CompTIA A+ 220-1201 &amp; 220-1202</p>
+
+            <!-- OS FILTER TABS -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+                <button class="print-btn" style="background:#1F497D;" onclick="filterOS('all')" id="btn-all">All</button>
+                <button class="print-btn" style="background:#0078d4;" onclick="filterOS('win')" id="btn-win">Windows</button>
+                <button class="print-btn" style="background:#e95420;" onclick="filterOS('linux')" id="btn-linux">Linux</button>
+                <button class="print-btn" style="background:#555;" onclick="filterOS('mac')" id="btn-mac">macOS</button>
+                <button class="print-btn" style="background:#27ae60;margin-left:auto;" onclick="window.print()">🖨️ Print</button>
+            </div>
 
             <!-- DIAGRAM REFERENCE PANEL -->
             <div style="margin-bottom:24px;border:1px solid #c7d2e0;border-radius:10px;overflow:hidden;background:#f8fafc;">
@@ -181,106 +190,88 @@
             </div>
             <!-- END DIAGRAM PANEL -->
 
-            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+            <button class="print-btn" onclick="window.print()" style="display:none;">🖨️ Print this page</button>
 
             <div class="table-wrapper">
-                <table class="ref-table">
+                <table class="ref-table" id="cmdTable">
                     <thead>
                         <tr>
                             <th>Command</th>
+                            <th>OS</th>
                             <th>Purpose</th>
-                            <th>Key Switches</th>
-                            <th>When to Use</th>
+                            <th>Key Switches / Notes</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="cmd">ipconfig</td>
-                            <td>IP configuration</td>
-                            <td class="switches">/all, /release, /renew, /flushdns</td>
-                            <td>First step for any network issue</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">ping</td>
-                            <td>Test connectivity</td>
-                            <td class="switches">-t (continuous), -n (count)</td>
-                            <td>Verify host reachable</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">tracert</td>
-                            <td>Trace route to host</td>
-                            <td class="switches">(none common)</td>
-                            <td>Find where packets stop</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">nslookup</td>
-                            <td>Test DNS resolution</td>
-                            <td class="switches">(server name)</td>
-                            <td>DNS issues, wrong IP returned</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">netstat</td>
-                            <td>Active connections</td>
-                            <td class="switches">-a (all), -n (numeric), -b (process)</td>
-                            <td>Find open ports, suspicious connections</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">sfc /scannow</td>
-                            <td>Repair system files</td>
-                            <td class="switches">(none)</td>
-                            <td>Corrupted Windows files</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">DISM /Online /Cleanup-Image /RestoreHealth</td>
-                            <td>Fix component store</td>
-                            <td class="switches">(none)</td>
-                            <td>Run BEFORE retrying failed sfc</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">chkdsk</td>
-                            <td>Disk integrity</td>
-                            <td class="switches">/f (fix errors), /r (bad sectors)</td>
-                            <td>Disk errors, file corruption</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">bootrec</td>
-                            <td>Fix bootloader</td>
-                            <td class="switches">/fixmbr, /fixboot, /rebuildbcd</td>
-                            <td>Windows won't boot</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">msconfig</td>
-                            <td>System configuration</td>
-                            <td class="switches">(GUI)</td>
-                            <td>Isolate startup/service conflicts</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">gpupdate /force</td>
-                            <td>Refresh Group Policy</td>
-                            <td class="switches">(none)</td>
-                            <td>GPO not applying</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">diskpart</td>
-                            <td>Disk management CLI</td>
-                            <td class="switches">list disk, clean, convert gpt</td>
-                            <td>Advanced partition work</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">robocopy</td>
-                            <td>Robust file copy</td>
-                            <td class="switches">/mir, /e, /z (resume)</td>
-                            <td>Large file migrations</td>
-                        </tr>
-                        <tr>
-                            <td class="cmd">shutdown</td>
-                            <td>Remote/scheduled shutdown</td>
-                            <td class="switches">/s, /r, /t (seconds)</td>
-                            <td>Restart remote PCs</td>
-                        </tr>
+                        <!-- WINDOWS -->
+                        <tr data-os="win"><td class="cmd">ipconfig</td><td>Win</td><td>Show/refresh IP configuration</td><td class="switches">/all, /release, /renew, /flushdns</td></tr>
+                        <tr data-os="win"><td class="cmd">ping</td><td>Win</td><td>Test network connectivity</td><td class="switches">-t (continuous), -n (count)</td></tr>
+                        <tr data-os="win"><td class="cmd">tracert</td><td>Win</td><td>Trace route to destination</td><td class="switches">Shows each hop/router</td></tr>
+                        <tr data-os="win"><td class="cmd">nslookup</td><td>Win</td><td>Query DNS records</td><td class="switches">nslookup domain [server]</td></tr>
+                        <tr data-os="win"><td class="cmd">netstat</td><td>Win</td><td>Show active connections/ports</td><td class="switches">-a (all), -n (numeric), -b (process)</td></tr>
+                        <tr data-os="win"><td class="cmd">sfc /scannow</td><td>Win</td><td>Repair Windows system files</td><td class="switches">Run elevated. If fails → DISM first</td></tr>
+                        <tr data-os="win"><td class="cmd">DISM /RestoreHealth</td><td>Win</td><td>Fix Windows component store</td><td class="switches">/Online /Cleanup-Image /RestoreHealth</td></tr>
+                        <tr data-os="win"><td class="cmd">chkdsk</td><td>Win</td><td>Check disk integrity</td><td class="switches">/f (fix errors), /r (bad sectors)</td></tr>
+                        <tr data-os="win"><td class="cmd">bootrec</td><td>Win</td><td>Repair boot configuration</td><td class="switches">/fixmbr, /fixboot, /rebuildbcd</td></tr>
+                        <tr data-os="win"><td class="cmd">gpupdate /force</td><td>Win</td><td>Refresh Group Policy now</td><td class="switches">Domain environments only</td></tr>
+                        <tr data-os="win"><td class="cmd">diskpart</td><td>Win</td><td>Advanced disk management</td><td class="switches">list disk, select, clean, convert</td></tr>
+                        <tr data-os="win"><td class="cmd">robocopy</td><td>Win</td><td>Robust file copy</td><td class="switches">/mir, /e, /z (resumable)</td></tr>
+                        <tr data-os="win"><td class="cmd">shutdown</td><td>Win</td><td>Shutdown/restart system</td><td class="switches">/s (off), /r (restart), /t (delay)</td></tr>
+                        <tr data-os="win"><td class="cmd">msconfig</td><td>Win</td><td>System Configuration tool</td><td class="switches">Boot tab → Safe Mode options</td></tr>
+                        <tr data-os="win"><td class="cmd">tasklist / taskkill</td><td>Win</td><td>List/kill running processes</td><td class="switches">taskkill /PID #### /F</td></tr>
+                        <tr data-os="win"><td class="cmd">net user</td><td>Win</td><td>Manage user accounts</td><td class="switches">net user username /add, /delete</td></tr>
+                        <tr data-os="win"><td class="cmd">net use</td><td>Win</td><td>Map/disconnect network drives</td><td class="switches">net use Z: \\server\share</td></tr>
+                        <tr data-os="win"><td class="cmd">pathping</td><td>Win</td><td>Combines ping + tracert</td><td class="switches">Shows packet loss per hop</td></tr>
+                        <!-- LINUX -->
+                        <tr data-os="linux"><td class="cmd">ifconfig / ip addr</td><td>Linux</td><td>Show/configure network</td><td class="switches">ip addr show, ip link set</td></tr>
+                        <tr data-os="linux"><td class="cmd">ping</td><td>Linux</td><td>Test connectivity</td><td class="switches">-c (count) — stops after N pings</td></tr>
+                        <tr data-os="linux"><td class="cmd">traceroute</td><td>Linux</td><td>Trace route to destination</td><td class="switches">Same as Windows tracert</td></tr>
+                        <tr data-os="linux"><td class="cmd">dig / nslookup</td><td>Linux</td><td>DNS queries</td><td class="switches">dig domain ANY, dig +short</td></tr>
+                        <tr data-os="linux"><td class="cmd">ss / netstat</td><td>Linux</td><td>Show socket/connections</td><td class="switches">ss -tulnp (listening ports)</td></tr>
+                        <tr data-os="linux"><td class="cmd">ls</td><td>Linux</td><td>List directory contents</td><td class="switches">-la (all+details), -R (recursive)</td></tr>
+                        <tr data-os="linux"><td class="cmd">cd / pwd</td><td>Linux</td><td>Change/print directory</td><td class="switches">cd ~ (home), cd .. (up), pwd (where)</td></tr>
+                        <tr data-os="linux"><td class="cmd">chmod</td><td>Linux</td><td>Change file permissions</td><td class="switches">chmod 755, chmod +x file</td></tr>
+                        <tr data-os="linux"><td class="cmd">chown</td><td>Linux</td><td>Change file ownership</td><td class="switches">chown user:group file</td></tr>
+                        <tr data-os="linux"><td class="cmd">sudo</td><td>Linux</td><td>Run as superuser</td><td class="switches">Elevates single command to root</td></tr>
+                        <tr data-os="linux"><td class="cmd">apt-get / dnf</td><td>Linux</td><td>Package management</td><td class="switches">install, update, remove. Debian vs RHEL</td></tr>
+                        <tr data-os="linux"><td class="cmd">ps / top / htop</td><td>Linux</td><td>View running processes</td><td class="switches">ps aux, top (real-time)</td></tr>
+                        <tr data-os="linux"><td class="cmd">kill / killall</td><td>Linux</td><td>Terminate processes</td><td class="switches">kill -9 PID (force kill)</td></tr>
+                        <tr data-os="linux"><td class="cmd">grep</td><td>Linux</td><td>Search text in files</td><td class="switches">grep -r "text" /path, -i (insensitive)</td></tr>
+                        <tr data-os="linux"><td class="cmd">cat / less / tail</td><td>Linux</td><td>View file contents</td><td class="switches">tail -f (follow log in real-time)</td></tr>
+                        <tr data-os="linux"><td class="cmd">df / du</td><td>Linux</td><td>Disk space usage</td><td class="switches">df -h (human), du -sh *</td></tr>
+                        <tr data-os="linux"><td class="cmd">systemctl</td><td>Linux</td><td>Manage services</td><td class="switches">start, stop, enable, status</td></tr>
+                        <tr data-os="linux"><td class="cmd">journalctl</td><td>Linux</td><td>View system logs</td><td class="switches">-u service, -f (follow), --since</td></tr>
+                        <!-- macOS -->
+                        <tr data-os="mac"><td class="cmd">ifconfig / networksetup</td><td>macOS</td><td>Network configuration</td><td class="switches">networksetup -listallnetworkservices</td></tr>
+                        <tr data-os="mac"><td class="cmd">ping</td><td>macOS</td><td>Test connectivity</td><td class="switches">-c (count) — same as Linux</td></tr>
+                        <tr data-os="mac"><td class="cmd">traceroute</td><td>macOS</td><td>Trace route</td><td class="switches">Same as Linux traceroute</td></tr>
+                        <tr data-os="mac"><td class="cmd">dscl</td><td>macOS</td><td>Directory Service CLI</td><td class="switches">User/group management</td></tr>
+                        <tr data-os="mac"><td class="cmd">diskutil</td><td>macOS</td><td>Disk management</td><td class="switches">list, eraseDisk, repairDisk</td></tr>
+                        <tr data-os="mac"><td class="cmd">defaults</td><td>macOS</td><td>Manage preferences</td><td class="switches">defaults read/write domain key</td></tr>
+                        <tr data-os="mac"><td class="cmd">brew</td><td>macOS</td><td>Package manager (Homebrew)</td><td class="switches">brew install, update, upgrade</td></tr>
+                        <tr data-os="mac"><td class="cmd">tmutil</td><td>macOS</td><td>Time Machine CLI</td><td class="switches">startbackup, listbackups</td></tr>
+                        <tr data-os="mac"><td class="cmd">open</td><td>macOS</td><td>Open files/apps from terminal</td><td class="switches">open . (Finder), open -a "App"</td></tr>
+                        <tr data-os="mac"><td class="cmd">softwareupdate</td><td>macOS</td><td>System updates via CLI</td><td class="switches">--list, --install --all</td></tr>
+                        <tr data-os="mac"><td class="cmd">chmod / chown / sudo</td><td>macOS</td><td>Permissions (same as Linux)</td><td class="switches">Unix-based — identical syntax</td></tr>
+                        <tr data-os="mac"><td class="cmd">launchctl</td><td>macOS</td><td>Manage services/daemons</td><td class="switches">load, unload, list</td></tr>
                     </tbody>
                 </table>
             </div>
+
+            <script>
+            function filterOS(os) {
+                const rows = document.querySelectorAll('#cmdTable tbody tr');
+                rows.forEach(row => {
+                    if (os === 'all') { row.style.display = ''; }
+                    else { row.style.display = row.dataset.os === os ? '' : 'none'; }
+                });
+                // Update active button
+                document.querySelectorAll('[id^="btn-"]').forEach(b => b.style.opacity = '0.5');
+                document.getElementById('btn-' + os).style.opacity = '1';
+            }
+            // Default: show all
+            document.getElementById('btn-all').style.opacity = '1';
+            </script>
 
             <div class="flow-section">
                 <h2>Troubleshooting Flows</h2>

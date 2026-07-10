@@ -5,16 +5,16 @@
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 685.6 716.1"
 	 style="enable-background:new 0 0 685.6 716.1;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#1F497D;}
+	.st0{fill:#2980B9;}
 	.st1{font-family:'SegoeUI-Bold';}
 	.st2{font-size:22px;}
-	.st3{fill:#333333;enable-background:new    ;}
+	.st3{fill:#333333;}
 	.st4{fill:none;stroke:#1F497D;stroke-miterlimit:10;}
 	.st5{fill:#FFFFFF;stroke:#C0392B;stroke-width:2;}
 	.st6{fill:#C0392B;}
 	.st7{font-family:'ArialNarrow-Bold';}
 	.st8{font-size:11px;}
-	.st9{fill:#333333;}
+	.st9{fill:#1F497D;}
 	.st10{fill:#FFFFFF;}
 	.st11{font-size:14px;}
 	.st12{fill:#FFFFFF;stroke:#E67E22;stroke-width:2;}
@@ -22,24 +22,24 @@
 	.st14{fill:#FFFFFF;stroke:#F39C12;stroke-width:2;}
 	.st15{fill:#F39C12;}
 	.st16{fill:#FFFFFF;stroke:#2980B9;stroke-width:2;}
-	.st17{fill:#2980B9;}
-	.st18{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
-	.st19{fill:#27AE60;}
-	.st20{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
-	.st21{fill:#8E44AD;}
-	.st22{fill:#FFFFFF;stroke:#16A085;stroke-width:2;}
-	.st23{fill:#16A085;}
-	.st24{fill:#FFFFFF;stroke:#1F497D;stroke-width:2;}
-	.st25{font-family:'Arial-BoldMT';}
-	.st26{font-size:12px;}
-	.st27{enable-background:new    ;}
-	.st28{font-family:'ArialMT';}
-	.st29{fill:#FFFFFF;stroke:#366092;stroke-width:2;}
-	.st30{fill:#366092;}
-	.st31{fill:none;}
-	.st32{fill:#FFFFFF;stroke:#548DD4;stroke-width:2;}
-	.st33{fill:#548DD4;}
-	.st34{font-family:'Arial-ItalicMT';}
+	.st17{fill:#FFFFFF;stroke:#27AE60;stroke-width:2;}
+	.st18{fill:#27AE60;}
+	.st19{fill:#FFFFFF;stroke:#8E44AD;stroke-width:2;}
+	.st20{fill:#8E44AD;}
+	.st21{fill:#FFFFFF;stroke:#16A085;stroke-width:2;}
+	.st22{fill:#16A085;}
+	.st23{fill:#FFFFFF;stroke:#1F497D;stroke-width:2;}
+	.st24{font-family:'Arial-BoldMT';}
+	.st25{font-size:12px;}
+	.st26{font-family:'ArialMT';}
+	.st27{fill:#FFFFFF;stroke:#548DD4;stroke-width:2;}
+	.st28{fill:#548DD4;}
+	.st29{font-family:'Arial-ItalicMT';}
+	.st30{fill:#FFFFFF;stroke:#366092;stroke-width:2;}
+	.st31{fill:#366092;}
+	.st32{fill:none;}
+	.st33{enable-background:new    ;}
+	.st34{fill:#888888;}
 </style>
 <sodipodi:namedview  bordercolor="#000000" borderopacity="0.25" id="namedview54" inkscape:current-layer="Layer_1" inkscape:cx="400.30979" inkscape:cy="325" inkscape:deskcolor="#d1d1d1" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:showpageshadow="2" inkscape:window-height="1009" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="1912" inkscape:window-y="-8" inkscape:zoom="1.2415385" pagecolor="#ffffff">
 	</sodipodi:namedview>
@@ -52,218 +52,226 @@
 <path id="path20" class="st3" d="M342.8-7.6"/>
 <path id="path23" class="st3" d="M342.8-7.6"/>
 <g>
-	<line class="st4" x1="31.8" y1="88.6" x2="31.8" y2="693.7"/>
+	<line class="st4" x1="31.8" y1="89.1" x2="31.8" y2="694.2"/>
 	<g>
 		<g>
-			<path id="path3" class="st5" d="M71.5,83.3h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,86,67.9,83.3,71.5,83.3z"/>
-			<text id="text4" transform="matrix(1 0 0 1 79.9738 103.3478)" class="st6 st7 st8">Ticket Creation (Intake)</text>
-			<text id="text5" transform="matrix(1 0 0 1 79.9738 121.3479)" class="st9 st7 st8">User name, contact info, device ID, problem description, date/time</text>
+			<path id="path3" class="st5" d="M71.5,83.8h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,86.5,67.9,83.8,71.5,83.8z"/>
+			<text id="text4" transform="matrix(1 0 0 1 79.9738 103.8478)" class="st6 st7 st8">Ticket Creation (Intake)</text>
+			<text id="text5" transform="matrix(1 0 0 1 79.9738 121.848)" class="st3 st7 st8">User name, contact info, device ID, problem description, date/time</text>
 		</g>
 		<g>
-			<polygon id="polygon8" class="st0" points="31.8,146.2 23.8,134.2 39.8,134.2 			"/>
+			<polygon id="polygon8" class="st9" points="31.8,146.7 23.8,134.7 39.8,134.7 			"/>
 			<g id="g54">
-				<circle id="circle2" class="st6" cx="31.8" cy="105.3" r="22"/>
-				<text id="text3" transform="matrix(1 0 0 1 27.7897 111.3478)" class="st10 st1 st11">1</text>
+				<circle id="circle2" class="st6" cx="31.8" cy="105.8" r="22"/>
+				<text id="text3" transform="matrix(1 0 0 1 27.7897 111.8478)" class="st10 st1 st11">1</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g>
-			<path id="path7" class="st12" d="M71.5,163.5h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,166.2,67.9,163.5,71.5,163.5z"/>
-			<text id="text7" transform="matrix(1 0 0 1 79.9738 183.5466)" class="st13 st7 st8">Categorization and Prioritization</text>
-			<text id="text8" transform="matrix(1 0 0 1 79.9738 201.5466)" class="st9 st7 st8">Assign priority: P1 Critical, P2 High, P3 Medium, P4 Low</text>
+			<path id="path7" class="st12" d="M71.5,164h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,166.7,67.9,164,71.5,164z"/>
+			<text id="text7" transform="matrix(1 0 0 1 79.9738 184.0467)" class="st13 st7 st8">Categorization and Prioritization</text>
+			<text id="text8" transform="matrix(1 0 0 1 79.9738 202.0467)" class="st3 st7 st8">Assign priority: P1 Critical, P2 High, P3 Medium, P4 Low</text>
 		</g>
 		<g>
-			<polygon id="polygon11" class="st0" points="23.8,219.4 39.8,219.4 31.8,231.4 			"/>
+			<polygon id="polygon11" class="st9" points="23.8,219.9 39.8,219.9 31.8,231.9 			"/>
 			<g id="g55">
-				<path id="path6" marker-end="url(#tlarr)" class="st0" d="M31.8,163.5"/>
-				<circle id="circle6" class="st13" cx="31.8" cy="190.5" r="22"/>
-				<text id="text6" transform="matrix(1 0 0 1 27.7897 196.5466)" class="st10 st1 st11">2</text>
+				<path id="path6" marker-end="url(#tlarr)" class="st9" d="M31.8,164"/>
+				<circle id="circle6" class="st13" cx="31.8" cy="191" r="22"/>
+				<text id="text6" transform="matrix(1 0 0 1 27.7897 197.0467)" class="st10 st1 st11">2</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g>
-			<path id="path10" class="st14" d="M71.5,248.7h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,251.4,67.9,248.7,71.5,248.7z"/>
-			<text id="text10" transform="matrix(1 0 0 1 79.9738 268.7453)" class="st15 st7 st8">Troubleshooting and Documentation</text>
-			<text id="text11" transform="matrix(1 0 0 1 79.9738 286.7453)" class="st9 st7 st8">User Q and A, testing, logs, system tools. Document everything.</text>
+			<path id="path10" class="st14" d="M71.5,249.2h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,251.9,67.9,249.2,71.5,249.2z"/>
+			<text id="text10" transform="matrix(1 0 0 1 79.9738 269.2454)" class="st15 st7 st8">Troubleshooting and Documentation</text>
+			<text id="text11" transform="matrix(1 0 0 1 79.9738 287.2454)" class="st3 st7 st8">User Q and A, testing, logs, system tools. Document everything.</text>
 		</g>
 		<g>
-			<polygon id="polygon14" class="st0" points="23.8,299.6 39.8,299.6 31.8,311.6 			"/>
+			<polygon id="polygon14" class="st9" points="23.8,300.1 39.8,300.1 31.8,312.1 			"/>
 			<g id="g56">
-				<circle id="circle9" class="st15" cx="31.8" cy="270.7" r="22"/>
-				<text id="text9" transform="matrix(1 0 0 1 27.7897 276.7453)" class="st10 st1 st11">3</text>
+				<circle id="circle9" class="st15" cx="31.8" cy="271.2" r="22"/>
+				<text id="text9" transform="matrix(1 0 0 1 27.7897 277.2454)" class="st10 st1 st11">3</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g>
-			<path id="path13" class="st16" d="M71.5,328.9h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,331.6,67.9,328.9,71.5,328.9z"/>
-			<text id="text13" transform="matrix(1 0 0 1 79.9738 348.9441)" class="st17 st7 st8">Escalation (If Needed)</text>
-			<text id="text14" transform="matrix(1 0 0 1 79.9738 366.9441)" class="st9 st7 st8">Exceeds permissions, specialized knowledge required, or SLA at risk</text>
+			<path id="path13" class="st16" d="M71.5,329.4h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,332.1,67.9,329.4,71.5,329.4z"/>
+			<text id="text13" transform="matrix(1 0 0 1 79.9738 349.4442)" class="st0 st7 st8">Escalation (If Needed)</text>
+			<text id="text14" transform="matrix(1 0 0 1 79.9738 367.4442)" class="st3 st7 st8">Exceeds permissions, specialized knowledge required, or SLA at risk</text>
 		</g>
 		<g>
-			<polygon id="polygon17" class="st0" points="31.8,391.8 23.8,379.8 39.8,379.8 			"/>
+			<polygon id="polygon17" class="st9" points="31.8,392.3 23.8,380.3 39.8,380.3 			"/>
 			<g id="g57">
-				<circle id="circle12" class="st17" cx="31.8" cy="350.9" r="22"/>
-				<text id="text12" transform="matrix(1 0 0 1 27.7897 356.9441)" class="st10 st1 st11">4</text>
+				<circle id="circle12" class="st0" cx="31.8" cy="351.4" r="22"/>
+				<text id="text12" transform="matrix(1 0 0 1 27.7897 357.4442)" class="st10 st1 st11">4</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g>
-			<path id="path16" class="st18" d="M71.5,409.1h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,411.8,67.9,409.1,71.5,409.1z"/>
-			<text id="text16" transform="matrix(1 0 0 1 79.9738 429.1429)" class="st19 st7 st8">Resolution and Implementation</text>
-			<text id="text17" transform="matrix(1 0 0 1 79.9738 447.1429)" class="st9 st7 st8">Apply fix, install updates, restore service, complete change</text>
+			<path id="path16" class="st17" d="M71.5,409.6h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,412.3,67.9,409.6,71.5,409.6z"/>
+			<text id="text16" transform="matrix(1 0 0 1 79.9738 429.643)" class="st18 st7 st8">Resolution and Implementation</text>
+			<text id="text17" transform="matrix(1 0 0 1 79.9738 447.643)" class="st3 st7 st8">Apply fix, install updates, restore service, complete change</text>
 		</g>
 		<g>
-			<polygon id="polygon20" class="st0" points="23.8,460 39.8,460 31.8,472 			"/>
+			<polygon id="polygon20" class="st9" points="23.8,460.5 39.8,460.5 31.8,472.5 			"/>
 			<g id="g58">
-				<circle id="circle15" class="st19" cx="31.8" cy="431.1" r="22"/>
-				<text id="text15" transform="matrix(1 0 0 1 27.7897 437.1429)" class="st10 st1 st11">5</text>
+				<circle id="circle15" class="st18" cx="31.8" cy="431.6" r="22"/>
+				<text id="text15" transform="matrix(1 0 0 1 27.7897 437.643)" class="st10 st1 st11">5</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g>
-			<path id="path19" class="st20" d="M71.5,489.3h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,492,67.9,489.3,71.5,489.3z"/>
-			<text id="text19" transform="matrix(1 0 0 1 79.9738 509.3416)" class="st21 st7 st8">Verification of Functionality</text>
-			<text id="text20" transform="matrix(1 0 0 1 79.9738 527.3416)" class="st9 st7 st8">Confirm issue fully resolved. User confirmation REQUIRED.</text>
+			<path id="path19" class="st19" d="M71.5,489.8h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,492.5,67.9,489.8,71.5,489.8z"/>
+			<text id="text19" transform="matrix(1 0 0 1 79.9738 509.8417)" class="st20 st7 st8">Verification of Functionality</text>
+			<text id="text20" transform="matrix(1 0 0 1 79.9738 527.8417)" class="st3 st7 st8">Confirm issue fully resolved. User confirmation REQUIRED.</text>
 		</g>
 		<g>
-			<polygon id="polygon23" class="st0" points="23.8,540.2 39.8,540.2 31.8,552.2 			"/>
+			<polygon id="polygon23" class="st9" points="23.8,540.7 39.8,540.7 31.8,552.7 			"/>
 			<g id="g59">
-				<circle id="circle18" class="st21" cx="31.8" cy="511.3" r="22"/>
-				<text id="text18" transform="matrix(1 0 0 1 27.7897 517.3416)" class="st10 st1 st11">6</text>
+				<circle id="circle18" class="st20" cx="31.8" cy="511.8" r="22"/>
+				<text id="text18" transform="matrix(1 0 0 1 27.7897 517.8417)" class="st10 st1 st11">6</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g>
-			<path id="path22" class="st22" d="M71.5,569.5h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,572.2,67.9,569.5,71.5,569.5z"/>
-			<text id="text22" transform="matrix(1 0 0 1 79.9738 589.5404)" class="st23 st7 st8">User Education (If Applicable)</text>
-			<text id="text23" transform="matrix(1 0 0 1 79.9738 607.5403)" class="st9 st7 st8">Explain how to avoid future issues. Provide documentation.</text>
+			<path id="path22" class="st21" d="M71.5,570h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,572.7,67.9,570,71.5,570z"/>
+			<text id="text22" transform="matrix(1 0 0 1 79.9738 590.0405)" class="st22 st7 st8">User Education (If Applicable)</text>
+			<text id="text23" transform="matrix(1 0 0 1 79.9738 608.0403)" class="st3 st7 st8">Explain how to avoid future issues. Provide documentation.</text>
 		</g>
 		<g>
-			<polygon id="polygon5" class="st0" points="31.8,632.4 23.8,620.4 39.8,620.4 			"/>
+			<polygon id="polygon5" class="st9" points="31.8,632.9 23.8,620.9 39.8,620.9 			"/>
 			<g>
-				<circle id="circle21" class="st23" cx="31.8" cy="591.5" r="22"/>
-				<text id="text21" transform="matrix(1 0 0 1 27.7897 597.5403)" class="st10 st1 st11">7</text>
+				<circle id="circle21" class="st22" cx="31.8" cy="592" r="22"/>
+				<text id="text21" transform="matrix(1 0 0 1 27.7897 598.0403)" class="st10 st1 st11">7</text>
 			</g>
 		</g>
 	</g>
 	<g>
 		<g id="g61">
-			<circle id="circle24" class="st0" cx="31.8" cy="671.7" r="22"/>
-			<text id="text24" transform="matrix(1 0 0 1 27.7897 677.7391)" class="st10 st1 st11">8</text>
+			<circle id="circle24" class="st9" cx="31.8" cy="672.2" r="22"/>
+			<text id="text24" transform="matrix(1 0 0 1 27.7897 678.2391)" class="st10 st1 st11">8</text>
 		</g>
 		<g>
-			<path id="path25" class="st24" d="M71.5,649.7h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
-				C65,652.4,67.9,649.7,71.5,649.7z"/>
-			<text id="text25" transform="matrix(1 0 0 1 79.9738 669.7391)" class="st0 st7 st8">Ticket Closure</text>
-			<text id="text26" transform="matrix(1 0 0 1 79.9738 687.7391)" class="st9 st7 st8">Closed ONLY after user confirms + all documentation entered.</text>
+			<path id="path25" class="st23" d="M71.5,650.2h302.6c3.6,0,6.5,2.7,6.5,6v36c0,3.3-2.9,6-6.5,6H71.5c-3.6,0-6.5-2.7-6.5-6v-36
+				C65,652.9,67.9,650.2,71.5,650.2z"/>
+			<text id="text25" transform="matrix(1 0 0 1 79.9738 670.2391)" class="st9 st7 st8">Ticket Closure</text>
+			<text id="text26" transform="matrix(1 0 0 1 79.9738 688.2391)" class="st3 st7 st8">Closed ONLY after user confirms + all documentation entered.</text>
 		</g>
 	</g>
 </g>
 <g>
+	<path id="path26" class="st23" d="M409.8,83.8h258.9c3.9,0,7,4.8,7,10.7v224.3c0,5.8-3.2,10.7-7,10.7H409.8c-3.9,0-7-4.8-7-10.7
+		V94.5C402.8,88.7,406,83.8,409.8,83.8z"/>
+	<path id="path27" class="st9" d="M409.8,84.2h258.9c3.9,0,7,3.6,7,8v10c0,4.4-3.2,8-7,8H409.8c-3.9,0-7-3.6-7-8v-10
+		C402.8,87.8,406,84.2,409.8,84.2z"/>
 	<g>
-		<path id="path26" class="st24" d="M409.8,83.3h258.9c3.9,0,7,4.6,7,10.3v216.8c0,5.6-3.2,10.3-7,10.3H409.8c-3.9,0-7-4.6-7-10.3
-			V93.6C402.8,88,406,83.3,409.8,83.3z"/>
-		<path id="path27" class="st0" d="M409.8,83.7h258.9c3.9,0,7,3.6,7,8v10c0,4.4-3.2,8-7,8H409.8c-3.9,0-7-3.6-7-8v-10
-			C402.8,87.3,406,83.7,409.8,83.7z"/>
 		<g>
 			<g>
-				<g>
-					<circle id="circle27" class="st6" cx="430.2" cy="127.5" r="10"/>
-					<text id="text28" transform="matrix(1 0 0 1 424.2055 131.4528)" class="st10 st25 st26">P1</text>
-				</g>
-				<g>
-					<text id="text29" transform="matrix(1 0 0 1 449.5931 127.7479)" class="st6 st25 st26">Critical</text>
-					<text id="text30" transform="matrix(1 0 0 1 449.5931 141.7478)" class="st27"><tspan x="0" y="0" class="st9 st28 st26">Complete outage. </tspan><tspan x="0" y="14.4" class="st9 st28 st26">All users affected. Immediate.</tspan></text>
-				</g>
+				<circle id="circle27" class="st6" cx="430.2" cy="128" r="10"/>
+				<text id="text28" transform="matrix(1 0 0 1 424.2055 131.9529)" class="st10 st24 st25">P1</text>
 			</g>
 			<g>
-				<g>
-					<circle id="circle30" class="st13" cx="430.2" cy="179.4" r="10"/>
-					<text id="text31" transform="matrix(1 0 0 1 422.8842 183.4178)" class="st10 st25 st26">P2</text>
-				</g>
-				<g>
-					<text id="text32" transform="matrix(1 0 0 1 449.5931 179.7126)" class="st13 st25 st26">High</text>
-					<text id="text33" transform="matrix(1 0 0 1 449.5931 193.7126)" class="st27"><tspan x="0" y="0" class="st9 st28 st26">Major impairment. </tspan><tspan x="0" y="14.4" class="st9 st28 st26">Workaround exists. Hours.</tspan></text>
-				</g>
-			</g>
-			<g>
-				<g>
-					<circle id="circle33" class="st15" cx="430.2" cy="231.4" r="10"/>
-					<text id="text34" transform="matrix(1 0 0 1 422.8842 235.3828)" class="st10 st25 st26">P3</text>
-				</g>
-				<g>
-					<text id="text35" transform="matrix(1 0 0 1 449.5931 231.6777)" class="st15 st25 st26">Medium</text>
-					<text id="text36" transform="matrix(1 0 0 1 449.5931 245.6777)" class="st27"><tspan x="0" y="0" class="st9 st28 st26">Non-critical. Small group. </tspan><tspan x="0" y="14.4" class="st9 st28 st26">Normal hours.</tspan></text>
-				</g>
-			</g>
-			<g>
-				<g>
-					<circle id="circle36" class="st19" cx="430.2" cy="283.3" r="10"/>
-					<text id="text37" transform="matrix(1 0 0 1 422.8842 287.3478)" class="st10 st25 st26">P4</text>
-				</g>
-				<g>
-					<text id="text38" transform="matrix(1 0 0 1 449.5931 283.6429)" class="st19 st25 st26">Low</text>
-					<text id="text39" transform="matrix(1 0 0 1 449.5931 297.6429)" class="st27"><tspan x="0" y="0" class="st9 st28 st26">Minor inconvenience. </tspan><tspan x="0" y="14.4" class="st9 st28 st26">As time permits.</tspan></text>
-				</g>
-			</g>
-		</g>
-		<text id="text27" transform="matrix(1 0 0 1 497.9188 100.0018)" class="st10 st25 st26">Priority Levels</text>
-	</g>
-	<g>
-		<path id="path39" class="st29" d="M409.8,337.8h258.9c3.9,0,7,4.4,7,9.7v181.4c0,5.4-3.2,9.7-7,9.7H409.8c-3.9,0-7-4.4-7-9.7
-			V347.5C402.8,342.1,406,337.8,409.8,337.8z"/>
-		<path id="path40" class="st30" d="M409.8,337.8h258.9c3.9,0,7,3.6,7,8v10c0,4.4-3.2,8-7,8H409.8c-3.9,0-7-3.6-7-8v-10
-			C402.8,341.4,406,337.8,409.8,337.8z"/>
-		<g>
-			<g>
-				<text id="text42" transform="matrix(1 0 0 1 419.5926 419.0404)" class="st9 st25 st26">Impact:</text>
-				<rect x="483.6" y="408.7" class="st31" width="221.9" height="28.3"/>
-				<text id="text43" transform="matrix(1 0 0 1 483.592 419.0404)" class="st27"><tspan x="0" y="0" class="st9 st28 st26">Scope of damage.</tspan><tspan x="0" y="14.4" class="st9 st28 st26">How much is affected?</tspan></text>
-			</g>
-			<g>
-				<text id="text44" transform="matrix(1 0 0 1 419.5923 458.7248)" class="st9 st25 st26">Urgency:</text>
-				<rect x="483.6" y="448.4" class="st31" width="198.1" height="36.2"/>
-				<text id="text45" transform="matrix(1 0 0 1 483.5923 458.7248)" class="st27"><tspan x="0" y="0" class="st9 st28 st26">Time sensitivity. </tspan><tspan x="0" y="14.4" class="st9 st28 st26">How fast is pain felt?</tspan></text>
-			</g>
-			<g>
-				<text id="text46" transform="matrix(1 0 0 1 419.5923 506.2931)" class="st9 st25 st26">Severity:</text>
-				<text id="text47" transform="matrix(1 0 0 1 483.5923 506.2931)" class="st9 st28 st26">How badly is the system broken?</text>
+				<text id="text29" transform="matrix(1 0 0 1 449.5931 128.248)" class="st6 st24 st25">Critical</text>
+				<text transform="matrix(1 0 0 1 449.5931 142.2479)" class="st3 st26 st25">Complete outage. </text>
+				<text transform="matrix(1 0 0 1 449.5931 156.6479)" class="st3 st26 st25">All users affected. Immediate.</text>
 			</g>
 		</g>
 		<g>
-			<text id="text41" transform="matrix(1 0 0 1 461.2421 382.1536)" class="st0 st25 st26">Priority = Impact + Urgency</text>
-			<text id="text40" transform="matrix(1 0 0 1 492.9297 355.0742)" class="st10 st25 st26">Priority Formula</text>
+			<g>
+				<circle id="circle30" class="st13" cx="430.2" cy="179.9" r="10"/>
+				<text id="text31" transform="matrix(1 0 0 1 422.8842 183.9178)" class="st10 st24 st25">P2</text>
+			</g>
+			<g>
+				<text id="text32" transform="matrix(1 0 0 1 449.5931 180.2126)" class="st13 st24 st25">High</text>
+				<text transform="matrix(1 0 0 1 449.5931 194.2126)" class="st3 st26 st25">Major impairment. </text>
+				<text transform="matrix(1 0 0 1 449.5931 208.6127)" class="st3 st26 st25">Workaround exists. Hours.</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				<circle id="circle33" class="st15" cx="430.2" cy="231.9" r="10"/>
+				<text id="text34" transform="matrix(1 0 0 1 422.8842 235.8829)" class="st10 st24 st25">P3</text>
+			</g>
+			<g>
+				<text id="text35" transform="matrix(1 0 0 1 449.5931 232.1778)" class="st15 st24 st25">Medium</text>
+				<text transform="matrix(1 0 0 1 449.5931 246.1778)" class="st3 st26 st25">Non-critical. Small group. </text>
+				<text transform="matrix(1 0 0 1 449.5931 260.5778)" class="st3 st26 st25">Normal hours.</text>
+			</g>
+		</g>
+		<g>
+			<g>
+				<circle id="circle36" class="st18" cx="430.2" cy="283.8" r="10"/>
+				<text id="text37" transform="matrix(1 0 0 1 422.8842 287.8479)" class="st10 st24 st25">P4</text>
+			</g>
+			<g>
+				<text id="text38" transform="matrix(1 0 0 1 449.5931 284.143)" class="st18 st24 st25">Low</text>
+				<text transform="matrix(1 0 0 1 449.5931 298.143)" class="st3 st26 st25">Minor inconvenience. </text>
+				<text transform="matrix(1 0 0 1 449.5931 312.543)" class="st3 st26 st25">As time permits.</text>
+			</g>
 		</g>
 	</g>
+	<text id="text27" transform="matrix(1 0 0 1 497.9188 100.5019)" class="st10 st24 st25">Priority Levels</text>
+</g>
+<g>
+	<path id="path47" class="st27" d="M409.8,560.8h258.9c3.9,0,7,3.8,7,8.5v120.4c0,4.6-3.2,8.5-7,8.5H409.8c-3.9,0-7-3.8-7-8.5V569.2
+		C402.8,564.6,406,560.8,409.8,560.8z"/>
+	<path id="path48" class="st28" d="M409.8,560.8h258.9c3.9,0,7,3.6,7,8v10c0,4.4-3.2,8-7,8H409.8c-3.9,0-7-3.6-7-8v-10
+		C402.8,564.4,406,560.8,409.8,560.8z"/>
+	<text id="text48" transform="matrix(1 0 0 1 470.2503 577.0889)" class="st10 st24 st25">Document at Every Step</text>
 	<g>
-		<path id="path47" class="st32" d="M409.8,555.8h258.9c3.9,0,7,4.4,7,9.9v140.6c0,5.4-3.2,9.9-7,9.9H409.8c-3.9,0-7-4.4-7-9.9
-			V565.6C402.8,560.2,406,555.8,409.8,555.8z"/>
-		<path id="path48" class="st33" d="M409.8,555.8h258.9c3.9,0,7,3.6,7,8v10c0,4.4-3.2,8-7,8H409.8c-3.9,0-7-3.6-7-8v-10
-			C402.8,559.4,406,555.8,409.8,555.8z"/>
-		<text id="text48" transform="matrix(1 0 0 1 470.2503 572.0889)" class="st10 st25 st26">Document at Every Step</text>
-		<g>
-			<text id="text49" transform="matrix(1 0 0 1 419.5927 600.3032)" class="st9 st28 st26">- Initial symptoms reported by user</text>
-			<text id="text50" transform="matrix(1 0 0 1 419.5927 625.8358)" class="st9 st28 st26">- Steps taken and tools used</text>
-			<text id="text51" transform="matrix(1 0 0 1 419.5927 651.3694)" class="st9 st28 st26">- Root cause identified</text>
-			<text id="text52" transform="matrix(1 0 0 1 419.5927 676.9021)" class="st9 st28 st26">- Resolution applied</text>
-			<text id="text53" transform="matrix(1 0 0 1 419.5927 702.4348)" class="st9 st28 st26">- Preventive measures implemented</text>
-		</g>
+		<text id="text49" transform="matrix(1 0 0 1 416.933 606.0004)" class="st3 st26 st25">- Initial symptoms reported by user</text>
+		<text id="text50" transform="matrix(1 0 0 1 416.933 625.8638)" class="st3 st26 st25">- Steps taken and tools used</text>
+		<text id="text51" transform="matrix(1 0 0 1 416.933 645.7282)" class="st3 st26 st25">- Root cause identified</text>
+		<text id="text52" transform="matrix(1 0 0 1 416.933 665.5918)" class="st3 st26 st25">- Resolution applied</text>
+		<text id="text53" transform="matrix(1 0 0 1 416.933 685.4553)" class="st3 st26 st25">- Preventive measures implemented</text>
 	</g>
 </g>
 <g>
-	<text id="text54" transform="matrix(1 0 0 1 204.6666 47.1304)" class="st0 st34 st26">&quot;The job is not done until the paperwork is finished.&quot;</text>
+	<text id="text54" transform="matrix(1 0 0 1 204.6666 47.1304)" class="st0 st29 st25">&quot;The job is not done until the paperwork is finished.&quot;</text>
+</g>
+<g>
+	<path id="path39" class="st30" d="M409.8,343.4h258.9c3.9,0,7,4.4,7,9.8v183.7c0,5.5-3.2,9.8-7,9.8H409.8c-3.9,0-7-4.4-7-9.8V353.3
+		C402.8,347.8,406,343.4,409.8,343.4z"/>
+	<path id="path40" class="st31" d="M409.8,343.4h258.9c3.9,0,7,3.6,7,8v10c0,4.4-3.2,8-7,8H409.8c-3.9,0-7-3.6-7-8v-10
+		C402.8,347,406,343.4,409.8,343.4z"/>
+	<g>
+		<rect x="402.8" y="380.5" class="st32" width="272.9" height="14.8"/>
+		<text id="text41" transform="matrix(1 0 0 1 431.0331 390.8036)" class="st33"><tspan x="0" y="0" class="st9 st24 st25">Priority = Impact + Urgency + </tspan><tspan x="169.7" y="0" class="st34 st24 st25" style="text-decoration: line-through;">Severity</tspan></text>
+		<text id="text40" transform="matrix(1 0 0 1 492.9297 360.7242)" class="st10 st24 st25">Priority Formula</text>
+	</g>
+	<g>
+		<g>
+			<text id="text42" transform="matrix(1 0 0 1 414.9337 418.0476)" class="st3 st24 st25">Impact:</text>
+			<text transform="matrix(1 0 0 1 478.9332 418.0476)" class="st3 st26 st25">Scope of damage.</text>
+			<text transform="matrix(1 0 0 1 478.9332 432.4476)" class="st33"><tspan x="0" y="0" class="st3 st24 st25">Who </tspan><tspan x="29.3" y="0" class="st3 st26 st25">is affected?</tspan></text>
+		</g>
+		<g>
+			<rect x="414.9" y="448.7" class="st32" width="52" height="14.8"/>
+			<text id="text44" transform="matrix(1 0 0 1 414.9336 458.9486)" class="st3 st24 st25">Urgency:</text>
+			<rect x="478.9" y="448.7" class="st32" width="87.3" height="14.2"/>
+			<text transform="matrix(1 0 0 1 478.9336 458.9486)" class="st3 st26 st25">Time sensitivity. </text>
+			<rect x="478.9" y="463.1" class="st32" width="189.4" height="14.2"/>
+			<text transform="matrix(1 0 0 1 478.9336 473.3486)" class="st33"><tspan x="0" y="0" class="st3 st24 st25">When </tspan><tspan x="36" y="0" class="st3 st26 st25">is resolution needed?</tspan></text>
+		</g>
+		<g>
+			<text id="text42_1_" transform="matrix(1 0 0 1 414.9331 499.8502)" class="st3 st24 st25">Severity: </text>
+			<text transform="matrix(1 0 0 1 478.9326 499.8502)" class="st3 st26 st25">The degree of the functional failure.</text>
+			<text transform="matrix(1 0 0 1 478.9326 514.2502)" class="st33"><tspan x="0" y="0" class="st3 st24 st25">How </tspan><tspan x="28.7" y="0" class="st3 st26 st25">badly is it broken?</tspan></text>
+		</g>
+	</g>
+	<text transform="matrix(1.0721 0 0 1 541.845 520.8414)" class="st33"><tspan x="0" y="0" class="st34 st7 st8"> </tspan><tspan x="-120.1" y="13.2" class="st34 st7 st8">Severity ≠ Priority, and is not used to calculate Priority. </tspan></text>
 </g>
 </svg>

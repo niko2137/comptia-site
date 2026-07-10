@@ -9,8 +9,32 @@
 html,body{height:100%;overflow:hidden;background:#020208;font-family:'Courier New',monospace;color:#c8d8e8;touch-action:none;-webkit-user-select:none;user-select:none}
 :root{--cyan:#00f3ff;--red:#ff3333;--orange:#ff8800;--green:#00ff88;--purple:#cc44ff;--blue:#0088ff;--glow-cyan:0 0 8px #00f3ff,0 0 20px rgba(0,243,255,0.3)}
 
-/* === LAYOUT === */
+/* === LAYOUT — SPLIT SCREEN === */
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hud{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 20px;background:rgba(0,8,20,0.97);
+    border-bottom:1px solid rgba(0,243,255,0.2);flex-shrink:0;
+    flex-wrap:wrap;gap:8px;
+}
+#splitView{
+    flex:1;display:flex;overflow:hidden;min-height:0;
+}
+/* Left: Arena (game visuals) */
+#arenaPanel{
+    flex:1;position:relative;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 20%,rgba(0,20,40,0.8) 0%,#020208 70%);
+    border-right:1px solid rgba(0,243,255,0.1);
+    min-width:0;
+}
+/* Right: Question panel */
+#questionPanel{
+    width:420px;flex-shrink:0;
+    display:flex;flex-direction:column;
+    background:rgba(0,5,15,0.98);
+    padding:0;
+    overflow-y:auto;
+}
 </style>
 </head>
 <body>
@@ -34,37 +58,41 @@ html,body{height:100%;overflow:hidden;background:#020208;font-family:'Courier Ne
         </div>
     </header>
 
-    <!-- MAIN ARENA -->
-    <main id="arena">
-        <!-- Background effects -->
-        <div class="vortex" id="vortex">
-            <div class="vortex-label">UNSECURE PORT</div>
-            <div class="vortex-ring"></div>
-            <div class="vortex-ring r2"></div>
+    <!-- SPLIT VIEW: Arena | Questions -->
+    <div id="splitView">
+        <!-- LEFT: Game Arena -->
+        <div id="arenaPanel">
+            <div class="vortex" id="vortex">
+                <div class="vortex-label">UNSECURE PORT</div>
+                <div class="vortex-ring"></div>
+                <div class="vortex-ring r2"></div>
+            </div>
+            <div id="threatZone"></div>
+            <div id="systemCore">
+                <div class="core-glow"></div>
+                <span class="core-label">SYSTEM VITALITY</span>
+            </div>
+            <div class="beam" id="beam"></div>
+            <div class="screen-flash" id="screenFlash"></div>
+            <div id="particles"></div>
         </div>
 
-        <!-- Threat display zone -->
-        <div id="threatZone">
-            <!-- Threats spawn here dynamically -->
+        <!-- RIGHT: Questions & Feedback -->
+        <div id="questionPanel">
+            <div class="qp-header">
+                <div class="threat-indicator" id="threatIndicator">—</div>
+                <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+            </div>
+            <div class="qp-body">
+                <div class="q-prompt" id="qPrompt">SCANNING FOR THREATS...</div>
+                <div class="q-options" id="qOptions"></div>
+                <div class="q-feedback" id="qFeedback"></div>
+            </div>
+            <div class="qp-footer">
+                <button class="ctrl-btn mute-btn" id="muteBtn" onclick="toggleMute()">🔊 AUDIO</button>
+                <button class="ctrl-btn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕ EXIT</button>
+            </div>
         </div>
-
-        <!-- System core (target threats approach) -->
-        <div id="systemCore">
-            <div class="core-glow"></div>
-            <span class="core-label">SYSTEM VITALITY</span>
-        </div>
-
-        <!-- Beam effect -->
-        <div class="beam" id="beam"></div>
-
-        <!-- Particle container -->
-        <div id="particles"></div>
-    </main>
-
-    <!-- QUESTION PANEL (bottom) -->
-    <div id="questionPanel">
-        <div class="q-prompt" id="qPrompt">SCANNING FOR THREATS...</div>
-        <div class="q-options" id="qOptions"></div>
     </div>
 
     <!-- GAME OVER OVERLAY -->
@@ -86,9 +114,9 @@ html,body{height:100%;overflow:hidden;background:#020208;font-family:'Courier Ne
     <div id="startScreen" class="overlay">
         <div class="overlay-card">
             <h2 class="title-glow">THREAT NEUTRALIZATION MATRIX</h2>
-            <p class="start-desc">Threats are emerging from unsecure ports. Identify the correct countermeasure to neutralize each threat before it reaches the system core.</p>
+            <p class="start-desc">Threats are emerging from unsecure ports.<br>Identify the correct countermeasure before they breach the system core.</p>
             <div class="start-keys">
-                <span>Click/Tap answer options • Answer correctly to fire beam</span>
+                <span>Click/Tap answers or press A B C D keys</span>
             </div>
             <button class="action-btn pulse" onclick="startGame()">INITIALIZE DEFENSES</button>
         </div>
@@ -97,202 +125,137 @@ html,body{height:100%;overflow:hidden;background:#020208;font-family:'Courier Ne
 
 <style>
 /* === HUD === */
-#hud{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:8px 16px;background:rgba(0,8,20,0.95);
-    border-bottom:1px solid rgba(0,243,255,0.15);flex-shrink:0;
-    flex-wrap:wrap;gap:6px;
-}
-.hud-label{font-size:9px;letter-spacing:2px;color:#556;display:block;margin-bottom:3px}
-.integrity-wrap{min-width:140px}
-.integrity-bar{width:100%;height:8px;background:#111;border:1px solid #222;border-radius:3px;overflow:hidden}
+.hud-label{font-size:10px;letter-spacing:2px;color:#556;display:block;margin-bottom:3px}
+.integrity-wrap{min-width:160px}
+.integrity-bar{width:100%;height:10px;background:#111;border:1px solid #222;border-radius:4px;overflow:hidden}
 .integrity-fill{height:100%;width:100%;background:linear-gradient(90deg,var(--red),var(--orange),var(--green));transition:width 0.4s;box-shadow:inset 0 0 6px rgba(0,255,136,0.3)}
-.int-val{font-size:11px;color:var(--green);text-shadow:0 0 4px var(--green)}
-.game-title{font-size:11px;letter-spacing:3px;color:var(--cyan);text-shadow:var(--glow-cyan);text-align:center}
-.hud-right{display:flex;gap:12px}
-.stat{font-size:10px;color:#778}
-.stat b{color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.5)}
+.int-val{font-size:13px;font-weight:700;color:var(--green);text-shadow:0 0 4px var(--green)}
+.game-title{font-size:13px;letter-spacing:3px;color:var(--cyan);text-shadow:var(--glow-cyan);text-align:center}
+.hud-right{display:flex;gap:14px}
+.stat{font-size:12px;color:#889}
+.stat b{color:var(--cyan);font-size:14px;text-shadow:0 0 4px rgba(0,243,255,0.5)}
 
-/* === ARENA === */
-#arena{
-    flex:1;position:relative;overflow:hidden;
-    background:radial-gradient(ellipse at 50% 20%,rgba(0,20,40,0.8) 0%,#020208 70%);
-    display:flex;align-items:center;justify-content:center;
-}
-/* Grid floor effect */
-#arena::before{
+/* === ARENA (left panel) === */
+#arenaPanel::before{
     content:'';position:absolute;bottom:0;left:0;right:0;height:60%;
-    background:
-        linear-gradient(rgba(0,243,255,0.04) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,243,255,0.04) 1px,transparent 1px);
+    background:linear-gradient(rgba(0,243,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,243,255,0.04) 1px,transparent 1px);
     background-size:50px 50px;
-    transform:perspective(400px) rotateX(55deg);
-    transform-origin:bottom;
-    opacity:0.7;
+    transform:perspective(400px) rotateX(55deg);transform-origin:bottom;opacity:0.7;
 }
-/* Distant structures */
-#arena::after{
+#arenaPanel::after{
     content:'';position:absolute;top:10%;left:5%;right:5%;height:30%;
-    background:
-        radial-gradient(ellipse at 20% 50%,rgba(0,100,200,0.05) 0%,transparent 50%),
-        radial-gradient(ellipse at 80% 30%,rgba(100,0,200,0.04) 0%,transparent 40%);
+    background:radial-gradient(ellipse at 20% 50%,rgba(0,100,200,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 30%,rgba(100,0,200,0.04) 0%,transparent 40%);
     pointer-events:none;
 }
 
-/* === VORTEX (threat source) === */
-.vortex{
-    position:absolute;top:8%;left:50%;transform:translateX(-50%);
-    text-align:center;
-}
-.vortex-label{font-size:10px;letter-spacing:3px;color:var(--red);text-shadow:0 0 8px var(--red);margin-bottom:8px}
-.vortex-ring{
-    width:80px;height:80px;border-radius:50%;
-    border:2px solid var(--red);
-    box-shadow:0 0 15px var(--red),inset 0 0 15px rgba(255,50,50,0.2);
-    animation:vortexSpin 3s linear infinite;
-    margin:0 auto;
-}
-.vortex-ring.r2{
-    width:50px;height:50px;position:absolute;top:23px;left:50%;transform:translateX(-50%);
-    border-color:var(--orange);box-shadow:0 0 10px var(--orange);
-    animation:vortexSpin 2s linear infinite reverse;
-}
+/* === VORTEX === */
+.vortex{position:absolute;top:8%;left:50%;transform:translateX(-50%);text-align:center;z-index:3}
+.vortex-label{font-size:12px;letter-spacing:3px;color:var(--red);text-shadow:0 0 8px var(--red);margin-bottom:8px;font-weight:700}
+.vortex-ring{width:90px;height:90px;border-radius:50%;border:2px solid var(--red);box-shadow:0 0 15px var(--red),inset 0 0 15px rgba(255,50,50,0.2);animation:vortexSpin 3s linear infinite;margin:0 auto}
+.vortex-ring.r2{width:55px;height:55px;position:absolute;top:26px;left:50%;transform:translateX(-50%);border-color:var(--orange);box-shadow:0 0 10px var(--orange);animation:vortexSpin 2s linear infinite reverse}
 @keyframes vortexSpin{from{transform:translateX(-50%) rotate(0deg)}to{transform:translateX(-50%) rotate(360deg)}}
 
 /* === THREATS === */
-.threat{
-    position:absolute;
-    padding:10px 16px;
-    border-radius:4px;
-    font-size:11px;font-weight:700;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    border:2px solid;
-    animation:threatDrift var(--drift-time,8s) linear forwards;
-    cursor:default;
-    z-index:5;
-}
-.threat.t-ransom{border-color:var(--red);color:var(--red);background:rgba(255,50,50,0.08);text-shadow:0 0 6px var(--red);box-shadow:0 0 12px rgba(255,50,50,0.3)}
-.threat.t-rootkit{border-color:var(--orange);color:var(--orange);background:rgba(255,136,0,0.08);text-shadow:0 0 6px var(--orange);box-shadow:0 0 12px rgba(255,136,0,0.3)}
-.threat.t-trojan{border-color:var(--purple);color:var(--purple);background:rgba(200,60,255,0.08);text-shadow:0 0 6px var(--purple);box-shadow:0 0 12px rgba(200,60,255,0.3)}
-.threat.t-worm{border-color:#ff4488;color:#ff4488;background:rgba(255,68,136,0.08);text-shadow:0 0 6px #ff4488;box-shadow:0 0 12px rgba(255,68,136,0.3)}
-.threat.t-phish{border-color:#ffaa00;color:#ffaa00;background:rgba(255,170,0,0.08);text-shadow:0 0 6px #ffaa00;box-shadow:0 0 12px rgba(255,170,0,0.3)}
-
-/* Jagged clip path for corrupted look */
-.threat::before{
-    content:'';position:absolute;inset:-2px;
-    background:inherit;border-radius:inherit;
-    clip-path:polygon(0% 5%,8% 0%,15% 4%,25% 0%,35% 3%,45% 0%,55% 5%,65% 0%,75% 3%,85% 0%,92% 4%,100% 0%,100% 95%,92% 100%,85% 96%,75% 100%,65% 97%,55% 100%,45% 95%,35% 100%,25% 97%,15% 100%,8% 96%,0% 100%);
-    z-index:-1;opacity:0.3;
-}
-
-@keyframes threatDrift{
-    0%{top:15%;opacity:0;transform:scale(0.6)}
-    10%{opacity:1;transform:scale(1)}
-    90%{opacity:1}
-    100%{top:70%;opacity:0.8}
-}
+.threat{position:absolute;padding:12px 20px;border-radius:6px;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:2px solid;animation:threatDrift var(--drift-time,8s) linear forwards;cursor:default;z-index:5}
+.threat.t-ransom{border-color:var(--red);color:var(--red);background:rgba(255,50,50,0.1);text-shadow:0 0 8px var(--red);box-shadow:0 0 16px rgba(255,50,50,0.4)}
+.threat.t-rootkit{border-color:var(--orange);color:var(--orange);background:rgba(255,136,0,0.1);text-shadow:0 0 8px var(--orange);box-shadow:0 0 16px rgba(255,136,0,0.4)}
+.threat.t-trojan{border-color:var(--purple);color:var(--purple);background:rgba(200,60,255,0.1);text-shadow:0 0 8px var(--purple);box-shadow:0 0 16px rgba(200,60,255,0.4)}
+.threat.t-worm{border-color:#ff4488;color:#ff4488;background:rgba(255,68,136,0.1);text-shadow:0 0 8px #ff4488;box-shadow:0 0 16px rgba(255,68,136,0.4)}
+.threat.t-phish{border-color:#ffaa00;color:#ffaa00;background:rgba(255,170,0,0.1);text-shadow:0 0 8px #ffaa00;box-shadow:0 0 16px rgba(255,170,0,0.4)}
+.threat::before{content:'';position:absolute;inset:-2px;background:inherit;border-radius:inherit;clip-path:polygon(0% 5%,8% 0%,15% 4%,25% 0%,35% 3%,45% 0%,55% 5%,65% 0%,75% 3%,85% 0%,92% 4%,100% 0%,100% 95%,92% 100%,85% 96%,75% 100%,65% 97%,55% 100%,45% 95%,35% 100%,25% 97%,15% 100%,8% 96%,0% 100%);z-index:-1;opacity:0.3}
+@keyframes threatDrift{0%{top:18%;opacity:0;transform:scale(0.6)}10%{opacity:1;transform:scale(1)}90%{opacity:1}100%{top:68%;opacity:0.8}}
 .threat.neutralized{animation:dissolve 0.6s forwards !important}
-@keyframes dissolve{
-    0%{transform:scale(1);opacity:1;filter:brightness(1)}
-    30%{transform:scale(1.3);filter:brightness(3)}
-    100%{transform:scale(0);opacity:0;filter:brightness(5)}
-}
+@keyframes dissolve{0%{transform:scale(1);opacity:1;filter:brightness(1)}30%{transform:scale(1.3);filter:brightness(3)}100%{transform:scale(0);opacity:0;filter:brightness(5)}}
 
-/* === SYSTEM CORE === */
-#systemCore{
-    position:absolute;bottom:12%;left:50%;transform:translateX(-50%);
-    text-align:center;
-}
-.core-glow{
-    width:60px;height:60px;margin:0 auto 6px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(0,255,136,0.4),transparent 70%);
-    border:2px solid var(--green);
-    box-shadow:0 0 20px var(--green),0 0 40px rgba(0,255,136,0.2);
-    animation:corePulse 2s ease-in-out infinite;
-}
-@keyframes corePulse{0%,100%{box-shadow:0 0 20px var(--green),0 0 40px rgba(0,255,136,0.2)}50%{box-shadow:0 0 30px var(--green),0 0 60px rgba(0,255,136,0.3)}}
-.core-label{font-size:9px;letter-spacing:2px;color:var(--green);text-shadow:0 0 6px var(--green)}
+/* === SYSTEM CORE (animated left-to-right) === */
+#systemCore{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);text-align:center;z-index:3;animation:corePatrol 4s ease-in-out infinite alternate}
+@keyframes corePatrol{0%{left:25%}100%{left:75%}}
+.core-glow{width:70px;height:70px;margin:0 auto 6px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,0.4),transparent 70%);border:2px solid var(--green);box-shadow:0 0 20px var(--green),0 0 40px rgba(0,255,136,0.2);animation:corePulse 2s ease-in-out infinite}
+@keyframes corePulse{0%,100%{box-shadow:0 0 20px var(--green),0 0 40px rgba(0,255,136,0.2);transform:scale(1)}50%{box-shadow:0 0 30px var(--green),0 0 60px rgba(0,255,136,0.3);transform:scale(1.05)}}
+.core-label{font-size:10px;letter-spacing:2px;color:var(--green);text-shadow:0 0 6px var(--green)}
 
-/* === BEAM === */
-.beam{
-    position:absolute;bottom:20%;left:50%;
-    width:4px;height:0;
-    transform:translateX(-50%);
-    background:linear-gradient(to top,var(--cyan),rgba(0,243,255,0.1));
-    box-shadow:0 0 8px var(--cyan),0 0 20px rgba(0,243,255,0.5);
-    border-radius:2px;
-    transition:height 0.15s,opacity 0.3s;
-    opacity:0;z-index:15;pointer-events:none;
-}
-.beam.firing{height:55%;opacity:1;animation:beamFire 0.4s forwards}
-@keyframes beamFire{0%{height:0;opacity:1}30%{height:55%;opacity:1}100%{height:55%;opacity:0}}
+/* === BEAM (dynamic — positioned by JS to target threat) === */
+.beam{position:absolute;width:5px;background:linear-gradient(to top,var(--cyan),rgba(0,243,255,0.1));box-shadow:0 0 10px var(--cyan),0 0 25px rgba(0,243,255,0.5);border-radius:3px;opacity:0;z-index:15;pointer-events:none;transform-origin:bottom center}
+.beam.firing{opacity:1;animation:beamFire 0.5s forwards}
+@keyframes beamFire{0%{opacity:1;filter:brightness(1)}40%{opacity:1;filter:brightness(2)}100%{opacity:0;filter:brightness(1)}}
 
-/* === QUESTION PANEL === */
-#questionPanel{
-    flex-shrink:0;
-    padding:12px 16px;
-    background:rgba(0,8,20,0.97);
-    border-top:1px solid rgba(0,243,255,0.12);
-}
-.q-prompt{
-    font-size:12px;color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.4);
-    margin-bottom:10px;text-align:center;letter-spacing:1px;
-    min-height:18px;
-}
-.q-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* === SCREEN EFFECTS === */
+.screen-flash{position:absolute;inset:0;pointer-events:none;z-index:20;opacity:0}
+.screen-flash.correct-flash{animation:flashGreen 0.3s}
+.screen-flash.wrong-flash{animation:flashRed 0.4s}
+.screen-flash.hit-flash{animation:flashCyan 0.2s}
+@keyframes flashGreen{0%{opacity:0.3;background:var(--green)}100%{opacity:0}}
+@keyframes flashRed{0%{opacity:0.25;background:var(--red)}50%{opacity:0.15}100%{opacity:0}}
+@keyframes flashCyan{0%{opacity:0.2;background:var(--cyan)}100%{opacity:0}}
+#arenaPanel.shake{animation:screenShake 0.3s}
+@keyframes screenShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+
+/* === QUESTION PANEL (right side) === */
+.qp-header{padding:16px 20px;border-bottom:1px solid rgba(0,243,255,0.1);text-align:center}
+.threat-indicator{font-size:18px;font-weight:700;letter-spacing:3px;color:var(--red);text-shadow:0 0 10px var(--red);margin-bottom:8px;min-height:24px}
+.timer-bar{width:100%;height:6px;background:#111;border:1px solid #222;border-radius:3px;overflow:hidden}
+.timer-fill{height:100%;width:100%;background:var(--cyan);transition:width 0.1s linear;box-shadow:0 0 6px var(--cyan)}
+
+.qp-body{flex:1;padding:24px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.q-prompt{font-size:16px;color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.4);line-height:1.7;text-align:center;letter-spacing:0.5px}
+.q-options{display:flex;flex-direction:column;gap:12px}
 .opt-btn{
-    padding:10px 12px;border:1.5px solid #333;border-radius:6px;
-    background:rgba(0,20,40,0.6);color:#aac;
-    font-family:inherit;font-size:12px;cursor:pointer;
-    transition:all 0.2s;text-align:left;
+    padding:16px 20px;border:2px solid #333;border-radius:8px;
+    background:rgba(0,20,40,0.6);color:#bbd;
+    font-family:inherit;font-size:15px;cursor:pointer;
+    transition:all 0.2s;text-align:left;line-height:1.4;
 }
-.opt-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,243,255,0.06)}
-.opt-btn:active{transform:scale(0.97)}
-.opt-btn.correct{border-color:var(--green);color:var(--green);background:rgba(0,255,136,0.1);box-shadow:0 0 10px rgba(0,255,136,0.3)}
+.opt-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,243,255,0.06);transform:translateX(4px)}
+.opt-btn:active{transform:scale(0.98)}
+.opt-btn.correct{border-color:var(--green);color:var(--green);background:rgba(0,255,136,0.1);box-shadow:0 0 12px rgba(0,255,136,0.3)}
 .opt-btn.wrong{border-color:var(--red);color:var(--red);background:rgba(255,50,50,0.1)}
-.opt-btn .opt-key{font-weight:700;margin-right:6px;opacity:0.6}
+.opt-btn .opt-key{font-weight:700;margin-right:8px;color:var(--cyan);opacity:0.7;font-size:13px}
+.q-feedback{font-size:13px;color:#889;line-height:1.5;padding:12px;border-radius:6px;background:rgba(0,243,255,0.03);border:1px solid #1a2a3a;min-height:20px}
+
+.qp-footer{padding:12px 20px;border-top:1px solid rgba(0,243,255,0.1);display:flex;gap:10px;justify-content:center}
+.ctrl-btn{padding:8px 16px;border:1px solid #444;border-radius:6px;background:none;color:#888;font-family:inherit;font-size:11px;cursor:pointer;transition:all 0.2s}
+.ctrl-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.ctrl-btn.mute-btn:hover{border-color:var(--orange);color:var(--orange)}
 
 /* === OVERLAYS === */
 .overlay{position:fixed;inset:0;background:rgba(2,2,8,0.92);z-index:100;display:flex;align-items:center;justify-content:center}
 .overlay.hidden{display:none}
-.overlay-card{
-    background:rgba(5,10,25,0.98);border:2px solid var(--cyan);border-radius:12px;
-    padding:36px;text-align:center;max-width:400px;width:90%;
-    box-shadow:0 0 40px rgba(0,243,255,0.15);
-}
-.overlay-card h2{color:var(--cyan);font-size:18px;letter-spacing:3px;margin-bottom:12px;text-shadow:var(--glow-cyan)}
+.overlay-card{background:rgba(5,10,25,0.98);border:2px solid var(--cyan);border-radius:12px;padding:40px;text-align:center;max-width:440px;width:90%;box-shadow:0 0 40px rgba(0,243,255,0.15)}
+.overlay-card h2{color:var(--cyan);font-size:20px;letter-spacing:3px;margin-bottom:14px;text-shadow:var(--glow-cyan)}
 .title-glow{animation:titlePulse 2s ease-in-out infinite}
 @keyframes titlePulse{0%,100%{text-shadow:var(--glow-cyan)}50%{text-shadow:0 0 12px #00f3ff,0 0 30px rgba(0,243,255,0.5)}}
-.start-desc{font-size:12px;color:#889;line-height:1.6;margin-bottom:16px}
-.start-keys{font-size:10px;color:#556;margin-bottom:20px}
-.action-btn{
-    padding:12px 32px;border:2px solid var(--cyan);border-radius:6px;
-    background:rgba(0,243,255,0.08);color:var(--cyan);
-    font-family:inherit;font-size:13px;font-weight:700;letter-spacing:2px;
-    cursor:pointer;transition:all 0.2s;margin:6px;
-}
+.start-desc{font-size:14px;color:#889;line-height:1.7;margin-bottom:16px}
+.start-keys{font-size:11px;color:#556;margin-bottom:20px}
+.action-btn{padding:14px 36px;border:2px solid var(--cyan);border-radius:6px;background:rgba(0,243,255,0.08);color:var(--cyan);font-family:inherit;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all 0.2s;margin:6px}
 .action-btn:hover{background:rgba(0,243,255,0.2);box-shadow:0 0 15px rgba(0,243,255,0.3)}
 .action-btn.exit{border-color:#555;color:#888}
 .action-btn.exit:hover{border-color:var(--red);color:var(--red)}
 .action-btn.pulse{animation:btnPulse 2s infinite}
 @keyframes btnPulse{0%,100%{box-shadow:0 0 5px rgba(0,243,255,0.3)}50%{box-shadow:0 0 20px rgba(0,243,255,0.5)}}
-.go-score{font-size:20px;color:var(--cyan);margin:12px 0;text-shadow:var(--glow-cyan)}
-.go-stats{display:flex;flex-direction:column;gap:6px;font-size:11px;color:#778;margin-bottom:20px}
+.go-score{font-size:22px;color:var(--cyan);margin:12px 0;text-shadow:var(--glow-cyan)}
+.go-stats{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#778;margin-bottom:20px}
 .go-stats b{color:var(--cyan)}
 
 /* === PARTICLES === */
 .p{position:fixed;border-radius:50%;pointer-events:none;z-index:50;animation:pfx 0.6s ease-out forwards}
 @keyframes pfx{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
 
-/* === RESPONSIVE === */
+/* === RESPONSIVE — stack on mobile === */
+@media(max-width:700px){
+    #splitView{flex-direction:column}
+    #arenaPanel{flex:none;height:45vh}
+    #questionPanel{width:100%;flex:1}
+    .qp-body{padding:14px}
+    .q-prompt{font-size:14px}
+    .opt-btn{font-size:13px;padding:12px 14px}
+    .threat{font-size:12px;padding:8px 14px}
+}
 @media(max-width:500px){
     .hud-center{display:none}
     .hud-right{gap:8px}
-    .stat{font-size:9px}
-    .q-options{grid-template-columns:1fr}
-    .opt-btn{padding:12px;font-size:13px}
+    .stat{font-size:10px}
+    #arenaPanel{height:35vh}
     .overlay-card{padding:24px}
 }
 </style>
@@ -379,9 +342,13 @@ const streakVal=document.getElementById('streakVal');
 const threatZone=document.getElementById('threatZone');
 const qPrompt=document.getElementById('qPrompt');
 const qOptions=document.getElementById('qOptions');
+const qFeedback=document.getElementById('qFeedback');
 const beamEl=document.getElementById('beam');
 const startScreen=document.getElementById('startScreen');
 const gameOverScreen=document.getElementById('gameOver');
+const threatIndicator=document.getElementById('threatIndicator');
+const timerFill=document.getElementById('timerFill');
+let timerInterval=null;
 
 // --- GAME LOOP ---
 function startGame(){
@@ -392,10 +359,12 @@ function startGame(){
     driftTime=9;
     updateHUD();
     spawnThreat();
+    if(!muted) startBgMusic();
 }
 
 function endGame(){
     gameActive=false;
+    bgMusicPlaying=false;
     clearTimeout(spawnTimer);
     if(threatEl){threatEl.remove();threatEl=null;}
     document.getElementById('goScore').textContent=score;
@@ -427,18 +396,29 @@ function spawnThreat(){
     usedIndices.push(idx);
     currentQ=THREATS[idx];
     answered=false;
+    qFeedback.textContent='';
 
     // Create threat element
     threatEl=document.createElement('div');
     threatEl.className=`threat ${currentQ.type}`;
     threatEl.textContent=currentQ.threat;
-    threatEl.style.left=`${30+Math.random()*40}%`;
+    threatEl.style.left=`${25+Math.random()*50}%`;
     threatEl.style.setProperty('--drift-time',driftTime+'s');
     threatZone.appendChild(threatEl);
 
-    // Show question
+    // Update right panel
+    threatIndicator.textContent=`⚠ ${currentQ.threat.toUpperCase()}`;
+    threatIndicator.style.color=getComputedStyle(threatEl).color;
     qPrompt.textContent=currentQ.q;
     renderOptions();
+
+    // Timer bar animation
+    timerFill.style.transition='none';
+    timerFill.style.width='100%';
+    requestAnimationFrame(()=>{
+        timerFill.style.transition=`width ${driftTime*0.85}s linear`;
+        timerFill.style.width='0%';
+    });
 
     // If threat reaches core (drift completes)
     const driftMs=driftTime*1000;
@@ -478,7 +458,10 @@ function selectAnswer(idx){
         kills++;
         const pts=10*Math.max(1,streak);
         score+=pts;
-        qPrompt.textContent=`✓ NEUTRALIZED! +${pts} pts — ${currentQ.explain}`;
+        qPrompt.textContent=`✓ NEUTRALIZED! +${pts} pts`;
+        qFeedback.textContent=currentQ.explain;
+        threatIndicator.textContent='✓ THREAT ELIMINATED';
+        threatIndicator.style.color='var(--green)';
 
         // Wave progression
         if(kills%5===0){
@@ -491,7 +474,12 @@ function selectAnswer(idx){
         btns[currentQ.correct].classList.add('correct');
         streak=0;
         integrity=Math.max(0,integrity-15);
-        qPrompt.textContent=`✗ WRONG! -15% integrity — ${currentQ.explain}`;
+        qPrompt.textContent=`✗ WRONG! -15% integrity`;
+        qFeedback.textContent=currentQ.explain;
+        threatIndicator.textContent='✗ BREACH DETECTED';
+        threatIndicator.style.color='var(--red)';
+        triggerFlash('wrong-flash');
+        triggerShake();
         if(integrity<=0){setTimeout(endGame,1000);updateHUD();return;}
     }
 
@@ -510,6 +498,9 @@ function threatReachesCore(){
     streak=0;
     integrity=Math.max(0,integrity-20);
     qPrompt.textContent='⚠ THREAT REACHED CORE! -20% integrity';
+    qFeedback.textContent='Answer faster! The correct response was: '+currentQ.opts[currentQ.correct];
+    threatIndicator.textContent='⚠ CORE BREACHED';
+    threatIndicator.style.color='var(--orange)';
     const btns=qOptions.querySelectorAll('.opt-btn');
     btns[currentQ.correct].classList.add('correct');
 
@@ -520,22 +511,62 @@ function threatReachesCore(){
     setTimeout(()=>{if(gameActive)spawnThreat();},2000);
 }
 
-// --- BEAM EFFECT ---
+// --- BEAM EFFECT (targets the threat from system core) ---
 function fireBeam(){
+    const core = document.getElementById('systemCore');
+    const arena = document.getElementById('arenaPanel');
+    if(!threatEl||!core||!arena)return;
+
+    const arenaRect = arena.getBoundingClientRect();
+    const coreRect = core.getBoundingClientRect();
+    const threatRect = threatEl.getBoundingClientRect();
+
+    // Calculate beam from core to threat
+    const cx = coreRect.left + coreRect.width/2 - arenaRect.left;
+    const cy = coreRect.top - arenaRect.top;
+    const tx = threatRect.left + threatRect.width/2 - arenaRect.left;
+    const ty = threatRect.top + threatRect.height/2 - arenaRect.top;
+
+    const dx = tx - cx, dy = ty - cy;
+    const length = Math.sqrt(dx*dx + dy*dy);
+    const angle = Math.atan2(dx, -dy); // angle from vertical
+
+    beamEl.style.left = cx + 'px';
+    beamEl.style.bottom = 'auto';
+    beamEl.style.top = cy + 'px';
+    beamEl.style.height = length + 'px';
+    beamEl.style.transform = `translateX(-50%) rotate(${angle}rad)`;
     beamEl.classList.remove('firing');
-    void beamEl.offsetWidth; // force reflow
+    void beamEl.offsetWidth;
     beamEl.classList.add('firing');
+
+    // Screen flash
+    triggerFlash('hit-flash');
     playSound('beam');
-    setTimeout(()=>beamEl.classList.remove('firing'),500);
+    setTimeout(()=>{beamEl.classList.remove('firing');beamEl.style.height='0';},500);
 }
 
 function neutralizeThreat(){
     if(!threatEl)return;
-    // Particles at threat position
     const rect=threatEl.getBoundingClientRect();
     spawnParticles(rect.left+rect.width/2,rect.top+rect.height/2);
     threatEl.classList.add('neutralized');
+    triggerFlash('correct-flash');
     playSound('dissolve');
+}
+
+function triggerFlash(cls){
+    const flash=document.getElementById('screenFlash');
+    flash.className='screen-flash';
+    void flash.offsetWidth;
+    flash.classList.add(cls);
+}
+
+function triggerShake(){
+    const arena=document.getElementById('arenaPanel');
+    arena.classList.remove('shake');
+    void arena.offsetWidth;
+    arena.classList.add('shake');
 }
 
 // --- PARTICLES ---
@@ -560,6 +591,7 @@ function spawnParticles(cx,cy){
 // --- SOUND (Web Audio API) ---
 function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();}
 function playSound(type){
+    if(muted) return;
     try{initAudio();}catch(e){return;}
     if(type==='beam'){
         // Rising sweep
@@ -584,6 +616,60 @@ function playSound(type){
         });
     }
 }
+
+// --- MUTE TOGGLE ---
+let muted = false;
+function toggleMute(){
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇 MUTED' : '🔊 AUDIO';
+    if(muted && bgMusic) bgMusic.stop();
+    else if(!muted && gameActive) startBgMusic();
+}
+
+// --- BACKGROUND MUSIC (ambient tension loop) ---
+let bgMusic = null;
+let bgMusicPlaying = false;
+
+function startBgMusic(){
+    if(muted || bgMusicPlaying) return;
+    bgMusicPlaying = true;
+    function loopBg(){
+        if(muted || !gameActive){bgMusicPlaying=false;return;}
+        try{
+            initAudio();
+            const now = audioCtx.currentTime;
+            // Low drone
+            const drone = audioCtx.createOscillator();
+            const dGain = audioCtx.createGain();
+            drone.type = 'sine';
+            drone.frequency.setValueAtTime(55, now);
+            dGain.gain.setValueAtTime(0.04, now);
+            dGain.gain.setValueAtTime(0.04, now + 3.8);
+            dGain.gain.linearRampToValueAtTime(0.001, now + 4);
+            drone.connect(dGain); dGain.connect(audioCtx.destination);
+            drone.start(now); drone.stop(now + 4);
+            // Tension arp
+            [110, 130.81, 164.81, 130.81].forEach((f, i) => {
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.type = 'triangle';
+                o.frequency.setValueAtTime(f, now + i);
+                g.gain.setValueAtTime(0.025, now + i);
+                g.gain.exponentialRampToValueAtTime(0.001, now + i + 0.8);
+                o.connect(g); g.connect(audioCtx.destination);
+                o.start(now + i); o.stop(now + i + 0.9);
+            });
+        }catch(e){}
+        setTimeout(loopBg, 4000);
+    }
+    loopBg();
+}
+
+// Start music on first interaction
+document.addEventListener('click', function startMusicOnce(){
+    if(!muted && gameActive) startBgMusic();
+    document.removeEventListener('click', startMusicOnce);
+}, {once: true});
 
 // --- KEYBOARD SUPPORT ---
 document.addEventListener('keydown',e=>{

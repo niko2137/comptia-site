@@ -14,34 +14,44 @@ body {
   overflow-x: hidden;
 }
 .container {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
   text-align: center;
 }
 h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   background: linear-gradient(90deg, #00f0ff, #b300ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-  text-shadow: 0 0 30px rgba(0,240,255,0.3);
+  margin-bottom: 6px;
 }
-.subtitle { color: #8899aa; margin-bottom: 20px; font-size: 1.1rem; }
+.subtitle { color: #8899aa; margin-bottom: 6px; font-size: 0.95rem; }
+.instructions { color: #64748b; font-size: 12px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
 <div class="container">
 <h1>Memory Match</h1>
-<p class="subtitle">CompTIA A+ Edition — Match ports to protocols and terms to definitions</p>
+<p class="subtitle">CompTIA A+ Edition</p>
+<p class="instructions">Flip two cards per turn. Find all matching pairs. Fewer moves = better score!</p>
 
 
 <div id="menu-screen">
   <div class="menu-box">
-    <h2>Select Difficulty</h2>
-    <button class="btn" onclick="startGame('easy')">Easy (4×4 — 8 pairs)</button>
-    <button class="btn" onclick="startGame('medium')">Medium (4×5 — 10 pairs)</button>
-    <button class="btn" onclick="startGame('hard')">Hard (5×6 — 15 pairs)</button>
+    <h2>Select Category</h2>
+    <div class="cat-grid">
+      <button class="cat-btn active" onclick="selectCategory('all')">All Mixed</button>
+      <button class="cat-btn" onclick="selectCategory('ports')">Ports &amp; Protocols</button>
+      <button class="cat-btn" onclick="selectCategory('hardware')">Hardware</button>
+      <button class="cat-btn" onclick="selectCategory('networking')">Networking</button>
+      <button class="cat-btn" onclick="selectCategory('security')">Security</button>
+      <button class="cat-btn" onclick="selectCategory('troubleshooting')">Troubleshooting</button>
+    </div>
+    <h2 style="margin-top:20px;">Select Difficulty</h2>
+    <button class="btn" onclick="startGame('easy')">Easy (4×3 — 6 pairs)</button>
+    <button class="btn" onclick="startGame('medium')">Medium (4×4 — 8 pairs)</button>
+    <button class="btn" onclick="startGame('hard')">Hard (5×4 — 10 pairs)</button>
     <div id="high-scores-menu"></div>
   </div>
 </div>
@@ -73,21 +83,29 @@ h1 {
   background: rgba(20,30,60,0.9);
   border: 1px solid rgba(0,240,255,0.3);
   border-radius: 16px;
-  padding: 40px;
-  max-width: 500px;
-  margin: 40px auto;
+  padding: 28px;
+  max-width: 460px;
+  margin: 20px auto;
   backdrop-filter: blur(10px);
 }
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.cat-btn {
+  padding: 10px 8px; border: 1px solid #334155; border-radius: 8px;
+  background: rgba(0,240,255,0.05); color: #94a3b8; font-size: 0.85rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.cat-btn:hover { border-color: #00f0ff; color: #00f0ff; }
+.cat-btn.active { border-color: #00f0ff; color: #00f0ff; background: rgba(0,240,255,0.15); box-shadow: 0 0 10px rgba(0,240,255,0.2); }
 .btn {
   display: block;
   width: 100%;
-  padding: 14px 24px;
-  margin: 12px 0;
+  padding: 12px 20px;
+  margin: 8px 0;
   background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(179,0,255,0.15));
   border: 1px solid rgba(0,240,255,0.5);
   border-radius: 8px;
   color: #00f0ff;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -96,20 +114,23 @@ h1 {
   box-shadow: 0 0 20px rgba(0,240,255,0.4);
   transform: translateY(-2px);
 }
-.btn-small { display: inline-block; width: auto; font-size: 0.9rem; padding: 10px 20px; }
+.btn-small { display: inline-block; width: auto; font-size: 0.85rem; padding: 8px 16px; }
 .stats-bar {
   display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-bottom: 20px;
-  padding: 15px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
   background: rgba(20,30,60,0.8);
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(0,240,255,0.2);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.stat { display: flex; flex-direction: column; align-items: center; }
-.stat-label { font-size: 0.8rem; color: #8899aa; text-transform: uppercase; }
-.stat span:last-child { font-size: 1.5rem; color: #00f0ff; font-weight: bold; }
+.stat { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+.stat-label { font-size: 0.7rem; color: #8899aa; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat span:last-child { font-size: 1.2rem; color: #00f0ff; font-weight: bold; }
 
 
 #game-grid {
@@ -223,10 +244,12 @@ h1 {
 }
 #admin-console button:hover { background: rgba(0,240,255,0.2); }
 @media (max-width: 600px) {
-  h1 { font-size: 1.8rem; }
-  .stats-bar { gap: 20px; }
-  .card-back { font-size: 0.75rem; }
-  .menu-box, .complete-box { padding: 20px; margin: 20px; }
+  h1 { font-size: 1.6rem; }
+  .stats-bar { gap: 8px; padding: 8px 12px; }
+  .stat span:last-child { font-size: 1rem; }
+  .card-back { font-size: 0.7rem; }
+  .menu-box, .complete-box { padding: 20px; margin: 12px; }
+  .cat-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 
@@ -241,29 +264,70 @@ h1 {
 </div>
 
 <script>
-// Card pairs data
-const PAIRS = {
-  easy: [
-    ['22','SSH'], ['80','HTTP'], ['443','HTTPS'], ['3389','RDP'],
-    ['53','DNS'], ['25','SMTP'], ['445','SMB'], ['110','POP3']
+// Card pairs data by CATEGORY
+const CATEGORY_PAIRS = {
+  ports: [
+    ['22','SSH'],['80','HTTP'],['443','HTTPS'],['3389','RDP'],
+    ['53','DNS'],['25','SMTP'],['445','SMB'],['110','POP3'],
+    ['143','IMAP'],['21','FTP'],['23','Telnet'],['161','SNMP'],
+    ['389','LDAP'],['67/68','DHCP'],['587','SMTPS'],['636','LDAPS']
   ],
-  medium: [
-    ['22','SSH'], ['80','HTTP'], ['443','HTTPS'], ['3389','RDP'],
-    ['53','DNS'], ['25','SMTP'], ['445','SMB'], ['110','POP3'],
-    ['TPM','Security chip for encryption'], ['RAID 5','Striping with parity']
+  hardware: [
+    ['ATX','305×244mm'],['DDR4','288 pins'],['DDR5','4800MHz+'],
+    ['NVMe','PCIe SSD'],['SATA III','6 Gbps'],['TPM','Encryption chip'],
+    ['SO-DIMM','Laptop RAM'],['Cat 6a','10Gbps/100m'],
+    ['PCIe x16','GPU slot'],['CMOS','Clock battery'],
+    ['POST','Boot self-test'],['RAID 5','Striping+parity']
   ],
-  hard: [
-    ['22','SSH'], ['80','HTTP'], ['443','HTTPS'], ['3389','RDP'],
-    ['53','DNS'], ['25','SMTP'], ['445','SMB'], ['110','POP3'],
-    ['TPM','Security chip for encryption'], ['RAID 5','Striping with parity'],
-    ['APIPA','169.254.x.x'], ['BitLocker','Full-disk encryption'],
-    ['POST','Power-On Self-Test'], ['ESD','Electrostatic Discharge'],
-    ['NAT','Private to public IP translation']
+  networking: [
+    ['OSI Layer 1','Physical'],['OSI Layer 2','Data Link'],
+    ['OSI Layer 3','Network'],['OSI Layer 4','Transport'],
+    ['Router','Layer 3'],['Switch','Layer 2'],
+    ['Hub','Layer 1'],['NAT','IP translation'],
+    ['DHCP','Auto IP assign'],['DNS','Name→IP'],
+    ['VLAN','Logical segment'],['TCP','Reliable']
+  ],
+  security: [
+    ['WPA3','SAE auth'],['MFA','2+ factors'],
+    ['Phishing','Email attack'],['Ransomware','Encrypts data'],
+    ['Rootkit','Kernel hiding'],['Trojan','Fake software'],
+    ['VPN','Encrypted tunnel'],['BitLocker','Disk encryption'],
+    ['Evil Twin','Rogue AP'],['ESD','Static damage'],
+    ['Mantrap','Anti-tailgate'],['Worm','Self-replicating']
+  ],
+  troubleshooting: [
+    ['sfc','System files'],['DISM','Component store'],
+    ['chkdsk','Disk errors'],['ipconfig','IP info'],
+    ['bootrec','Boot repair'],['Safe Mode','Minimal drivers'],
+    ['BSOD','Kernel error'],['tracert','Path tracing'],
+    ['netstat','Connections'],['nslookup','DNS query'],
+    ['Event Viewer','System logs'],['System Restore','Roll back']
   ]
 };
 
+let selectedCategory = 'all';
+function selectCategory(cat) {
+  selectedCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
 
-const GRID_CONFIG = { easy: {cols:4,rows:4}, medium: {cols:5,rows:4}, hard: {cols:6,rows:5} };
+function getCategoryPairs(count) {
+  let pool = [];
+  if (selectedCategory === 'all') {
+    Object.values(CATEGORY_PAIRS).forEach(arr => pool.push(...arr));
+  } else {
+    pool = [...CATEGORY_PAIRS[selectedCategory]];
+  }
+  // Shuffle and take count
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, count);
+}
+
+const GRID_CONFIG = { easy: {cols:4,rows:3,pairs:6}, medium: {cols:4,rows:4,pairs:8}, hard: {cols:5,rows:4,pairs:10} };
 
 let currentDifficulty = 'easy';
 let cards = [];
@@ -333,7 +397,8 @@ function shuffle(arr) {
 
 function startGame(difficulty) {
   currentDifficulty = difficulty;
-  const pairs = PAIRS[difficulty];
+  const config = GRID_CONFIG[difficulty];
+  const pairs = getCategoryPairs(config.pairs);
   totalPairs = pairs.length;
   matchedPairs = 0;
   moves = 0;
@@ -349,11 +414,11 @@ function startGame(difficulty) {
   });
   shuffle(cards);
 
-  // Setup grid
-  const config = GRID_CONFIG[difficulty];
+  // Setup grid — tiles can be large, grid expands naturally
   const grid = document.getElementById('game-grid');
-  const cardSize = Math.min(120, (window.innerWidth - 60) / config.cols - 10);
+  const cardSize = Math.min(120, (window.innerWidth - 60) / config.cols - 12);
   grid.style.gridTemplateColumns = `repeat(${config.cols}, ${cardSize}px)`;
+  grid.style.maxWidth = '';
   grid.innerHTML = '';
 
   cards.forEach((card, i) => {

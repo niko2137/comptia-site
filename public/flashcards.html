@@ -430,183 +430,8 @@
             { term: "Class C Fire", definition: "Fire extinguisher for electrical/IT fires. Use CO2 or dry chemical, NEVER water. Most important type for server rooms." }
         ];
 
-        // Member detection - if member, load full 500+ deck
-        const isMember = localStorage.getItem('comptia_member') === '1';
-
-        if (isMember) {
-            // Add the remaining 450+ cards for members (full deck from glossary data)
-            const memberCards = [
-{term:'FTP',definition:'Ports 20/21 (TCP). File transfer. 21=control, 20=data. Unencrypted credentials. Use SFTP or FTPS instead.'},
-{term:'SFTP',definition:'Port 22 (TCP). Encrypted file transfer over SSH tunnel. Preferred secure alternative to FTP. Single port simplifies firewall rules.'},
-{term:'Telnet',definition:'Port 23 (TCP). Unencrypted remote access. Obsolete and insecure. Sends passwords in cleartext. Use SSH instead.'},
-{term:'SMTP',definition:'Port 25/587 (TCP). Sends outbound email. 587=client submission with STARTTLS.'},
-{term:'POP3',definition:'Port 110/995 (TCP). Downloads email to one device, removes from server. 995=encrypted.'},
-{term:'IMAP',definition:'Port 143/993 (TCP). Keeps email on server, syncs across devices. 993=encrypted.'},
-{term:'LDAP',definition:'Port 389 (TCP/UDP). Queries Active Directory. LDAPS on port 636 for encrypted.'},
-{term:'SNMP',definition:'Ports 161/162 (UDP). Monitors network devices. 161=queries, 162=traps.'},
-{term:'NTP',definition:'Port 123 (UDP). Synchronizes clocks. Wrong clock = SSL errors and authentication failures.'},
-{term:'SIP',definition:'Ports 5060/5061. VoIP call setup protocol. 5061=encrypted.'},
-{term:'Switch',definition:'Forwards frames to correct port using MAC tables. Layer 2. Most common LAN device.'},
-{term:'Router',definition:'Routes packets between networks using IP addresses. Layer 3. Connects LAN to WAN.'},
-{term:'Hub',definition:'Legacy Layer 1. Broadcasts all data to every port. Creates collisions. Replaced by switches.'},
-{term:'WAP',definition:'Wireless Access Point. Connects wireless clients to wired network. Layer 2. Does not route traffic.'},
-{term:'Firewall',definition:'Controls inbound/outbound traffic based on security rules. Can be hardware appliance or software.'},
-{term:'PoE',definition:'Power over Ethernet. Supplies power to devices through network cables. 802.3af=15.4W, 802.3at=30W.'},
-{term:'IDS',definition:'Intrusion Detection System. Monitors traffic and alerts on threats. Passive — does not block.'},
-{term:'IPS',definition:'Intrusion Prevention System. Monitors AND blocks threats. Active inline device.'},
-{term:'Proxy Server',definition:'Intermediary filtering content, caching pages, improving security and privacy for clients.'},
-{term:'Cable Tester',definition:'Verifies Ethernet cable continuity and correct wiring order. Tests all 8 pins.'},
-{term:'Tone Generator & Probe',definition:'Fox and hound. Traces cable runs through walls without visible labels.'},
-{term:'Loopback Plug',definition:'Tests NIC transmit/receive by redirecting output to input. Verifies port functionality.'},
-{term:'Crimper',definition:'Tool attaching RJ-45 connectors to Ethernet cable ends.'},
-{term:'Punch-Down Tool',definition:'Terminates wires into patch panels or keystone jacks at correct depth.'},
-{term:'Wi-Fi 5 (802.11ac)',definition:'Up to 3.5 Gbps. 5 GHz only. MU-MIMO. Wave 2 added multi-user downlink.'},
-{term:'Wi-Fi 6 (802.11ax)',definition:'Up to 9.6 Gbps. OFDMA for dense environments. 2.4/5/6 GHz. Target Wake Time for battery.'},
-{term:'SSID',definition:'Broadcast name of a wireless network. Can be hidden but not truly secure.'},
-{term:'WEP',definition:'Original wireless security. RC4 encryption. Cracked in minutes. Never use.'},
-{term:'WPA2 (AES/CCMP)',definition:'Current baseline wireless security. AES-128 encryption. Personal (PSK) or Enterprise (802.1X).'},
-{term:'IMEI',definition:'15-17 digit hardware ID for cell phones. Used to blacklist stolen devices.'},
-{term:'IMSI',definition:'15-digit subscriber ID stored on SIM. Identifies the USER for billing/roaming.'},
-{term:'NFC',definition:'Near Field Communication. Very short range (inches). Tap-to-pay, quick device pairing.'},
-{term:'Micro-ATX',definition:'Mid-size board (244x244mm). 4 slots. Most common in pre-built PCs. ATX case compatible.'},
-{term:'Mini-ITX',definition:'Compact board (170x170mm). 1 slot. Small form factor builds.'},
-{term:'LGA',definition:'Land Grid Array. CPU socket with pins on motherboard. Used by Intel. Bent pin = board damage.'},
-{term:'DDR4',definition:'RAM standard (2133-3200+ MHz, 1.2V). 288 pins. Not compatible with DDR5 slots.'},
-{term:'DDR5',definition:'Current RAM (4800-7200+ MHz, 1.1V). 288 pins different notch. On-die ECC. Intel 12th gen+.'},
-{term:'ECC RAM',definition:'Error-Correcting Code RAM. Detects/corrects single-bit errors. Servers only.'},
-{term:'Dual-Channel',definition:'Matched RAM pairs in correct color-coded slots doubles memory bandwidth.'},
-{term:'SO-DIMM',definition:'Laptop RAM. 260 pins (DDR4). Not interchangeable with desktop DIMM.'},
-{term:'24-pin ATX',definition:'Main motherboard power connector providing 3.3V, 5V, and 12V rails.'},
-{term:'8-pin EPS',definition:'Dedicated 12V CPU power near CPU socket. Not same as PCIe 8-pin.'},
-{term:'80 PLUS',definition:'PSU efficiency certification. Bronze=82%, Silver=85%, Gold=87%, Platinum=92%.'},
-{term:'GPU',definition:'Graphics Processing Unit. PCIe x16 card. Requires dedicated power connectors for gaming cards.'},
-{term:'Thermal Paste',definition:'Fills gaps between CPU and heatsink. Clean and reapply when reseating cooler.'},
-{term:'CMOS Battery',definition:'CR2032 coin cell. Powers BIOS clock/settings when off. Dead = settings reset each boot.'},
-{term:'POST',definition:'Power-On Self-Test. BIOS/UEFI hardware check on boot. Failures = beep codes or LEDs.'},
-{term:'BIOS',definition:'Legacy firmware. 16-bit. MBR only, 2TB max. Replaced by UEFI.'},
-{term:'HDD',definition:'Mechanical storage. Spinning platters. Cheaper per GB. Clicking = failure imminent.'},
-{term:'SSD',definition:'Flash memory storage. Much faster, more durable, lower power than HDDs.'},
-{term:'SATA III',definition:'Storage interface at 6 Gb/s (~550 MB/s). Same cable for HDD and SSD.'},
-{term:'M.2 NVMe',definition:'High-performance SSD via PCIe. 3,500-7,000+ MB/s. Key M slot on motherboard.'},
-{term:'RAID 0',definition:'Striping. No fault tolerance. One failure loses ALL data. Fastest but riskiest.'},
-{term:'RAID 1',definition:'Mirroring. Two drives. Survives one failure. Half usable capacity.'},
-{term:'RAID 10',definition:'Mirror + stripe. Min 4 drives. Best performance + redundancy.'},
-{term:'FAT32',definition:'Legacy file system. 4GB max file. No permissions. Universal compatibility. Used for UEFI ESP.'},
-{term:'exFAT',definition:'Designed for flash media. No 4GB limit. Cross-platform. No permissions or journaling.'},
-{term:'Cat 5e',definition:'1 Gbps at 100m. Minimum for Gigabit Ethernet. Enhanced version of Cat 5.'},
-{term:'Cat 6',definition:'10 Gbps at 55m or 1 Gbps at 100m. Thicker insulation, tighter twists.'},
-{term:'Plenum (CMP)',definition:'Fire-retardant cable for air-handling spaces above ceilings. Required by building code.'},
-{term:'USB 2.0',definition:'480 Mbps. Black ports. Standard for keyboards and mice.'},
-{term:'USB 3.2 Gen 1',definition:'5 Gbps. Blue connectors or SS logo. Backward compatible with 2.0.'},
-{term:'Thunderbolt 3/4',definition:'40 Gbps via USB-C. Supports daisy-chaining, dual 4K, PCIe tunneling.'},
-{term:'HDMI',definition:'Most common digital A/V. 19-pin. 4K/8K, HDR, ARC. No latch.'},
-{term:'DisplayPort',definition:'20-pin digital video with locking latch. Supports daisy-chaining. Alt mode over USB-C.'},
-{term:'LCD',definition:'Liquid crystals with backlight. TN=fastest, IPS=best color, VA=best contrast.'},
-{term:'OLED',definition:'Self-emissive pixels. True blacks. No backlight needed. Used in phones and premium displays.'},
-{term:'Inverter',definition:'DC-to-AC for CCFL backlights. Dark screen + working external = likely inverter failure.'},
-{term:'Digitizer',definition:'Touchscreen component. Converts finger/stylus to coordinates. Ghost touches = failing.'},
-{term:'Laser Process',definition:'Six steps: Processing, Charging, Exposing, Developing, Transferring, Fusing.'},
-{term:'Pickup Rollers',definition:'Rubber rollers pulling paper from tray. Worn/glazed = paper jams. Clean with IPA.'},
-{term:'Print Spooler',definition:'Windows service queuing print jobs. Restart via services.msc when stuck.'},
-{term:'Type 1 Hypervisor',definition:'Bare metal. Directly on hardware, no host OS. Most efficient. ESXi, Hyper-V Server.'},
-{term:'Type 2 Hypervisor',definition:'Hosted on existing OS. Easier setup, less efficient. VirtualBox, VMware Workstation.'},
-{term:'VM Snapshot',definition:'Point-in-time state capture for rollback. Not a backup replacement.'},
-{term:'NAT Mode (VM)',definition:'VM shares host IP. Safest default. VM invisible to LAN.'},
-{term:'Bridged Mode (VM)',definition:'VM gets own IP from physical DHCP. Appears as separate LAN device.'},
-{term:'Host-Only (VM)',definition:'VM talks only to host. No internet. Isolated testing.'},
-{term:'SaaS',definition:'Software as a Service. Provider manages everything. Microsoft 365, Gmail.'},
-{term:'PaaS',definition:'Platform as a Service. Provider manages infrastructure. Azure App Service.'},
-{term:'IaaS',definition:'Infrastructure as a Service. Customer manages VMs/OS/apps. AWS EC2, Azure VMs.'},
-{term:'Public Cloud',definition:'Shared infrastructure from providers like AWS, Azure, GCP.'},
-{term:'Private Cloud',definition:'Organization-owned, not shared externally.'},
-{term:'Hybrid Cloud',definition:'Combination of public and private cloud with data shared between them.'},
-{term:'Elasticity',definition:'Auto-scale resources up/down based on demand. Pay only for what you use.'},
-{term:'Shared Responsibility',definition:'Customer always owns data/access regardless of cloud model.'},
-{term:'Virus',definition:'Malicious code attaching to files. Spreads when user runs infected file. Requires user action.'},
-{term:'Worm',definition:'Self-replicating across networks without user action. No host file needed. Example: WannaCry.'},
-{term:'Trojan',definition:'Malware disguised as legitimate software. Does not self-replicate. Creates backdoors.'},
-{term:'Rootkit',definition:'Hides deep in OS kernel. Extremely hard to detect. Often requires OS reinstall.'},
-{term:'Spyware',definition:'Silently collects passwords and browsing data without consent.'},
-{term:'7-Step Malware Removal',definition:'Identify, Quarantine, Disable Restore, Scan, Schedule, Enable Restore, Educate.'},
-{term:'Spear-Phishing',definition:'Targeted phishing aimed at specific individual using personal details.'},
-{term:'Whaling',definition:'Phishing targeting senior executives. Often involves wire transfer fraud.'},
-{term:'Vishing',definition:'Voice phishing via phone calls. Caller pretends to be bank/IRS/support.'},
-{term:'Smishing',definition:'SMS/text phishing. Malicious links via text message.'},
-{term:'Tailgating',definition:'Unauthorized person following authorized person through secured door.'},
-{term:'Social Engineering',definition:'Manipulating people into revealing confidential info or compromising security.'},
-{term:'Least Privilege',definition:'Users/processes receive only minimum access required for their job function.'},
-{term:'VPN',definition:'Encrypted tunnel for secure remote access over public networks.'},
-{term:'SSL/TLS Certificate',definition:'Digital certificate verifying website identity. Expired = browser warning. Issued by CA.'},
-{term:'Browser Hijacker',definition:'Changes homepage/search engine without consent. Fix via browser reset.'},
-{term:'Default Credentials',definition:'Factory admin/password on routers. #1 SOHO vulnerability. Always change immediately.'},
-{term:'Guest Network',definition:'Separate SSID isolating visitors/IoT from main network and shared resources.'},
-{term:'MDM',definition:'Mobile Device Management. Centralized system pushing policies and security to mobile devices.'},
-{term:'Remote Wipe',definition:'Erases all data on lost/stolen device remotely. Full or selective wipe options.'},
-{term:'Remote Lock',definition:'Locks device screen remotely. Always lock FIRST before deciding to wipe.'},
-{term:'BYOD',definition:'Bring Your Own Device. Personal devices for work. Limited MDM control.'},
-{term:'BitLocker',definition:'Windows full-disk encryption. Requires TPM + Pro/Enterprise. Recovery key in AD.'},
-{term:'Group Policy',definition:'Centrally manages Windows settings via GPOs. Pro/Enterprise only. gpupdate /force refreshes.'},
-{term:'Hyper-V',definition:'Windows built-in Type 1 hypervisor. Pro/Enterprise. Conflicts with VirtualBox/VMware.'},
-{term:'Task Manager',definition:'CPU/RAM/Disk/Network per process. Kill apps. Manage startup. Ctrl+Shift+Esc.'},
-{term:'Event Viewer',definition:'Windows log viewer (eventvwr.msc). System/Application/Security. Filter by Error/Warning.'},
-{term:'Device Manager',definition:'Hardware drivers. Yellow triangle = problem. Update/rollback/disable. devmgmt.msc.'},
-{term:'Disk Management',definition:'GUI for partitions, formatting, drive letters. diskmgmt.msc.'},
-{term:'msconfig',definition:'System Configuration. Boot tab: Safe Mode. Services: hide Microsoft to isolate conflicts.'},
-{term:'services.msc',definition:'Start/stop/restart services. Fix Print Spooler. Set startup type.'},
-{term:'Safe Mode',definition:'Minimal drivers/services. Isolates conflicts. Via msconfig or WinRE.'},
-{term:'System Restore',definition:'Reverts system files/registry. Does NOT affect documents. Removes recent apps/drivers.'},
-{term:'sfc /scannow',definition:'System File Checker. Repairs corrupted files from cache. Run elevated. DISM first if fails.'},
-{term:'DISM /RestoreHealth',definition:'Repairs Windows component store. Run before retrying failed sfc.'},
-{term:'bootrec',definition:'WinRE boot repair. /fixmbr, /fixboot, /rebuildbcd. For Windows startup failures.'},
-{term:'ipconfig',definition:'/release /renew for DHCP. /flushdns clears cache. /all shows MAC and DHCP server.'},
-{term:'chkdsk',definition:'/f=file errors. /r=bad sectors. Run elevated. Requires reboot on system drive.'},
-{term:'netstat',definition:'Shows active connections, listening ports, routing tables.'},
-{term:'tracert',definition:'Traces path to destination showing each router hop.'},
-{term:'nslookup',definition:'Tests DNS resolution by querying DNS server directly.'},
-{term:'NTFS Permissions',definition:'Combined with Share, most restrictive wins. Full Control, Modify, Read, Write.'},
-{term:'BSOD',definition:'Blue Screen. Critical kernel error. Note stop code. Check Event Viewer.'},
-{term:'sudo',definition:'Linux superuser do. Temporarily elevates to root. Requires password. Logged.'},
-{term:'chmod',definition:'Linux file permissions. +x=executable. 755=owner full, others read/execute.'},
-{term:'Time Machine',definition:'macOS backup creating hourly/daily/weekly versioned snapshots to external drive.'},
-{term:'FileVault',definition:'macOS full-disk encryption using XTS-AES-128. Recovery key required if password forgotten.'},
-{term:'PowerShell (.ps1)',definition:'Windows automation scripting. Cmdlet-based (Verb-Noun). Run as admin for system changes.'},
-{term:'Bash (.sh)',definition:'Linux/macOS shell scripting. #!/bin/bash required. chmod +x to make executable.'},
-{term:'Execution Policy',definition:'PowerShell security. Restricted=no scripts. RemoteSigned=local OK. Set-ExecutionPolicy.'},
-{term:'Full Backup',definition:'Copies everything. Slowest to create, fastest to restore. Clears archive bit.'},
-{term:'Incremental',definition:'Changes since LAST backup. Fastest to create. Complex restore: full + all incrementals.'},
-{term:'Differential',definition:'Changes since last FULL. Grows daily. Restore: full + latest differential only.'},
-{term:'3-2-1 Rule',definition:'3 copies, 2 media types, 1 offsite. Industry standard backup strategy.'},
-{term:'WinRE',definition:'Windows Recovery Environment. Startup Repair, Reset, Restore, Command Prompt.'},
-{term:'Startup Repair',definition:'Automated WinRE tool fixing boot problems. First step for boot failures.'},
-{term:'Reset This PC',definition:'Reinstalls Windows. Keep files or remove everything. Removes all installed apps.'},
-{term:'6-Step Troubleshooting',definition:'Identify, Establish theory, Test, Plan action, Verify function, Document.'},
-{term:'Change Management',definition:'Formal process: request, assess risk, approve, document, review post-implementation.'},
-{term:'SLA',definition:'Service Level Agreement. Response times, uptime guarantees, penalties.'},
-{term:'Ticket Escalation',definition:'Transfer to higher tier when issue exceeds current skill or SLA threshold.'},
-{term:'P1 Critical',definition:'Complete outage. Entire business affected. Immediate all-hands response.'},
-{term:'RTO / RPO',definition:'RTO=max downtime. RPO=max data loss (time between backups).'},
-{term:'ESD',definition:'100V damages components. Humans feel 3000V. Ground yourself first always.'},
-{term:'Antistatic Wrist Strap',definition:'Non-dominant wrist. Clip to unpainted chassis metal. Prevents ESD damage.'},
-{term:'Class C Fire',definition:'Electrical fires. CO2 or dry chemical. NEVER water. Server rooms.'},
-{term:'PASS Method',definition:'Pull pin, Aim at base, Squeeze handle, Sweep side-to-side.'},
-{term:'UPS',definition:'Uninterruptible Power Supply. Battery backup for graceful shutdown during outages.'},
-{term:'Documentation',definition:'Record symptoms, root cause, steps, preventive measures. Job not done until documented.'},
-{term:'PII',definition:'Personally Identifiable Information. Name, SSN, email, phone. Breach requires notification.'},
-{term:'PHI',definition:'Protected Health Information. HIPAA governs. Medical records, insurance info.'},
-{term:'PCI-DSS',definition:'Payment Card Industry standard. 12 requirements for credit card data handling.'},
-{term:'HIPAA',definition:'US law protecting patient health info. Access controls, encryption, audit logs required.'},
-{term:'Chain of Custody',definition:'Documents who handled evidence, when, why. Required for legal proceedings.'},
-{term:'Generative AI',definition:'Creates new content from patterns. ChatGPT, Copilot, DALL-E. Verify outputs.'},
-{term:'AI Hallucination',definition:'AI confidently generating incorrect info. Always verify with trusted sources.'},
-{term:'Deepfake',definition:'AI-generated fake audio/video of real people. Social engineering and fraud risk.'},
-{term:'Public AI Safety',definition:'Never input PII, passwords, or proprietary data into public AI models.'}
-            ];
-            // Add member cards to the deck
-            memberCards.forEach(c => cards.push({term: c.term, definition: c.definition}));
-            // Update UI for members
-            document.querySelector('.flashcard-header h1').innerHTML = '&#x1F0CF; Full Flash Card Deck';
-            document.querySelector('.flashcard-header .subtitle').textContent = 'All ' + cards.length + ' terms — shuffle, flip, and master every concept';
-        }
+        // Member detection - removed. This is the FREE 50-card preview only.
+        // Full 500-card deck is at flashcards-full.html (members only).
 
         let currentIndex = 0;
         let isFlipped = false;
@@ -652,13 +477,7 @@
                 updateCard();
                 GameSounds.correct();
             } else {
-                // Members don't see upsell
-                if (isMember) {
-                    currentIndex = 0;
-                    updateCard();
-                } else {
-                    showUpsell();
-                }
+                showUpsell();
             }
         }
 
@@ -701,22 +520,6 @@
         // Initialize
         updateCard();
 
-        // Add shuffle button for members
-        if (isMember) {
-            const navArea = document.querySelector('.card-nav');
-            const shuffleBtn = document.createElement('button');
-            shuffleBtn.textContent = '🔀 Shuffle';
-            shuffleBtn.style.cssText = 'padding:10px 20px;border:1px solid var(--border);border-radius:8px;font-size:1em;font-weight:600;color:var(--navy);cursor:pointer;background:#fff;font-family:inherit;';
-            shuffleBtn.onclick = function() {
-                for (let i = cards.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [cards[i], cards[j]] = [cards[j], cards[i]];
-                }
-                currentIndex = 0;
-                updateCard();
-            };
-            navArea.appendChild(shuffleBtn);
-        }
     </script>
 
 </body>

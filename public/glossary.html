@@ -8,32 +8,32 @@
     <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-        --navy: #1a365d;
-        --navy-dark: #0f2440;
-        --blue-accent: #3182ce;
-        --blue-pale: #ebf4ff;
-        --text-body: #2d3748;
-        --text-muted: #718096;
-        --border: #e2e8f0;
-        --red: #e53e3e;
-        --orange: #c8a800;
-        --green: #38a169;
-        --bg-section: #f7fafc;
-        --shadow: 0 2px 8px rgba(0,0,0,0.08);
-        --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+        --navy: #0f172a;
+        --navy-dark: #0f172a;
+        --blue-accent: #5b9bd5;
+        --blue-pale: #1e3a5f;
+        --text-body: #e2e8f0;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --red: #e74c3c;
+        --orange: #f59e0b;
+        --green: #27ae60;
+        --bg-section: #1e293b;
+        --shadow: 0 2px 8px rgba(0,0,0,0.3);
+        --shadow-hover: 0 8px 24px rgba(0,0,0,0.4);
     }
     body {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         color: var(--text-body);
         line-height: 1.6;
-        background: #fff;
+        background: #0f172a;
     }
     a { color: var(--blue-accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     /* NAV BAR */
     .navbar {
-        background: var(--navy);
+        background: #0f172a;
         color: #fff;
         padding: 14px 24px;
         display: flex;
@@ -42,7 +42,8 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        border-bottom: 1px solid #334155;
     }
     .navbar .brand {
         font-weight: 700;
@@ -68,7 +69,7 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 60px; }
     .page-title {
         font-size: 2em;
-        color: var(--navy);
+        color: #f1f5f9;
         margin-bottom: 8px;
         text-align: center;
     }
@@ -87,7 +88,7 @@
     .glossary-search {
         width: 100%; padding: 14px 20px 14px 48px; border: 2px solid var(--border);
         border-radius: 30px; font-size: 1em; outline: none; transition: border-color 0.2s;
-        font-family: inherit;
+        font-family: inherit; background: #1e293b; color: #e2e8f0;
     }
     .glossary-search:focus { border-color: var(--blue-accent); box-shadow: 0 0 0 3px rgba(49,130,206,0.1); }
 
@@ -97,7 +98,7 @@
     }
     .filter-btn {
         padding: 8px 18px; border: 1px solid var(--border); border-radius: 20px;
-        background: #fff; cursor: pointer; font-size: 0.85em; font-weight: 600;
+        background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 0.85em; font-weight: 600;
         transition: all 0.2s; font-family: inherit;
     }
     .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
@@ -118,14 +119,14 @@
         display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
     }
     .glossary-card {
-        background: #fff; border: 1px solid var(--border); border-radius: 8px;
+        background: #1e293b; border: 1px solid var(--border); border-radius: 8px;
         padding: 16px 20px; border-left: 4px solid var(--red);
         transition: all 0.2s; box-shadow: var(--shadow);
     }
     .glossary-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
     .glossary-card.priority-med { border-left-color: var(--orange); }
     .glossary-card.priority-low { border-left-color: var(--green); }
-    .glossary-card h4 { margin: 0 0 6px; font-size: 1em; color: var(--navy); }
+    .glossary-card h4 { margin: 0 0 6px; font-size: 1em; color: #f1f5f9; }
     .glossary-card p { margin: 0; font-size: 0.85em; color: var(--text-muted); line-height: 1.5; }
 
     /* LOAD MORE */
@@ -164,12 +165,12 @@
         </nav>
 
         <div class="container">
-            <h1 class="page-title">&#128214; Complete Glossary — 500+ Terms</h1>
-            <p class="page-subtitle">Master every term for CompTIA A+ Core 1 (220-1201) &amp; Core 2 (220-1202)</p>
+            <h1 class="page-title">&#128214; Complete Glossary — 600+ Terms</h1>
+            <p class="page-subtitle">Master every term for CompTIA A+ Core 1 (220-1201) &amp; Core 2 (220-1202) — includes expanded terms</p>
 
             <div class="search-wrapper">
                 <span class="search-icon">&#128269;</span>
-                <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search 500+ terms...">
+                <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search 600+ terms...">
             </div>
 
             <div class="filter-bar" id="filterBar">
@@ -690,7 +691,74 @@
 {term:'Matter',priority:'medium',def:'Universal smart home standard by Apple, Google, Amazon, Samsung. Unifies IoT ecosystems for device interoperability.'},
 {term:'Thread',priority:'low',def:'IPv6-based low-power mesh networking for IoT. Transport layer for Matter standard. Self-healing mesh.'},
 {term:'Edge Computing',priority:'medium',def:'Processing data locally on/near IoT device rather than sending to cloud. Reduces latency and bandwidth usage.'},
-{term:'CAN Bus',priority:'low',def:'Controller Area Network. Communication protocol in vehicles allowing embedded controllers to communicate without central computer.'}
+{term:'CAN Bus',priority:'low',def:'Controller Area Network. Communication protocol in vehicles allowing embedded controllers to communicate without central computer.'},
+{term:'Field-Replaceable Unit (FRU)',priority:'high',def:'Component designed to be replaced by a technician without returning the device to the manufacturer. Examples: RAM, HDD, Wi-Fi card, battery, keyboard, I/O board.'},
+{term:'SO-DIMM vs DIMM',priority:'high',def:'SO-DIMM (260-pin DDR4) is for laptops; DIMM (288-pin DDR4) is for desktops. Different physical sizes, NOT interchangeable.'},
+{term:'Unitary Construction',priority:'medium',def:'Smartphone design where all components are sealed together. Not field-serviceable. Opening typically voids warranty.'},
+{term:'PPG (Photoplethysmography)',priority:'low',def:'Technology used in fitness trackers and smartwatches to measure heart rate using light sensors on the wrist.'},
+{term:'watchOS',priority:'medium',def:'Apple\'s operating system for Apple Watch. Supports notifications, NFC payments, LTE, and health monitoring.'},
+{term:'Wear OS',priority:'medium',def:'Google\'s operating system for smartwatches. Previously called Android Wear. Works with Android and iOS phones.'},
+{term:'Fire OS',priority:'medium',def:'Amazon\'s modified Android operating system used on Fire tablets and Fire TV devices. Uses Amazon Appstore instead of Google Play.'},
+{term:'Lightning Port',priority:'medium',def:'Apple\'s proprietary 8-pin connector used on older iPhones/iPads. Now largely obsolete as Apple transitions to USB-C.'},
+{term:'Spudger',priority:'medium',def:'Plastic prying tool used to open device cases and disconnect ribbon cables without causing damage or ESD.'},
+{term:'Ribbon Cable',priority:'medium',def:'Flat, flexible cable connecting internal components in laptops. Delicate connectors with plastic clamps. Not designed for frequent disconnection.'},
+{term:'I/O Board',priority:'medium',def:'Small separate circuit board in laptops controlling external ports (USB, audio). Connected to motherboard via ribbon cable. Common FRU.'},
+{term:'Thermal Conductor',priority:'medium',def:'Copper heat pipe transferring heat from CPU to fan assembly in laptops. Part of the cooling system.'},
+{term:'In-Place Clone',priority:'medium',def:'Storage migration method that copies entire drive sector-by-sector to new drive. Fastest migration method.'},
+{term:'Backup and Restore (migration)',priority:'medium',def:'Storage migration using backup software to image old drive then restore to new drive. Safest method but slower.'},
+{term:'Mini PCI / M.2 (wireless)',priority:'medium',def:'Expansion card slots for laptop wireless cards. Modern laptops use M.2 Key E slot for Wi-Fi/Bluetooth combo cards.'},
+{term:'WWAN Card',priority:'medium',def:'Cellular data card installed in laptop M.2 slot providing mobile broadband. Requires SIM card and carrier plan.'},
+{term:'IKEv2/IPSec',priority:'medium',def:'VPN protocol offering strong encryption and stability. Good for mobile devices that switch between Wi-Fi and cellular.'},
+{term:'L2TP/IPSec',priority:'medium',def:'Legacy VPN protocol combining L2TP tunneling with IPSec encryption. Being replaced by more modern solutions.'},
+{term:'PPTP',priority:'medium',def:'Oldest VPN protocol. Very weak encryption (broken). Should never be used for security. Only acceptable for non-sensitive tunneling.'},
+{term:'Wi-Fi 6E',priority:'high',def:'Extension of Wi-Fi 6 (802.11ax) adding the 6 GHz band. Less interference, more channels, lower latency. Requires 6E-capable devices.'},
+{term:'OFDMA (Wi-Fi)',priority:'medium',def:'Orthogonal Frequency Division Multiple Access. Wi-Fi 6 technology dividing channels into resource units for simultaneous multi-user transmission.'},
+{term:'Target Wake Time (TWT)',priority:'low',def:'Wi-Fi 6 feature scheduling when devices wake to send/receive data. Improves battery life for IoT and mobile devices.'},
+{term:'MLO (Multi-Link Operation)',priority:'low',def:'Wi-Fi 7 feature allowing simultaneous transmission across multiple bands (2.4/5/6 GHz). Dramatically increases throughput and reliability.'},
+{term:'BSS Coloring',priority:'low',def:'Wi-Fi 6 technique marking frames with color identifiers to reduce interference from overlapping networks in dense environments.'},
+{term:'SSID Broadcasting',priority:'high',def:'Router setting that makes the network name visible to nearby devices. Disabling hides network but doesn\'t provide real security.'},
+{term:'Channel Bonding',priority:'medium',def:'Combining adjacent Wi-Fi channels (20/40/80/160 MHz) for higher throughput. Wider channels = faster but fewer available in the band.'},
+{term:'Omnidirectional Antenna',priority:'medium',def:'Wi-Fi antenna radiating signal equally in all directions (360\u00B0). Standard in most consumer routers and access points.'},
+{term:'Directional Antenna',priority:'medium',def:'Focuses Wi-Fi signal in one direction for longer range. Used for point-to-point links or targeting specific coverage areas.'},
+{term:'ISP (Internet Service Provider)',priority:'medium',def:'Company providing internet connectivity. Common types: cable, DSL, fiber, satellite, cellular. Assigns public IP via DHCP to customer router.'},
+{term:'Coaxial Cable (RG-6)',priority:'medium',def:'Cable used for cable internet and TV. Single copper core with braided shielding. F-type connector. Maximum ~1 Gbps (DOCSIS 3.1).'},
+{term:'DSL (Digital Subscriber Line)',priority:'medium',def:'Internet over phone lines. ADSL=asymmetric speeds. Slower than cable/fiber. Speed degrades with distance from CO (Central Office).'},
+{term:'Fiber to the Premises (FTTP)',priority:'medium',def:'Fiber optic cable running directly to customer location. Fastest residential option. Symmetrical upload/download speeds possible.'},
+{term:'DOCSIS',priority:'low',def:'Data Over Cable Service Interface Specification. Standard for cable internet. DOCSIS 3.1 supports up to 10 Gbps download.'},
+{term:'Crossover Cable',priority:'medium',def:'Ethernet cable with TX/RX pairs swapped at one end. Legacy use: connecting two similar devices directly. Modern devices use Auto-MDI-X instead.'},
+{term:'Auto-MDI-X',priority:'medium',def:'Modern switch/NIC feature automatically detecting cable type and adjusting pin assignments. Eliminates need for crossover cables.'},
+{term:'T568A / T568B',priority:'high',def:'Wiring standards for RJ-45 Ethernet connectors. T568B is most common in commercial installations. Both ends must match for straight-through.'},
+{term:'Punch-Down Block (66/110)',priority:'medium',def:'Termination point for network cables in wiring closets. 66 block = legacy phone. 110 block = modern data/voice. Used with patch panels.'},
+{term:'Patch Panel',priority:'medium',def:'Central connection point in a network closet. Wall ports terminate on back; patch cables connect front to switch ports. Organized cable management.'},
+{term:'OTDR',priority:'low',def:'Optical Time Domain Reflectometer. Tests fiber optic cables for breaks, splices, and signal loss by sending light pulses and measuring reflections.'},
+{term:'SC / LC / ST Connectors',priority:'medium',def:'Fiber optic connector types. SC=square (push-pull). LC=small form-factor (most common). ST=round (bayonet twist). Not interchangeable.'},
+{term:'SFP / SFP+ Transceiver',priority:'medium',def:'Small Form-factor Pluggable module converting electrical signals to fiber optic. SFP=1G, SFP+=10G. Hot-swappable in switch slots.'},
+{term:'PoE+ / PoE++',priority:'medium',def:'Enhanced Power over Ethernet. PoE=15.4W (802.3af), PoE+=30W (802.3at), PoE++=60-100W (802.3bt). Powers cameras, WAPs, phones.'},
+{term:'Managed vs Unmanaged Switch',priority:'high',def:'Managed switches support VLANs, QoS, port mirroring, SNMP. Unmanaged are plug-and-play with no configuration options. Enterprise uses managed.'},
+{term:'Port Mirroring / SPAN',priority:'medium',def:'Copies traffic from one switch port to another for monitoring/analysis. Used by IDS/IPS and packet capture tools.'},
+{term:'SNMP Trap',priority:'medium',def:'Unsolicited alert sent from network device to SNMP management station when a threshold is exceeded or event occurs. UDP port 162.'},
+{term:'Syslog',priority:'medium',def:'Standard protocol for sending log messages to a central server. UDP port 514. Used for event monitoring across network devices.'},
+{term:'NetBIOS',priority:'medium',def:'Legacy Windows networking protocol for name resolution and file sharing on local networks. Ports 137-139. Being replaced by DNS/SMB.'},
+{term:'WINS',priority:'low',def:'Windows Internet Name Service. Legacy NetBIOS name resolution. Replaced by DNS in modern networks but may appear on exam.'},
+{term:'mDNS (Multicast DNS)',priority:'medium',def:'Zero-configuration name resolution for local networks without DNS server. Used by Apple Bonjour and Linux Avahi. Port 5353.'},
+{term:'VDI (Virtual Desktop Infrastructure)',priority:'medium',def:'On-premises hosted virtual desktops running on organization\'s own servers. More control than DaaS but requires own hardware management.'},
+{term:'Metered Utilization',priority:'medium',def:'Cloud billing model where customers pay only for resources actually consumed. Core advantage of cloud computing economics.'},
+{term:'Rapid Elasticity',priority:'high',def:'Cloud capability to quickly scale resources up or down based on demand. Appears unlimited to the consumer. Key cloud advantage on exam.'},
+{term:'Resource Pooling',priority:'medium',def:'Cloud provider serving multiple tenants from shared physical resources. Resources dynamically assigned based on demand. Multi-tenant model.'},
+{term:'Measured Service',priority:'medium',def:'Cloud systems automatically controlling and optimizing resource use. Provides transparency for both provider and consumer via monitoring.'},
+{term:'On-Demand Self-Service',priority:'medium',def:'Cloud consumer can provision resources (storage, VMs) automatically without requiring human interaction with service provider.'},
+{term:'Imaging Drum (OPC)',priority:'high',def:'Photosensitive cylinder in laser printers. Light from laser creates electrostatic image. Scratches cause repeating defects. Light-sensitive component.'},
+{term:'Pickup Roller',priority:'high',def:'Rubber roller that grips paper from tray and feeds it into printer. Worn/glazed rollers cause paper jams and no-feed errors. Clean with IPA.'},
+{term:'Separation Pad',priority:'medium',def:'Friction pad preventing multiple sheets from feeding simultaneously. Worn pad = multi-page feeds. Replace together with pickup roller.'},
+{term:'Maintenance Kit',priority:'medium',def:'Scheduled replacement set for laser printers (typically every 200K pages). Includes fuser, rollers, separation pad. Resets page counter.'},
+{term:'Virtual Printing',priority:'medium',def:'Printing to file or cloud rather than physical printer. Examples: Print to PDF, XPS, cloud print services. No physical output device needed.'},
+{term:'Microcontroller',priority:'medium',def:'Single-chip computer designed for specific tasks in embedded systems. Contains CPU, memory, I/O on one chip. Arduino is a common example.'},
+{term:'Matter Protocol',priority:'medium',def:'Universal smart home standard developed by Apple, Google, Amazon, Samsung. Unifies IoT device ecosystems for interoperability over IP.'},
+{term:'OTA Update (Over-the-Air)',priority:'medium',def:'Firmware or OS update delivered wirelessly to devices. Standard for smartphones and IoT. No physical access required.'},
+{term:'WinRE (Windows Recovery)',priority:'high',def:'Windows Recovery Environment. Boot menu with Startup Repair, Reset This PC, System Restore, Command Prompt. Accessed via failed boots or install media.'},
+{term:'LLM (Large Language Model)',priority:'medium',def:'AI model trained on massive text datasets powering chatbots and content generation. Base technology behind ChatGPT, Copilot, Gemini.'},
+{term:'Training Data Bias',priority:'medium',def:'AI producing skewed or discriminatory outputs because training data contained imbalanced or prejudiced content. Leads to unfair recommendations.'},
+{term:'Public vs Private AI',priority:'high',def:'Public AI (ChatGPT, Gemini) = shared service, never input secrets/PII. Private AI = deployed internally, data stays in organization. Know the difference.'}
 ];
 
         // Count by priority

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 623 409" style="enable-background:new 0 0 623 409;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#2980B9;}
+	.st1{font-family:'Arial-BoldMT';}
+	.st2{font-size:17px;}
+	.st3{fill:#888888;}
+	.st4{font-family:'ArialMT';}
+	.st5{font-size:9px;}
+	.st6{fill:#FEFCF7;stroke:#E8D5B7;stroke-width:0.6;}
+	.st7{fill:#ECF0F1;stroke:#7F8C8D;stroke-width:1.2;}
+	.st8{fill:#2C3E50;}
+	.st9{font-size:12px;}
+	.st10{fill:none;stroke:#F39C12;stroke-width:2.5;stroke-dasharray:5,3;}
+	.st11{fill:#666666;}
+	.st12{font-size:8px;}
+	.st13{fill:#FDEDEC;stroke:#E74C3C;stroke-width:1.2;}
+	.st14{fill:#1A2744;}
+	.st15{font-size:10px;}
+	.st16{fill:#FFFFFF;stroke:#E74C3C;stroke-width:0.5;}
+	.st17{fill:#EAFAF1;stroke:#27AE60;stroke-width:1.2;}
+	.st18{fill:#FFFFFF;stroke:#27AE60;stroke-width:0.5;}
+	.st19{fill:#F4ECF7;stroke:#8E44AD;stroke-width:1.2;}
+	.st20{fill:#FFFFFF;stroke:#8E44AD;stroke-width:0.5;}
+	.st21{fill:none;stroke:#E74C3C;}
+	.st22{fill:none;stroke:#27AE60;}
+	.st23{fill:none;stroke:#8E44AD;}
+	.st24{fill:#FEF9E7;stroke:#F1C40F;}
+	.st25{fill:none;stroke:#E74C3C;stroke-width:0.8;stroke-dasharray:3,2;}
+	.st26{fill:none;stroke:#27AE60;stroke-width:0.8;stroke-dasharray:3,2;}
+	.st27{fill:none;stroke:#8E44AD;stroke-width:0.8;stroke-dasharray:3,2;}
+	.st28{fill:#C0392B;}
+	.st29{font-family:'SegoeUISymbol';}
+	.st30{font-size:16px;}
+	.st31{fill:#FFFFFF;}
+	.st32{fill:none;stroke:#E0E0E0;stroke-width:0.5;}
+	.st33{fill:#333333;}
+	.st34{fill:#F9F9F9;}
+	.st35{fill:#FDF2F2;stroke:#E6B0AA;stroke-width:0.6;}
+	.st36{fill:#555555;}
+</style>
+<text transform="matrix(1 0 0 1 157.4812 20)" class="st0 st1 st2">VLANs — Virtual Local Area Networks</text>
+<text transform="matrix(1 0 0 1 165.1675 34)" class="st3 st4 st5">Logically segment one physical network into separate broadcast domains</text>
+<path class="st6" d="M13,42h597c2.8,0,5,2.2,5,5v185c0,2.8-2.2,5-5,5H13c-2.8,0-5-2.2-5-5V47C8,44.2,10.2,42,13,42z"/>
+<path class="st7" d="M125,52h230c2.8,0,5,2.2,5,5v20c0,2.8-2.2,5-5,5H125c-2.8,0-5-2.2-5-5V57C120,54.2,122.2,52,125,52z"/>
+<text transform="matrix(1 0 0 1 214.8867 71)" class="st8 st1 st9">Switch A</text>
+<path class="st7" d="M425,52h130c2.8,0,5,2.2,5,5v20c0,2.8-2.2,5-5,5H425c-2.8,0-5-2.2-5-5V57C420,54.2,422.2,52,425,52z"/>
+<text transform="matrix(1 0 0 1 464.6641 71)" class="st8 st1 st9">Switch B</text>
+<line class="st10" x1="360" y1="67" x2="420" y2="67"/>
+<text transform="matrix(1 0 0 1 379.1094 60)" class="st11 st1 st12">Trunk</text>
+<text transform="matrix(1 0 0 1 360.8691 80)" class="st11 st4 st12">(802.1Q tagged)</text>
+<path class="st13" d="M20,98h175c2.8,0,5,2.2,5,5v65c0,2.8-2.2,5-5,5H20c-2.8,0-5-2.2-5-5v-65C15,100.2,17.2,98,20,98z"/>
+<text transform="matrix(1 0 0 1 42.2661 114)" class="st14 st1 st15">VLAN 10 — HR Department</text>
+<path class="st16" d="M28,120h64c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3H28c-1.7,0-3-1.3-3-3v-18C25,121.3,26.3,120,28,120z"/>
+<text transform="matrix(1 0 0 1 43.7773 131)" class="st11 st4 st12">HR-PC-1</text>
+<text transform="matrix(1 0 0 1 41.0938 140)" class="st11 st4 st12">10.10.10.2</text>
+<path class="st16" d="M105,120h64c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3h-64c-1.7,0-3-1.3-3-3v-18C102,121.3,103.3,120,105,120z"/>
+<text transform="matrix(1 0 0 1 120.7773 131)" class="st11 st4 st12">HR-PC-2</text>
+<text transform="matrix(1 0 0 1 118.0938 140)" class="st11 st4 st12">10.10.10.3</text>
+<text transform="matrix(1 0 0 1 67.6328 165)" class="st11 st4 st12">Subnet: 10.10.10.0/24</text>
+<path class="st17" d="M215,98h185c2.8,0,5,2.2,5,5v65c0,2.8-2.2,5-5,5H215c-2.8,0-5-2.2-5-5v-65C210,100.2,212.2,98,215,98z"/>
+<text transform="matrix(1 0 0 1 249.7686 114)" class="st14 st1 st15">VLAN 20 — Engineering</text>
+<path class="st18" d="M223,120h49c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3h-49c-1.7,0-3-1.3-3-3v-18C220,121.3,221.3,120,223,120z"/>
+<text transform="matrix(1 0 0 1 236.3301 131)" class="st11 st4 st12">Dev-1</text>
+<text transform="matrix(1 0 0 1 228.0938 140)" class="st11 st4 st12">10.20.20.2</text>
+<path class="st18" d="M283,120h49c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3h-49c-1.7,0-3-1.3-3-3v-18C280,121.3,281.3,120,283,120z"/>
+<text transform="matrix(1 0 0 1 296.3301 131)" class="st11 st4 st12">Dev-2</text>
+<text transform="matrix(1 0 0 1 288.0938 140)" class="st11 st4 st12">10.20.20.3</text>
+<path class="st18" d="M343,120h49c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3h-49c-1.7,0-3-1.3-3-3v-18C340,121.3,341.3,120,343,120z"/>
+<text transform="matrix(1 0 0 1 356.3301 131)" class="st11 st4 st12">Dev-3</text>
+<text transform="matrix(1 0 0 1 348.0938 140)" class="st11 st4 st12">10.20.20.4</text>
+<text transform="matrix(1 0 0 1 267.6328 165)" class="st11 st4 st12">Subnet: 10.20.20.0/24</text>
+<path class="st19" d="M420,98h185c2.8,0,5,2.2,5,5v65c0,2.8-2.2,5-5,5H420c-2.8,0-5-2.2-5-5v-65C415,100.2,417.2,98,420,98z"/>
+<text transform="matrix(1 0 0 1 455.9282 114)" class="st14 st1 st15">VLAN 30 — Guest Wi-Fi</text>
+<path class="st20" d="M433,120h64c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3h-64c-1.7,0-3-1.3-3-3v-18C430,121.3,431.3,120,433,120z"/>
+<text transform="matrix(1 0 0 1 450.7715 131)" class="st11 st4 st12">Guest-1</text>
+<text transform="matrix(1 0 0 1 446.0938 140)" class="st11 st4 st12">10.30.30.5</text>
+<path class="st20" d="M513,120h64c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3h-64c-1.7,0-3-1.3-3-3v-18C510,121.3,511.3,120,513,120z"/>
+<text transform="matrix(1 0 0 1 530.7715 131)" class="st11 st4 st12">Guest-2</text>
+<text transform="matrix(1 0 0 1 526.0938 140)" class="st11 st4 st12">10.30.30.6</text>
+<text transform="matrix(1 0 0 1 472.6328 165)" class="st11 st4 st12">Subnet: 10.30.30.0/24</text>
+<line class="st21" x1="180" y1="82" x2="107" y2="98"/>
+<line class="st22" x1="240" y1="82" x2="307" y2="98"/>
+<line class="st23" x1="490" y1="82" x2="512" y2="98"/>
+<path class="st24" d="M145,185h190c2.8,0,5,2.2,5,5v32c0,2.8-2.2,5-5,5H145c-2.8,0-5-2.2-5-5v-32C140,187.2,142.2,185,145,185z"/>
+<text transform="matrix(1 0 0 1 184.707 201)" class="st14 st1 st15">Layer 3 Switch / Router</text>
+<text transform="matrix(1 0 0 1 169.3027 214)" class="st11 st4 st12">Required for inter-VLAN communication</text>
+<text transform="matrix(1 0 0 1 185.6055 224)" class="st11 st4 st12">(routes traffic between VLANs)</text>
+<line class="st25" x1="107" y1="173" x2="160" y2="195"/>
+<line class="st26" x1="307" y1="173" x2="270" y2="185"/>
+<line class="st27" x1="400" y1="185" x2="340" y2="200"/>
+<text transform="matrix(1 0 0 1 379.1094 137.75)" class="st28 st29 st30">✗</text>
+<text transform="matrix(1 0 0 1 157.4812 137.75)" class="st28 st29 st30">✗</text>
+<text transform="matrix(1 0 0 1 141.2129 152)" class="st11 st4 st12">isolated</text>
+<text transform="matrix(1 0 0 1 346.2129 152)" class="st11 st4 st12">isolated</text>
+<text transform="matrix(1 0 0 1 252.9893 254)" class="st0 st1 st9">VLAN Key Concepts</text>
+<path class="st8" d="M23,260h577c1.7,0,3,1.3,3,3v14c0,1.7-1.3,3-3,3H23c-1.7,0-3-1.3-3-3v-14C20,261.3,21.3,260,23,260z"/>
+<text transform="matrix(1 0 0 1 82 273)" class="st31 st1 st5">Concept</text>
+<text transform="matrix(1 0 0 1 355.2456 273)" class="st31 st1 st5">Description</text>
+<rect x="20" y="280" class="st31" width="583" height="22"/>
+<line class="st32" x1="20" y1="302" x2="603" y2="302"/>
+<text transform="matrix(1 0 0 1 73.9866 294)" class="st33 st1 st5">Access Port</text>
+<text transform="matrix(1 0 0 1 249.5176 294)" class="st33 st4 st5">Belongs to one VLAN only. Connects end devices (PCs, printers).</text>
+<rect x="20" y="302" class="st34" width="583" height="22"/>
+<line class="st32" x1="20" y1="324" x2="603" y2="324"/>
+<text transform="matrix(1 0 0 1 77.4978 316)" class="st33 st1 st5">Trunk Port</text>
+<text transform="matrix(1 0 0 1 250.6887 316)" class="st33 st4 st5">Carries multiple VLANs between switches. Uses 802.1Q tagging.</text>
+<rect x="20" y="324" class="st31" width="583" height="22"/>
+<line class="st32" x1="20" y1="346" x2="603" y2="346"/>
+<text transform="matrix(1 0 0 1 85.2388 338)" class="st33 st1 st5">802.1Q</text>
+<text transform="matrix(1 0 0 1 207.1477 338)" class="st33 st4 st5">Standard for VLAN tagging. Adds a 4-byte tag to Ethernet frames identifying the VLAN.</text>
+<rect x="20" y="346" class="st34" width="583" height="22"/>
+<line class="st32" x1="20" y1="368" x2="603" y2="368"/>
+<text transform="matrix(1 0 0 1 58.2563 360)" class="st33 st1 st5">Inter-VLAN Routing</text>
+<text transform="matrix(1 0 0 1 210.6743 360)" class="st33 st4 st5">Requires Layer 3 device (router or L3 switch). VLANs cannot communicate without it.</text>
+<path class="st35" d="M11,378h601c1.7,0,3,1.3,3,3v18c0,1.7-1.3,3-3,3H11c-1.7,0-3-1.3-3-3v-18C8,379.3,9.3,378,11,378z"/>
+<text transform="matrix(1 0 0 1 59.5845 394)" class="st36 st1 st5">Exam Tip: VLANs segment at Layer 2. Traffic between VLANs ALWAYS requires a Layer 3 device (router or L3 switch).</text>
+</svg>
