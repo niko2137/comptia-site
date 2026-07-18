@@ -8,7 +8,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background: #0f172a;
+            background: #152d4f;
             color: #e2e8f0;
             min-height: 100vh;
             line-height: 1.6;
@@ -17,8 +17,8 @@
         a:hover { text-decoration: underline; }
 
         .top-bar {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
+            background: #1c3a63;
+            border-bottom: 1px solid #2d4d7a;
             padding: 12px 24px;
             display: flex;
             justify-content: space-between;
@@ -57,8 +57,8 @@
         }
 
         .instructions {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 12px;
             padding: 20px 24px;
             margin-bottom: 32px;
@@ -72,7 +72,7 @@
         .instructions li { margin-bottom: 4px; color: #cbd5e1; font-size: 0.93em; }
 
         .exam-tip {
-            background: linear-gradient(135deg, #1e3a5f, #1e293b);
+            background: linear-gradient(135deg, #1e3a5f, #1c3a63);
             border: 1px solid #3b82f6;
             border-radius: 12px;
             padding: 16px 20px;
@@ -96,9 +96,9 @@
             gap: 10px;
             margin-bottom: 28px;
             padding: 20px;
-            background: #1e293b;
+            background: #1c3a63;
             border-radius: 12px;
-            border: 1px solid #334155;
+            border: 1px solid #2d4d7a;
             min-height: 60px;
         }
         .port-chip {
@@ -128,8 +128,8 @@
         .drop-item {
             display: flex;
             align-items: center;
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 10px;
             overflow: hidden;
             transition: border-color 0.2s;
@@ -158,7 +158,7 @@
             transition: background 0.2s;
         }
         .drop-zone.has-chip {
-            border-left: 1px solid #334155;
+            border-left: 1px solid #2d4d7a;
         }
         .drop-zone .port-chip {
             cursor: pointer;
@@ -168,8 +168,8 @@
 
         /* Multiple Choice */
         .question-card {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 16px;
@@ -202,8 +202,8 @@
             gap: 8px;
         }
         .option-btn {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: #152d4f;
+            border: 1px solid #2d4d7a;
             border-radius: 8px;
             padding: 10px 16px;
             color: #e2e8f0;
@@ -237,7 +237,7 @@
         .btn:hover { transform: translateY(-1px); }
         .btn-primary { background: #3b82f6; color: #fff; }
         .btn-primary:hover { box-shadow: 0 4px 16px rgba(59,130,246,0.4); }
-        .btn-secondary { background: #334155; color: #e2e8f0; }
+        .btn-secondary { background: #2d4d7a; color: #e2e8f0; }
         .btn-secondary:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
         .results-banner {
@@ -267,11 +267,11 @@
             <p class="subtitle">CompTIA A+ Core 1 (220-1201) — Performance-Based Question</p>
 
         <!-- DIAGRAM REFERENCE PANEL -->
-        <div style="margin-top:20px;background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;">
+        <div style="margin-top:20px;background:#1c3a63;border:1px solid #2d4d7a;border-radius:10px;overflow:hidden;">
             <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'grid':'none';this.textContent=this.textContent.includes('▶')?'📐 Reference Diagrams ▼':'📐 Reference Diagrams ▶';" style="width:100%;padding:12px 18px;background:none;border:none;color:#5b9bd5;font-size:0.95rem;font-weight:700;cursor:pointer;text-align:left;">📐 Reference Diagrams ▶</button>
             <div style="display:none;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:16px;">
-                <a href="../Images/Diagrams/osi-model.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/osi-model.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="OSI Model"><br>OSI Model</a>
-                <a href="../Images/Diagrams/tcp-vs-udp.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/tcp-vs-udp.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="TCP vs UDP"><br>TCP vs UDP</a>
+                <a href="../Images/Diagrams/osi-model.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/osi-model.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="OSI Model"><br>OSI Model</a>
+                <a href="../Images/Diagrams/tcp-vs-udp.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/tcp-vs-udp.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="TCP vs UDP"><br>TCP vs UDP</a>
             </div>
         </div>
         <!-- END DIAGRAM PANEL -->

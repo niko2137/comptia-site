@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtualization & Cloud Quick Reference — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+
+        .print-btn {
+            background: var(--blue-accent);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: background 0.2s;
+        }
+        .print-btn:hover { background: var(--navy); }
+
+        .table-section { margin-bottom: 40px; }
+        .table-section h2 {
+            font-size: 1.4em;
+            color: var(--navy);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--blue-pale);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            min-width: 600px;
+        }
+        .ref-table thead { background: var(--navy); color: #fff; }
+        .ref-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ref-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+        .ref-table tbody tr:nth-child(even) { background: var(--bg-light); }
+        .ref-table tbody tr:hover { background: var(--blue-pale); }
+        .ref-table .highlight { font-weight: 700; color: var(--navy); }
+        .ref-table .speed { font-weight: 600; color: var(--blue-accent); font-family: 'Consolas', 'Courier New', monospace; }
+
+        .diagram-panel { margin-bottom: 24px; text-align: center; }
+        .diagram-panel img { max-width: 100%; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .diagram-panel .cap { font-size: 0.8em; color: var(--text-muted); margin-top: 8px; }
+
+        .notes-box {
+            background: var(--bg-light);
+            border-left: 4px solid var(--orange);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 20px 24px;
+            margin-top: 32px;
+        }
+        .notes-box h3 { color: var(--orange); margin-top: 0; margin-bottom: 12px; }
+        .notes-box ul { margin: 0; padding-left: 20px; }
+        .notes-box li { margin-bottom: 10px; color: var(--text-body); line-height: 1.5; }
+        .notes-box li strong { color: var(--navy); }
+
+        .trap-box {
+            background: rgba(231,76,60,0.06);
+            border-left: 4px solid var(--red);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            padding: 20px 24px;
+            margin-top: 24px;
+        }
+        .trap-box h3 { color: var(--red); margin-top: 0; margin-bottom: 8px; }
+        .trap-box p { margin: 0; color: var(--text-body); line-height: 1.5; }
+
+        .bottom-cta {
+            margin-top: 48px;
+            padding: 24px;
+            background: var(--bg-section);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .bottom-cta p { margin: 0; color: var(--text-muted); font-size: 0.95em; }
+        .bottom-cta a { color: var(--red); font-weight: 600; }
+        .bottom-cta a:hover { text-decoration: underline; }
+
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta { display: none !important; }
+            .ref-page { padding: 0; }
+            .table-wrapper { box-shadow: none; }
+            .ref-table { font-size: 0.8em; }
+            .table-section { page-break-inside: avoid; }
+            body { font-size: 12pt; }
+        }
+        @media (max-width: 768px) {
+            .ref-page h1 { font-size: 1.5em; }
+            .ref-table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="../book.html" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>☁️ Virtualization & Cloud Quick Reference</h1>
+            <p class="subtitle">Hypervisors, VM resource allocation, snapshots vs. clones, and cloud service/deployment models for the CompTIA A+ 220-1200 exam</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <div class="diagram-panel">
+                <img src="../Images/Diagrams/vmachine.svg" alt="Virtual machine and hypervisor architecture diagram">
+                <p class="cap">Type 1 vs. Type 2 hypervisor architecture</p>
+            </div>
+
+            <div class="table-section">
+                <h2>Hypervisor Types</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Feature</th><th>Type 1 (Bare Metal)</th><th>Type 2 (Hosted)</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">Architecture</td><td>Runs directly on hardware, no host OS</td><td>Runs on top of a host OS</td></tr>
+                            <tr><td class="highlight">Best for</td><td>Enterprise / server environments (most efficient)</td><td>Students &amp; labs (easiest to install)</td></tr>
+                            <tr><td class="highlight">Examples</td><td class="speed">VMware ESXi, Hyper-V Server, Xen, KVM</td><td class="speed">VMware Workstation, VirtualBox, Parallels Desktop</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color:var(--text-muted);font-size:0.9em;"><strong>VDI (Virtual Desktop Infrastructure):</strong> hosts desktop OSes as VMs on a central server, streaming the desktop to thin clients — centralizes management since the OS/data never live on the endpoint.</p>
+            </div>
+
+            <div class="table-section">
+                <h2>VM Resource Allocation</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Resource</th><th>Configure</th><th>Key Consideration</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">CPU (vCPU)</td><td>Virtual cores assigned</td><td>Never exceed host's physical cores — most lab VMs run fine with 1–2 vCPUs</td></tr>
+                            <tr><td class="highlight">RAM</td><td>Host RAM reserved for the VM</td><td>A VM using 75% of host RAM causes the host to page to disk</td></tr>
+                            <tr><td class="highlight">Storage</td><td>Dynamically allocated vs. Fixed size</td><td>Dynamic saves space; fixed gives better performance</td></tr>
+                            <tr><td class="highlight">Network Adapter</td><td>NAT, Bridged, Host-only, Internal</td><td>Can be changed after creation</td></tr>
+                            <tr><td class="highlight">Display / VRAM</td><td>Video memory for the VM</td><td>Increase for GUI-heavy guest OSes; minimal for CLI-only</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Snapshots vs. Clones</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Feature</th><th>Snapshot</th><th>Clone</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">What it does</td><td>Captures VM state at a point in time</td><td>Creates a complete independent copy</td></tr>
+                            <tr><td class="highlight">Use case</td><td>Revert instantly if a change breaks something</td><td>Deploy multiple identical VMs from a baseline</td></tr>
+                            <tr><td class="highlight">Speed / Storage</td><td>Fast, small (records only changes)</td><td>Slower, large (full disk copy)</td></tr>
+                            <tr><td class="highlight">Dependency</td><td>Depends on the snapshot chain — too many degrade performance</td><td>Fully independent of the original</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Virtual Networking Modes</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Mode</th><th>Description</th><th>Use Case</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">NAT</td><td>VM shares the host's IP via translation</td><td>Safest, easiest setup</td></tr>
+                            <tr><td class="highlight">Bridged</td><td>VM gets its own IP from the network</td><td>Servers or lab networks</td></tr>
+                            <tr><td class="highlight">Host-only</td><td>VM communicates only with the host</td><td>Secure, isolated labs</td></tr>
+                            <tr><td class="highlight">Internal</td><td>VMs communicate only with each other</td><td>Multi-VM simulations</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Cloud Service Models</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Model</th><th>Meaning</th><th>Examples</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">SaaS</td><td>Software delivered fully online</td><td class="speed">Microsoft 365, Gmail, Salesforce</td></tr>
+                            <tr><td class="highlight">PaaS</td><td>Platform for building applications</td><td class="speed">Azure App Service, Google App Engine</td></tr>
+                            <tr><td class="highlight">IaaS</td><td>Virtual machines &amp; storage</td><td class="speed">AWS EC2, Azure VMs</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Cloud Deployment Models</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Model</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">Public</td><td>Shared infrastructure managed by providers (AWS, Azure, GCP)</td></tr>
+                            <tr><td class="highlight">Private</td><td>Organization-owned cloud infrastructure</td></tr>
+                            <tr><td class="highlight">Hybrid</td><td>Mix of public + private cloud</td></tr>
+                            <tr><td class="highlight">Community</td><td>Shared by similar organizations (e.g., government agencies)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Shared Responsibility Model</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Responsibility</th><th>On-Prem</th><th>IaaS</th><th>PaaS</th><th>SaaS</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">Datacenter &amp; hardware</td><td>Customer</td><td>Provider</td><td>Provider</td><td>Provider</td></tr>
+                            <tr><td class="highlight">Network infrastructure</td><td>Customer</td><td>Provider</td><td>Provider</td><td>Provider</td></tr>
+                            <tr><td class="highlight">Hypervisor</td><td>Customer</td><td>Provider</td><td>Provider</td><td>Provider</td></tr>
+                            <tr><td class="highlight">Operating system</td><td>Customer</td><td>Customer</td><td>Provider</td><td>Provider</td></tr>
+                            <tr><td class="highlight">Runtime &amp; middleware</td><td>Customer</td><td>Customer</td><td>Provider</td><td>Provider</td></tr>
+                            <tr><td class="highlight">Application</td><td>Customer</td><td>Customer</td><td>Customer</td><td>Provider</td></tr>
+                            <tr><td class="highlight">Data &amp; access management</td><td>Customer</td><td>Customer</td><td>Customer</td><td>Customer</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color:var(--text-muted);font-size:0.9em;"><strong>Key insight:</strong> the customer always owns their data and identity/access management, regardless of service model.</p>
+            </div>
+
+            <div class="notes-box">
+                <h3>📈 Elasticity vs. High Availability</h3>
+                <ul>
+                    <li><strong>Elasticity:</strong> automatic, on-demand scaling up or down in response to demand. All elastic systems are scalable; not all scalable systems are elastic (scalability can be manual).</li>
+                    <li><strong>High Availability (HA):</strong> minimal downtime through redundancy. 99.9% uptime ("three nines") = ~8.76 hours of downtime/year; 99.999% ("five nines") = ~5.26 minutes/year.</li>
+                </ul>
+            </div>
+
+            <div class="trap-box">
+                <h3>⚠️ Exam Traps</h3>
+                <p><strong>Snapshots are NOT backups</strong> — a snapshot lives on the same physical disk as the VM, so a disk failure destroys both. <strong>"The cloud provider is responsible for everything"</strong> is never correct — even in SaaS, the customer owns their data and compliance obligations (HIPAA, GDPR, etc.).</p>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Series Complete Study Guide. <a href="../book.html">Learn More About the Book →</a></p>
+            </div>
+        </div>
+    </section>
+    <footer style="background:#1a2332;padding:20px 24px;text-align:center;border-top:1px solid #e2e8f0;">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:10px;">
+            <a href="../index.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Home</a>
+            <a href="../members.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Members Area</a>
+            <a href="../book.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Get the Book</a>
+            <a href="../about.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">About the Author</a>
+            <a href="../about.html#contact" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Contact</a>
+        </div>
+        <p style="color:rgba(255,255,255,.3);font-size:.75rem;">&copy; 2026 Niko Williams. All rights reserved.</p>
+    </footer>
+</body>
+</html>

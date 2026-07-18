@@ -6,24 +6,25 @@
 <title>Reference Sheets — CompTIA A+ Study Hub</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6;min-height:100vh}
+body{font-family:system-ui,-apple-system,sans-serif;background:#152d4f;color:#e2e8f0;line-height:1.6;min-height:100vh}
 a{color:#5b9bd5;text-decoration:none}
 a:hover{color:#7db4e6}
-.nav{background:#0f172a;padding:12px 24px;border-bottom:1px solid #334155;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav{background:#152d4f;padding:12px 24px;border-bottom:1px solid #2d4d7a;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .nav a{color:#94a3b8;font-size:0.9rem;font-weight:500}
 .nav a:hover{color:#fff}
 .container{max-width:900px;margin:0 auto;padding:40px 24px 60px}
 h1{font-size:2rem;color:#f1f5f9;margin-bottom:8px;text-align:center}
 .subtitle{color:#94a3b8;text-align:center;margin-bottom:40px;font-size:1rem}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.card{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:24px;transition:all 0.2s;display:flex;flex-direction:column}
+.card{background:#1c3a63;border:1px solid #2d4d7a;border-radius:10px;padding:24px;transition:all 0.2s;display:flex;flex-direction:column}
 .card:hover{border-color:#5b9bd5;box-shadow:0 4px 20px rgba(91,155,213,0.15);transform:translateY(-2px)}
 .card-icon{font-size:2rem;margin-bottom:10px}
 .card h3{font-size:1.05rem;color:#f1f5f9;margin-bottom:6px}
 .card p{font-size:0.85rem;color:#94a3b8;flex:1;margin-bottom:12px}
 .card-link{display:inline-block;padding:8px 18px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:0.82rem;font-weight:600;transition:all 0.2s}
 .card-link:hover{background:#366092;color:#fff}
-.footer{text-align:center;padding:24px;color:rgba(255,255,255,0.3);font-size:0.75rem;border-top:1px solid #334155;margin-top:40px}
+.card-badge{display:inline-block;padding:2px 8px;background:#f59e0b;color:#152d4f;border-radius:10px;font-size:0.65rem;font-weight:700;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.footer{text-align:center;padding:24px;color:rgba(255,255,255,0.3);font-size:0.75rem;border-top:1px solid #2d4d7a;margin-top:40px}
 @media(max-width:600px){h1{font-size:1.5rem}.card-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -76,8 +77,38 @@ h1{font-size:2rem;color:#f1f5f9;margin-bottom:8px;text-align:center}
     <div class="card">
         <div class="card-icon">📖</div>
         <h3>Complete Glossary</h3>
-        <p>100+ essential CompTIA A+ terms with definitions. Searchable glossary covering all exam domains.</p>
-        <a href="glossary-full.html" class="card-link">View Glossary</a>
+        <p>500+ essential CompTIA A+ terms with definitions. Searchable glossary covering all exam domains.</p>
+        <a href="../glossary.html" class="card-link">View Glossary</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">☁️</div>
+        <h3>Virtualization &amp; Cloud Quick Reference</h3>
+        <p>Hypervisor types, VM resource allocation, snapshots vs. clones, and cloud service/deployment models.</p>
+        <a href="virtualization.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">🔢</div>
+        <h3>IPv6 &amp; SLAAC Quick Reference</h3>
+        <p>Address notation, prefix types, address types, and Stateless Address Autoconfiguration walkthrough.</p>
+        <a href="ipv6.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>CPU &amp; Memory Deep Dive</h3>
+        <p>Current CPU socket types (incl. LGA 1851) and DDR3/4/5 RAM specifications.</p>
+        <a href="cpu-memory.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">🔄</div>
+        <h3>Change Management &amp; Documentation<span class="card-badge">Members</span></h3>
+        <p>The formal 9-step change process, CAB approval, and key documentation terminology.</p>
+        <a href="change-management.html" class="card-link">View Sheet</a>
+    </div>
+    <div class="card">
+        <div class="card-icon">🔧</div>
+        <h3>Laptop Repair &amp; FRU Field Guide<span class="card-badge">Members</span></h3>
+        <p>Device serviceability spectrum, keyboard replacement steps, and system board access.</p>
+        <a href="laptop-repair.html" class="card-link">View Sheet</a>
     </div>
 </div>
 </div>

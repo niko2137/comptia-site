@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU & Memory Deep Dive — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+        .print-btn { background: var(--blue-accent); color: #fff; border: none; padding: 8px 20px; border-radius: 4px; font-size: 0.9em; font-weight: 600; cursor: pointer; margin-bottom: 24px; transition: background 0.2s; }
+        .print-btn:hover { background: var(--navy); }
+        .table-section { margin-bottom: 40px; }
+        .table-section h2 { font-size: 1.4em; color: var(--navy); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--blue-pale); }
+        .table-wrapper { overflow-x: auto; margin-bottom: 24px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .ref-table { width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 600px; }
+        .ref-table thead { background: var(--navy); color: #fff; }
+        .ref-table th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ref-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+        .ref-table tbody tr:nth-child(even) { background: var(--bg-light); }
+        .ref-table tbody tr:hover { background: var(--blue-pale); }
+        .ref-table .highlight { font-weight: 700; color: var(--navy); }
+        .ref-table .speed { font-weight: 600; color: var(--blue-accent); font-family: 'Consolas', 'Courier New', monospace; }
+        .diagram-panel { margin-bottom: 24px; text-align: center; }
+        .diagram-panel img { max-width: 100%; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .diagram-panel .cap { font-size: 0.8em; color: var(--text-muted); margin-top: 8px; }
+        .notes-box { background: var(--bg-light); border-left: 4px solid var(--orange); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin-top: 32px; }
+        .notes-box h3 { color: var(--orange); margin-top: 0; margin-bottom: 12px; }
+        .notes-box ul { margin: 0; padding-left: 20px; }
+        .notes-box li { margin-bottom: 10px; color: var(--text-body); line-height: 1.5; }
+        .notes-box li strong { color: var(--navy); }
+        .trap-box { background: rgba(231,76,60,0.06); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin-top: 24px; }
+        .trap-box h3 { color: var(--red); margin-top: 0; margin-bottom: 8px; }
+        .trap-box p { margin: 0; color: var(--text-body); line-height: 1.5; }
+        .bottom-cta { margin-top: 48px; padding: 24px; background: var(--bg-section); border-radius: var(--radius); text-align: center; border: 1px solid var(--border); }
+        .bottom-cta p { margin: 0; color: var(--text-muted); font-size: 0.95em; }
+        .bottom-cta a { color: var(--red); font-weight: 600; }
+        .bottom-cta a:hover { text-decoration: underline; }
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta { display: none !important; }
+            .ref-page { padding: 0; } .table-wrapper { box-shadow: none; } .ref-table { font-size: 0.8em; }
+            .table-section { page-break-inside: avoid; } body { font-size: 12pt; }
+        }
+        @media (max-width: 768px) { .ref-page h1 { font-size: 1.5em; } .ref-table { font-size: 0.8em; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="../book.html" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>🧠 CPU & Memory Deep Dive</h1>
+            <p class="subtitle">Current CPU socket types and DDR RAM specifications for the CompTIA A+ 220-1200 exam</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <div class="diagram-panel">
+                <img src="../Images/Diagrams/CPU%20sockets-compact.svg" alt="CPU socket types comparison diagram">
+                <p class="cap">LGA vs. PGA socket architecture comparison</p>
+            </div>
+
+            <div class="table-section">
+                <h2>CPU Socket Types</h2>
+                <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:12px;">The CPU socket on the motherboard must match the CPU's socket type exactly — sockets are generation-specific.</p>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Socket</th><th>Manufacturer</th><th>Notes</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">LGA 1700</td><td>Intel</td><td>Intel 12th, 13th, and 14th gen Core processors. Pins on motherboard.</td></tr>
+                            <tr><td class="highlight">LGA 1851</td><td>Intel</td><td>2024+. Arrow Lake / "Core Ultra Series 2" desktop CPUs. DDR5-only.</td></tr>
+                            <tr><td class="highlight">AM4</td><td>AMD</td><td>Ryzen 1000–5000 series. PGA (pins on CPU) — one of the longest-lasting sockets in history.</td></tr>
+                            <tr><td class="highlight">AM5</td><td>AMD</td><td>Ryzen 7000 series and newer. LGA-style (pins moved to motherboard). Expected to support multiple future generations.</td></tr>
+                            <tr><td class="highlight">SP3 / SP5</td><td>AMD (Server)</td><td>SP3 = EPYC Naples/Rome/Milan. SP5 = EPYC Genoa/Bergamo (Zen 4). Not interchangeable.</td></tr>
+                            <tr><td class="highlight">LGA 4677</td><td>Intel (Server)</td><td>Intel Xeon Scalable server processors.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>DDR RAM Types</h2>
+                <div class="diagram-panel">
+                    <img src="../Images/Diagrams/DDR.svg" alt="DDR3 vs DDR4 vs DDR5 RAM comparison diagram">
+                </div>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Type</th><th>Speed Range</th><th>Voltage</th><th>Notes</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">DDR3</td><td class="speed">1066–1866 MHz</td><td>1.35–1.5V</td><td>Legacy. NOT compatible with DDR4/DDR5 slots.</td></tr>
+                            <tr><td class="highlight">DDR4</td><td class="speed">2133–3200+ MHz</td><td>1.2V</td><td>Current mainstream standard 2016–2023.</td></tr>
+                            <tr><td class="highlight">DDR5</td><td class="speed">4800–7200+ MHz</td><td>1.1V</td><td>Required for Intel 12th gen+ and AMD Ryzen 7000+. Higher bandwidth/capacity.</td></tr>
+                            <tr><td class="highlight">ECC RAM</td><td class="speed">Varies</td><td>Varies</td><td>Error-Correcting Code — detects/corrects single-bit errors. Used in servers/workstations.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="notes-box">
+                <h3>💡 RAM Installation Rules</h3>
+                <ul>
+                    <li><strong>Dual-Channel:</strong> install matched pairs in the correct color-coded slots (usually 1&amp;3 or 2&amp;4) to double memory bandwidth</li>
+                    <li><strong>Capacity:</strong> mismatched sizes default to single-channel — install matched pairs (e.g., 2×8GB)</li>
+                    <li><strong>Max capacity</strong> is determined by the motherboard chipset and CPU, not just the number of slots</li>
+                </ul>
+            </div>
+
+            <div class="trap-box">
+                <h3>⚠️ Exam Traps</h3>
+                <p>DDR4 and DDR5 slots are physically different and NOT interchangeable — DDR5 DIMMs have a different notch position. An LGA 1700 CPU will NOT fit an LGA 1851 socket (different pin layout) even though both are current Intel sockets — always verify exact socket compatibility before purchasing.</p>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Series Complete Study Guide. <a href="../book.html">Learn More About the Book →</a></p>
+            </div>
+        </div>
+    </section>
+    <footer style="background:#1a2332;padding:20px 24px;text-align:center;border-top:1px solid #e2e8f0;">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:10px;">
+            <a href="../index.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Home</a>
+            <a href="../members.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Members Area</a>
+            <a href="../book.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Get the Book</a>
+            <a href="../about.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">About the Author</a>
+            <a href="../about.html#contact" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Contact</a>
+        </div>
+        <p style="color:rgba(255,255,255,.3);font-size:.75rem;">&copy; 2026 Niko Williams. All rights reserved.</p>
+    </footer>
+</body>
+</html>

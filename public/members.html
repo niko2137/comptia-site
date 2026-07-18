@@ -8,7 +8,7 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #e2e8f0; background: #0f172a; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #e2e8f0; background: #152d4f; }
         a { text-decoration: none; color: inherit; }
         :root {
             --navy: #1F497D;
@@ -19,8 +19,8 @@
             --blue-pale: #1e3a5f;
             --red: #e74c3c;
             --emerald: #27ae60;
-            --surface: #1e293b;
-            --border: #334155;
+            --surface: #1c3a63;
+            --border: #2d4d7a;
             --text: #f1f5f9;
             --text-muted: #94a3b8;
             --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.3);
@@ -49,7 +49,7 @@
         #protectedContent { display: none; }
 
         /* NAV */
-        .member-nav { background: #0f172a; padding: 0 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: space-between; }
+        .member-nav { background: #152d4f; padding: 0 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: space-between; }
         .member-nav .nav-brand { font-weight: 800; font-size: 1rem; color: #fff; padding: 14px 0; }
         .member-nav .nav-brand span { color: var(--blue-light); }
         .member-nav .nav-items { display: flex; align-items: center; gap: 4px; }
@@ -67,12 +67,12 @@
         /* SECTIONS */
         .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
         .section { margin-bottom: 48px; }
-        .section h3 { font-size: 1.3rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #334155; color: var(--blue-light); }
+        .section h3 { font-size: 1.3rem; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #2d4d7a; color: var(--blue-light); }
         .section-desc { color: #94a3b8; margin-bottom: 16px; font-size: 0.9rem; }
 
         /* CARDS */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-        .m-card { background: #1e293b; border: 1px solid #334155; border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+        .m-card { background: #1c3a63; border: 1px solid #2d4d7a; border-radius: var(--radius); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.2s; }
         .m-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .m-card .icon { font-size: 2rem; margin-bottom: 8px; }
         .m-card h4 { margin: 0 0 6px; color: #f1f5f9; font-size: 1rem; }
@@ -84,20 +84,20 @@
 
         /* TOOLS — 3 equal columns top row */
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-        .tool-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
+        .tool-card { background: #1c3a63; border: 1px solid #2d4d7a; border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
         .tool-card h4 { margin: 0 0 12px; color: #f1f5f9; font-size: 1rem; }
         .checklist { list-style: none; }
-        .checklist li { padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.85rem; color: #e2e8f0; }
+        .checklist li { padding: 6px 0; border-bottom: 1px solid #2d4d7a; font-size: 0.85rem; color: #e2e8f0; }
         .checklist li:last-child { border-bottom: none; }
         .checklist label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .checklist input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--emerald); }
-        .schedule-week { padding: 6px 0; border-bottom: 1px solid #334155; font-size: 0.85rem; color: #94a3b8; }
+        .schedule-week { padding: 6px 0; border-bottom: 1px solid #2d4d7a; font-size: 0.85rem; color: #94a3b8; }
         .schedule-week:last-child { border-bottom: none; }
         .schedule-week strong { color: #f1f5f9; }
 
         /* LINKS */
         .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
-        .link-card { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #e2e8f0; transition: all 0.2s; }
+        .link-card { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: #1c3a63; border: 1px solid #2d4d7a; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #e2e8f0; transition: all 0.2s; }
         .link-card:hover { background: var(--blue-pale); border-color: var(--blue-light); transform: translateY(-1px); }
         .link-card span { font-size: 1.1rem; }
 
@@ -110,7 +110,7 @@
             .welcome-banner { padding: 28px 16px; }
             .welcome-banner h2 { font-size: 1.3rem; }
             .hamburger { display: block; }
-            .member-nav .nav-items { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #0f172a; flex-direction: column; padding: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+            .member-nav .nav-items { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #152d4f; flex-direction: column; padding: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
             .member-nav .nav-items.open { display: flex; }
             .member-nav .nav-items a { padding: 12px 24px; width: 100%; }
             .member-nav { position: relative; }
@@ -344,9 +344,9 @@
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128290;</div>
-                        <h4>Binary Builder <span class="badge-free">FREE</span></h4>
-                        <p>Convert between decimal and binary</p>
-                        <a href="games/binary-builder.html" class="m-link">Play</a>
+                        <h4>IPv6 Crunch <span class="badge-free">FREE</span></h4>
+                        <p>Compress and expand IPv6 addresses</p>
+                        <a href="games/ipv6-crunch.html" class="m-link">Play</a>
                     </div>
                     <div class="m-card">
                         <div class="icon">&#128268;</div>
@@ -487,6 +487,8 @@
                     <a href="reference/how-to-guides.html" class="link-card"><span>&#128295;</span> How-to Guides</a>
                     <a href="reference/commands.html" class="link-card"><span>&#128421;</span> OS Commands</a>
                     <a href="reference/resources.html" class="link-card"><span>&#128230;</span> Resource Center</a>
+                    <a href="reference/change-management.html" class="link-card"><span>&#128260;</span> Change Management</a>
+                    <a href="reference/laptop-repair.html" class="link-card"><span>&#128295;</span> Laptop Repair Guide</a>
                     <a href="pbqs/hardware.html" class="link-card"><span>&#128187;</span> Hardware PBQ</a>
                     <a href="pbqs/networking.html" class="link-card"><span>&#127760;</span> Networking PBQ</a>
                     <a href="pbqs/os.html" class="link-card"><span>&#128421;</span> OS PBQ</a>
@@ -547,7 +549,7 @@
     if (localStorage.getItem('comptia_member') === '1') { unlock(); }
     </script>
 
-    <footer style="background:#0a0f1a;padding:20px 24px;text-align:center;border-top:1px solid #1e293b;">
+    <footer style="background:#0a0f1a;padding:20px 24px;text-align:center;border-top:1px solid #1c3a63;">
         <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:10px;">
             <a href="index.html" style="color:rgba(255,255,255,.5);font-size:.8rem;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Home</a>
             <a href="book.html" style="color:rgba(255,255,255,.5);font-size:.8rem;text-decoration:none;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Get the Book</a>

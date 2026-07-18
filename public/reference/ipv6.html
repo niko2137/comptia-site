@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv6 & SLAAC Quick Reference — CompTIA A+ Study Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .ref-page { padding: 40px 0 60px; }
+        .ref-page h1 { font-size: 2em; margin-bottom: 8px; }
+        .ref-page .subtitle { color: var(--text-muted); font-size: 1.05em; margin-bottom: 32px; }
+        .print-btn { background: var(--blue-accent); color: #fff; border: none; padding: 8px 20px; border-radius: 4px; font-size: 0.9em; font-weight: 600; cursor: pointer; margin-bottom: 24px; transition: background 0.2s; }
+        .print-btn:hover { background: var(--navy); }
+        .table-section { margin-bottom: 40px; }
+        .table-section h2 { font-size: 1.4em; color: var(--navy); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--blue-pale); }
+        .table-wrapper { overflow-x: auto; margin-bottom: 24px; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .ref-table { width: 100%; border-collapse: collapse; font-size: 0.9em; min-width: 600px; }
+        .ref-table thead { background: var(--navy); color: #fff; }
+        .ref-table th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ref-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+        .ref-table tbody tr:nth-child(even) { background: var(--bg-light); }
+        .ref-table tbody tr:hover { background: var(--blue-pale); }
+        .ref-table .highlight { font-weight: 700; color: var(--navy); }
+        .ref-table .mono { font-family: 'Consolas', 'Courier New', monospace; color: var(--blue-accent); font-weight: 600; }
+        .diagram-panel { margin-bottom: 24px; text-align: center; }
+        .diagram-panel img { max-width: 100%; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .diagram-panel .cap { font-size: 0.8em; color: var(--text-muted); margin-top: 8px; }
+        .steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+        .steps li { counter-increment: step; position: relative; padding: 10px 0 10px 40px; border-bottom: 1px solid var(--border); }
+        .steps li:last-child { border-bottom: none; }
+        .steps li::before { content: counter(step); position: absolute; left: 0; top: 8px; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 0.8em; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .notes-box { background: var(--bg-light); border-left: 4px solid var(--orange); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin-top: 32px; }
+        .notes-box h3 { color: var(--orange); margin-top: 0; margin-bottom: 12px; }
+        .notes-box ul { margin: 0; padding-left: 20px; }
+        .notes-box li { margin-bottom: 10px; color: var(--text-body); line-height: 1.5; }
+        .trap-box { background: rgba(231,76,60,0.06); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; padding: 20px 24px; margin-top: 24px; }
+        .trap-box h3 { color: var(--red); margin-top: 0; margin-bottom: 8px; }
+        .trap-box p { margin: 0 0 8px; color: var(--text-body); line-height: 1.5; }
+        .example-box { background: #0f1e33; color: #e2e8f0; border-radius: var(--radius); padding: 18px 22px; margin: 16px 0; font-family: 'Consolas','Courier New',monospace; font-size: 0.88em; line-height: 1.8; }
+        .example-box .arrow { color: #5b9bd5; }
+        .bottom-cta { margin-top: 48px; padding: 24px; background: var(--bg-section); border-radius: var(--radius); text-align: center; border: 1px solid var(--border); }
+        .bottom-cta p { margin: 0; color: var(--text-muted); font-size: 0.95em; }
+        .bottom-cta a { color: var(--red); font-weight: 600; }
+        .bottom-cta a:hover { text-decoration: underline; }
+        @media print {
+            nav, .print-btn, .bottom-cta, .nav-cta { display: none !important; }
+            .ref-page { padding: 0; } .table-wrapper { box-shadow: none; } .ref-table { font-size: 0.8em; }
+            .table-section { page-break-inside: avoid; } body { font-size: 12pt; }
+        }
+        @media (max-width: 768px) { .ref-page h1 { font-size: 1.5em; } .ref-table { font-size: 0.8em; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <ul class="nav-links">
+                <li><a href="../index.html">← Back to Home</a></li>
+                <li><a href="../book.html" class="nav-cta">Get the Book</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="ref-page">
+        <div class="container">
+            <h1>🔢 IPv6 & SLAAC Quick Reference</h1>
+            <p class="subtitle">Address notation, prefix types, address types, and Stateless Address Autoconfiguration for the CompTIA A+ 220-1200 exam</p>
+
+            <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+            <div class="diagram-panel">
+                <img src="../Images/Diagrams/ipv6%20notation.svg" alt="IPv6 address notation and compression rules diagram">
+                <p class="cap">IPv6 notation compression rules</p>
+            </div>
+
+            <div class="table-section">
+                <h2>IPv6 Address Basics</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">Format</td><td>128-bit, 8 groups of 4 hex digits separated by colons</td></tr>
+                            <tr><td class="highlight">Loopback</td><td class="mono">::1</td></tr>
+                            <tr><td class="highlight">Link-local</td><td class="mono">fe80::/10</td></tr>
+                            <tr><td class="highlight">Broadcast</td><td>None — IPv6 uses multicast and anycast instead</td></tr>
+                            <tr><td class="highlight">Auto-config</td><td>SLAAC (Stateless Address Autoconfiguration)</td></tr>
+                            <tr><td class="highlight">Standard LAN prefix</td><td class="mono">/64</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Notation Compression Rules</h2>
+                <div class="example-box">
+                    Full: 2001:0db8:85a3:0000:0000:8a2e:0370:7334<br>
+                    <span class="arrow">↓</span> Rule 1 — drop leading zeros in each group<br>
+                    2001:db8:85a3:0:0:8a2e:370:7334<br>
+                    <span class="arrow">↓</span> Rule 2 — replace ONE run of all-zero groups with ::<br>
+                    2001:db8:85a3::8a2e:370:7334
+                </div>
+                <p style="color:var(--text-muted);font-size:0.9em;">The double-colon <span class="mono">::</span> can only appear <strong>once</strong> per address — otherwise the address would be ambiguous.</p>
+            </div>
+
+            <div class="table-section">
+                <h2>Common IPv6 Prefix Types</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Prefix</th><th>Purpose</th><th>Details</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight mono">fe80::/10</td><td>Link-Local</td><td>Auto-configured on every interface, not routable beyond the local segment, used for neighbor discovery</td></tr>
+                            <tr><td class="highlight mono">ff00::/8</td><td>Multicast</td><td>One-to-many delivery; no direct IPv4 equivalent</td></tr>
+                            <tr><td class="highlight mono">::1/128</td><td>Loopback</td><td>IPv6 equivalent of 127.0.0.1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>IPv6 Address Types</h2>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead><tr><th>Type</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td class="highlight">Unicast</td><td>One-to-one — standard type for most communication</td></tr>
+                            <tr><td class="highlight">Multicast</td><td>One-to-many — single packet sent to multiple destinations</td></tr>
+                            <tr><td class="highlight">Anycast</td><td>Delivered to the <em>nearest</em> of several destinations — used for DNS/CDN load balancing</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>How SLAAC Works</h2>
+                <div class="diagram-panel">
+                    <img src="../Images/Diagrams/slaac.svg" alt="SLAAC stateless address autoconfiguration process flowchart">
+                </div>
+                <ol class="steps">
+                    <li><strong>Router Advertisement</strong> — the router periodically sends RA messages containing the network prefix (typically /64)</li>
+                    <li><strong>Interface Identifier</strong> — the device generates the host portion (last 64 bits) via EUI-64 (from the MAC address) or Privacy Extensions (randomized)</li>
+                    <li><strong>Address Formation</strong> — the device combines the router's prefix with its generated identifier</li>
+                    <li><strong>Duplicate Address Detection (DAD)</strong> — the device verifies no other device is using the same address</li>
+                </ol>
+                <div class="example-box">
+                    Router advertises prefix: 2001:db8:abcd:12::/64<br>
+                    Device MAC: 00:1A:2B:3C:4D:5E<br>
+                    EUI-64 identifier: 021a:2bff:fe3c:4d5e<br>
+                    <span class="arrow">→</span> Final address: 2001:db8:abcd:12:021a:2bff:fe3c:4d5e/64
+                </div>
+            </div>
+
+            <div class="notes-box">
+                <h3>💡 SLAAC vs. DHCPv6</h3>
+                <ul>
+                    <li><strong>SLAAC</strong> = Stateless — no server tracks assignments</li>
+                    <li><strong>DHCPv6</strong> = Stateful — server manages and tracks address assignments</li>
+                    <li>Many networks use both: SLAAC for address assignment + DHCPv6 for DNS/domain info</li>
+                </ul>
+            </div>
+
+            <div class="trap-box">
+                <h3>⚠️ Exam Traps</h3>
+                <p><strong>fe80::</strong> link-local addresses are automatically assigned to every IPv6 interface and cannot be removed. If a device only has a fe80:: address (no global address), check whether the router is sending Router Advertisements or whether SLAAC/DHCPv6 is functioning.</p>
+                <p>IPv6 has <strong>no subnet mask</strong> — it uses prefix length (like /64) instead, and there is <strong>no broadcast</strong> to worry about at all.</p>
+            </div>
+
+            <div class="bottom-cta">
+                <p>This cheat sheet is from the CompTIA A+ 220-1200 Series Complete Study Guide. <a href="../book.html">Learn More About the Book →</a></p>
+            </div>
+        </div>
+    </section>
+    <footer style="background:#1a2332;padding:20px 24px;text-align:center;border-top:1px solid #e2e8f0;">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:10px;">
+            <a href="../index.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Home</a>
+            <a href="../members.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Members Area</a>
+            <a href="../book.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Get the Book</a>
+            <a href="../about.html" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">About the Author</a>
+            <a href="../about.html#contact" style="color:rgba(255,255,255,.55);font-size:.8rem;text-decoration:none;">Contact</a>
+        </div>
+        <p style="color:rgba(255,255,255,.3);font-size:.75rem;">&copy; 2026 Niko Williams. All rights reserved.</p>
+    </footer>
+</body>
+</html>

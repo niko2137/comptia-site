@@ -8,7 +8,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background: #0f172a;
+            background: #152d4f;
             color: #e2e8f0;
             line-height: 1.6;
             min-height: 100vh;
@@ -17,8 +17,8 @@
         a:hover { text-decoration: underline; }
 
         .top-bar {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
+            background: #1c3a63;
+            border-bottom: 1px solid #2d4d7a;
             padding: 12px 24px;
             display: flex;
             align-items: center;
@@ -56,7 +56,7 @@
         }
 
         .exam-trap {
-            background: linear-gradient(135deg, #1e293b, #1e3a5f);
+            background: linear-gradient(135deg, #1c3a63, #1e3a5f);
             border: 1px solid #3b82f6;
             border-left: 4px solid #3b82f6;
             border-radius: 8px;
@@ -80,8 +80,8 @@
 
 
         .exercise {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 12px;
             padding: 28px;
             margin-bottom: 36px;
@@ -99,8 +99,8 @@
 
         /* Score display */
         .score-bar {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 8px;
             padding: 16px 24px;
             text-align: center;
@@ -118,8 +118,8 @@
             margin-bottom: 20px;
             min-height: 50px;
             padding: 16px;
-            background: #0f172a;
-            border: 2px dashed #334155;
+            background: #152d4f;
+            border: 2px dashed #2d4d7a;
             border-radius: 8px;
         }
 
@@ -147,14 +147,14 @@
         .drop-slot {
             display: flex;
             align-items: stretch;
-            border: 1px solid #334155;
+            border: 1px solid #2d4d7a;
             border-radius: 8px;
             overflow: hidden;
-            background: #0f172a;
+            background: #152d4f;
             transition: all 0.2s;
         }
         .drop-slot .slot-num {
-            background: #334155;
+            background: #2d4d7a;
             color: #e2e8f0;
             min-width: 40px;
             display: flex;
@@ -203,8 +203,8 @@
             margin-bottom: 4px;
         }
         .match-item {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: #152d4f;
+            border: 1px solid #2d4d7a;
             border-radius: 8px;
             padding: 12px 16px;
             font-size: 0.88em;
@@ -237,8 +237,8 @@
             align-items: center;
             gap: 12px;
             padding: 10px 14px;
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: #152d4f;
+            border: 1px solid #2d4d7a;
             border-radius: 6px;
             font-size: 0.85em;
         }
@@ -249,8 +249,8 @@
 
         /* Exercise 3: Multiple Choice */
         .mc-question {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: #152d4f;
+            border: 1px solid #2d4d7a;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 16px;
@@ -266,14 +266,14 @@
             font-style: italic;
             margin-bottom: 12px;
             padding: 10px 14px;
-            background: #1e293b;
+            background: #1c3a63;
             border-radius: 6px;
             border-left: 3px solid #3b82f6;
         }
         .mc-options { display: flex; flex-direction: column; gap: 8px; }
         .mc-option {
             padding: 10px 14px;
-            border: 1px solid #334155;
+            border: 1px solid #2d4d7a;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.88em;
@@ -341,11 +341,11 @@
             <p class="subtitle">CompTIA A+ Core 1 (220-1201) — Performance-Based Question</p>
 
         <!-- DIAGRAM REFERENCE PANEL -->
-        <div style="margin-top:20px;background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;">
+        <div style="margin-top:20px;background:#1c3a63;border:1px solid #2d4d7a;border-radius:10px;overflow:hidden;">
             <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'grid':'none';this.textContent=this.textContent.includes('▶')?'📐 Reference Diagrams ▼':'📐 Reference Diagrams ▶';" style="width:100%;padding:12px 18px;background:none;border:none;color:#3b82f6;font-size:0.95rem;font-weight:700;cursor:pointer;text-align:left;">📐 Reference Diagrams ▶</button>
             <div style="display:none;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:16px;">
-                <a href="../Images/Diagrams/laser-printing-process.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/laser-printing-process.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Laser Printing Process"><br>Laser Printing Process</a>
-                <a href="../Images/Diagrams/Printer-types.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/Printer-types.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Printer Types"><br>Printer Types</a>
+                <a href="../Images/Diagrams/laser-printing-process.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/laser-printing-process.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Laser Printing Process"><br>Laser Printing Process</a>
+                <a href="../Images/Diagrams/Printer-types.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/Printer-types.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Printer Types"><br>Printer Types</a>
             </div>
         </div>
         <!-- END DIAGRAM PANEL -->

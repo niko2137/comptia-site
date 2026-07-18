@@ -6,28 +6,28 @@
     <title>IP Address Calculator | CompTIA A+ Study</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; }
-        .top-bar { background: #1e293b; padding: 12px 20px; display: flex; align-items: center; border-bottom: 1px solid #334155; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #152d4f; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; }
+        .top-bar { background: #1c3a63; padding: 12px 20px; display: flex; align-items: center; border-bottom: 1px solid #2d4d7a; }
         .top-bar a { color: #5b9bd5; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
         .top-bar a:hover { text-decoration: underline; }
-        .top-bar .badge { margin-left: auto; background: #5b9bd5; color: #0f172a; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; }
+        .top-bar .badge { margin-left: auto; background: #5b9bd5; color: #152d4f; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; }
         .container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .card { background: #1e293b; border-radius: 16px; padding: 36px 32px; max-width: 640px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+        .card { background: #1c3a63; border-radius: 16px; padding: 36px 32px; max-width: 640px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
         h1 { font-size: 1.8rem; text-align: center; margin-bottom: 8px; color: #f1f5f9; }
         .subtitle { text-align: center; color: #94a3b8; margin-bottom: 24px; font-size: 0.95rem; }
-        .primer { background: #0f172a; border-radius: 10px; padding: 18px; margin-bottom: 24px; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; border: 1px solid #334155; }
+        .primer { background: #152d4f; border-radius: 10px; padding: 18px; margin-bottom: 24px; font-size: 0.88rem; color: #cbd5e1; line-height: 1.7; border: 1px solid #2d4d7a; }
         .primer strong { color: #5b9bd5; }
         .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-        .btn-primary { background: #5b9bd5; color: #0f172a; }
+        .btn-primary { background: #5b9bd5; color: #152d4f; }
         .btn-primary:hover { background: #7db3e0; transform: translateY(-1px); }
-        .btn-secondary { background: #334155; color: #e2e8f0; }
+        .btn-secondary { background: #2d4d7a; color: #e2e8f0; }
         .btn-secondary:hover { background: #475569; }
-        .progress-bar { background: #334155; border-radius: 8px; height: 8px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: #2d4d7a; border-radius: 8px; height: 8px; margin-bottom: 20px; overflow: hidden; }
         .progress-fill { background: linear-gradient(90deg, #5b9bd5, #7db3e0); height: 100%; border-radius: 8px; transition: width 0.4s ease; }
         .question-num { font-size: 0.8rem; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 24px; line-height: 1.5; color: #f1f5f9; }
         .choices { display: flex; flex-direction: column; gap: 10px; }
-        .choice-btn { background: #0f172a; border: 2px solid #334155; border-radius: 10px; padding: 14px 18px; text-align: left; font-size: 0.95rem; color: #e2e8f0; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .choice-btn { background: #152d4f; border: 2px solid #2d4d7a; border-radius: 10px; padding: 14px 18px; text-align: left; font-size: 0.95rem; color: #e2e8f0; cursor: pointer; transition: all 0.2s; font-family: inherit; }
         .choice-btn:hover:not(.disabled) { border-color: #5b9bd5; background: #1a2540; }
         .choice-btn.correct { border-color: #27ae60; background: rgba(39,174,96,0.12); color: #27ae60; font-weight: 600; }
         .choice-btn.incorrect { border-color: #e74c3c; background: rgba(231,76,60,0.12); color: #e74c3c; }
@@ -48,7 +48,7 @@
         .grade.fail { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); color: #fca5a5; }
         .btn-row { display: flex; gap: 12px; }
         .btn-row .btn { flex: 1; }
-        .mute-btn { position: fixed; bottom: 20px; right: 20px; background: #1e293b; border: 2px solid #334155; color: #94a3b8; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 100; transition: all 0.2s; }
+        .mute-btn { position: fixed; bottom: 20px; right: 20px; background: #1c3a63; border: 2px solid #2d4d7a; color: #94a3b8; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 100; transition: all 0.2s; }
         .mute-btn:hover { border-color: #5b9bd5; color: #5b9bd5; }
         @media (max-width: 600px) {
             .card { padding: 24px 16px; border-radius: 12px; }

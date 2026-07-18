@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPv6 Crunch — CompTIA A+ Study Hub</title>
+<meta name="description" content="IPv6 Crunch: an arcade-style drill for compressing and expanding IPv6 addresses for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e1a;color:#e0e6f0;min-height:100vh;overflow-x:hidden;font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.game-container{position:relative;z-index:1;max-width:750px;margin:0 auto;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* START SCREEN */
+.start-screen{text-align:center;width:100%}
+.game-logo{font-size:3em;font-weight:900;background:linear-gradient(135deg,#00e5ff,#b300ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;animation:logoGlow 3s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 20px rgba(0,229,255,0.4))}50%{filter:drop-shadow(0 0 40px rgba(179,0,255,0.6))}}
+.game-tagline{color:#7a8a9e;font-size:1.05em;margin-bottom:22px}
+.rules-panel{background:rgba(20,28,48,0.8);border:1px solid #2a3a55;border-radius:12px;padding:16px 20px;text-align:left;max-width:480px;margin:0 auto 22px}
+.rules-panel h4{color:#00e5ff;font-size:0.85em;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.rules-panel ol{margin-left:18px;color:#b0bec5;font-size:0.88em;line-height:1.7}
+.rules-panel strong{color:#fff}
+.start-btn{background:linear-gradient(135deg,#00e5ff,#b300ff);border:none;color:#fff;font-size:1.3em;font-weight:800;padding:16px 55px;border-radius:50px;cursor:pointer;margin-top:6px;transition:all .2s;box-shadow:0 4px 30px rgba(0,229,255,0.3)}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 6px 40px rgba(179,0,255,0.5)}
+.highscore-panel{margin-top:22px;max-width:400px;margin-left:auto;margin-right:auto}
+
+/* COUNTDOWN */
+.countdown-screen{display:flex;align-items:center;justify-content:center;min-height:400px}
+.countdown-num{font-size:8em;font-weight:900;color:#00e5ff;text-shadow:0 0 50px rgba(0,229,255,0.6);animation:countPop .7s ease}
+.countdown-go{font-size:5em;font-weight:900;background:linear-gradient(135deg,#00e676,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:countPop .5s ease}
+@keyframes countPop{0%{transform:scale(0.2);opacity:0}60%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
+
+/* GAME SCREEN */
+.game-screen{width:100%;text-align:center}
+.timer-bar-wrap{width:100%;height:10px;background:#1a2444;border-radius:5px;overflow:hidden;margin-bottom:16px;box-shadow:inset 0 0 10px rgba(0,0,0,0.5)}
+.timer-bar{height:100%;width:100%;border-radius:5px;background:linear-gradient(90deg,#00e676,#00e5ff);transition:width .3s linear,background .5s}
+.timer-bar.warning{background:linear-gradient(90deg,#ffeb3b,#ff9100)}
+.timer-bar.danger{background:linear-gradient(90deg,#ff1744,#ff6d00);animation:dangerPulse .5s ease-in-out infinite}
+@keyframes dangerPulse{0%,100%{box-shadow:0 0 5px #ff1744}50%{box-shadow:0 0 20px #ff1744}}
+.game-hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.hud-item{font-size:0.88em;color:#7a8a9e}
+.hud-item span{font-weight:700;color:#fff;font-size:1.15em}
+.hud-streak span{color:#ffab00}
+.hud-lives{display:flex;gap:4px;align-items:center}
+.hud-lives .heart{font-size:1.2em}
+.hud-lives .heart.lost{opacity:0.2}
+
+.round-mode{display:inline-block;padding:4px 14px;border-radius:20px;font-size:0.78em;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.round-mode.compress{background:rgba(0,229,255,0.15);color:#00e5ff;border:1px solid #00e5ff}
+.round-mode.expand{background:rgba(179,0,255,0.15);color:#d580ff;border:1px solid #b300ff}
+.addr-label{font-size:0.8em;text-transform:uppercase;letter-spacing:2px;color:#5c6b80;margin-bottom:8px}
+.addr-display{font-family:'Consolas','Courier New',monospace;font-size:clamp(1.1em,4.2vw,1.6em);font-weight:700;color:#fff;background:#0d1428;border:2px solid #2a3a55;border-radius:12px;padding:18px 14px;margin-bottom:22px;word-break:break-all;text-shadow:0 0 20px rgba(0,229,255,0.3);box-shadow:inset 0 0 20px rgba(0,229,255,0.05)}
+
+.answer-form{display:flex;gap:10px;max-width:520px;margin:0 auto 10px;flex-wrap:wrap;justify-content:center}
+#answerInput{flex:1;min-width:220px;font-family:'Consolas','Courier New',monospace;font-size:1.1em;background:#141c30;border:2px solid #2a3a55;color:#fff;padding:14px 16px;border-radius:10px;outline:none;transition:border-color .2s}
+#answerInput:focus{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.25)}
+#answerInput.correct{border-color:#00e676;box-shadow:0 0 20px rgba(0,230,118,0.4)}
+#answerInput.wrong{border-color:#ff1744;box-shadow:0 0 20px rgba(255,23,68,0.4);animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.submit-btn{background:linear-gradient(135deg,#00e5ff,#b300ff);border:none;color:#fff;font-weight:800;padding:14px 26px;border-radius:10px;cursor:pointer;font-size:1em;transition:all .2s}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,229,255,0.3)}
+.feedback-note{max-width:520px;margin:0 auto;min-height:44px;font-size:0.88em;color:#b0bec5;line-height:1.5;padding:0 10px}
+.feedback-note .fb-answer{color:#00e5ff;font-family:'Consolas','Courier New',monospace;font-weight:700}
+.feedback-note.fb-wrong{color:#ffab8a}
+
+/* STREAK / FLOAT */
+.streak-fire{position:fixed;top:60px;left:50%;transform:translateX(-50%);font-size:1.8em;font-weight:900;color:#ffab00;text-shadow:0 0 20px rgba(255,171,0,0.6);z-index:50;animation:streakPop .6s ease;pointer-events:none}
+@keyframes streakPop{0%{transform:translateX(-50%) scale(0.5);opacity:0}50%{transform:translateX(-50%) scale(1.3)}100%{transform:translateX(-50%) scale(1);opacity:1}}
+.flash{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:48;opacity:0;transition:opacity .15s}
+.flash.green{background:radial-gradient(ellipse at center,rgba(0,230,118,0.12) 0%,transparent 70%);opacity:1}
+.flash.red{background:radial-gradient(ellipse at center,rgba(255,23,68,0.12) 0%,transparent 70%);opacity:1}
+
+/* GAME OVER */
+.gameover-screen{text-align:center;width:100%}
+.gameover-screen h2{font-size:2.3em;color:#fff;margin-bottom:8px}
+.final-score{font-size:4.2em;font-weight:900;background:linear-gradient(135deg,#00e5ff,#b300ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:8px 0}
+.grade-badge{display:inline-block;font-size:1.4em;font-weight:800;padding:8px 24px;border-radius:30px;margin-bottom:12px}
+.grade-a{background:rgba(0,230,118,0.15);color:#00e676;border:2px solid #00e676;box-shadow:0 0 20px rgba(0,230,118,0.3)}
+.grade-b{background:rgba(0,229,255,0.15);color:#00e5ff;border:2px solid #00e5ff}
+.grade-c{background:rgba(255,171,0,0.15);color:#ffab00;border:2px solid #ffab00}
+.grade-f{background:rgba(255,23,68,0.15);color:#ff1744;border:2px solid #ff1744}
+.stats-grid{display:flex;gap:22px;justify-content:center;margin:18px 0 26px;flex-wrap:wrap}
+.stat-box{text-align:center}
+.stat-box .stat-val{display:block;font-size:1.5em;font-weight:800;color:#fff}
+.stat-box .stat-label{font-size:0.78em;color:#7a8a9e;text-transform:uppercase;letter-spacing:1px}
+.play-again-btn{background:linear-gradient(135deg,#00e5ff,#b300ff);border:none;color:#fff;font-size:1.15em;font-weight:700;padding:15px 46px;border-radius:50px;cursor:pointer;margin:8px;transition:all .2s;box-shadow:0 4px 25px rgba(0,229,255,0.3)}
+.play-again-btn:hover{transform:scale(1.05);box-shadow:0 6px 35px rgba(179,0,255,0.5)}
+.menu-btn{background:transparent;border:2px solid #2a3a55;color:#b0bec5;font-size:0.95em;font-weight:600;padding:11px 28px;border-radius:50px;cursor:pointer;transition:all .2s}
+.menu-btn:hover{border-color:#00e5ff;color:#00e5ff}
+.ref-link{display:block;margin-top:16px;color:#7a8a9e;font-size:0.85em}
+.ref-link a{color:#00e5ff}
+
+@media(max-width:600px){
+.game-logo{font-size:2.2em}
+.rules-panel{padding:14px 16px}
+.answer-form{flex-direction:column}
+.submit-btn{width:100%}
+.final-score{font-size:3em}
+.stats-grid{gap:12px}
+}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="flash" id="flash"></div>
+<div class="game-container" id="gameContainer">
+
+<!-- START SCREEN -->
+<div id="startScreen" class="start-screen">
+<div class="game-logo">IPv6 CRUNCH</div>
+<p class="game-tagline">Compress and expand IPv6 addresses — arcade style!</p>
+<div class="rules-panel">
+<h4>How Compression Works</h4>
+<ol>
+<li><strong>Drop leading zeros</strong> in each group (0db8 → db8)</li>
+<li>Replace the <strong>longest</strong> run of consecutive all-zero groups with <strong>::</strong> — only once per address</li>
+<li>If two runs tie in length, the <strong>leftmost</strong> one wins</li>
+</ol>
+</div>
+<button class="start-btn" id="startBtn">START</button>
+<div class="highscore-panel" id="hsPanel"></div>
+<p class="ref-link">Need a refresher? <a href="../reference/ipv6.html">IPv6 &amp; SLAAC Quick Reference →</a></p>
+</div>
+
+<!-- COUNTDOWN SCREEN -->
+<div id="countdownScreen" class="countdown-screen" style="display:none">
+<div id="countdownDisplay"></div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="game-screen" style="display:none">
+<div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
+<div class="game-hud">
+<div class="hud-item">Score: <span id="hudScore">0</span></div>
+<div class="hud-item hud-streak">Streak: <span id="hudStreak">0</span> &#x1F525;</div>
+<div class="hud-item hud-lives" id="hudLives"></div>
+<div class="hud-item">Round: <span id="hudRound">1</span>/<span id="hudTotal">12</span></div>
+</div>
+<div class="round-mode" id="roundMode">COMPRESS</div>
+<div class="addr-label" id="addrLabel">Compress this address:</div>
+<div class="addr-display" id="addrDisplay">2001:0db8:85a3:0000:0000:8a2e:0370:7334</div>
+<form class="answer-form" id="answerForm" autocomplete="off">
+<input type="text" id="answerInput" placeholder="Type your answer…" autocapitalize="off" autocorrect="off" spellcheck="false">
+<button type="submit" class="submit-btn">Submit</button>
+</form>
+<div class="feedback-note" id="feedbackNote"></div>
+</div>
+
+<!-- GAME OVER SCREEN -->
+<div id="gameOverScreen" class="gameover-screen" style="display:none">
+<h2 id="goTitle">Round Complete!</h2>
+<div class="final-score" id="finalScore">0</div>
+<div id="gradeBadge" class="grade-badge grade-a"></div>
+<div class="stats-grid">
+<div class="stat-box"><span class="stat-val" id="statCorrect">0</span><span class="stat-label">Correct</span></div>
+<div class="stat-box"><span class="stat-val" id="statWrong">0</span><span class="stat-label">Missed</span></div>
+<div class="stat-box"><span class="stat-val" id="statStreak">0</span><span class="stat-label">Best Streak</span></div>
+</div>
+<div id="hsPanelEnd" style="max-width:400px;margin:0 auto 20px"></div>
+<button class="play-again-btn" id="playAgainBtn">Play Again</button>
+<button class="menu-btn" id="menuBtn">Main Menu</button>
+</div>
+</div>
+
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'ipv6-crunch';
+const PIP_SCORE = 950;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+// ==================== ADDRESS PAIR DATA ====================
+const PAIRS = [
+ {full:"2001:0db8:85a3:0000:0000:8a2e:0370:7334", compressed:"2001:db8:85a3::8a2e:370:7334", note:"The longest zero run (2 groups) compresses with ::"},
+ {full:"fe80:0000:0000:0000:0214:22ff:fe01:2345", compressed:"fe80::214:22ff:fe01:2345", note:"Link-local address — the 3-group zero run compresses right after the prefix"},
+ {full:"2001:0db8:0000:0000:0000:0000:0000:0001", compressed:"2001:db8::1", note:"A 5-group zero run collapses to a single ::"},
+ {full:"0000:0000:0000:0000:0000:0000:0000:0001", compressed:"::1", note:"The IPv6 loopback address"},
+ {full:"0000:0000:0000:0000:0000:0000:0000:0000", compressed:"::", note:"The unspecified address — an all-zero address compresses to just ::"},
+ {full:"2001:0db8:0001:0000:0000:0ab9:0000:0000", compressed:"2001:db8:1::ab9:0:0", note:"Exam trap: two equal-length zero runs — only the FIRST (leftmost) one gets compressed"},
+ {full:"2001:0db8:85a3:0000:0001:0000:0000:7334", compressed:"2001:db8:85a3:0:1::7334", note:"Exam trap: the longest run wins — the lone single zero group stays as a literal 0"},
+ {full:"2001:0db8:1234:5678:9abc:def0:0012:0034", compressed:"2001:db8:1234:5678:9abc:def0:12:34", note:"No zero run here — just drop each group's leading zeros"},
+ {full:"ff02:0000:0000:0000:0000:0000:0000:0001", compressed:"ff02::1", note:"The all-nodes multicast address"},
+ {full:"2001:0db8:0000:1234:0000:0000:0000:5678", compressed:"2001:db8:0:1234::5678", note:"The longest run (3 groups) wins over the shorter 1-group run"},
+ {full:"fd00:0000:0000:0001:0000:0000:0000:0002", compressed:"fd00:0:0:1::2", note:"Unique Local Address (ULA) — the longest run (3 groups) compresses"},
+ {full:"2001:0000:0000:0000:0000:0000:0000:0001", compressed:"2001::1", note:"A 6-group zero run compresses to a single ::"},
+ {full:"2001:0db8:0000:0000:1234:0000:0000:5678", compressed:"2001:db8::1234:0:0:5678", note:"Exam trap: two 2-group runs tie in length — the leftmost one wins"},
+ {full:"2001:0db8:aaaa:bbbb:cccc:dddd:eeee:0001", compressed:"2001:db8:aaaa:bbbb:cccc:dddd:eeee:1", note:"No zero run — leading-zero omission only"},
+ {full:"2001:0db8:85a3:0000:0000:0000:0000:0001", compressed:"2001:db8:85a3::1", note:"A 4-group zero run compresses"},
+ {full:"2001:0db8:0042:0000:0000:0000:0000:0000", compressed:"2001:db8:42::", note:"The zero run extends all the way to the end of the address"},
+ {full:"0000:0000:0000:0000:0000:ffff:c000:0280", compressed:"::ffff:c000:280", note:"The zero run starts at the very beginning of the address"},
+ {full:"2001:0db8:0000:0000:0000:0001:0000:0001", compressed:"2001:db8::1:0:1", note:"The longest run (3 groups) wins over the trailing lone zero group"},
+ {full:"fe80:0000:0000:0000:0000:0000:0000:0001", compressed:"fe80::1", note:"Link-local address with a full zero-run collapse"},
+ {full:"2001:0db8:0000:0042:0000:0000:0000:0001", compressed:"2001:db8:0:42::1", note:"The longest run (3 groups) wins over the shorter 1-group run"}
+];
+const TOTAL_ROUNDS = 12;
+
+// ==================== GAME STATE ====================
+let state = {
+    score:0, streak:0, bestStreak:0, correct:0, wrong:0, lives:3,
+    round:0, roundTimeLeft:25, roundTimer:null, running:false,
+    rounds:[], currentPair:null, currentMode:'compress', answering:false
+};
+
+// ==================== BACKGROUND CANVAS (matches site arcade style) ====================
+const bgCanvas=document.getElementById('bgCanvas');
+const bgCtx=bgCanvas.getContext('2d');
+let bgParticles=[];
+function resizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight}
+window.addEventListener('resize',resizeBg);resizeBg();
+function initBgParticles(){
+    bgParticles=[];
+    for(let i=0;i<36;i++){
+        bgParticles.push({
+            x:Math.random()*bgCanvas.width,y:Math.random()*bgCanvas.height,
+            vx:(Math.random()-0.5)*0.3,vy:Math.random()*0.4+0.1,
+            text:(Math.random()*255|0).toString(16).padStart(2,'0'),
+            alpha:Math.random()*0.2+0.05,size:Math.random()*10+8
+        });
+    }
+}
+initBgParticles();
+function drawBg(){
+    bgCtx.fillStyle='#0a0e1a';bgCtx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+    bgParticles.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.y>bgCanvas.height){p.y=-20;p.x=Math.random()*bgCanvas.width}
+        if(p.x<0||p.x>bgCanvas.width)p.vx*=-1;
+        bgCtx.font=p.size+'px monospace';bgCtx.fillStyle=`rgba(0,229,255,${p.alpha})`;
+        bgCtx.fillText(p.text,p.x,p.y);
+    });
+    requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// ==================== HIGH SCORES UI ====================
+function refreshHsPanels(){
+    const html = HighScores.renderPanel(GAME_ID, {title:'\u{1F3C6} Top Crunchers'});
+    document.getElementById('hsPanel').innerHTML = html;
+    const endEl = document.getElementById('hsPanelEnd');
+    if(endEl) endEl.innerHTML = html;
+}
+refreshHsPanels();
+
+// ==================== UI EVENTS ====================
+document.getElementById('startBtn').addEventListener('click',()=>{GameSounds.click();startCountdown();});
+document.getElementById('playAgainBtn').addEventListener('click',()=>{GameSounds.click();startCountdown();});
+document.getElementById('menuBtn').addEventListener('click',()=>{GameSounds.click();goToMenu();});
+document.getElementById('answerForm').addEventListener('submit',e=>{e.preventDefault();submitAnswer();});
+
+// ==================== COUNTDOWN ====================
+function startCountdown(){
+    showScreen('countdownScreen');
+    let count=3;const display=document.getElementById('countdownDisplay');
+    display.innerHTML=`<div class="countdown-num">${count}</div>`;
+    const iv=setInterval(()=>{
+        count--;
+        if(count>0)display.innerHTML=`<div class="countdown-num">${count}</div>`;
+        else if(count===0)display.innerHTML=`<div class="countdown-go">GO!</div>`;
+        else{clearInterval(iv);startGame();}
+    },700);
+}
+
+// ==================== SCREEN MANAGEMENT ====================
+function showScreen(id){
+    ['startScreen','countdownScreen','gameScreen','gameOverScreen'].forEach(s=>{
+        document.getElementById(s).style.display = s===id ? (s==='countdownScreen'?'flex':'block') : 'none';
+    });
+}
+function goToMenu(){showScreen('startScreen');refreshHsPanels();}
+
+// ==================== START GAME ====================
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function startGame(){
+    state.score=0;state.streak=0;state.bestStreak=0;state.correct=0;state.wrong=0;state.lives=3;
+    state.round=0;state.running=true;
+    state.rounds = shuffle([...PAIRS]).slice(0, TOTAL_ROUNDS).map(p=>({...p, mode: Math.random()<0.5?'compress':'expand'}));
+    document.getElementById('hudTotal').textContent = TOTAL_ROUNDS;
+    renderLives();
+    showScreen('gameScreen');
+    nextRound();
+}
+
+function renderLives(){
+    const el=document.getElementById('hudLives');
+    let html='';for(let i=0;i<3;i++)html+=`<span class="heart${i<state.lives?'':' lost'}">&#x2764;&#xFE0F;</span>`;
+    el.innerHTML=html;
+}
+
+function updateHUD(){
+    document.getElementById('hudScore').textContent=state.score;
+    document.getElementById('hudStreak').textContent=state.streak;
+    document.getElementById('hudRound').textContent=Math.min(state.round+1, TOTAL_ROUNDS);
+}
+
+// ==================== ROUNDS ====================
+function nextRound(){
+    if(!state.running) return;
+    if(state.round >= TOTAL_ROUNDS){endGame();return;}
+    const pair = state.rounds[state.round];
+    state.currentPair = pair;
+    state.currentMode = pair.mode;
+    state.answering = false;
+    state.roundTimeLeft = 25;
+
+    const modeEl = document.getElementById('roundMode');
+    const labelEl = document.getElementById('addrLabel');
+    const displayEl = document.getElementById('addrDisplay');
+    const input = document.getElementById('answerInput');
+
+    if(pair.mode === 'compress'){
+        modeEl.textContent='COMPRESS';modeEl.className='round-mode compress';
+        labelEl.textContent='Compress this address to its shortest valid form:';
+        displayEl.textContent = pair.full;
+    } else {
+        modeEl.textContent='EXPAND';modeEl.className='round-mode expand';
+        labelEl.textContent='Expand this address to its full 8-group form:';
+        displayEl.textContent = pair.compressed;
+    }
+    input.value='';input.className='';input.disabled=false;
+    document.getElementById('feedbackNote').textContent='';
+    document.getElementById('feedbackNote').className='feedback-note';
+    updateHUD();
+    setTimeout(()=>input.focus(), 50);
+    startRoundTimer();
+}
+
+function startRoundTimer(){
+    if(state.roundTimer) clearInterval(state.roundTimer);
+    updateTimerBar();
+    state.roundTimer = setInterval(()=>{
+        if(!state.running) return;
+        state.roundTimeLeft--;
+        if(state.roundTimeLeft<=5 && state.roundTimeLeft>0) GameSounds.tick();
+        if(state.roundTimeLeft<=0){
+            clearInterval(state.roundTimer);
+            handleResult(false, true);
+        }
+        updateTimerBar();
+    },1000);
+}
+function updateTimerBar(){
+    const bar=document.getElementById('timerBar');
+    const pct=(state.roundTimeLeft/25)*100;
+    bar.style.width=pct+'%';
+    bar.className='timer-bar'+(pct<=20?' danger':pct<=40?' warning':'');
+}
+
+function normalize(str){return str.trim().toLowerCase().replace(/\s+/g,'');}
+
+function submitAnswer(){
+    if(state.answering || !state.running) return;
+    const input = document.getElementById('answerInput');
+    const userAnswer = normalize(input.value);
+    if(!userAnswer) return;
+    const target = state.currentMode==='compress' ? state.currentPair.compressed : state.currentPair.full;
+    const isCorrect = userAnswer === normalize(target);
+    handleResult(isCorrect, false);
+}
+
+function handleResult(isCorrect, timedOut){
+    state.answering = true;
+    if(state.roundTimer) clearInterval(state.roundTimer);
+    const input = document.getElementById('answerInput');
+    const flash = document.getElementById('flash');
+    const fb = document.getElementById('feedbackNote');
+    const target = state.currentMode==='compress' ? state.currentPair.compressed : state.currentPair.full;
+    input.disabled = true;
+
+    if(isCorrect){
+        GameSounds.correct();
+        state.streak++; state.correct++;
+        if(state.streak > state.bestStreak) state.bestStreak = state.streak;
+        const streakBonus = state.streak>1 ? state.streak*10 : 0;
+        const timeBonus = Math.max(0, state.roundTimeLeft*2);
+        state.score += 100 + streakBonus + timeBonus;
+        input.className='correct';flash.className='flash green';
+        fb.className='feedback-note';
+        fb.innerHTML = `✅ Correct! <span class="fb-answer">${target}</span> — ${state.currentPair.note}`;
+        if(state.streak===3||state.streak===6||state.streak===9) showStreakFire();
+    } else {
+        GameSounds.wrong();
+        state.streak=0; state.wrong++; state.lives--;
+        input.className='wrong';flash.className='flash red';
+        fb.className='feedback-note fb-wrong';
+        fb.innerHTML = (timedOut?'⏰ Time\'s up! ':'❌ Not quite. ') + `Correct answer: <span class="fb-answer">${target}</span> — ${state.currentPair.note}`;
+        renderLives();
+    }
+    updateHUD();
+    setTimeout(()=>{
+        flash.className='flash';
+        state.round++;
+        if(!isCorrect && state.lives<=0){ endGame(); return; }
+        nextRound();
+    }, isCorrect ? 1600 : 2600);
+}
+
+function showStreakFire(){
+    const el=document.createElement('div');el.className='streak-fire';
+    el.textContent=`ON FIRE! ${state.streak}x`;document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1500);
+}
+
+// ==================== END GAME ====================
+function endGame(){
+    state.running = false;
+    if(state.roundTimer) clearInterval(state.roundTimer);
+    GameSounds.complete();
+    showScreen('gameOverScreen');
+
+    const outOfLives = state.lives<=0;
+    document.getElementById('goTitle').textContent = outOfLives ? 'Out of Lives!' : 'Session Complete!';
+
+    let displayed=0;const target=state.score;const scoreEl=document.getElementById('finalScore');
+    const countInterval=setInterval(()=>{
+        displayed+=Math.ceil(target/30)||1;
+        if(displayed>=target){displayed=target;clearInterval(countInterval);}
+        scoreEl.textContent=displayed;
+    },40);
+
+    let grade,gradeClass;
+    if(state.score>=1400){grade='A+';gradeClass='grade-a';}
+    else if(state.score>=1100){grade='A';gradeClass='grade-a';}
+    else if(state.score>=800){grade='B';gradeClass='grade-b';}
+    else if(state.score>=500){grade='C';gradeClass='grade-c';}
+    else{grade='F';gradeClass='grade-f';}
+    const gradeBadge=document.getElementById('gradeBadge');
+    gradeBadge.textContent=grade;gradeBadge.className='grade-badge '+gradeClass;
+
+    document.getElementById('statCorrect').textContent=state.correct;
+    document.getElementById('statWrong').textContent=state.wrong;
+    document.getElementById('statStreak').textContent=state.bestStreak;
+
+    if(state.score>0) HighScores.submitScore(GAME_ID, state.score, {label: 'You'});
+    refreshHsPanels();
+}
+
+// Init
+showScreen('startScreen');
+GameSounds.initControls();
+document.body.insertAdjacentHTML('beforeend', GameSounds.createControlsUI());
+</script>
+</body>
+</html>

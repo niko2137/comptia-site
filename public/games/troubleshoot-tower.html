@@ -154,7 +154,15 @@ class Particle{
 function burst(x,y,c,n){for(let i=0;i<n;i++){const a=Math.PI*2/n*i,s=3+Math.random()*5;particles.push(new Particle(x,y,c,Math.cos(a)*s,Math.sin(a)*s-2));}}
 
 // HIGH SCORES
-function loadHS(){try{highScores=JSON.parse(localStorage.getItem('troubleshootTower2')||'[]');}catch(e){highScores=[];}}
+function loadHS(){
+    try{highScores=JSON.parse(localStorage.getItem('troubleshootTower2')||'[]');}catch(e){highScores=[];}
+    if(!highScores.some(s=>s.name==='Pip')){
+        highScores.push({name:'Pip',score:1650,level:4,layers:5,date:new Date().toLocaleDateString()});
+        highScores.sort((a,b)=>b.score-a.score);
+        highScores=highScores.slice(0,10);
+        saveHS();
+    }
+}
 function saveHS(){try{localStorage.setItem('troubleshootTower2',JSON.stringify(highScores));}catch(e){}}
 function addHS(name){highScores.push({name:name||'AAA',score,level,layers:layersBuilt,date:new Date().toLocaleDateString()});highScores.sort((a,b)=>b.score-a.score);highScores=highScores.slice(0,10);saveHS();}
 function renderHS(){loadHS();const el=document.getElementById('hs-list');if(!el)return;el.innerHTML=highScores.slice(0,5).map((s,i)=>`<div style="display:flex;justify-content:space-between;padding:2px 0;"><span style="color:#ccc">${i+1}. ${s.name}</span><span style="color:#fa0">${s.score}</span></div>`).join('')||'<div style="color:#555">No scores</div>';}
