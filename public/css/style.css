@@ -17,7 +17,7 @@
     --text-muted: #666;
     --bg-white: #ffffff;
     --bg-light: #f8fafe;
-    --bg-section: #f0f4f8;
+    --bg-section: #eaeff5;
     --border: #e2e8f0;
     --shadow: 0 2px 12px rgba(31, 73, 125, 0.08);
     --shadow-hover: 0 4px 20px rgba(31, 73, 125, 0.15);
@@ -32,7 +32,7 @@ body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-body);
     line-height: 1.6;
-    background: var(--bg-white);
+    background: #f5f7fa;
 }
 a { color: var(--blue-accent); text-decoration: none; }
 a:hover { color: var(--navy); text-decoration: underline; }

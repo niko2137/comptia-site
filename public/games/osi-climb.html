@@ -225,7 +225,15 @@ class P{
 function burst(x,y,c,n){for(let i=0;i<n;i++)particles.push(new P(x,y,c));}
 
 // HIGH SCORES
-function loadHS(){try{highScores=JSON.parse(localStorage.getItem('osiClimb2')||'[]');}catch(e){highScores=[];}}
+function loadHS(){
+    try{highScores=JSON.parse(localStorage.getItem('osiClimb2')||'[]');}catch(e){highScores=[];}
+    if(!highScores.some(s=>s.name==='Pip')){
+        highScores.push({name:'Pip',score:1450,layer:5,date:new Date().toLocaleDateString()});
+        highScores.sort((a,b)=>b.score-a.score);
+        highScores=highScores.slice(0,10);
+        saveHS();
+    }
+}
 function saveHS(){try{localStorage.setItem('osiClimb2',JSON.stringify(highScores));}catch(e){}}
 function addHS(name){highScores.push({name:name||'AAA',score,layer:currentLayer,date:new Date().toLocaleDateString()});highScores.sort((a,b)=>b.score-a.score);highScores=highScores.slice(0,10);saveHS();}
 function renderHS(){loadHS();const el=document.getElementById('hs-list');if(!el)return;el.innerHTML=highScores.slice(0,4).map((s,i)=>`<div style="display:flex;justify-content:space-between;padding:1px 0;"><span style="color:#ccc">${i+1}.${s.name}</span><span style="color:#fa0">${s.score}</span></div>`).join('')||'<div style="color:#555">None yet</div>';}

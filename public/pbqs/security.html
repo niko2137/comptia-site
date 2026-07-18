@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background: #0f172a;
+            background: #152d4f;
             color: #e2e8f0;
             min-height: 100vh;
             line-height: 1.6;
@@ -26,9 +26,9 @@
             --text-dark: #f1f5f9;
             --text-body: #e2e8f0;
             --text-muted: #94a3b8;
-            --bg-white: #1e293b;
-            --bg-section: #1e293b;
-            --border: #334155;
+            --bg-white: #1c3a63;
+            --bg-section: #1c3a63;
+            --border: #2d4d7a;
             --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
             --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.4);
             --radius: 8px;
@@ -55,8 +55,8 @@
             margin-bottom: 16px;
         }
         .pbq-instructions {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: var(--radius);
             padding: 20px 24px;
             margin-bottom: 32px;
@@ -79,8 +79,8 @@
 
         /* Question cards */
         .question-card {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: var(--radius);
             padding: 24px;
             margin-bottom: 20px;
@@ -129,12 +129,12 @@
         .options-list li {
             padding: 10px 16px;
             margin-bottom: 8px;
-            border: 1px solid #334155;
+            border: 1px solid #2d4d7a;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.92em;
-            background: #0f172a;
+            background: #152d4f;
             color: #e2e8f0;
         }
         .options-list li:hover {
@@ -257,10 +257,10 @@
         .pbq-cta {
             text-align: center;
             padding: 40px 24px;
-            background: #1e293b;
+            background: #1c3a63;
             border-radius: var(--radius);
             margin-top: 40px;
-            border: 1px solid #334155;
+            border: 1px solid #2d4d7a;
         }
         .pbq-cta p {
             color: var(--text-muted);
@@ -281,14 +281,14 @@
             .drag-bank-section { position: static; max-height: none; }
             .drop-target { min-width: auto; max-width: 100%; }
             .drop-item { flex-direction: column; }
-            .drop-description { border-right: none; border-bottom: 1px solid #334155; }
+            .drop-description { border-right: none; border-bottom: 1px solid #2d4d7a; }
             .pbq-header h1 { font-size: 1.5em; }
             .pbq-container { padding: 24px 16px 40px; }
         }
     </style>
 </head>
 <body>
-    <div style="background:#1e293b;border-bottom:1px solid #334155;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="background:#1c3a63;border-bottom:1px solid #2d4d7a;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
         <a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;" style="color:#5b9bd5;font-weight:600;font-size:0.9em;">← Return</a>
     </div>
 
@@ -298,12 +298,12 @@
             <p class="subtitle">Scenario-based security questions for the CompTIA A+ exam</p>
 
         <!-- DIAGRAM REFERENCE PANEL -->
-        <div style="margin-top:20px;background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;">
+        <div style="margin-top:20px;background:#1c3a63;border:1px solid #2d4d7a;border-radius:10px;overflow:hidden;">
             <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'grid':'none';this.textContent=this.textContent.includes('▶')?'📐 Reference Diagrams ▼':'📐 Reference Diagrams ▶';" style="width:100%;padding:12px 18px;background:none;border:none;color:#5b9bd5;font-size:0.95rem;font-weight:700;cursor:pointer;text-align:left;">📐 Reference Diagrams ▶</button>
             <div style="display:none;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:16px;">
-                <a href="../Images/Diagrams/malware-removal-mnemonic.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/malware-removal-mnemonic.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Malware Removal"><br>Malware Removal Steps</a>
-                <a href="../Images/Diagrams/data-destruction.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/data-destruction.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Data Destruction"><br>Data Destruction Methods</a>
-                <a href="../Images/Diagrams/fire-safety.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/fire-safety.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Fire Safety"><br>Fire Safety / ESD</a>
+                <a href="../Images/Diagrams/malware-removal-mnemonic.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/malware-removal-mnemonic.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Malware Removal"><br>Malware Removal Steps</a>
+                <a href="../Images/Diagrams/data-destruction.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/data-destruction.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Data Destruction"><br>Data Destruction Methods</a>
+                <a href="../Images/Diagrams/fire-safety.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/fire-safety.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Fire Safety"><br>Fire Safety / ESD</a>
             </div>
         </div>
         <!-- END DIAGRAM PANEL -->

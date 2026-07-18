@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laptop Repair & FRU Field Guide — CompTIA A+ Study Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#152d4f;color:#e2e8f0;line-height:1.6;min-height:100vh}
+a{color:#5b9bd5;text-decoration:none}
+a:hover{color:#7db4e6}
+.top-bar{background:#1c3a63;padding:12px 24px;border-bottom:1px solid #2d4d7a;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.top-bar a{color:#94a3b8;font-size:0.9rem;font-weight:500}
+.top-bar a:hover{color:#fff}
+.badge-members{background:#f59e0b;color:#152d4f;padding:4px 10px;border-radius:6px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.container{max-width:1000px;margin:0 auto;padding:32px 24px 60px}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:2rem;color:#f1f5f9;margin-bottom:8px}
+.header .subtitle{color:#94a3b8;font-size:1rem}
+.print-btn{display:block;margin:0 auto 32px;background:#366092;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:0.9rem;font-weight:600;cursor:pointer}
+.print-btn:hover{background:#5b9bd5}
+.diagram-panel{text-align:center;margin-bottom:24px}
+.diagram-panel img{max-width:100%;border-radius:10px;background:#fff;padding:12px}
+.diagram-panel .cap{font-size:0.8rem;color:#94a3b8;margin-top:8px}
+.section{margin-bottom:40px}
+.section h2{font-size:1.3rem;color:#5b9bd5;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #2d4d7a}
+.steps{list-style:none}
+.steps li{background:#1c3a63;border:1px solid #2d4d7a;border-radius:8px;padding:14px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start}
+.steps .num{background:#366092;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.steps strong{color:#f1f5f9}
+.steps span{color:#94a3b8;font-size:0.9rem}
+.spectrum{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.spectrum-item{flex:1;min-width:140px;background:#1c3a63;border-radius:8px;padding:14px;text-align:center;border-top:4px solid var(--c)}
+.spectrum-item h4{color:#f1f5f9;font-size:0.9rem;margin-bottom:6px}
+.spectrum-item p{color:#94a3b8;font-size:0.78rem}
+.term-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.term-card{background:#1c3a63;border:1px solid #2d4d7a;border-radius:8px;padding:16px}
+.term-card h4{color:#f1f5f9;font-size:0.95rem;margin-bottom:6px}
+.term-card p{color:#94a3b8;font-size:0.85rem}
+.tips-box{background:rgba(91,155,213,0.1);border-left:4px solid #5b9bd5;border-radius:0 8px 8px 0;padding:20px 24px;margin-top:32px}
+.tips-box h3{color:#5b9bd5;margin-bottom:10px}
+.tips-box ul{margin-left:20px}
+.tips-box li{color:#cbd5e1;margin-bottom:8px;font-size:0.9rem}
+.trap-box{background:rgba(231,76,60,0.1);border-left:4px solid #e74c3c;border-radius:0 8px 8px 0;padding:20px 24px;margin-top:20px}
+.trap-box h3{color:#f87171;margin-bottom:8px}
+.trap-box p{color:#cbd5e1;font-size:0.9rem}
+.bottom-cta{margin-top:40px;padding:20px;background:#1c3a63;border-radius:8px;text-align:center;border:1px solid #2d4d7a}
+.bottom-cta p{color:#94a3b8;font-size:0.9rem}
+@media print{.top-bar,.print-btn,.bottom-cta{display:none!important}body{background:#fff;color:#000}.steps li,.term-card,.spectrum-item{background:#f5f5f5;border-color:#ccc}}
+@media(max-width:768px){.header h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="../members.html">&larr; Back to Members Area</a>
+    <span class="badge-members">Members Only</span>
+</div>
+<div class="container">
+    <div class="header">
+        <h1>🔧 Laptop Repair & FRU Field Guide</h1>
+        <p class="subtitle">Device serviceability, keyboard replacement, and system board access for hands-on technicians</p>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Print this page</button>
+
+    <div class="section">
+        <h2>Device Serviceability Spectrum</h2>
+        <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:16px;">Not all mobile devices are designed to be repaired by end users or technicians. Always verify warranty status before attempting any repair — unauthorized disassembly can void warranties and trigger tamper-evident seals.</p>
+        <div class="diagram-panel">
+            <img src="../Images/Diagrams/mdf%20spectrum.svg" alt="Device serviceability spectrum from wearables to laptops">
+            <p class="cap">Least → most field-serviceable mobile devices</p>
+        </div>
+        <div class="spectrum">
+            <div class="spectrum-item" style="--c:#e74c3c;"><h4>Wearables</h4><p>Smartwatches, fitness trackers — almost never user-serviceable (compact size, waterproof seals)</p></div>
+            <div class="spectrum-item" style="--c:#f59e0b;"><h4>Smartphones</h4><p>Generally NOT field-serviceable — sealed unitary construction, glued components</p></div>
+            <div class="spectrum-item" style="--c:#f59e0b;"><h4>AR/VR Headsets</h4><p>Manufacturer-serviced only — limited user-replaceable parts (face cushions, straps)</p></div>
+            <div class="spectrum-item" style="--c:#5b9bd5;"><h4>Tablets</h4><p>Varies by manufacturer — some allow battery/screen replacement</p></div>
+            <div class="spectrum-item" style="--c:#27ae60;"><h4>Laptops</h4><p><strong>Most field-serviceable</strong> — RAM, storage, batteries, Wi-Fi cards often FRUs</p></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Removing a Laptop Keyboard</h2>
+        <div class="diagram-panel">
+            <img src="../Images/Diagrams/keyboard-replacement.svg" alt="Laptop keyboard removal step-by-step diagram">
+        </div>
+        <ol class="steps">
+            <li><span class="num">1</span><div><strong>Preparation</strong><br><span>Power off the laptop and remove the battery. Download the service manual for your specific model. Use plastic spudgers to avoid damaging fragile plastic parts.</span></div></li>
+            <li><span class="num">2</span><div><strong>Release the Keyboard</strong><br><span>Identify snap-fit tabs or screws (often near the F-keys). Use a plastic spudger to gently release the clips.</span></div></li>
+            <li><span class="num">3</span><div><strong>Lift and Flip</strong><br><span>Carefully lift the keyboard from the top edge and tilt it upward.</span></div></li>
+            <li><span class="num">4</span><div><strong>Disconnect Cables</strong><br><span>Identify the backlight power cable (small, orange) and the keystroke signal cable (larger, blue). Use a spudger to lift the plastic clamps, then slide the cables out gently.</span></div></li>
+            <li><span class="num">5</span><div><strong>Reassembly</strong><br><span>Replace the keyboard with a new FRU, reconnect cables and clamps, and snap or screw the keyboard back into place.</span></div></li>
+        </ol>
+        <div class="trap-box">
+            <h3>⚠️ Handle With Care</h3>
+            <p>Ribbon cable connectors are delicate and not designed for frequent use — repeated connect/disconnect cycles can damage the contacts.</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Accessing the System Board</h2>
+        <div class="diagram-panel">
+            <img src="../Images/Diagrams/systemboardlayout.png" alt="Laptop system board layout diagram">
+            <p class="cap">Key laptop system board components and their locations</p>
+        </div>
+        <div class="term-grid">
+            <div class="term-card"><h4>Initial Disassembly</h4><p>Typical sequence: remove battery → lower access panel → keyboard → top/bottom case screws.</p></div>
+            <div class="term-card"><h4>Key Components</h4><p>Memory modules, coin cell battery (system clock), antenna wires, display connector assembly, ribbon cable to the I/O board.</p></div>
+            <div class="term-card"><h4>CPU & Cooling</h4><p>CPU sits under the heatsink — replaceable only if not soldered. Clean old thermal paste completely before applying fresh paste.</p></div>
+            <div class="term-card"><h4>I/O Board</h4><p>Small separate board controlling external ports (USB, audio) — linked via a delicate ribbon cable, a common laptop FRU.</p></div>
+        </div>
+    </div>
+
+    <div class="tips-box">
+        <h3>💡 Pro Tips</h3>
+        <ul>
+            <li>Modern laptops trend toward slimmer profiles, flat ribbon cables, and limited airflow — expect fans to run more often in compact designs.</li>
+            <li>After reassembly, run a hardware monitoring app (e.g., CPUID) to verify CPU temperature is correct.</li>
+            <li>Always name and photograph screw locations during disassembly — laptop screws vary in length by position.</li>
+        </ul>
+    </div>
+
+    <div class="bottom-cta">
+        <p>This cheat sheet is from the CompTIA A+ 220-1200 Series Complete Study Guide. <a href="../book.html">Learn More About the Book →</a></p>
+    </div>
+</div>
+</body>
+</html>

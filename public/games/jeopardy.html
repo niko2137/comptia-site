@@ -298,7 +298,15 @@ function stopDrone(){if(droneOsc){droneOsc.stop();droneOsc=null;droneGain=null;}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function getHighScores(){
-  try{return JSON.parse(localStorage.getItem('jeopardyHighScores'))||[];}catch(e){return[];}
+  let scores;
+  try{scores=JSON.parse(localStorage.getItem('jeopardyHighScores'))||[];}catch(e){scores=[];}
+  if(!scores.some(s=>s.name==='Pip')){
+    scores.push({name:'Pip',score:4200,accuracy:78,date:new Date().toLocaleDateString(),mode:'Classic'});
+    scores.sort((a,b)=>b.score-a.score);
+    scores=scores.slice(0,10);
+    localStorage.setItem('jeopardyHighScores',JSON.stringify(scores));
+  }
+  return scores;
 }
 function saveHighScore(entry){
   let scores=getHighScores();

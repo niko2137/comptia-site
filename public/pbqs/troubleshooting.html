@@ -8,7 +8,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background: #0f172a;
+            background: #152d4f;
             color: #e2e8f0;
             min-height: 100vh;
             line-height: 1.6;
@@ -18,8 +18,8 @@
 
         /* Top Bar */
         .top-bar {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
+            background: #1c3a63;
+            border-bottom: 1px solid #2d4d7a;
             padding: 12px 24px;
             display: flex;
             justify-content: space-between;
@@ -30,7 +30,7 @@
         }
         .top-bar .back-link { font-size: 0.95em; }
         .top-bar .score-display {
-            background: #334155;
+            background: #2d4d7a;
             padding: 6px 16px;
             border-radius: 20px;
             font-weight: 600;
@@ -61,7 +61,7 @@
 
         /* Exam Tip Box */
         .exam-tip {
-            background: #1e293b;
+            background: #1c3a63;
             border: 1px solid #3b82f6;
             border-left: 4px solid #3b82f6;
             border-radius: 8px;
@@ -84,8 +84,8 @@
 
         /* Section Cards */
         .exercise-section {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 12px;
             padding: 28px;
             margin-bottom: 32px;
@@ -110,7 +110,7 @@
             border-radius: 8px;
             overflow: hidden;
             border: 2px dashed #475569;
-            background: #0f172a;
+            background: #152d4f;
             min-height: 52px;
             transition: all 0.2s;
         }
@@ -118,7 +118,7 @@
         .drop-slot.correct { border-color: #10b981; border-style: solid; background: rgba(16,185,129,0.1); }
         .drop-slot.incorrect { border-color: #ef4444; border-style: solid; background: rgba(239,68,68,0.1); }
         .slot-number {
-            background: #334155;
+            background: #2d4d7a;
             color: #e2e8f0;
             min-width: 44px;
             display: flex;
@@ -148,9 +148,9 @@
             flex-wrap: wrap;
             gap: 10px;
             padding: 16px;
-            background: #0f172a;
+            background: #152d4f;
             border-radius: 8px;
-            border: 1px solid #334155;
+            border: 1px solid #2d4d7a;
             min-height: 60px;
         }
         .drag-item {
@@ -172,8 +172,8 @@
         /* Scenario Questions */
         .scenario-list { display: flex; flex-direction: column; gap: 16px; }
         .scenario-item {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: #152d4f;
+            border: 1px solid #2d4d7a;
             border-radius: 8px;
             padding: 18px 20px;
             transition: border-color 0.3s;
@@ -193,8 +193,8 @@
         }
         .scenario-options { display: flex; flex-direction: column; gap: 8px; }
         .scenario-option {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: #1c3a63;
+            border: 1px solid #2d4d7a;
             border-radius: 6px;
             padding: 10px 14px;
             cursor: pointer;
@@ -265,12 +265,12 @@
             <p class="subtitle">Performance-Based Question — The 6-Step Troubleshooting Process</p>
 
         <!-- DIAGRAM REFERENCE PANEL -->
-        <div style="margin-top:20px;background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;">
+        <div style="margin-top:20px;background:#1c3a63;border:1px solid #2d4d7a;border-radius:10px;overflow:hidden;">
             <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'grid':'none';this.textContent=this.textContent.includes('▶')?'📐 Reference Diagrams ▼':'📐 Reference Diagrams ▶';" style="width:100%;padding:12px 18px;background:none;border:none;color:#5b9bd5;font-size:0.95rem;font-weight:700;cursor:pointer;text-align:left;">📐 Reference Diagrams ▶</button>
             <div style="display:none;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:16px;">
-                <a href="../Images/Diagrams/troubleshooting-methodology.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/troubleshooting-methodology.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Troubleshooting Methodology"><br>6-Step Methodology</a>
-                <a href="../Images/Diagrams/ticket-lifecycle.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/ticket-lifecycle.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Ticket Lifecycle"><br>Ticket Lifecycle</a>
-                <a href="../Images/Diagrams/ticketpriority.svg" target="_blank" style="display:block;text-align:center;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/ticketpriority.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Ticket Priority"><br>Ticket Priority Levels</a>
+                <a href="../Images/Diagrams/troubleshooting-methodology.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/troubleshooting-methodology.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Troubleshooting Methodology"><br>6-Step Methodology</a>
+                <a href="../Images/Diagrams/ticket-lifecycle.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/ticket-lifecycle.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Ticket Lifecycle"><br>Ticket Lifecycle</a>
+                <a href="../Images/Diagrams/ticketpriority.svg" target="_blank" style="display:block;text-align:center;background:#152d4f;border:1px solid #2d4d7a;border-radius:8px;padding:10px;color:#94a3b8;font-size:0.8rem;text-decoration:none;"><img src="../Images/Diagrams/ticketpriority.svg" style="width:100%;max-height:120px;object-fit:contain;margin-bottom:6px;" alt="Ticket Priority"><br>Ticket Priority Levels</a>
             </div>
         </div>
         <!-- END DIAGRAM PANEL -->

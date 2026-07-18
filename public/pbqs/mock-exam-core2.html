@@ -6,15 +6,15 @@
 <title>CompTIA A+ Core 2 (220-1202) Mock Exam</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
-.top-bar{position:sticky;top:0;z-index:100;background:#1e293b;border-bottom:1px solid #334155;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+body{font-family:system-ui,-apple-system,sans-serif;background:#152d4f;color:#e2e8f0;min-height:100vh}
+.top-bar{position:sticky;top:0;z-index:100;background:#1c3a63;border-bottom:1px solid #2d4d7a;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .back-link{color:#3b82f6;text-decoration:none;font-size:14px;display:flex;align-items:center;gap:6px}
 .back-link:hover{color:#60a5fa}
-.timer{font-size:20px;font-weight:700;color:#f8fafc;background:#0f172a;padding:8px 16px;border-radius:8px;border:1px solid #334155}
+.timer{font-size:20px;font-weight:700;color:#f8fafc;background:#152d4f;padding:8px 16px;border-radius:8px;border:1px solid #2d4d7a}
 .timer.warning{color:#f59e0b;border-color:#f59e0b}
 .timer.danger{color:#ef4444;border-color:#ef4444;animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.progress-container{width:100%;background:#334155;border-radius:4px;height:6px;margin-top:8px}
+.progress-container{width:100%;background:#2d4d7a;border-radius:4px;height:6px;margin-top:8px}
 .progress-bar{height:100%;background:#3b82f6;border-radius:4px;transition:width .3s}
 </style>
 </head>
@@ -31,7 +31,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2
 .main-container{display:flex;max-width:1400px;margin:0 auto;padding:20px;gap:20px}
 .question-area{flex:1;min-width:0}
 .nav-panel{width:280px;flex-shrink:0}
-.card{background:#1e293b;border-radius:12px;border:1px solid #334155;padding:24px;margin-bottom:16px}
+.card{background:#1c3a63;border-radius:12px;border:1px solid #2d4d7a;padding:24px;margin-bottom:16px}
 .question-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .domain-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:#3b82f620;color:#3b82f6;border:1px solid #3b82f640}
 .flag-btn{background:none;border:1px solid #475569;border-radius:8px;padding:8px 12px;cursor:pointer;color:#94a3b8;font-size:14px;display:flex;align-items:center;gap:6px;transition:all .2s}
@@ -39,14 +39,14 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2
 .flag-btn.flagged{background:#f59e0b20;border-color:#f59e0b;color:#f59e0b}
 .question-text{font-size:17px;line-height:1.6;color:#f1f5f9;margin-bottom:24px}
 .choices{display:flex;flex-direction:column;gap:10px}
-.choice{padding:14px 18px;border-radius:10px;border:2px solid #334155;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px}
+.choice{padding:14px 18px;border-radius:10px;border:2px solid #2d4d7a;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px}
 .choice:hover{border-color:#3b82f6;background:#3b82f610}
 .choice.selected{border-color:#3b82f6;background:#3b82f620}
 .choice-letter{font-weight:700;color:#3b82f6;min-width:20px}
 .choice-text{flex:1;line-height:1.4}
 .nav-buttons{display:flex;gap:12px;margin-top:20px}
 .nav-btn{flex:1;padding:12px;border-radius:8px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
-.nav-btn.prev{background:#334155;color:#e2e8f0}
+.nav-btn.prev{background:#2d4d7a;color:#e2e8f0}
 .nav-btn.next{background:#3b82f6;color:white}
 .nav-btn:hover{opacity:.85;transform:translateY(-1px)}
 .nav-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
@@ -57,7 +57,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2
 
 <style>
 .nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-.nav-grid-btn{width:36px;height:36px;border-radius:6px;border:1px solid #475569;background:#0f172a;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.nav-grid-btn{width:36px;height:36px;border-radius:6px;border:1px solid #475569;background:#152d4f;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .nav-grid-btn:hover{border-color:#3b82f6}
 .nav-grid-btn.current{border-color:#3b82f6;background:#3b82f6;color:white}
 .nav-grid-btn.answered{background:#3b82f620;border-color:#3b82f6;color:#3b82f6}
@@ -66,7 +66,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2
 .legend-item{display:flex;align-items:center;gap:4px}
 .legend-dot{width:10px;height:10px;border-radius:3px}
 .review-screen,.results-screen{display:none;max-width:800px;margin:40px auto;padding:20px}
-.review-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:#1e293b;border:1px solid #334155;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.review-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:8px;background:#1c3a63;border:1px solid #2d4d7a;margin-bottom:8px;cursor:pointer;transition:all .2s}
 .review-item:hover{border-color:#3b82f6}
 .review-badge{font-size:11px;padding:3px 8px;border-radius:6px}
 .badge-flagged{background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b40}
@@ -77,24 +77,24 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2
 .score-circle.fail{border-color:#ef4444;background:#ef444410}
 .score-number{font-size:42px;font-weight:800}
 .domain-table{width:100%;border-collapse:collapse;margin-top:24px}
-.domain-table th,.domain-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #334155}
+.domain-table th,.domain-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #2d4d7a}
 .domain-table th{color:#94a3b8;font-size:13px;font-weight:600}
-.domain-bar{height:8px;border-radius:4px;background:#334155;overflow:hidden;min-width:100px}
+.domain-bar{height:8px;border-radius:4px;background:#2d4d7a;overflow:hidden;min-width:100px}
 .domain-bar-fill{height:100%;border-radius:4px;transition:width .5s}
 .confetti-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden}
 .confetti{position:absolute;width:10px;height:10px;top:-10px;animation:confettiFall 3s linear forwards}
 @keyframes confettiFall{to{top:110vh;transform:rotateZ(720deg)}}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
-.modal{background:#1e293b;border-radius:12px;padding:32px;max-width:400px;width:90%;text-align:center;border:1px solid #334155}
+.modal{background:#1c3a63;border-radius:12px;padding:32px;max-width:400px;width:90%;text-align:center;border:1px solid #2d4d7a}
 .modal h3{margin-bottom:12px;font-size:20px}
 .modal p{color:#94a3b8;margin-bottom:24px}
 .modal-btns{display:flex;gap:12px;justify-content:center}
 .modal-btn{padding:10px 24px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:14px}
-.modal-btn.cancel{background:#334155;color:#e2e8f0}
+.modal-btn.cancel{background:#2d4d7a;color:#e2e8f0}
 .modal-btn.confirm{background:#ef4444;color:white}
 .review-incorrect-btn{padding:12px 24px;border-radius:8px;border:none;background:#3b82f6;color:white;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px}
 .incorrect-list{margin-top:24px}
-.incorrect-item{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:20px;margin-bottom:12px}
+.incorrect-item{background:#1c3a63;border:1px solid #2d4d7a;border-radius:10px;padding:20px;margin-bottom:12px}
 .incorrect-item .q-text{font-weight:600;margin-bottom:10px}
 .incorrect-item .your-answer{color:#ef4444}
 .incorrect-item .correct-answer{color:#10b981}
@@ -124,7 +124,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2
 <h4 style="margin-bottom:12px;color:#f1f5f9;font-size:14px">Question Navigator</h4>
 <div class="nav-grid" id="navGrid"></div>
 <div class="nav-legend">
-<div class="legend-item"><div class="legend-dot" style="background:#0f172a;border:1px solid #475569"></div>Unanswered</div>
+<div class="legend-item"><div class="legend-dot" style="background:#152d4f;border:1px solid #475569"></div>Unanswered</div>
 <div class="legend-item"><div class="legend-dot" style="background:#3b82f620;border:1px solid #3b82f6"></div>Answered</div>
 <div class="legend-item"><div class="legend-dot" style="background:#f59e0b20;border:1px solid #f59e0b"></div>Flagged</div>
 </div>
@@ -472,7 +472,7 @@ function submitExam() {
     html += `</tbody></table></div>
     <div style="text-align:center;margin-top:20px">
         <button class="review-incorrect-btn" onclick="showIncorrect()">Review Incorrect Answers</button>
-        <button class="review-incorrect-btn" style="background:#334155;margin-left:12px" onclick="restartExam()">Retake Exam</button>
+        <button class="review-incorrect-btn" style="background:#2d4d7a;margin-left:12px" onclick="restartExam()">Retake Exam</button>
     </div>
     <div class="incorrect-list" id="incorrectList"></div>`;
 

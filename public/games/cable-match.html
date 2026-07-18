@@ -600,6 +600,12 @@ function updatePanel() {
 // ============================================================
 function loadHighScores() {
     try { highScores = JSON.parse(localStorage.getItem('cableMatchScores2') || '[]'); } catch(e) { highScores = []; }
+    if (!highScores.some(s => s.name === 'Pip')) {
+        highScores.push({ name: 'Pip', score: 2400, level: 5, date: new Date().toLocaleDateString() });
+        highScores.sort((a,b) => b.score - a.score);
+        highScores = highScores.slice(0, 10);
+        saveHighScores();
+    }
 }
 function saveHighScores() {
     try { localStorage.setItem('cableMatchScores2', JSON.stringify(highScores)); } catch(e) {}
