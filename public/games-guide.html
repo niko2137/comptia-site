@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games Guide - CompTIA A+ Study Hub</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #1a2744; background: #fff; }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; font-family: inherit; }
+        :root {
+            --navy: #1F497D;
+            --navy-dark: #152d4f;
+            --blue: #366092;
+            --blue-light: #5b9bd5;
+            --surface: #f8fafe;
+            --border: #e2e8f0;
+            --text: #1a2744;
+            --text-muted: #666;
+            --emerald: #27ae60;
+            --amber: #f39c12;
+            --red: #e74c3c;
+            --red-dark: #c0392b;
+            --shadow-sm: 0 2px 12px rgba(31, 73, 125, 0.08);
+            --shadow-md: 0 4px 20px rgba(31, 73, 125, 0.15);
+            --radius: 8px;
+            --max-width: 1200px;
+        }
+
+        /* NAV */
+        .nav { position: sticky; top: 0; z-index: 1000; background: var(--navy); padding: 0.75rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .nav-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand { font-weight: 800; font-size: 1.1rem; color: #fff; }
+        .nav-brand span { color: var(--blue-light); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+        .nav-links a { font-size: 0.9rem; font-weight: 500; color: #94a3b8; transition: color 0.2s; }
+        .nav-links a:hover { color: #fff; }
+        .nav-links .btn-members { background: var(--red); color: #fff; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-links .btn-members:hover { background: var(--red-dark); transform: translateY(-1px); }
+        .hamburger { display: none; background: none; padding: 4px; flex-direction: column; gap: 5px; }
+        .hamburger span { display: block; width: 24px; height: 2.5px; background: #fff; border-radius: 2px; }
+        
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
+        
+        .hero-section { text-align: center; padding: 3rem 1.5rem; background: linear-gradient(135deg, #0d1b2a 0%, var(--navy) 100%); margin-bottom: 2rem; }
+        .hero-section h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; font-weight: 800; }
+        .hero-section p { color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; font-size: 1rem; }
+        
+        .domain-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .domain-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+        .domain-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+        .domain-card h3 { color: var(--blue); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .domain-card > p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .domain-card > p:last-of-type { font-size: 0.8rem; font-style: italic; margin-bottom: 1rem; color: #999; }
+        
+        .game-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .game-item { background: rgba(91, 155, 213, 0.05); border-left: 4px solid var(--blue-light); padding: 0.75rem 0.875rem; border-radius: 4px; transition: all 0.2s; }
+        .game-item:hover { background: rgba(91, 155, 213, 0.1); }
+        .game-item a { color: var(--blue); font-weight: 600; display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; }
+        .game-item a:hover { color: var(--navy); }
+        .game-item .game-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.375rem; margin-left: 0.875rem; }
+        
+        /* Difficulty color coding */
+        .game-item.difficulty-easy { border-left-color: var(--emerald); background: rgba(39, 174, 96, 0.05); }
+        .game-item.difficulty-easy:hover { background: rgba(39, 174, 96, 0.1); }
+        .game-item.difficulty-medium { border-left-color: var(--amber); background: rgba(243, 156, 18, 0.05); }
+        .game-item.difficulty-medium:hover { background: rgba(243, 156, 18, 0.1); }
+        .game-item.difficulty-hard { border-left-color: var(--red); background: rgba(231, 76, 60, 0.05); }
+        .game-item.difficulty-hard:hover { background: rgba(231, 76, 60, 0.1); }
+        
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.65rem; font-weight: 700; margin-left: 0.375rem; }
+        .badge-free { background: rgba(39,174,96,0.15); color: var(--emerald); }
+        .badge-members { background: rgba(243,156,18,0.15); color: var(--amber); }
+        .difficulty { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; background: rgba(155,155,155,0.15); color: var(--text-muted); margin-left: 0.25rem; }
+        
+        .learning-path { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm); }
+        .learning-path h3 { color: var(--blue); margin-bottom: 1rem; font-size: 1.1rem; }
+        .path-step { margin-bottom: 0.75rem; padding-left: 1.25rem; position: relative; font-size: 0.9rem; }
+        .path-step::before { content: '→'; position: absolute; left: 0; color: var(--blue); font-weight: bold; }
+        .path-step strong { color: var(--text); }
+        .path-step span { color: var(--text-muted); }
+        
+        .tips-box { background: linear-gradient(135deg, rgba(39,174,96,0.08), rgba(91,155,213,0.08)); border: 1px solid rgba(91,155,213,0.3); border-radius: var(--radius); padding: 1.5rem; margin: 2rem 0; }
+        .tips-box h3 { color: var(--blue); margin-bottom: 0.75rem; font-size: 1.1rem; }
+        .tips-box ul { margin-left: 1.25rem; }
+        .tips-box li { color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .tips-box li strong { color: var(--text); }
+        
+        .difficulty-guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1.25rem; }
+        .difficulty-item { background: #f8fafe; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+        .difficulty-item strong { font-size: 0.9rem; }
+        .difficulty-item p { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.5; }
+        
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 2rem 1.5rem; margin-top: 3rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .hero-section { padding: 1.75rem 1rem; }
+            .hero-section h1 { font-size: 1.3rem; }
+            .domain-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .difficulty-guide { grid-template-columns: 1fr; }
+            .hamburger { display: flex; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--navy); flex-direction: column; padding: 0.5rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 999; }
+            .nav-links.open { display: flex; }
+            .nav-links a { padding: 0.75rem 1.5rem; width: 100%; }
+            .nav { position: relative; }
+            .tips-box ul { margin-left: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <button class="hamburger" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html#games">Free Games</a>
+                <a href="games-guide.html">Games Guide</a>
+                <a href="index.html#reference">Reference</a>
+                <a href="study-plan.html">Study Plan</a>
+                <a href="reference/glossary-full.html">Glossary</a>
+                <a href="book.html">Get the Book</a>
+                <a href="members.html" class="btn-members">Members Area</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="container">
+        <div class="hero-section">
+            <h1>🎮 Complete Games Guide</h1>
+            <p>Master CompTIA A+ concepts through interactive games organized by exam domain. Choose games that align with what you're studying.</p>
+        </div>
+
+        <!-- LEARNING PATH -->
+        <div class="learning-path">
+            <h3>📈 Recommended Learning Path</h3>
+            <div class="path-step"><strong>Week 1-2:</strong> <span>Play free networking games (OSI Climb, Speed Match, Port Match)</span></div>
+            <div class="path-step"><strong>Week 2-3:</strong> <span>Play hardware games (Cable Connector Match, Binary Builder, Build-a-PC)</span></div>
+            <div class="path-step"><strong>Week 4-5:</strong> <span>Unlock members games for deeper learning and practice exams</span></div>
+            <div class="path-step"><strong>Week 6-8:</strong> <span>Use PBQs for exam-style scenarios and review weak areas</span></div>
+            <div class="path-step"><strong>Throughout:</strong> <span>Play general study games (Jeopardy, Wordle, Acronym Decoder) for vocabulary reinforcement</span></div>
+        </div>
+
+        <!-- NETWORKING FUNDAMENTALS -->
+        <div class="domain-grid">
+            <div class="domain-card">
+                <h3>🔗 Networking Fundamentals (Core 1)</h3>
+                <p><strong>Exam Coverage:</strong> OSI Model, TCP/IP, ports, protocols, IP addressing, SOHO networks, wireless technologies</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Master the most heavily tested domain on Core 1. These games reinforce critical port numbers, layer functions, and networking protocols.</p>
+                
+                <div class="game-list">
+                    <div class="game-item difficulty-easy">
+                        <a href="games/osi-climb.html">🏔️ OSI Layer Climb</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Answer OSI model questions at each layer. Build understanding of layer functions, protocols, and devices.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/osi-layer-sort.html">📊 OSI Layer Sort</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Sort 35+ items (protocols, devices, concepts) into correct OSI layers. Deep-dive into layer categorization.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/speed-match.html">⚡ Speed Match</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Quick-fire matching of 22 critical ports to protocols. Timed challenge to build speed and accuracy.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/port-blaster.html">🚀 Port Blaster</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Arcade shooter! Blast real ports, dodge decoys. Lock in port numbers through high-energy gameplay.</div>
+                    </div>
+                    <div class="game-item difficulty-easy">
+                        <a href="games/port-match.html">🔌 Port Match</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Draw connections between ports and protocols. Visual learning of port-to-service mappings.</div>
+                    </div>
+                    <div class="game-item difficulty-easy">
+                        <a href="members.html">💾 Memory Match</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Flip cards to match ports with protocols. Memory-based reinforcement of critical ports.</div>
+                    </div>
+                    <div class="game-item difficulty-hard">
+                        <a href="members.html">🧮 IP Address Calculator</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Hard</span>
+                        <div class="game-desc">Master subnetting, CIDR notation, IPv4/IPv6. Perform calculations tested on the exam.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HARDWARE & PERIPHERALS -->
+            <div class="domain-card">
+                <h3>⚙️ Hardware & Peripherals (Core 1)</h3>
+                <p><strong>Exam Coverage:</strong> Motherboards, CPUs, RAM, storage, RAID, cables, PSUs, cooling, printers</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Understand hardware components, connectors, and specifications. These games build hands-on recognition skills.</p>
+                
+                <div class="game-list">
+                    <div class="game-item difficulty-medium">
+                        <a href="games/build-a-pc.html">🖥️ Build-a-PC</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Drag components onto motherboard. Learn CPU sockets, RAM slots, connectors, and proper placement.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/cable-connector-match.html">🔌 Cable Connector Match</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Identify 25 cable types and connector specs. Master USB, SATA, Ethernet, power connectors.</div>
+                    </div>
+                    <div class="game-item difficulty-easy">
+                        <a href="games/binary-builder.html">📐 Binary Builder</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Convert between decimal and binary. Essential for memory size calculations and networking.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="members.html">📦 Cable Match</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Sort falling cables by speed categories. Learn USB speeds, SATA specifications, Ethernet standards.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECURITY -->
+            <div class="domain-card">
+                <h3>🔐 Security (Core 2)</h3>
+                <p><strong>Exam Coverage:</strong> Threats, authentication, wireless security, malware types, compliance, incident response</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Learn threat identification, mitigation strategies, and security best practices tested on Core 2.</p>
+                
+                <div class="game-list">
+                    <div class="game-item difficulty-hard">
+                        <a href="members.html">🛡️ Security Threat ID</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Hard</span>
+                        <div class="game-desc">Identify 25 security threats from scenarios. Learn threat types, indicators, and mitigation strategies.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="members.html">⚔️ Terminal Takedown</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Tetris-style defense! Clear threat blocks while answering malware questions. Learn virus vs. worm vs. Trojan.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TROUBLESHOOTING & OPERATIONS -->
+            <div class="domain-card">
+                <h3>🔧 Troubleshooting & Operations (Core 2)</h3>
+                <p><strong>Exam Coverage:</strong> 6-step methodology, communication, documentation, CLI troubleshooting, professional practices</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Master the systematic troubleshooting approach tested across both exams. Critical for PBQ success.</p>
+                
+                <div class="game-list">
+                    <div class="game-item difficulty-medium">
+                        <a href="members.html">🏗️ Troubleshooting Tower</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Stack troubleshooting steps in correct order. Master: Identify → Establish Theory → Test → Establish Plan → Implement → Verify → Document</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GENERAL STUDY -->
+            <div class="domain-card">
+                <h3>📚 General Study (Core 1 & Core 2)</h3>
+                <p><strong>Exam Coverage:</strong> Terminology, acronyms, concepts from all 10 exam domains</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Reinforce vocabulary and concepts across all domains. Great for warm-up or continued reinforcement.</p>
+                
+                <div class="game-list">
+                    <div class="game-item difficulty-medium">
+                        <a href="games/jeopardy.html">🏆 CompTIA Jeopardy</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">5 categories, Daily Doubles, all 10 exam domains. Classic quiz format with competitive scoring.</div>
+                    </div>
+                    <div class="game-item difficulty-easy">
+                        <a href="games/wordle-tech.html">🔤 Tech Wordle</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Guess hidden CompTIA terms. 30 essential terms across 5 categories. Fun vocabulary builder.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/acronym-decoder.html">📖 Acronym Decoder</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Master 75 IT acronyms. Select correct meanings for acronyms tested on both exams.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="members.html">🔤 Tech Scramble</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Unscramble 50+ CompTIA terms. Fill blanks from jumbled letters. Boost vocabulary recognition.</div>
+                    </div>
+                    <div class="game-item difficulty-hard">
+                        <a href="members.html">⬜ Tech Tile Time</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Hard</span>
+                        <div class="game-desc">10-clue crossword with CompTIA terminology. Challenge yourself with harder vocabulary puzzles.</div>
+                    </div>
+                    <div class="game-item difficulty-hard">
+                        <a href="members.html">🎮 Neon Circuit Dash</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Hard</span>
+                        <div class="game-desc">8-level arcade challenge covering all domains. Dodge obstacles, answer questions, survive!</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="members.html">👾 Maze Runner</a>
+                        <span class="badge badge-members">MEMBERS</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Pac-Man maze with threats and questions. Navigate while reinforcing security and networking concepts.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME DIFFICULTY GUIDE -->
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 30px 0;">
+            <h3 style="color: var(--blue-light); margin-bottom: 16px;">📊 Game Difficulty & Learning Progression</h3>
+            <div class="difficulty-guide">
+                <div class="difficulty-item">
+                    <strong style="color: var(--emerald);">🟢 Easy Games</strong>
+                    <p>Start here if new to CompTIA. Focus on concepts and basic recall. Great for foundations.</p>
+                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> OSI Climb, Port Match, Tech Wordle, Binary Builder, Memory Match</p>
+                </div>
+                <div class="difficulty-item">
+                    <strong style="color: var(--amber);">🟡 Medium Games</strong>
+                    <p>Applied knowledge and timed challenges. Good for building speed and accuracy.</p>
+                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> Speed Match, Port Blaster, Build-a-PC, Cable Match, Troubleshooting Tower</p>
+                </div>
+                <div class="difficulty-item">
+                    <strong style="color: var(--red);">🔴 Hard Games</strong>
+                    <p>Complex scenarios and advanced recall. Use for final review and practice exams.</p>
+                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> IP Calculator, Tech Tile Time, Neon Circuit Dash, Security Threat ID</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TIPS FOR SUCCESS -->
+        <div class="tips-box">
+            <h3>💡 Tips for Success</h3>
+            <ul>
+                <li><strong>Start with free games</strong> to test the format and build confidence</li>
+                <li><strong>Play consistently</strong> — 15-30 minutes daily is better than marathon sessions</li>
+                <li><strong>Focus on weak areas</strong> — use games that target your problem domains</li>
+                <li><strong>Use the study plan</strong> to know which domain to focus on each week</li>
+                <li><strong>Track your progress</strong> — note high scores and areas for improvement</li>
+                <li><strong>Combine games with PBQs</strong> for complete exam preparation</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Created by Niko Williams • CompTIA A+ Study Hub</p>
+        <p>© 2026 All Rights Reserved</p>
+    </footer>
+
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        hamburgerBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+        
+        // Close menu when link is clicked
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>

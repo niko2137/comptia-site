@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete CompTIA A+ Glossary — 220-1201 &amp; 220-1202</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #e2e8f0; background: #0f172a; }
+        a { text-decoration: none; color: inherit; }
+        :root {
+            --navy: #1F497D;
+            --navy-dark: #152d4f;
+            --blue: #366092;
+            --blue-light: #5b9bd5;
+            --surface: #1e293b;
+            --border: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* NAV */
+        .nav-bar { background: #0f172a; padding: 0 24px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: space-between; }
+        .nav-bar .nav-brand { font-weight: 800; font-size: 1rem; color: #fff; padding: 14px 0; }
+        .nav-bar .nav-brand span { color: var(--blue-light); }
+        .nav-bar .nav-items { display: flex; align-items: center; gap: 4px; }
+        .nav-bar .nav-items a { color: rgba(255,255,255,0.8); font-size: 0.82rem; font-weight: 500; padding: 14px 10px; transition: all 0.2s; white-space: nowrap; }
+        .nav-bar .nav-items a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .hamburger { display: none; background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; padding: 8px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        .hero-section { text-align: center; padding: 40px 24px; }
+        .hero-section h1 { color: #fff; font-size: 2rem; margin-bottom: 8px; }
+        .hero-section p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .search-box { max-width: 600px; margin: 30px auto 2rem; }
+        .search-box input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--surface); color: var(--text); transition: all 0.2s; font-family: inherit; }
+        .search-box input:focus { border-color: var(--blue-light); outline: none; box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.1); }
+
+        .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-top: 2rem; margin-bottom: 40px; }
+        .glossary-item { background: var(--surface); padding: 16px; border-radius: 8px; border-left: 4px solid var(--blue-light); box-shadow: var(--shadow-sm); transition: all 0.2s; }
+        .glossary-item:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); }
+        .glossary-item h3 { font-size: 1rem; font-weight: 700; color: var(--blue-light); margin-bottom: 8px; }
+        .glossary-item p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; }
+        .glossary-item .category { display: inline-block; background: rgba(91, 155, 213, 0.15); color: var(--blue-light); padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-top: 10px; }
+
+        .results-count { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin: 20px 0; }
+
+        footer { background: var(--navy-dark); border-top: 1px solid var(--border); padding: 30px 24px; margin-top: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container { padding: 0 16px; }
+            .hero-section { padding: 28px 16px; }
+            .hero-section h1 { font-size: 1.5rem; }
+            .glossary-grid { grid-template-columns: 1fr; gap: 12px; }
+            .hamburger { display: block; }
+            .nav-bar .nav-items { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #0f172a; flex-direction: column; padding: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 999; }
+            .nav-bar .nav-items.open { display: flex; }
+            .nav-bar .nav-items a { padding: 12px 24px; width: 100%; border-bottom: 1px solid var(--border); }
+            .nav-bar { position: relative; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="nav-bar">
+        <a href="../index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+        <button class="hamburger" id="hamburgerBtn">&#9776;</button>
+        <div class="nav-items" id="navItems">
+            <a href="../index.html">Home</a>
+            <a href="../index.html#games">Free Games</a>
+            <a href="index.html">Reference</a>
+            <a href="../study-plan.html">Study Plan</a>
+            <a href="glossary-full.html">Glossary</a>
+            <a href="../book.html">Get Book</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="hero-section">
+                <h1>📖 CompTIA A+ Comprehensive Glossary</h1>
+                <p>220-1201 (Core 1) &amp; 220-1202 (Core 2) — Complete study reference with 100+ essential terms</p>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="glossarySearch" placeholder="Search glossary... (type to filter)" />
+            </div>
+
+            <div class="results-count" id="resultsCount"></div>
+
+            <div class="glossary-grid" id="glossaryGrid">
+                <!-- Networking Terms -->
+                <div class="glossary-item">
+                    <h3>API</h3>
+                    <p>Application Programming Interface. A set of rules and protocols that allows different software applications to communicate and exchange data.</p>
+                    <span class="category">Networking</span>
+                </div>
+                
+                <div class="glossary-item">
+                    <h3>APIPA</h3>
+                    <p>Automatic Private IP Addressing. An address in the range 169.254.x.x automatically assigned when a device cannot reach a DHCP server. Indicates DHCP failure.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>ARP</h3>
+                    <p>Address Resolution Protocol. A Layer 2/3 protocol that resolves IP addresses to MAC addresses on the local network. Used for device discovery.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Bandwidth</h3>
+                    <p>The maximum data transmission rate over a connection, measured in bits per second (Mbps, Gbps). Determines maximum theoretical speed.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>BIOS</h3>
+                    <p>Basic Input/Output System. Firmware that runs before the OS. Initializes hardware and boots the operating system. Being replaced by UEFI.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>BitLocker</h3>
+                    <p>Windows full-disk encryption feature. Requires TPM 2.0 and Windows Pro or higher. Encrypts entire drive including OS and personal files.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Bluetooth</h3>
+                    <p>Short-range wireless standard (typically up to 33 feet). Used for connecting peripherals like headsets, mice, and keyboards. Different classes have varying ranges.</p>
+                    <span class="category">Mobile/Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Boot Sector</h3>
+                    <p>The first sector of a disk (typically 512 bytes) that contains the bootloader code. Tells the system how to start the operating system.</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>BYOD</h3>
+                    <p>Bring Your Own Device. A workplace policy allowing employees to use personal mobile devices for work purposes. Requires MDM and security controls.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Cache</h3>
+                    <p>Fast temporary memory that stores frequently accessed data. Levels: L1 (CPU cache), L2 (per core), L3 (shared among cores). Speeds up performance.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>CalDAV</h3>
+                    <p>Calendar Delegation Access Protocol. A standard protocol for synchronizing calendar data between devices and servers. Used by iCloud, Google Calendar, and corporate systems.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>CardDAV</h3>
+                    <p>Contact Card Delegation Access Protocol. A standard for synchronizing contacts across devices. Used by iCloud, Google Contacts, and Enterprise systems.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>CCNA</h3>
+                    <p>Cisco Certified Network Associate. Advanced networking certification. CompTIA A+ is foundational; CCNA builds on networking knowledge.</p>
+                    <span class="category">Certification</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>CIDR</h3>
+                    <p>Classless Inter-Domain Routing. Notation for IP addresses using a prefix length (e.g., 192.168.1.0/24). More efficient than Class-based addressing.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>CMOS</h3>
+                    <p>Complementary Metal-Oxide-Semiconductor. The battery-backed memory that stores BIOS settings. Powered by a CR2032 coin cell battery on the motherboard.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>CPU</h3>
+                    <p>Central Processing Unit. The main processor chip in a computer. Executes instructions. Modern CPUs use socket types like LGA 1700 (Intel) or AM5 (AMD).</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>DDR4 / DDR5</h3>
+                    <p>Double Data Rate RAM. DDR4 runs at 2133-3200+ MHz; DDR5 at 4800-7200+ MHz. NOT interchangeable — different notch positions prevent accidental insertion.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>DHCP</h3>
+                    <p>Dynamic Host Configuration Protocol. Automatically assigns IP addresses to devices on a network. Uses ports 67 (server) and 68 (client).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>DNS</h3>
+                    <p>Domain Name System. Translates human-readable domain names (google.com) to IP addresses (142.250.x.x). Uses port 53 (TCP/UDP).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>EAS</h3>
+                    <p>Exchange ActiveSync. Microsoft protocol for syncing email, contacts, and calendar in a single connection. The preferred corporate mobile sync solution.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>ECC RAM</h3>
+                    <p>Error-Correcting Code RAM. Detects and corrects single-bit memory errors. Used in servers and workstations where data integrity is critical.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>ESD</h3>
+                    <p>Electrostatic Discharge. Static electricity that can damage sensitive components. Prevented using antistatic wrist straps, mats, and proper grounding.</p>
+                    <span class="category">Safety</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Ethernet</h3>
+                    <p>Wired networking standard using twisted-pair cables (Cat5e, Cat6, Cat7). Standard for local area networks. Uses RJ-45 connectors.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>FileVault</h3>
+                    <p>macOS full-disk encryption. Built into all macOS versions. Similar to Windows BitLocker — encrypts entire drive including OS and user files.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>FRU</h3>
+                    <p>Field-Replaceable Unit. Components that technicians can replace without returning the device to the manufacturer. Examples: RAM, hard drives, Wi-Fi cards.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>FTP</h3>
+                    <p>File Transfer Protocol. Unencrypted file transfer protocol using port 21 (control) and port 20 (data). Deprecated — use SFTP instead.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>GPU</h3>
+                    <p>Graphics Processing Unit. Dedicated processor for rendering graphics and video. Connected to PCIe x16 slot. Requires separate power (6+2 pin connector).</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>GUID</h3>
+                    <p>Globally Unique Identifier. A 128-bit value used to uniquely identify resources. Different from GUIDs used in Windows (which are 16-byte values).</p>
+                    <span class="category">Software</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>GPT</h3>
+                    <p>GUID Partition Table. Modern partition format supporting drives larger than 2 TB. Replaces MBR. Used on modern systems, required for UEFI.</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Hypervisor</h3>
+                    <p>Virtual machine monitor software. Type 1: runs on hardware (ESXi, Hyper-V Server). Type 2: runs on host OS (VirtualBox, VMware Workstation).</p>
+                    <span class="category">Virtualization</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Hz</h3>
+                    <p>Hertz. Unit of frequency representing cycles per second. RAM speed measured in MHz/GHz; refresh rate measured in Hz (60 Hz = 60 cycles/sec).</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>I2C</h3>
+                    <p>Inter-Integrated Circuit. Low-speed protocol for communicating between components on a motherboard. Used for BIOS settings, temperature sensors, etc.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>ICCID</h3>
+                    <p>Integrated Circuit Card Identifier. A 19-22 digit number unique to a SIM card (or eSIM). Identifies the SIM card itself, not the user.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>IMEI</h3>
+                    <p>International Mobile Equipment Identity. A 15-digit identifier for cellular device hardware. Used to blacklist stolen phones. NOT unique to the user.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>IMSI</h3>
+                    <p>International Mobile Subscriber Identity. A 15-digit (or fewer) ID unique to the mobile subscriber. Used for roaming charges and billing.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>IMAP</h3>
+                    <p>Internet Message Access Protocol. Email protocol that keeps mail on server, syncs across devices. Port 143 (plain), 993 (SSL/TLS). Recommended over POP3.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>IoT</h3>
+                    <p>Internet of Things. Network of connected physical devices with sensors that communicate over the internet. Examples: smart home devices, fitness trackers.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>IP</h3>
+                    <p>Internet Protocol. Foundation protocol for routing packets between networks. Current versions: IPv4 (32-bit), IPv6 (128-bit). Operates at OSI Layer 3 (Network).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>IPAM</h3>
+                    <p>IP Address Management. System for managing IP address allocation and tracking. Important for enterprise networks with thousands of devices.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>ISP</h3>
+                    <p>Internet Service Provider. Company that provides Internet connectivity to consumers. Examples: Comcast, Verizon, AT&amp;T.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>LDAP</h3>
+                    <p>Lightweight Directory Access Protocol. Protocol for querying directory services (Active Directory). Port 389 (plain), 636 (LDAPS encrypted). Used for user lookups.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>LGA</h3>
+                    <p>Land Grid Array. CPU socket type with pins on the motherboard socket (not on the CPU). Standard for modern Intel processors. Different versions (LGA 1200, 1700, 1851, etc.) are incompatible.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>LTE</h3>
+                    <p>Long Term Evolution. 4G cellular standard. Provides faster data than 3G. Being replaced by 5G in modern networks.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>MAC</h3>
+                    <p>Media Access Control. Layer 2 (Data Link) address. 48-bit address in format XX:XX:XX:XX:XX:XX. Used to identify devices on local networks. First 3 octets = manufacturer OUI.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>MBR</h3>
+                    <p>Master Boot Record. Legacy partition format supporting drives up to 2 TB. Replaced by GPT on modern systems.</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>MFA</h3>
+                    <p>Multi-Factor Authentication. Authentication requiring more than one verification factor. Examples: password + phone code, password + fingerprint. Also called 2FA/3FA.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>MHz</h3>
+                    <p>Megahertz. One million cycles per second. Used to measure CPU and RAM speed. 1000 MHz = 1 GHz.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>NFC</h3>
+                    <p>Near Field Communication. Short-range wireless (1-2 inches). Used for contactless payments (Apple Pay, Google Pay) and quick device pairing (Android Beam).</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>NTP</h3>
+                    <p>Network Time Protocol. Synchronizes system clocks across devices. Uses port 123 (UDP). Critical for SSL certificate validation and log timestamps.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>NVMe</h3>
+                    <p>Non-Volatile Memory Express. Ultra-fast storage interface using PCIe. Speeds: PCIe 3.0 (~3500 MB/s), PCIe 4.0 (~7000 MB/s), PCIe 5.0 (~14000 MB/s).</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>OAuth</h3>
+                    <p>Open Authorization. Protocol allowing third-party apps to access user data without sharing passwords. Used for single sign-on (Google, Facebook, Microsoft logins).</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>OS</h3>
+                    <p>Operating System. Software that manages computer hardware and provides services to applications. Examples: Windows, macOS, Linux, Android, iOS.</p>
+                    <span class="category">Software</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>OSI</h3>
+                    <p>Open Systems Interconnection. 7-layer reference model for network communication. Layers: Physical, Data Link, Network, Transport, Session, Presentation, Application.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>OUI</h3>
+                    <p>Organizationally Unique Identifier. The first 3 octets (24 bits) of a MAC address. Identifies the manufacturer of the network adapter.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PAT</h3>
+                    <p>Port Address Translation. Multiple internal IP addresses share one public IP by using different port numbers. Enables many devices to access internet with one public IP.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PBQ</h3>
+                    <p>Performance-Based Question. Interactive exam question requiring hands-on troubleshooting or configuration. Tests practical skills, not just knowledge.</p>
+                    <span class="category">Exam</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PCIe</h3>
+                    <p>PCI Express. Serial expansion bus for connecting peripherals. Versions: 3.0 (16 GB/s x16), 4.0 (32 GB/s x16), 5.0 (64 GB/s x16).</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PGA</h3>
+                    <p>Pin Grid Array. CPU socket type with pins on the CPU (not motherboard socket). Standard for AMD processors. Different versions are incompatible.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PIN</h3>
+                    <p>Personal Identification Number. Secret numeric code used for authentication. Common on SIM cards and mobile devices for unlock protection.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>POP3</h3>
+                    <p>Post Office Protocol version 3. Email protocol that downloads mail from server (typically deletes server copy). Port 110 (plain), 995 (SSL/TLS). Legacy — use IMAP instead.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PRL</h3>
+                    <p>Preferred Roaming List. List of frequencies/towers on a cellular device. Updates pushed automatically via OTA. Allows device to connect to correct cellular network while roaming.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>PSU</h3>
+                    <p>Power Supply Unit. Converts wall power (AC) to regulated DC power (+3.3V, +5V, +12V) for computer components. Specifications: wattage, efficiency rating (80+ Bronze/Gold/Platinum).</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>QoS</h3>
+                    <p>Quality of Service. Network feature that prioritizes certain traffic types. Example: prioritize video streaming over file downloads to prevent buffering.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>RAID</h3>
+                    <p>Redundant Array of Independent Disks. Disk storage system combining multiple drives. RAID 0 (striping), RAID 1 (mirroring), RAID 5/6 (striping + parity), RAID 10 (stripe of mirrors).</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>RAM</h3>
+                    <p>Random Access Memory. Fast volatile memory used for running programs and storing temporary data. Lost when powered off. Types: DDR3, DDR4, DDR5.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>RDP</h3>
+                    <p>Remote Desktop Protocol. Windows graphical remote access protocol. Port 3389. Provides full desktop experience. NEVER expose to internet without VPN.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>RFID</h3>
+                    <p>Radio-Frequency Identification. Wireless technology using radio waves to identify objects. Range varies from inches (passive) to 100+ feet (active). Used in asset tracking.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>ROM</h3>
+                    <p>Read-Only Memory. Non-volatile memory containing firmware. Examples: BIOS/UEFI on motherboard. Data persists when powered off.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>RPM</h3>
+                    <p>Revolutions Per Minute. Speed at which a hard disk drive's platters spin. Common speeds: 5400 RPM (laptop HDDs), 7200 RPM (desktop HDDs). Faster = better performance, more heat.</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>RTC</h3>
+                    <p>Real-Time Clock. Circuit on motherboard powered by CMOS battery that maintains system time even when PC is powered off. Backed by CR2032 coin cell.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SAE</h3>
+                    <p>Simultaneous Authentication of Equals. Wi-Fi 6+ encryption protocol used with WPA3. More secure than WPA2's 4-way handshake.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SATA</h3>
+                    <p>Serial ATA. Interface for hard drives and SSDs. Speed: SATA II (3 Gbps), SATA III (6 Gbps). Connections: 7-pin data, 15-pin power.</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SCSI</h3>
+                    <p>Small Computer System Interface. Legacy parallel interface for storage devices. Largely replaced by SATA for consumer systems. Still used in enterprise (SAS).</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SD Card</h3>
+                    <p>Secure Digital Card. Removable flash storage used in cameras and mobile devices. Versions: SD (2 GB), SDHC (32 GB), SDXC (2 TB).</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SFTP</h3>
+                    <p>SSH File Transfer Protocol. Secure file transfer over SSH. Replaces unencrypted FTP. Uses port 22 (same as SSH). Data encrypted in transit.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SLA</h3>
+                    <p>Service Level Agreement. Contract defining service availability, uptime, response time, and penalties for failures. Common in cloud/hosted services.</p>
+                    <span class="category">Business</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SMART</h3>
+                    <p>Self-Monitoring Analysis and Reporting Technology. Built-in monitoring on hard drives and SSDs that predicts failures. Alerts when problems detected.</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SMB</h3>
+                    <p>Server Message Block. Windows file and printer sharing protocol. Port 445. Used by ransomware attacks — keep systems patched and firewalled.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SMTP</h3>
+                    <p>Simple Mail Transfer Protocol. Protocol for sending outgoing email. Port 25 (server-to-server), 587 (client submission with STARTTLS), 465 (implicit SSL).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SNMP</h3>
+                    <p>Simple Network Management Protocol. Protocol for network monitoring and management. Port 161 (queries), 162 (trap alerts). Uses UDP.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SOHO</h3>
+                    <p>Small Office / Home Office. Network setup for 1-10 users. Uses consumer-grade routers, DHCP, NAT. Minimal security vs. enterprise networks.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SSD</h3>
+                    <p>Solid State Drive. Storage using flash memory (no moving parts). Faster, more durable, cooler than HDDs. Prices: SATA (~$0.10/GB), NVMe (~$0.08/GB).</p>
+                    <span class="category">Storage</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SSH</h3>
+                    <p>Secure Shell. Encrypted remote command-line access. Port 22. Replaces unencrypted Telnet. Used for Linux/Unix server administration and secure file transfer (SFTP).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SSL / TLS</h3>
+                    <p>Secure Sockets Layer / Transport Layer Security. Encryption protocol for securing data in transit. SSL deprecated; use TLS 1.2 or 1.3. Used for HTTPS, SMTPS, IMAPS, etc.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>SSID</h3>
+                    <p>Service Set Identifier. Wi-Fi network name. Broadcast publicly so devices can discover and connect to the network. Can be hidden (not recommended).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>TCP</h3>
+                    <p>Transmission Control Protocol. Connection-oriented Layer 4 transport protocol ensuring reliable, ordered data delivery. Used for: HTTP, HTTPS, FTP, SMTP, SSH, Telnet.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>TCP/IP</h3>
+                    <p>Transmission Control Protocol / Internet Protocol. 4-layer networking model: Application, Transport, Internet, Network Access. The protocol suite running the internet.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>TDP</h3>
+                    <p>Thermal Design Power. Maximum heat output (in watts) a CPU produces. Used to size cooling solutions. Higher TDP CPUs need better coolers.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Telnet</h3>
+                    <p>Unencrypted remote access protocol. Port 23. Sends passwords in plain text. Completely obsolete — NEVER use. Replaced by SSH.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>TPM</h3>
+                    <p>Trusted Platform Module. Chip storing cryptographic keys and enabling BitLocker, Windows Hello, Secure Boot. TPM 2.0 required for Windows 11.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>UDP</h3>
+                    <p>User Datagram Protocol. Connectionless Layer 4 transport protocol — fast but unreliable (no delivery guarantee). Used for: DNS, DHCP, NTP, SNMP, VoIP, streaming.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>UEFI</h3>
+                    <p>Unified Extensible Firmware Interface. Modern replacement for BIOS. Supports drives larger than 2 TB (requires GPT partitioning). Enables Secure Boot.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>USB</h3>
+                    <p>Universal Serial Bus. Standard for connecting peripherals. Versions: 2.0 (480 Mbps), 3.0 (5 Gbps), 3.1 (10 Gbps), 3.2 (20 Gbps), 4.0 (40 Gbps).</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>UTP</h3>
+                    <p>Unshielded Twisted Pair. Standard network cable without shielding. Category 5e (1 Gbps), Cat 6 (10 Gbps up to 55m), Cat 6a (10 Gbps up to 100m).</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>VAN</h3>
+                    <p>Value Added Network. Third-party network provider for secure business communication. Used for EDI, procurement, supply chain integration.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>VGA</h3>
+                    <p>Video Graphics Array. Legacy analog video connector. 15-pin D-sub. Replaced by HDMI and DisplayPort. Susceptible to EMI/signal degradation over distance.</p>
+                    <span class="category">Hardware</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>VLan</h3>
+                    <p>Virtual Local Area Network. Network segmentation using software. Isolates traffic without physical separation. Used for security and network optimization.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>VNC</h3>
+                    <p>Virtual Network Computing. Cross-platform remote desktop protocol. Port 5900. Less efficient than RDP but works cross-OS. Always protect behind VPN/SSH tunnel.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>VPN</h3>
+                    <p>Virtual Private Network. Encrypts traffic and routes it through a private server. Secures data on public Wi-Fi. Protocols: IKEv2, IPSec, L2TP, WireGuard.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>VR / AR / MR</h3>
+                    <p>Virtual Reality (fully immersive digital environment) / Augmented Reality (digital overlays on real world) / Mixed Reality (interactive blend). Used in gaming, training, design.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>WAN</h3>
+                    <p>Wide Area Network. Connects distant locations across cities/countries. Example: branch offices connected via dedicated lines or internet.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>WPA / WPA2 / WPA3</h3>
+                    <p>Wi-Fi Protected Access. Security standards. WPA (TKIP - weak), WPA2 (AES/CCMP - strong), WPA3 (SAE - strongest, protects against brute-force). Use WPA3 when available.</p>
+                    <span class="category">Security</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>Wi-Fi 6 / 6E / 7</h3>
+                    <p>Wi-Fi standards. 802.11ax (9.6 Gbps, 2.4/5 GHz). 6E extends to 6 GHz. 802.11be (46 Gbps with MLO). Higher = faster, less interference, better for dense environments.</p>
+                    <span class="category">Networking</span>
+                </div>
+
+                <div class="glossary-item">
+                    <h3>WWAN</h3>
+                    <p>Wireless Wide Area Network. Cellular connectivity (4G/5G). Used by smartphones and mobile broadband cards for remote/mobile access.</p>
+                    <span class="category">Mobile</span>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Created by Niko Williams • CompTIA A+ Study Hub</p>
+        <p>© 2026 All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Hamburger menu
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navItems = document.getElementById('navItems');
+        
+        hamburgerBtn.addEventListener('click', () => {
+            navItems.classList.toggle('open');
+        });
+        
+        // Close menu when link is clicked
+        navItems.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navItems.classList.remove('open');
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('glossarySearch');
+        const glossaryGrid = document.getElementById('glossaryGrid');
+        const resultsCount = document.getElementById('resultsCount');
+
+        searchInput.addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.glossary-item');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const title = item.querySelector('h3').textContent.toLowerCase();
+                const text = item.textContent.toLowerCase();
+                if (title.includes(searchTerm) || text.includes(searchTerm)) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update results count
+            if (searchTerm.trim() === '') {
+                resultsCount.textContent = `Showing all ${items.length} terms`;
+            } else {
+                resultsCount.textContent = `Found ${visibleCount} term${visibleCount !== 1 ? 's' : ''}`;
+            }
+        });
+
+        // Initialize results count on load
+        window.addEventListener('load', () => {
+            const items = document.querySelectorAll('.glossary-item');
+            resultsCount.textContent = `Showing all ${items.length} terms`;
+        });
+    </script>
+
+</body>
+</html>

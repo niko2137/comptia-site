@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-Week CompTIA A+ Study Plan — Complete Exam Prep</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #1a2744; background: #fff; }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; font-family: inherit; }
+        :root {
+            --navy: #1F497D;
+            --navy-dark: #152d4f;
+            --blue: #366092;
+            --blue-light: #5b9bd5;
+            --surface: #f8fafe;
+            --border: #e2e8f0;
+            --text: #1a2744;
+            --text-muted: #666;
+            --emerald: #27ae60;
+            --red: #e74c3c;
+            --red-dark: #c0392b;
+            --shadow-sm: 0 2px 12px rgba(31, 73, 125, 0.08);
+            --shadow-md: 0 4px 20px rgba(31, 73, 125, 0.15);
+            --max-width: 1200px;
+        }
+
+        /* NAV */
+        .nav { position: sticky; top: 0; z-index: 1000; background: var(--navy); padding: 0.75rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .nav-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand { font-weight: 800; font-size: 1.1rem; color: #fff; }
+        .nav-brand span { color: var(--blue-light); }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+        .nav-links a { font-size: 0.9rem; font-weight: 500; color: #94a3b8; transition: color 0.2s; }
+        .nav-links a:hover { color: #fff; }
+        .nav-links .btn-members { background: var(--red); color: #fff; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-links .btn-members:hover { background: var(--red-dark); transform: translateY(-1px); }
+        .hamburger { display: none; background: none; padding: 4px; flex-direction: column; gap: 5px; }
+        .hamburger span { display: block; width: 24px; height: 2.5px; background: #fff; border-radius: 2px; }
+
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; }
+        
+        .hero-section { text-align: center; padding: 3rem 1.5rem; background: linear-gradient(135deg, #0d1b2a 0%, var(--navy) 100%); }
+        .hero-section h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 0.5rem; font-weight: 800; }
+        .hero-section p { color: rgba(255,255,255,0.8); font-size: 1rem; }
+
+        .tips-box { background: linear-gradient(135deg, rgba(39,174,96,0.08), rgba(91,155,213,0.08)); border: 1px solid rgba(91,155,213,0.3); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+        .tips-box h3 { color: var(--blue); margin-bottom: 0.75rem; }
+        .tips-box ul { margin-left: 1.25rem; }
+        .tips-box li { margin: 0.5rem 0; color: var(--text-muted); font-size: 0.9rem; }
+        .tips-box li strong { color: var(--text); }
+
+        .week-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1.25rem 0; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+        .week-card:hover { box-shadow: var(--shadow-md); }
+        .week-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .week-num { background: var(--navy); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: 700; flex-shrink: 0; }
+        .week-card h3 { font-size: 1.1rem; color: var(--blue); margin-bottom: 0.5rem; }
+        .week-card > p { color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem; }
+        .week-topics { background: rgba(91,155,213,0.05); padding: 1rem; border-left: 3px solid var(--blue); border-radius: 4px; margin-bottom: 1rem; }
+        .week-topics strong { color: var(--blue); }
+        .topic-list { margin: 0.75rem 0 0 0; padding-left: 1.25rem; }
+        .topic-list li { margin: 0.375rem 0; color: var(--text-muted); font-size: 0.9rem; }
+        
+        .mnemonic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .mnemonic-card { background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%); color: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: var(--shadow-sm); transition: all 0.2s; }
+        .mnemonic-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .mnemonic-card h4 { font-size: 0.95rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; }
+        .mnemonic-card .phrase { font-weight: 600; font-size: 0.9rem; margin: 0.5rem 0; }
+        .mnemonic-card .breakdown { font-size: 0.8rem; line-height: 1.6; margin-top: 0.5rem; }
+        
+        .trap-alert { background: rgba(231,76,60,0.08); border-left: 4px solid var(--red); padding: 1rem; border-radius: 4px; margin: 1rem 0; }
+        .trap-alert strong { color: var(--red); }
+
+        .exam-tips { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; box-shadow: var(--shadow-sm); }
+        .exam-tips h3 { color: var(--blue); margin-bottom: 1rem; font-size: 1.1rem; }
+        .tips-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .tips-list li { background: rgba(91,155,213,0.05); padding: 0.75rem; border-radius: 6px; list-style: none; color: var(--text-muted); font-size: 0.9rem; }
+
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 2rem 1.5rem; margin-top: 3rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .hero-section { padding: 1.75rem 1rem; }
+            .hero-section h1 { font-size: 1.3rem; }
+            .week-header { flex-direction: column; align-items: flex-start; }
+            .week-num { width: 50px; height: 50px; font-size: 1.2em; }
+            .mnemonic-grid { grid-template-columns: 1fr; }
+            .tips-list { grid-template-columns: 1fr; }
+            .hamburger { display: flex; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--navy); flex-direction: column; padding: 0.5rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 999; }
+            .nav-links.open { display: flex; }
+            .nav-links a { padding: 0.75rem 1.5rem; width: 100%; }
+            .nav { position: relative; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">CompTIA A+ <span>Study Hub</span></a>
+            <button class="hamburger" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html#games">Free Games</a>
+                <a href="games-guide.html">Games Guide</a>
+                <a href="index.html#reference">Reference</a>
+                <a href="study-plan.html">Study Plan</a>
+                <a href="reference/glossary-full.html">Glossary</a>
+                <a href="book.html">Get the Book</a>
+                <a href="members.html" class="btn-members">Members Area</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="hero-section">
+                <h1>📅 8-Week CompTIA A+ Study Plan</h1>
+                <p>Structured week-by-week roadmap for comprehensive exam preparation (1-2 hours/day)</p>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 How to Use This Plan</h3>
+                <ul>
+                    <li><strong>Consistency beats cramming:</strong> 1-2 hours daily for 8 weeks beats last-minute 12-hour marathon sessions</li>
+                    <li><strong>Hands-on practice:</strong> Don't just read — take apart old devices, configure VMs, practice troubleshooting</li>
+                    <li><strong>Active recall:</strong> Use flashcards, take practice tests, teach concepts to someone else</li>
+                    <li><strong>Adjust pacing:</strong> If you have IT experience, reduce time. If new to IT, add an extra week</li>
+                    <li><strong>Take both exams:</strong> Pass Core 1 (220-1201) first, then Core 2 (220-1202) — they build on each other</li>
+                </ul>
+            </div>
+
+            <!-- Week 1 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">1</div>
+                    <div>
+                        <h3>Mobile Devices & Laptops</h3>
+                        <p style="margin: 0;">Master smartphone/tablet features, laptop hardware components, input devices, and mobile connectivity</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>Smartphone vs. tablet vs. wearable device characteristics</li>
+                        <li>Mobile connectivity: Wi-Fi, Bluetooth, NFC, cellular (IMEI, ICCID, IMSI)</li>
+                        <li>Laptop hardware: keyboard removal, system board replacement, power states</li>
+                        <li>Field-Replaceable Units (FRUs) — what can technicians replace</li>
+                        <li>Mobile device synchronization: iCloud, Google, Exchange ActiveSync</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Identify components on a smartphone/laptop. Set up email sync on iOS/Android. Practice removing a laptop keyboard.
+                </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">2</div>
+                    <div>
+                        <h3>Networking Fundamentals</h3>
+                        <p style="margin: 0;">Network types, TCP/IP, IP addressing, ports, protocols, DNS/DHCP, VLANs, and SOHO setup (23% of Core 1)</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>Network types: PAN, LAN, WLAN, MAN, WAN, WWAN</li>
+                        <li>TCP/IP model (4 layers) vs. OSI model (7 layers)</li>
+                        <li>IPv4 addressing, subnetting, CIDR notation (/24, /25, etc.)</li>
+                        <li>IPv6 basics: link-local, multicast, anycast, SLAAC</li>
+                        <li>Critical ports: 22 (SSH), 53 (DNS), 67/68 (DHCP), 80/443 (HTTP/S), 389/636 (LDAP)</li>
+                        <li>Network hardware: switches (Layer 2), routers (Layer 3), firewalls</li>
+                        <li>SOHO router setup: DHCP, port forwarding, wireless security</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Calculate subnets. Identify what layer routers/switches operate on. Set up a home network in a VM.
+                </div>
+            </div>
+
+            <!-- Week 3 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">3</div>
+                    <div>
+                        <h3>Hardware & Peripherals</h3>
+                        <p style="margin: 0;">Motherboards, CPUs, RAM, storage, printers, expansion cards, power supplies (25% of Core 1)</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>Motherboard form factors: ATX, mATX, mini-ITX, E-ATX</li>
+                        <li>CPU sockets: LGA 1200, 1700 (Intel), AM4, AM5 (AMD) — NOT interchangeable</li>
+                        <li>RAM: DDR4 vs. DDR5 (different notches!), dual-channel requirements, ECC RAM</li>
+                        <li>Storage: HDD (RPM), SSD/NVMe (PCIe speeds), RAID levels (0, 1, 5, 6, 10)</li>
+                        <li>Power supplies: wattage, 80+ ratings, connectors (24-pin ATX, 8-pin EPS, 6+2 PCIe, SATA)</li>
+                        <li>Expansion cards: PCIe versions (3.0, 4.0, 5.0), GPUs, sound cards, RAID controllers</li>
+                        <li>Cooling: thermal paste, CPU heatsinks, case fans, TDP</li>
+                        <li>Printer types: inkjet, laser, thermal, impact, 3D printing</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Identify motherboard components. Calculate PSU wattage. Practice RAM installation. Learn the 6-step troubleshooting methodology.
+                </div>
+            </div>
+
+            <!-- Week 4 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">4</div>
+                    <div>
+                        <h3>Virtualization, Cloud & IoT</h3>
+                        <p style="margin: 0;">Hypervisors, VMs, cloud models (IaaS/PaaS/SaaS), IoT security, disaster recovery</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>Type 1 hypervisors: VMware ESXi, Hyper-V Server (bare-metal)</li>
+                        <li>Type 2 hypervisors: VirtualBox, VMware Workstation (host OS-based)</li>
+                        <li>VM configuration: snapshots, cloning, resource allocation</li>
+                        <li>Cloud models: IaaS (AWS EC2), PaaS (Azure App Service), SaaS (Office 365)</li>
+                        <li>Cloud concepts: elasticity, scalability, shared responsibility model</li>
+                        <li>IoT security: default passwords, firmware updates, segmentation</li>
+                        <li>Backup types: full, incremental, differential</li>
+                        <li>Disaster recovery: RPO, RTO, failover</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Create a VM in VirtualBox. Take a snapshot, make changes, revert. Understand the cloud responsibility matrix.
+                </div>
+            </div>
+
+            <!-- Week 5 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">5</div>
+                    <div>
+                        <h3>Operating Systems (Core 2)</h3>
+                        <p style="margin: 0;">Windows tools, Linux commands, macOS basics, OS installation, updates, file systems (28% of Core 2)</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>Windows tools: Device Manager, Disk Management, Group Policy, Services, Task Scheduler</li>
+                        <li>Windows CLI: CMD vs. PowerShell, ipconfig, systeminfo, sfc /scannow, chkdsk /f</li>
+                        <li>Linux commands: ls, cd, sudo, chmod, chown, ps, top, systemd</li>
+                        <li>macOS: Finder, Terminal, Activity Monitor, Disk Utility, Time Machine</li>
+                        <li>File systems: NTFS vs. FAT32 vs. ext4 vs. APFS</li>
+                        <li>OS installation: clean install, upgrade, boot order, BIOS/UEFI</li>
+                        <li>Windows editions: Home (no domain join, no BitLocker), Pro, Enterprise</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Install Windows/Linux in a VM from ISO. Use Windows PowerShell. Master the CLI commands for your OS.
+                </div>
+            </div>
+
+            <!-- Week 6 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">6</div>
+                    <div>
+                        <h3>Security (Core 2)</h3>
+                        <p style="margin: 0;">Threats, authentication, wireless security, malware, physical security, compliance (28% of Core 2)</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>Threat types: virus, worm, trojan, spyware, ransomware, adware, fileless malware, rootkit, keylogger</li>
+                        <li>Authentication: passwords, PIN, biometric, MFA (2FA), certificate-based</li>
+                        <li>Wireless security: WEP (broken), WPA (weak), WPA2 (strong), WPA3 (strongest with SAE)</li>
+                        <li>Encryption: BitLocker (Windows Pro+), FileVault (macOS), AES, TLS 1.2/1.3</li>
+                        <li>Social engineering: phishing, vishing, smishing, whaling, pretexting, tailgating</li>
+                        <li>Physical security: access control, surveillance, locked cabinets, badge readers</li>
+                        <li>Data destruction: wiping, degaussing (magnetic only), physical destruction, certificate of destruction</li>
+                        <li>Regulations: GDPR, HIPAA, PCI-DSS, SOX</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Identify malware types. Set up MFA on personal accounts. Review GDPR/HIPAA requirements.
+                </div>
+            </div>
+
+            <!-- Week 7 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">7</div>
+                    <div>
+                        <h3>Troubleshooting & Operations</h3>
+                        <p style="margin: 0;">6-step methodology, professional communication, documentation, support tickets (Core 1 & 2)</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Topics to Study:</strong>
+                    <ul class="topic-list">
+                        <li>6-step troubleshooting: Identify, Establish theory, Test theory, Establish plan, Implement, Verify (IETEVD)</li>
+                        <li>Professional communication: email etiquette, phone skills, documentation, ticket tracking</li>
+                        <li>Change management: notification, testing, rollback, approval</li>
+                        <li>IT documentation: runbooks, network diagrams, asset inventory, disaster recovery plans</li>
+                        <li>Common symptoms: random shutdowns (PSU), won't POST (RAM/CPU), BSOD (driver/OS)</li>
+                        <li>Hardware troubleshooting: POST codes, Q-LEDs, diagnostic tools, loopback plugs</li>
+                        <li>Software troubleshooting: Safe Mode, Clean Boot, Event Viewer, Device Manager</li>
+                        <li>Network troubleshooting: ping, ipconfig, nslookup, tracert, arp -a</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Practice the 6-step methodology on sample scenarios. Write professional support ticket responses.
+                </div>
+            </div>
+
+            <!-- Week 8 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <div class="week-num">8</div>
+                    <div>
+                        <h3>Review & Practice Exams</h3>
+                        <p style="margin: 0;">Take full practice exams, identify weak areas, final review, schedule real exams</p>
+                    </div>
+                </div>
+                <div class="week-topics">
+                    <strong>Activities:</strong>
+                    <ul class="topic-list">
+                        <li>Take a full Core 1 (220-1201) practice exam (90 minutes, ~90 questions)</li>
+                        <li>Review failed questions — identify patterns (networking? hardware? troubleshooting?)</li>
+                        <li>Take a full Core 2 (220-1202) practice exam</li>
+                        <li>Study weak domains identified in practice exams</li>
+                        <li>Review exam tips and traps in the study guide</li>
+                        <li>Answer every question on the real exam (no penalty for wrong answers!)</li>
+                        <li>Schedule your exams at Pearson VUE — register 1-2 weeks before</li>
+                    </ul>
+                </div>
+                <div style="background: #e8f4f8; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+                    <strong>Practice:</strong> Take multiple full practice exams. Aim for 80%+ on practice before scheduling real exams.
+                </div>
+            </div>
+
+            <!-- KEY MNEMONICS -->
+            <h2 style="font-size: 1.8rem; margin-top: 48px; margin-bottom: 24px; color: var(--navy);">🧠 Key Mnemonics & Memory Hooks</h2>
+            
+            <div class="mnemonic-grid">
+                <div class="mnemonic-card">
+                    <h4>OSI Model Layers (Top to Bottom)</h4>
+                    <p class="phrase">"All People Seem To Need Data Processing"</p>
+                    <div class="breakdown">
+                        • Application (7)<br>
+                        • Presentation (6)<br>
+                        • Session (5)<br>
+                        • Transport (4)<br>
+                        • Network (3)<br>
+                        • Data Link (2)<br>
+                        • Physical (1)
+                    </div>
+                </div>
+
+                <div class="mnemonic-card">
+                    <h4>Troubleshooting Methodology</h4>
+                    <p class="phrase">"I EAT EVDS"</p>
+                    <div class="breakdown">
+                        • <strong>I</strong>dentify the problem<br>
+                        • <strong>E</strong>stablish theory of probable cause<br>
+                        • <strong>T</strong>est the theory<br>
+                        • <strong>E</strong>stablish plan &amp; implement<br>
+                        • <strong>V</strong>erify functionality &amp; prevent<br>
+                        • <strong>D</strong>ocument findings
+                    </div>
+                </div>
+
+                <div class="mnemonic-card">
+                    <h4>Network Types (Small to Large)</h4>
+                    <p class="phrase">"Please Let Wireless Make Wide Waves"</p>
+                    <div class="breakdown">
+                        • <strong>P</strong>AN (Bluetooth, NFC)<br>
+                        • <strong>L</strong>AN (Home/office)<br>
+                        • <strong>W</strong>LAN (Wi-Fi)<br>
+                        • <strong>M</strong>AN (City-wide)<br>
+                        • <strong>W</strong>AN (Internet)<br>
+                        • <strong>W</strong>WAN (Cellular)
+                    </div>
+                </div>
+
+                <div class="mnemonic-card">
+                    <h4>Malware Types</h4>
+                    <p class="phrase">"Very Wild Tigers Sneak Rapidly Around Forests, Keeping Trouble"</p>
+                    <div class="breakdown">
+                        • <strong>V</strong>irus<br>
+                        • <strong>W</strong>orm<br>
+                        • <strong>T</strong>rojan<br>
+                        • <strong>S</strong>pyware<br>
+                        • <strong>R</strong>ansomware<br>
+                        • <strong>A</strong>dware<br>
+                        • <strong>F</strong>ileless<br>
+                        • <strong>K</strong>eylogger / Rootkit
+                    </div>
+                </div>
+
+                <div class="mnemonic-card">
+                    <h4>Port Numbers (Rule of 22)</h4>
+                    <p class="phrase">"22 is always secure, 23 is never secure"</p>
+                    <div class="breakdown">
+                        • Port 22 = SSH (encrypted)<br>
+                        • Port 23 = Telnet (unencrypted, OBSOLETE)<br>
+                        One number apart, opposite security!
+                    </div>
+                </div>
+
+                <div class="mnemonic-card">
+                    <h4>Cloud Service Models</h4>
+                    <p class="phrase">"You use it, they run it" (SaaS) / "You build it, they manage it" (PaaS) / "You control it, they own it" (IaaS)</p>
+                    <div class="breakdown">
+                        • <strong>SaaS</strong>: Gmail, Office 365<br>
+                        • <strong>PaaS</strong>: Azure App Service<br>
+                        • <strong>IaaS</strong>: AWS EC2<br>
+                        Remember: Responsibility increases as you go down
+                    </div>
+                </div>
+
+                <div class="mnemonic-card">
+                    <h4>Critical Port Numbers to Know</h4>
+                    <p class="phrase">"22 secure, 53 names, 67/68 assigns, 80/443 web"</p>
+                    <div class="breakdown">
+                        • 22 = SSH/SFTP<br>
+                        • 53 = DNS<br>
+                        • 67/68 = DHCP<br>
+                        • 80/443 = HTTP/HTTPS<br>
+                        • 389/636 = LDAP/LDAPS
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXAM TIPS -->
+            <div class="tips-box" style="background: #fff3cd; border-left-color: #f39c12; margin-top: 40px;">
+                <h3 style="color: #856404;">⚠️ Common Exam Traps & Wrong Answers</h3>
+                <ul>
+                    <li><strong>DDR4 works in DDR5 slots:</strong> WRONG — different notch positions. They're incompatible!</li>
+                    <li><strong>Windows Home can be RDP HOST:</strong> WRONG — Home can be RDP CLIENT only. Pro required to host.</li>
+                    <li><strong>APIPA means network is working:</strong> WRONG — 169.254.x.x means DHCP failed!</li>
+                    <li><strong>Formatting permanently deletes data:</strong> WRONG — format only removes file system. Use secure wipe tools.</li>
+                    <li><strong>Antivirus alone is sufficient:</strong> WRONG — need defense in depth: AV + firewall + patches + MFA + encryption.</li>
+                    <li><strong>Remote Wipe first for lost phone:</strong> WRONG — use Remote LOCK first! Wipe only if confirmed stolen.</li>
+                    <li><strong>Switches broadcast like hubs:</strong> WRONG — switches forward only to correct port using MAC table.</li>
+                    <li><strong>Degaussing erases SSDs:</strong> WRONG — degaussing works only on magnetic media. Destroy or secure-erase SSDs.</li>
+                </ul>
+            </div>
+
+            <!-- EXAM DAY TIPS -->
+            <div class="tips-box" style="background: #e8f5e9; border-left-color: #27ae60;">
+                <h3 style="color: #1b5e20;">✅ Exam Day Tips</h3>
+                <ul>
+                    <li><strong>Answer every question:</strong> You don't lose points for wrong answers — always guess!</li>
+                    <li><strong>Flag tough questions:</strong> Mark questions you're unsure of and return to them if time allows.</li>
+                    <li><strong>Read questions carefully:</strong> Look for qualifiers: "BEST", "FIRST", "NOT", "MOST likely"</li>
+                    <li><strong>Eliminate wrong answers:</strong> Often easier than finding the right answer — narrows choices</li>
+                    <li><strong>Time management:</strong> ~60 seconds per question. If stuck, flag and move on.</li>
+                    <li><strong>Take both exams in same session:</strong> Schedule both on same day or consecutive days to stay in "exam mode"</li>
+                    <li><strong>Bring ID and arrive early:</strong> Proctors are strict about time and identification requirements</li>
+                </ul>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>Created by Niko Williams • CompTIA A+ Study Hub</p>
+        <p>© 2026 All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Hamburger menu
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburgerBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        // Close menu when link is clicked
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+    </script>
+</body>
+</html>
