@@ -91,7 +91,124 @@ body{background:#0a0a1a;overflow:hidden;font-family:'Courier New',monospace;disp
 // ============================================================
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-function resizeCanvas(){const v=document.getElementById('climb-view');canvas.width=v.clientWidth;canvas.height=v.clientHeight;}
+function resizeCanvas(){const v=document.getElementById('climb-view');canvas.width=v.clientWidth;canvas.height=v.clientHeight;generateMountains();}
+
+// PARALLAX MOUNTAIN BACKGROUND — flat-design wavy hills (teal/cyan family)
+let mountainLayers=[];
+function generateMountains(){
+    if(!canvas.width||!canvas.height)return;
+    mountainLayers=[];
+    // Back-to-front: paler/hazier in the distance, richer teal up close
+    const defs=[
+        {color:'#bdf0ef', heightFactor:0.24, wave:18}, // farthest, palest
+        {color:'#46e0e1', heightFactor:0.34, wave:24}, // mid
+        {color:'#27c9c9', heightFactor:0.46, wave:30}  // nearest, richest
+    ];
+    defs.forEach(def=>{
+        const segs=8;
+        const points=[];
+        for(let i=0;i<=segs;i++){
+            const x=(canvas.width/segs)*i;
+            const h=canvas.height*def.heightFactor+(Math.random()-0.5)*def.wave*2;
+            points.push({x,h:Math.max(16,h)});
+        }
+        mountainLayers.push({color:def.color, points});
+    });
+}
+
+// Smooth, rolling silhouette through a set of points (quadratic curves, not jagged lines)
+function wavyPath(points,yOffset,shift){
+    ctx.moveTo(points[0].x,canvas.height-points[0].h+shift);
+    for(let i=0;i<points.length-1;i++){
+        const p0=points[i], p1=points[i+1];
+        const midX=(p0.x+p1.x)/2, midY=canvas.height-((p0.h+p1.h)/2)+shift;
+        ctx.quadraticCurveTo(p0.x,canvas.height-p0.h+shift,midX,midY);
+    }
+    const last=points[points.length-1];
+    ctx.lineTo(last.x,canvas.height-last.h+shift);
+}
+
+// Draws text with a light halo so any label color stays legible against the pale sky
+function outlinedText(text,x,y,fillColor){
+    ctx.lineWidth=3;
+    ctx.strokeStyle='rgba(234,251,251,0.9)';
+    ctx.strokeText(text,x,y);
+    ctx.fillStyle=fillColor;
+    ctx.fillText(text,x,y);
+}
+
+function drawBackground(){
+    // Soft, bright flat-design sky
+    const g=ctx.createLinearGradient(0,0,0,canvas.height);
+    g.addColorStop(0,'#eafbfb');
+    g.addColorStop(0.5,'#cdf3f2');
+    g.addColorStop(1,'#9de6e6');
+    ctx.fillStyle=g;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Parallax wavy hills — nearer layers drift more as the climber ascends
+    const parallaxBase=(canvas.height*0.5-climberY);
+    mountainLayers.forEach((layer,li)=>{
+        const shift=parallaxBase*(0.02+li*0.025);
+        ctx.fillStyle=layer.color;
+        ctx.beginPath();
+        wavyPath(layer.points,0,shift);
+        ctx.lineTo(canvas.width,canvas.height);
+        ctx.lineTo(0,canvas.height);
+        ctx.closePath();
+        ctx.fill();
+    });
+}
+
+// CLIMBER SPRITE — a small mountaineer with helmet, jacket, backpack, and ice axe
+function drawClimber(cx,cy,glowColor){
+    ctx.save();
+    ctx.shadowColor=glowColor;ctx.shadowBlur=8+Math.sin(climberGlow*2)*4;
+    ctx.lineCap='round';ctx.lineJoin='round';
+
+    // Back leg (trailing)
+    ctx.strokeStyle='#242844';ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(cx-2,cy+2);ctx.lineTo(cx-9,cy+11);ctx.lineTo(cx-8,cy+18);ctx.stroke();
+    // Front leg (bent, climbing step)
+    ctx.beginPath();ctx.moveTo(cx+2,cy+2);ctx.lineTo(cx+9,cy+9);ctx.lineTo(cx+6,cy+18);ctx.stroke();
+
+    // Backpack
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#5c4433';
+    ctx.fillRect(cx-10,cy-15,7,13);
+    ctx.fillStyle='#4a3628';
+    ctx.fillRect(cx-9,cy-11,5,3);
+    ctx.shadowColor=glowColor;ctx.shadowBlur=8+Math.sin(climberGlow*2)*4;
+
+    // Torso (jacket)
+    ctx.fillStyle='#ff6b35';
+    ctx.beginPath();
+    ctx.moveTo(cx-6,cy+3);ctx.lineTo(cx-5,cy-14);ctx.lineTo(cx+5,cy-14);ctx.lineTo(cx+7,cy+3);
+    ctx.closePath();ctx.fill();
+
+    // Back arm (trailing, gripping the rock)
+    ctx.strokeStyle='#e85a2a';ctx.lineWidth=3.5;
+    ctx.beginPath();ctx.moveTo(cx-4,cy-10);ctx.lineTo(cx-12,cy-5);ctx.stroke();
+
+    // Front arm reaching up, holding an ice axe
+    ctx.beginPath();ctx.moveTo(cx+4,cy-10);ctx.lineTo(cx+11,cy-21);ctx.stroke();
+    ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx+11,cy-21);ctx.lineTo(cx+15,cy-27);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+12.5,cy-25.5);ctx.lineTo(cx+18,cy-24.5);ctx.stroke();
+
+    // Head + helmet
+    ctx.fillStyle='#e8b896';
+    ctx.beginPath();ctx.arc(cx,cy-18,4.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#2d3748';
+    ctx.beginPath();ctx.arc(cx,cy-19.5,5,Math.PI,0);ctx.fill();
+    ctx.fillRect(cx-5,cy-19.5,10,2);
+    // Headlamp accent — tied to the current layer's color for continuity
+    ctx.fillStyle=glowColor;
+    ctx.beginPath();ctx.arc(cx+4,cy-18.5,1.4,0,Math.PI*2);ctx.fill();
+
+    ctx.restore();
+}
+
 resizeCanvas();window.addEventListener('resize',resizeCanvas);
 
 // AUDIO
@@ -387,55 +504,60 @@ function saveScore(){
 
 
 // CANVAS DRAWING - Mountain/Climb Animation
-let gridOff=0;
-
 function drawClimbView(){
-    // Background
-    ctx.fillStyle='#0a0a1a';ctx.fillRect(0,0,canvas.width,canvas.height);
-    gridOff=(gridOff+0.1)%40;
-    ctx.strokeStyle='#1a1a2a';ctx.lineWidth=0.5;
-    for(let y=gridOff;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
-    
-    // Draw OSI layers as platforms
+    drawBackground();
+
+    // Draw OSI layers as mountain ledges with flags
     const margin=50;
     const usableH=canvas.height-margin*2;
     const layerH=usableH/7;
-    
+    const cx=canvas.width/2;
+
     for(let i=0;i<7;i++){
         const layer=OSI_LAYERS[i];
         const ly=getLayerY(i+1);
         const isActive=i+1===currentLayer;
         const isClimbed=i+1<currentLayer;
-        
+
         ctx.save();
-        // Platform
+        // Text anchor positions (kept wide for readability, no visible bar drawn here anymore)
         const pw=canvas.width*0.7;
         const px=(canvas.width-pw)/2;
-        
-        if(isClimbed){
-            ctx.fillStyle=layer.color+'44';
-            ctx.shadowColor=layer.color;ctx.shadowBlur=5;
-        } else if(isActive){
-            ctx.fillStyle=layer.color+'66';
-            ctx.shadowColor=layer.color;ctx.shadowBlur=12;
-        } else {
-            ctx.fillStyle='#1a1a3a55';
-        }
-        
-        ctx.fillRect(px,ly-2,pw,8);
-        
-        // Layer label
+
+        // Rock ledge, centered on the climb path
+        const ledgeW=isActive?74:52;
+        if(isActive){ctx.shadowColor=layer.color;ctx.shadowBlur=12;}
+        else if(isClimbed){ctx.shadowColor=layer.color;ctx.shadowBlur=4;}
+        ctx.fillStyle=isClimbed?layer.color+'99':(isActive?layer.color:'#6b8f8f');
+        ctx.beginPath();
+        ctx.moveTo(cx-ledgeW/2,ly+7);
+        ctx.lineTo(cx-ledgeW/2+9,ly-3);
+        ctx.lineTo(cx+ledgeW/2-7,ly-1);
+        ctx.lineTo(cx+ledgeW/2,ly+7);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur=0;
+
+        // Flag pole + pennant marking the layer number
+        ctx.strokeStyle=isClimbed||isActive?'#2a4a4a':'#5a7a7a';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();ctx.moveTo(cx,ly-3);ctx.lineTo(cx,ly-20);ctx.stroke();
+        ctx.fillStyle=isClimbed||isActive?layer.color:'#5a7a7a';
+        ctx.beginPath();
+        ctx.moveTo(cx,ly-20);ctx.lineTo(cx+13,ly-16);ctx.lineTo(cx,ly-12);
+        ctx.closePath();ctx.fill();
+        ctx.fillStyle='#fff';ctx.font='bold 8px Courier New';ctx.textAlign='center';
+        ctx.fillText(String(i+1),cx+4.5,ly-15);
+
+        // Layer label (light halo keeps bright layer colors legible on the pale sky)
         ctx.font=isActive?'bold 13px Courier New':'11px Courier New';
         ctx.textAlign='left';
-        ctx.fillStyle=isActive?layer.color:(isClimbed?layer.color+'aa':'#555');
-        ctx.shadowBlur=0;
-        ctx.fillText(`L${i+1} ${layer.name}`,px+5,ly-10);
-        
+        outlinedText(`L${i+1} ${layer.name}`,px+5,ly-27,isActive?layer.color:(isClimbed?layer.color+'dd':'#2a4a4a'));
+
         // Right side description
         ctx.textAlign='right';ctx.font='9px Courier New';
-        ctx.fillStyle=isActive?'#aaa':'#444';
-        ctx.fillText(layer.desc,px+pw-5,ly-10);
-        
+        outlinedText(layer.desc,px+pw-5,ly-27,isActive?'#1f3a3a':'#3d5c5c');
+
         ctx.restore();
     }
     
@@ -443,35 +565,11 @@ function drawClimbView(){
     climberBob+=0.05;climberGlow+=0.03;
     // Smooth movement
     climberY+=(targetClimberY-climberY)*0.08;
-    
-    const cx=canvas.width/2;
-    const cy=climberY-20+Math.sin(climberBob)*3;
+
+    const climbCy=climberY-6+Math.sin(climberBob)*3;
     const layer=OSI_LAYERS[currentLayer-1];
-    
-    ctx.save();
-    ctx.shadowColor=layer.color;ctx.shadowBlur=10+Math.sin(climberGlow)*5;
-    // Character body
-    ctx.fillStyle=layer.color;
-    ctx.beginPath();ctx.arc(cx,cy-12,8,0,Math.PI*2);ctx.fill(); // head
-    ctx.fillRect(cx-5,cy-4,10,16); // body
-    // Arms
-    ctx.fillRect(cx-12,cy,6,3);
-    ctx.fillRect(cx+6,cy,6,3);
-    // Legs
-    ctx.fillRect(cx-5,cy+12,4,8);
-    ctx.fillRect(cx+1,cy+12,4,8);
-    ctx.restore();
-    
-    // Arrow indicator
-    if(state===ST.PLAYING){
-        ctx.save();
-        ctx.font='16px Courier New';ctx.textAlign='center';
-        ctx.fillStyle=layer.color;
-        ctx.globalAlpha=0.5+Math.sin(climberGlow*2)*0.3;
-        ctx.fillText('▲',cx,cy-30);
-        ctx.restore();
-    }
-    
+    drawClimber(cx,climbCy,layer.color);
+
     // Particles
     particles.forEach(p=>{p.update();p.draw();});
     particles=particles.filter(p=>p.life>0);

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>Root Cause Muncher — CompTIA A+ Study Hub</title>
+<meta name="description" content="Root Cause Muncher: a Word-Muncher-style arcade game for learning change management, ticket lifecycle, and documentation terms for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#080c18;font-family:'Courier New',monospace;color:#e2e8f0;touch-action:none;-webkit-user-select:none;user-select:none}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hud{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-bottom:1px solid rgba(0,229,255,0.15);flex-shrink:0;flex-wrap:wrap;gap:8px}
+.h-item{font-size:11px;color:#7a8a9e}
+.h-item b{color:#00e5ff}
+.h-lives .heart{font-size:1em}
+.h-lives .heart.lost{opacity:0.2}
+#prompt{background:#0a1424;padding:10px 16px;text-align:center;font-size:0.88em;color:#c8d8e8;border-bottom:1px solid rgba(0,229,255,0.1);flex-shrink:0;min-height:2.6em;display:flex;align-items:center;justify-content:center}
+#prompt b{color:#00e5ff}
+#gridWrap{flex:1;display:flex;align-items:center;justify-content:center;padding:8px;overflow:hidden}
+#grid{display:grid;gap:3px;width:100%;max-width:640px;aspect-ratio:6/5}
+.cell{background:#141c30;border:1px solid #2a3a55;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.62em;text-align:center;padding:2px;position:relative;color:#c8d8e8;line-height:1.15;overflow:hidden}
+.cell.muncher{background:#00e5ff;color:#080c18;font-weight:900;box-shadow:0 0 16px rgba(0,229,255,0.6)}
+.cell.bug{background:#ff1744;color:#fff;font-weight:900;box-shadow:0 0 16px rgba(255,23,68,0.5)}
+.cell.correct-flash{background:#00e676;color:#080c18}
+.cell.wrong-flash{background:#ff1744;color:#fff}
+#controls{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;background:#0f1628;flex-shrink:0}
+.dpad{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px);gap:4px}
+.dpad button{background:#141c30;border:1px solid #2a3a55;color:#00e5ff;border-radius:8px;font-size:1.2em;cursor:pointer}
+.dpad button:active{background:#1e3a5f}
+#foot{display:flex;justify-content:center;gap:16px;padding:6px;background:#0f1628}
+#muteBtn,.fbtn{background:none;border:1px solid #2a3a55;color:#888;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px}
+#overlay{position:fixed;inset:0;background:rgba(8,12,24,0.96);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.over-card{background:#141c30;border:2px solid #00e5ff;border-radius:16px;padding:30px;max-width:420px;width:100%;text-align:center}
+.over-card h2{color:#00e5ff;font-size:1.5em;margin-bottom:10px}
+.over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
+.over-card button{background:#00e5ff;color:#080c18;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;margin-top:14px}
+@media(min-width:601px){ .dpad{display:none} }
+</style>
+</head>
+<body>
+<div id="app">
+    <header id="hud">
+        <span class="h-item">SCORE: <b id="sVal">0</b></span>
+        <span class="h-item">ROUND: <b id="rVal">1</b>/<b>15</b></span>
+        <span class="h-item h-lives" id="hudLives"></span>
+    </header>
+    <div id="prompt"></div>
+    <div id="gridWrap"><div id="grid"></div></div>
+    <div id="controls">
+        <div class="dpad">
+            <div></div><button data-d="up">▲</button><div></div>
+            <button data-d="left">◀</button><div></div><button data-d="right">▶</button>
+            <div></div><button data-d="down">▼</button><div></div>
+        </div>
+    </div>
+    <footer id="foot">
+        <button id="muteBtn">🔊</button>
+        <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
+    </footer>
+</div>
+<div id="overlay">
+    <div class="over-card" id="overCard"></div>
+</div>
+
+<script src="../audio/games/Terminal-Takedown-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'root-cause-muncher';
+const PIP_SCORE = 1600;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+// Content from book.md Change Management + Ticket Lifecycle + prioritization modules
+const POOL = [
+    {term:'Standard Change', def:"A pre-approved, repeatable, low-risk change (e.g., routine patching) that doesn't need a full CAB review"},
+    {term:'Normal Change', def:"Follows the full change process, including CAB review, due to higher risk or complexity"},
+    {term:'Emergency Change', def:"An urgent change to resolve a critical issue, often bypassing normal approval and documented after the fact"},
+    {term:'Change Freeze', def:"A defined period where non-emergency changes are prohibited (e.g., peak business season)"},
+    {term:'Peer Review', def:"Another technician reviews a planned change before implementation to catch missed risks"},
+    {term:'Change Board', def:"Reviews and formally approves change requests (also called the CAB)"},
+    {term:'Backout Plan', def:"Documents exactly how to revert a change if something goes wrong"},
+    {term:'Risk Analysis', def:"Evaluates potential risks and assigns a risk level (low/medium/high) to a proposed change"},
+    {term:'Scope', def:"Defines what systems, users, or processes will be affected by a change"},
+    {term:'Business Process', def:"The formal reason and business justification recorded for a change"},
+    {term:'Ticket Creation', def:"The very first step of the ticket lifecycle — capturing username, contact info, and problem description"},
+    {term:'Prioritization', def:"Assigning P1–P4 based on impact and urgency — happens right after ticket creation"},
+    {term:'Escalation', def:"What happens when an issue exceeds your permissions or requires specialized knowledge"},
+    {term:'Verification', def:"Confirming the issue is fully resolved — requires the user's confirmation, not just yours"},
+    {term:'User Education', def:"Explaining to the user how to avoid the same issue in the future, after the fix is in place"},
+    {term:'Ticket Closure', def:"The very last step of the ticket lifecycle — only after user confirmation and full documentation"},
+    {term:'Severity', def:"How badly the system is technically broken, regardless of its business use"},
+    {term:'Impact', def:"How many users or how much of the business is affected by an issue"},
+    {term:'Urgency', def:"How quickly the business needs an issue resolved — a payroll outage on Friday morning is high on this"},
+    {term:'Knowledge Base', def:"Where closed ticket documentation gets turned into reusable reference articles"}
+];
+
+const COLS = 6, ROWS = 5;
+let grid = [];
+let muncherPos = {r:2, c:2};
+let bugs = [];
+let score = 0, lives = 3, round = 0;
+const TOTAL_ROUNDS = 15;
+let currentTarget = null;
+let muted = false, musicPlayer = null, musicStarted = false;
+let invuln = false;
+let bugInterval = null;
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function buildGrid(){
+    grid = [];
+    for(let r=0;r<ROWS;r++){
+        const row=[];
+        for(let c=0;c<COLS;c++) row.push(POOL[Math.floor(Math.random()*POOL.length)]);
+        grid.push(row);
+    }
+}
+
+function pickTarget(){
+    currentTarget = POOL[Math.floor(Math.random()*POOL.length)];
+    // guarantee at least one cell has it
+    const r = Math.floor(Math.random()*ROWS), c = Math.floor(Math.random()*COLS);
+    grid[r][c] = currentTarget;
+    document.getElementById('prompt').innerHTML = `Find: <b>${currentTarget.def}</b>`;
+}
+
+function renderGrid(flashCell, flashClass){
+    const el = document.getElementById('grid');
+    el.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+    el.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
+    el.innerHTML = '';
+    for(let r=0;r<ROWS;r++){
+        for(let c=0;c<COLS;c++){
+            const div = document.createElement('div');
+            div.className = 'cell';
+            const isMuncher = muncherPos.r===r && muncherPos.c===c;
+            const bug = bugs.find(b=>b.r===r && b.c===c);
+            if(isMuncher) div.classList.add('muncher');
+            else if(bug) div.classList.add('bug');
+            if(flashCell && flashCell.r===r && flashCell.c===c) div.classList.add(flashClass);
+            div.textContent = isMuncher ? '🔎' : (bug ? '🐛' : grid[r][c].term);
+            el.appendChild(div);
+        }
+    }
+}
+
+function renderLives(){
+    document.getElementById('hudLives').innerHTML = Array.from({length:3},(_, i)=>
+        `<span class="heart${i<lives?'':' lost'}">&#x2764;&#xFE0F;</span>`).join('');
+}
+function updateHUD(){ document.getElementById('sVal').textContent = score; document.getElementById('rVal').textContent = Math.min(round+1, TOTAL_ROUNDS); }
+
+function move(dir){
+    if(invuln) return;
+    let {r,c} = muncherPos;
+    if(dir==='up') r = Math.max(0, r-1);
+    if(dir==='down') r = Math.min(ROWS-1, r+1);
+    if(dir==='left') c = Math.max(0, c-1);
+    if(dir==='right') c = Math.min(COLS-1, c+1);
+    muncherPos = {r,c};
+    checkMunch();
+    checkBugCollision();
+    renderGrid();
+}
+
+function checkMunch(){
+    const cell = grid[muncherPos.r][muncherPos.c];
+    if(!cell) return;
+    if(cell.term === currentTarget.term){
+        score += 100;
+        GameSounds.correct();
+        round++;
+        updateHUD();
+        renderGrid({r:muncherPos.r,c:muncherPos.c}, 'correct-flash');
+        if(round >= TOTAL_ROUNDS){ setTimeout(winGame, 400); return; }
+        setTimeout(()=>{
+            grid[muncherPos.r][muncherPos.c] = POOL[Math.floor(Math.random()*POOL.length)];
+            pickTarget();
+            renderGrid();
+        }, 350);
+    } else {
+        score = Math.max(0, score-10);
+        GameSounds.wrong();
+        renderGrid({r:muncherPos.r,c:muncherPos.c}, 'wrong-flash');
+        updateHUD();
+        setTimeout(renderGrid, 300);
+    }
+}
+
+function checkBugCollision(){
+    if(bugs.some(b=>b.r===muncherPos.r && b.c===muncherPos.c)){
+        loseLife();
+    }
+}
+
+function loseLife(){
+    if(invuln) return;
+    lives--;
+    GameSounds.wrong();
+    renderLives();
+    invuln = true;
+    setTimeout(()=>{invuln=false;}, 1200);
+    if(lives <= 0) setTimeout(loseGame, 400);
+}
+
+function moveBugs(){
+    bugs.forEach(b=>{
+        const dirs = [[0,1],[0,-1],[1,0],[-1,0]];
+        const [dr,dc] = dirs[Math.floor(Math.random()*dirs.length)];
+        const nr = Math.min(ROWS-1, Math.max(0, b.r+dr));
+        const nc = Math.min(COLS-1, Math.max(0, b.c+dc));
+        b.r = nr; b.c = nc;
+    });
+    checkBugCollision();
+    renderGrid();
+}
+
+function winGame(){
+    clearInterval(bugInterval);
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{result:'win'}});
+    showEnd('🎉 All Root Causes Found!', true);
+}
+function loseGame(){
+    clearInterval(bugInterval);
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{result:'lose'}});
+    showEnd('💥 Out of Lives!', false);
+}
+function showEnd(title, win){
+    document.getElementById('overCard').innerHTML = `
+        <h2>${title}</h2>
+        <p style="color:#94a3b8;">Rounds cleared: ${round}/${TOTAL_ROUNDS}</p>
+        <div class="final">${score}</div>
+        <div id="hsPanelEl"></div>
+        <button onclick="location.reload()">🔄 Play Again</button>`;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Top Munchers'});
+    document.getElementById('overlay').classList.add('show');
+}
+
+function startGame(){
+    buildGrid();
+    muncherPos = {r:2,c:2};
+    bugs = [{r:0,c:0},{r:ROWS-1,c:COLS-1}];
+    score=0; lives=3; round=0; invuln=false;
+    renderLives(); updateHUD();
+    pickTarget();
+    renderGrid();
+    if(bugInterval) clearInterval(bugInterval);
+    bugInterval = setInterval(moveBugs, 900);
+}
+
+document.querySelectorAll('.dpad button').forEach(btn=>{
+    btn.addEventListener('click', ()=> move(btn.dataset.d));
+});
+document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowUp'||e.key==='w') move('up');
+    if(e.key==='ArrowDown'||e.key==='s') move('down');
+    if(e.key==='ArrowLeft'||e.key==='a') move('left');
+    if(e.key==='ArrowRight'||e.key==='d') move('right');
+});
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{ musicPlayer = new TerminalTakedownMusic(); musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); }); musicStarted = true; }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); } else { startMusic(); GameSounds.unmute(); }
+});
+document.addEventListener('click', function once(){ startMusic(); }, {once:true});
+document.addEventListener('touchstart', function onceT(){ startMusic(); }, {once:true});
+
+startGame();
+</script>
+</body>
+</html>

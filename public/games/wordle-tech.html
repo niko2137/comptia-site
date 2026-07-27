@@ -942,7 +942,11 @@
     // ===== HIGH SCORES =====
     function getHighScores() {
         try {
-            const scores = JSON.parse(localStorage.getItem('wordleTechScores') || '[]');
+            let scores = JSON.parse(localStorage.getItem('wordleTechScores') || '[]');
+            if (!scores.some(s => s.name === 'Pip')) {
+                scores.push({ name: 'Pip', score: 850, date: new Date().toLocaleDateString() });
+                localStorage.setItem('wordleTechScores', JSON.stringify(scores));
+            }
             return scores.sort((a, b) => b.score - a.score).slice(0, 5);
         } catch (e) {
             return [];
@@ -966,7 +970,7 @@
         scores.forEach((s, i) => {
             const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
             const li = document.createElement('li');
-            li.innerHTML = `<span>${medal} #${i + 1}</span><span>${s.score} pts</span><span>${s.date}</span>`;
+            li.innerHTML = `<span>${medal} #${i + 1}${s.name ? ' ' + s.name : ''}</span><span>${s.score} pts</span><span>${s.date}</span>`;
             listEl.appendChild(li);
         });
     }

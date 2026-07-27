@@ -569,9 +569,17 @@ function saveScore(diff, moves, time, stars) {
   localStorage.setItem(key, JSON.stringify(scores));
 }
 
+const PIP_MATCH_MOVES = { easy: 14, medium: 20, hard: 28 };
 function getScores(diff) {
   const key = 'matchGameScores';
   let scores = JSON.parse(localStorage.getItem(key) || '{}');
+  if (!scores[diff]) scores[diff] = [];
+  if (!scores[diff].some(s => s.name === 'Pip')) {
+    scores[diff].push({ name: 'Pip', moves: PIP_MATCH_MOVES[diff] || 20, time: 90, stars: 3, date: new Date().toLocaleDateString() });
+    scores[diff].sort((a,b) => a.moves - b.moves);
+    scores[diff] = scores[diff].slice(0, 5);
+    localStorage.setItem(key, JSON.stringify(scores));
+  }
   return scores[diff] || [];
 }
 
@@ -596,7 +604,7 @@ function renderHighScores() {
       scores.forEach((s,i) => {
         const min = Math.floor(s.time/60);
         const sec = s.time%60;
-        html += `<div class="hs-entry">${i+1}. ${s.moves} moves — ${min}:${sec.toString().padStart(2,'0')} — ${'⭐'.repeat(s.stars)}</div>`;
+        html += `<div class="hs-entry">${i+1}. ${s.name ? s.name + ' — ' : ''}${s.moves} moves — ${min}:${sec.toString().padStart(2,'0')} — ${'⭐'.repeat(s.stars)}</div>`;
       });
     }
     html += '</div>';

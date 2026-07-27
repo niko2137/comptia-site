@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>OS Pop — CompTIA A+ Study Hub</title>
+<meta name="description" content="OS Pop: a bubble-shooter arcade game for learning Windows, macOS, and Linux tools, file systems, and cross-platform utilities for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier New',monospace;color:#e2e8f0;touch-action:none;-webkit-user-select:none;user-select:none}
+:root{--cyan:#00f3ff;--win:#4488ff;--mac:#00c8ff;--linux:#ff9500;--cross:#00ff88;--fs:#cc44ff;--gold:#ffd700}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hud{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-bottom:1px solid rgba(0,243,255,0.15);flex-shrink:0;gap:10px;flex-wrap:wrap}
+.h-item{font-size:11px;color:#778}
+.h-item b{color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.5)}
+.h-item.title{font-size:13px;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 8px rgba(0,243,255,0.4)}
+#targetBanner{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;letter-spacing:0.5px;transition:all .3s}
+#game{flex:1;display:block;width:100%;cursor:crosshair}
+#foot{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-top:1px solid rgba(0,243,255,0.15);flex-shrink:0;gap:10px}
+.next-bubble{width:30px;height:30px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+#termTicker{font-size:10px;color:#8899aa;text-align:center;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#termTicker b{color:var(--cyan)}
+.fbtn{width:32px;height:32px;border-radius:50%;border:1px solid #444;background:none;color:#888;font-size:14px;cursor:pointer;flex-shrink:0}
+.fbtn:hover{border-color:#ff4444;color:#ff4444}
+#muteBtn{width:32px;height:32px;border-radius:50%;border:1px solid #444;background:none;color:#888;font-size:14px;cursor:pointer;flex-shrink:0}
+#muteBtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.legend{display:flex;gap:6px;padding:4px 16px 8px;flex-wrap:wrap;background:#0f1628;font-size:9px;justify-content:center}
+.legend span{padding:2px 8px;border-radius:10px;font-weight:700}
+#overlay{position:fixed;inset:0;background:rgba(10,10,26,0.95);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.over-card{background:#0f1628;border:2px solid var(--cyan);border-radius:16px;padding:30px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 60px rgba(0,243,255,0.2)}
+.over-card h2{color:var(--cyan);font-size:1.6em;margin-bottom:10px;text-shadow:0 0 10px rgba(0,243,255,0.4)}
+.over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
+.over-card button{background:var(--cyan);color:#0a0a1a;border:none;padding:12px 30px;border-radius:8px;font-weight:800;font-size:1em;cursor:pointer;margin-top:14px;font-family:'Courier New',monospace}
+.over-card button:hover{background:#7ff}
+</style>
+</head>
+<body>
+<div id="app">
+    <header id="hud">
+        <span class="h-item">SCORE: <b id="sVal">0</b></span>
+        <span class="h-item title">OS POP</span>
+        <span id="targetBanner">🎯 TARGET: —</span>
+        <span class="h-item">LEVEL: <b id="lVal">1</b></span>
+    </header>
+    <div class="legend" id="legend"></div>
+    <canvas id="game"></canvas>
+    <footer id="foot">
+        <div class="next-bubble" id="nextBubble"></div>
+        <div id="termTicker">Tap/drag to aim, tap to shoot • Match 3+ same category</div>
+        <button id="muteBtn" title="Toggle Sound">🔊</button>
+        <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
+    </footer>
+</div>
+
+<div id="overlay">
+    <div class="over-card">
+        <h2>💥 GAME OVER</h2>
+        <div class="final" id="finalScoreEl">0</div>
+        <div id="hsPanelEl"></div>
+        <button onclick="restartGame()">🔄 Play Again</button>
+    </div>
+</div>
+
+<script src="../audio/games/Terminal-Takedown-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+// ============================================================
+// OS POP — bubble-shooter drill on Windows / macOS / Linux /
+// cross-platform tools and file systems (CompTIA A+ Core 2)
+// ============================================================
+const GAME_ID = 'os-pop';
+const PIP_SCORE = 2200;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+const canvas = document.getElementById('game');
+const c = canvas.getContext('2d');
+const scoreEl = document.getElementById('sVal');
+const levelEl = document.getElementById('lVal');
+const nextEl = document.getElementById('nextBubble');
+const targetEl = document.getElementById('targetBanner');
+const tickerEl = document.getElementById('termTicker');
+
+// --- CONFIG ---
+const COLS = 8;
+let RADIUS = 20;
+let DIAMETER = RADIUS * 2;
+let offsetX = 0;
+let rows = [];
+let score = 0, level = 1;
+let shootBubble = null, nextCell = null;
+let shooting = false, animFrame = null;
+let sx = 0, sy = 0, svx = 0, svy = 0;
+let aimX = null, aimY = null;
+let musicPlayer = null, musicStarted = false, muted = false;
+let popsSinceTargetChange = 0;
+let targetCat = 0;
+const SPEED = 12;
+
+// Categories mirror the site's Operating Systems study content (see study-plan.html Week 5)
+const CATEGORIES = [
+    { key:'win', hex:'#4488ff', icon:'🪟', label:'WINDOWS', glow:'rgba(68,136,255,0.4)',
+      terms:['Device Manager','Disk Management','Group Policy','Task Scheduler','PowerShell','ipconfig','systeminfo','chkdsk'] },
+    { key:'mac', hex:'#00c8ff', icon:'🍎', label:'macOS', glow:'rgba(0,200,255,0.4)',
+      terms:['Finder','Terminal.app','Activity Monitor','Disk Utility','Time Machine','Keychain','Spotlight','FileVault'] },
+    { key:'linux', hex:'#ff9500', icon:'🐧', label:'LINUX', glow:'rgba(255,149,0,0.4)',
+      terms:['ls','sudo','chmod','chown','ps','top','systemd','grep'] },
+    { key:'cross', hex:'#00ff88', icon:'🌐', label:'CROSS-PLATFORM', glow:'rgba(0,255,136,0.4)',
+      terms:['SSH','Docker','Python','Git','Chrome','VS Code','Zoom','VLC'] },
+    { key:'fs', hex:'#cc44ff', icon:'💾', label:'FILE SYSTEMS', glow:'rgba(204,68,255,0.4)',
+      terms:['NTFS','FAT32','ext4','APFS','exFAT','ReFS','HFS+','Btrfs'] }
+];
+
+function buildLegend(){
+    const el = document.getElementById('legend');
+    el.innerHTML = CATEGORIES.map(cat=>`<span style="background:${cat.hex}22;color:${cat.hex};border:1px solid ${cat.hex}66;">${cat.icon} ${cat.label}</span>`).join('');
+}
+
+function resize(){
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    RADIUS = Math.floor(canvas.width / (COLS * 2 + 1));
+    DIAMETER = RADIUS * 2;
+    offsetX = (canvas.width - COLS * DIAMETER) / 2;
+}
+
+function randomCell(){
+    const catIdx = Math.floor(Math.random()*Math.min(3+level,CATEGORIES.length));
+    const cat = CATEGORIES[catIdx];
+    const term = cat.terms[Math.floor(Math.random()*cat.terms.length)];
+    return { cat: catIdx, term, popping:false };
+}
+
+// --- GRID LOGIC ---
+function initGrid(){
+    rows = [];
+    const startRows = 4 + Math.min(level, 4);
+    for(let r=0; r<startRows; r++){
+        const row = [];
+        const cols = (r % 2 === 0) ? COLS : COLS - 1;
+        for(let col=0; col<cols; col++) row.push(randomCell());
+        rows.push(row);
+    }
+}
+
+function getBubblePos(row, col){
+    const isOffset = row % 2 !== 0;
+    const x = offsetX + RADIUS + col * DIAMETER + (isOffset ? RADIUS : 0);
+    const y = RADIUS + row * (DIAMETER * 0.87);
+    return {x, y};
+}
+
+function draw(){
+    c.clearRect(0,0,canvas.width,canvas.height);
+    c.strokeStyle = 'rgba(0,243,255,0.03)';
+    c.lineWidth = 1;
+    for(let i=0;i<canvas.width;i+=40){c.beginPath();c.moveTo(i,0);c.lineTo(i,canvas.height);c.stroke();}
+    for(let i=0;i<canvas.height;i+=40){c.beginPath();c.moveTo(0,i);c.lineTo(canvas.width,i);c.stroke();}
+
+    rows.forEach((row, ri)=>{
+        row.forEach((cell, ci)=>{
+            if(cell === null) return;
+            const {x, y} = getBubblePos(ri, ci);
+            drawBubble(x, y, cell);
+        });
+    });
+
+    if(shootBubble !== null && shooting){
+        drawBubble(sx, sy, shootBubble);
+    }
+    if(!shooting && shootBubble !== null){
+        drawBubble(canvas.width/2, canvas.height - 40, shootBubble);
+        drawAimLine();
+    }
+}
+
+function drawAimLine(){
+    if(aimX === null) return;
+    const startX = canvas.width/2, startY = canvas.height-40;
+    let angle = Math.atan2(aimY - startY, aimX - startX);
+    if(angle > -0.15 && angle <= 0) angle = -0.15;
+    if(angle >= 0) return;
+    c.save();
+    c.setLineDash([6,6]);
+    c.strokeStyle = 'rgba(0,243,255,0.5)';
+    c.lineWidth = 2;
+    c.beginPath();
+    c.moveTo(startX, startY);
+    let px = startX, py = startY;
+    let dx = Math.cos(angle), dy = Math.sin(angle);
+    let dist = Math.max(canvas.width, canvas.height);
+    let nx = px + dx*dist, ny = py + dy*dist;
+    if(nx < RADIUS || nx > canvas.width - RADIUS){
+        const bounceDist = nx < RADIUS ? (RADIUS-px)/dx : (canvas.width-RADIUS-px)/dx;
+        const bx = px + dx*bounceDist, by = py + dy*bounceDist;
+        c.lineTo(bx, by);
+        const dx2 = -dx;
+        const remaining = dist - bounceDist;
+        c.lineTo(bx + dx2*remaining, by + dy*remaining);
+    } else {
+        c.lineTo(nx, ny);
+    }
+    c.stroke();
+    c.restore();
+}
+
+function drawBubble(x, y, cell){
+    const cat = CATEGORIES[cell.cat];
+    c.beginPath();
+    c.arc(x, y, RADIUS - 2, 0, Math.PI*2);
+    c.fillStyle = cell.popping ? '#fff' : cat.hex;
+    c.shadowColor = cat.glow;
+    c.shadowBlur = cell.popping ? 20 : 8;
+    c.fill();
+    c.shadowBlur = 0;
+    c.font = `${Math.max(10,RADIUS*0.85)}px sans-serif`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText(cat.icon, x, y);
+    c.beginPath();
+    c.arc(x, y, RADIUS - 2, 0, Math.PI*2);
+    c.strokeStyle = cell.popping ? '#fff' : 'rgba(255,255,255,0.25)';
+    c.lineWidth = 1.5;
+    c.stroke();
+}
+
+function prepareShot(){
+    shootBubble = nextCell !== null ? nextCell : randomCell();
+    nextCell = randomCell();
+    updateNext();
+}
+function updateNext(){
+    const cat = CATEGORIES[nextCell.cat];
+    nextEl.style.background = cat.hex;
+    nextEl.style.borderColor = cat.hex;
+    nextEl.style.boxShadow = `0 0 8px ${cat.glow}`;
+    nextEl.textContent = cat.icon;
+}
+
+function rotateTarget(){
+    targetCat = Math.floor(Math.random() * Math.min(3+level, CATEGORIES.length));
+    const cat = CATEGORIES[targetCat];
+    targetEl.textContent = `🎯 TARGET: ${cat.label} (2x)`;
+    targetEl.style.background = cat.hex + '22';
+    targetEl.style.color = cat.hex;
+    targetEl.style.border = `1px solid ${cat.hex}88`;
+    popsSinceTargetChange = 0;
+}
+
+// --- SHOOTING ---
+function shoot(targetX, targetY){
+    if(shooting || shootBubble === null) return;
+    const startX = canvas.width / 2;
+    const startY = canvas.height - 40;
+    const angle = Math.atan2(targetY - startY, targetX - startX);
+    if(angle > -0.15 && angle < 0.15) return;
+    if(angle > 0) return;
+
+    sx = startX; sy = startY;
+    svx = Math.cos(angle) * SPEED;
+    svy = Math.sin(angle) * SPEED;
+    shooting = true;
+    aimX = null;
+    animate();
+}
+
+function animate(){
+    if(!shooting) return;
+    sx += svx; sy += svy;
+    if(sx - RADIUS <= 0 || sx + RADIUS >= canvas.width){ svx = -svx; playTick(); }
+    if(sy - RADIUS <= 0){ snap(); return; }
+    for(let ri=0; ri<rows.length; ri++){
+        for(let ci=0; ci<rows[ri].length; ci++){
+            if(rows[ri][ci] === null) continue;
+            const {x, y} = getBubblePos(ri, ci);
+            const dist = Math.sqrt((sx-x)**2 + (sy-y)**2);
+            if(dist < DIAMETER - 4){ snap(); return; }
+        }
+    }
+    draw();
+    animFrame = requestAnimationFrame(animate);
+}
+
+function snap(){
+    shooting = false;
+    cancelAnimationFrame(animFrame);
+    let bestRow=0, bestCol=0, bestDist=Infinity;
+    for(let ri=0; ri<=rows.length; ri++){
+        const cols = (ri%2===0)?COLS:COLS-1;
+        for(let ci=0; ci<cols; ci++){
+            const {x,y} = getBubblePos(ri,ci);
+            const dist = Math.sqrt((sx-x)**2+(sy-y)**2);
+            if(dist < bestDist){
+                if(ri >= rows.length || !rows[ri] || rows[ri][ci] === null || rows[ri][ci] === undefined){
+                    bestDist=dist;bestRow=ri;bestCol=ci;
+                }
+            }
+        }
+    }
+    while(rows.length <= bestRow){
+        const cols = (rows.length%2===0)?COLS:COLS-1;
+        const newRow = [];
+        for(let i=0;i<cols;i++) newRow.push(null);
+        rows.push(newRow);
+    }
+    if(bestCol >= rows[bestRow].length) bestCol = rows[bestRow].length-1;
+    rows[bestRow][bestCol] = shootBubble;
+
+    checkMatches(bestRow, bestCol);
+
+    const maxY = rows.length * (DIAMETER * 0.87) + RADIUS;
+    if(maxY > canvas.height - 80){
+        endGame();
+        return;
+    }
+
+    prepareShot();
+    draw();
+}
+
+// --- MATCH DETECTION (flood fill) ---
+function getNeighbors(row, col){
+    const neighbors = [];
+    const isOffset = row % 2 !== 0;
+    neighbors.push([row, col-1],[row, col+1]);
+    const dCol = isOffset ? [0, 1] : [-1, 0];
+    neighbors.push([row-1, col+dCol[0]],[row-1, col+dCol[1]]);
+    neighbors.push([row+1, col+dCol[0]],[row+1, col+dCol[1]]);
+    return neighbors.filter(([r,c])=> r>=0 && r<rows.length && c>=0 && c<rows[r].length);
+}
+
+function checkMatches(row, col){
+    const targetCatIdx = rows[row][col].cat;
+    const poppedTerm = rows[row][col].term;
+    const visited = new Set();
+    const cluster = [];
+    const queue = [[row, col]];
+    visited.add(`${row},${col}`);
+
+    while(queue.length > 0){
+        const [r, cc] = queue.shift();
+        if(rows[r][cc] === null) continue;
+        if(rows[r][cc].cat !== targetCatIdx) continue;
+        cluster.push([r, cc]);
+        const nbrs = getNeighbors(r, cc);
+        for(const [nr, nc] of nbrs){
+            const key = `${nr},${nc}`;
+            if(!visited.has(key)){
+                visited.add(key);
+                if(rows[nr] && rows[nr][nc] && rows[nr][nc] !== null && rows[nr][nc].cat === targetCatIdx){
+                    queue.push([nr, nc]);
+                }
+            }
+        }
+    }
+
+    if(cluster.length >= 3){
+        const isBonus = targetCatIdx === targetCat;
+        const mult = isBonus ? 2 : 1;
+        cluster.forEach(([r,cc])=>{ rows[r][cc] = null; });
+        score += cluster.length * 10 * mult;
+        showTerm(poppedTerm, CATEGORIES[targetCatIdx], isBonus);
+        playPopSound(isBonus);
+        removeFloating();
+        updateHUD();
+        popsSinceTargetChange++;
+        if(popsSinceTargetChange >= 4) rotateTarget();
+        if(Math.floor(score/150)+1 > level){
+            level = Math.floor(score/150)+1;
+            updateHUD();
+        }
+    }
+}
+
+function showTerm(term, cat, isBonus){
+    tickerEl.innerHTML = isBonus
+        ? `⭐ BONUS! <b>${term}</b> — ${cat.label} x2`
+        : `Popped <b>${term}</b> — ${cat.label}`;
+}
+
+function removeFloating(){
+    const connected = new Set();
+    const queue = [];
+    if(rows.length > 0){
+        rows[0].forEach((cell, ci)=>{
+            if(cell !== null){ queue.push([0, ci]); connected.add(`0,${ci}`); }
+        });
+    }
+    while(queue.length > 0){
+        const [r, cc] = queue.shift();
+        const nbrs = getNeighbors(r, cc);
+        for(const [nr, nc] of nbrs){
+            const key = `${nr},${nc}`;
+            if(!connected.has(key) && rows[nr] && rows[nr][nc] !== null){
+                connected.add(key);
+                queue.push([nr, nc]);
+            }
+        }
+    }
+    let dropped = 0;
+    rows.forEach((row, ri)=>{
+        row.forEach((cell, ci)=>{
+            if(cell !== null && !connected.has(`${ri},${ci}`)){ rows[ri][ci] = null; dropped++; }
+        });
+    });
+    if(dropped > 0) score += dropped * 5;
+}
+
+function updateHUD(){ scoreEl.textContent=score; levelEl.textContent=level; }
+
+// --- AUDIO ---
+function playPopSound(isBonus){
+    if(muted) return;
+    isBonus ? GameSounds.correct() : GameSounds.click();
+}
+function playTick(){ if(!muted) GameSounds.tick(); }
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{
+        musicPlayer = new TerminalTakedownMusic();
+        musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); });
+        musicStarted = true;
+    }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); }
+    else{ startMusic(); GameSounds.unmute(); }
+});
+
+// --- GAME OVER ---
+function endGame(){
+    GameSounds.wrong();
+    setTimeout(()=>GameSounds.complete(), 300);
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{level}});
+    document.getElementById('finalScoreEl').textContent = score;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Top Poppers'});
+    document.getElementById('overlay').classList.add('show');
+}
+window.restartGame = function(){
+    document.getElementById('overlay').classList.remove('show');
+    score=0; level=1;
+    initGrid();
+    rotateTarget();
+    updateHUD();
+    nextCell = randomCell();
+    prepareShot();
+    draw();
+};
+
+// --- INPUT ---
+function getXY(e){
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+
+canvas.addEventListener('mousemove', e=>{
+    if(shooting) return;
+    const {x,y} = getXY(e);
+    aimX = x; aimY = y;
+    draw();
+});
+canvas.addEventListener('click', e=>{
+    const {x, y} = getXY(e);
+    shoot(x, y);
+});
+canvas.addEventListener('touchmove', e=>{
+    e.preventDefault();
+    if(shooting) return;
+    const {x,y} = getXY(e);
+    aimX = x; aimY = y;
+    draw();
+}, {passive:false});
+canvas.addEventListener('touchend', e=>{
+    if(e.changedTouches.length > 0){
+        const rect = canvas.getBoundingClientRect();
+        const x = e.changedTouches[0].clientX - rect.left;
+        const y = e.changedTouches[0].clientY - rect.top;
+        shoot(x, y);
+    }
+},{passive:true});
+
+document.addEventListener('touchmove', e=>e.preventDefault(), {passive:false});
+document.addEventListener('click', function startOnce(){ startMusic(); }, {once:true});
+document.addEventListener('touchstart', function startOnceTouch(){ startMusic(); }, {once:true});
+
+// --- INIT ---
+window.addEventListener('resize', ()=>{resize();draw();});
+buildLegend();
+resize();
+initGrid();
+rotateTarget();
+nextCell = randomCell();
+prepareShot();
+draw();
+</script>
+</body>
+</html>
