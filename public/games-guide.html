@@ -48,7 +48,12 @@
         .hero-section h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; font-weight: 800; }
         .hero-section p { color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; font-size: 1rem; }
         
-        .domain-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .domain-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin: 2rem 0; }
+        .domain-jump { position: sticky; top: 56px; z-index: 100; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; background: #f5f7fa; padding: 0.75rem 0 1.25rem; margin-bottom: 0.5rem; }
+        .domain-jump a { display: inline-flex; align-items: center; gap: 0.3rem; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 0.4rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: var(--text); transition: all 0.2s; }
+        .domain-jump a:hover { border-color: var(--blue-light); color: var(--blue); transform: translateY(-1px); }
+        .domain-jump a b { color: var(--text-muted); font-weight: 700; }
+        .domain-card h3 .domain-count { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); background: var(--surface); border-radius: 10px; padding: 0.1rem 0.55rem; margin-left: 0.5rem; vertical-align: middle; }
         .domain-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .domain-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
         .domain-card h3 { color: var(--blue); margin-bottom: 0.75rem; font-size: 1.1rem; }
@@ -125,6 +130,7 @@
                 <a href="index.html#games">Free Games</a>
                 <a href="games-guide.html">Games Guide</a>
                 <a href="index.html#reference">Reference</a>
+                <a href="reference/resources.html">Resource Center</a>
                 <a href="study-plan.html">Study Plan</a>
                 <a href="glossary.html">Glossary</a>
                 <a href="book.html">Get the Book</a>
@@ -144,16 +150,27 @@
         <div class="learning-path">
             <h3>📈 Recommended Learning Path</h3>
             <div class="path-step"><strong>Week 1-2:</strong> <span>Play free networking games (OSI Climb, Speed Match, Port Match)</span></div>
-            <div class="path-step"><strong>Week 2-3:</strong> <span>Play hardware games (Cable Connector Match, Build-a-PC) and drill IPv6 Crunch</span></div>
+            <div class="path-step"><strong>Week 2-3:</strong> <span>Play hardware games (Cable Connector Match, Build-a-PC, Board ID Blitz, Spec Sprint) and drill IPv6 Crunch</span></div>
             <div class="path-step"><strong>Week 4-5:</strong> <span>Unlock members games for deeper learning and practice exams</span></div>
             <div class="path-step"><strong>Week 6-8:</strong> <span>Use PBQs for exam-style scenarios and review weak areas</span></div>
             <div class="path-step"><strong>Throughout:</strong> <span>Play general study games (Jeopardy, Wordle, Acronym Decoder) for vocabulary reinforcement</span></div>
         </div>
 
+        <!-- QUICK JUMP -->
+        <nav class="domain-jump">
+            <a href="#domain-networking">🔗 Networking <b>9</b></a>
+            <a href="#domain-hardware">⚙️ Hardware <b>6</b></a>
+            <a href="#domain-virtualization">☁️ Virtualization &amp; Cloud <b>3</b></a>
+            <a href="#domain-os">🖥️ Operating Systems <b>3</b></a>
+            <a href="#domain-security">🔐 Security <b>3</b></a>
+            <a href="#domain-troubleshooting">🔧 Troubleshooting <b>4</b></a>
+            <a href="#domain-general">📚 General Study <b>7</b></a>
+        </nav>
+
         <!-- NETWORKING FUNDAMENTALS -->
         <div class="domain-grid">
-            <div class="domain-card">
-                <h3>🔗 Networking Fundamentals (Core 1)</h3>
+            <div class="domain-card" id="domain-networking">
+                <h3>🔗 Networking Fundamentals (Core 1) <span class="domain-count">9 games</span></h3>
                 <p><strong>Exam Coverage:</strong> OSI Model, TCP/IP, ports, protocols, IP addressing, SOHO networks, wireless technologies</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Master the most heavily tested domain on Core 1. These games reinforce critical port numbers, layer functions, and networking protocols.</p>
                 
@@ -206,15 +223,21 @@
                         <span class="difficulty">Medium</span>
                         <div class="game-desc">Compress and expand IPv6 addresses against the clock. Master leading-zero omission, the :: rule, and tie-break exam traps.</div>
                     </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/protocol-cluster.html">📡 Protocol Cluster</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">Sync the grid! Connect compatible network packets for score, combos, and level progression.</div>
+                    </div>
                 </div>
             </div>
 
             <!-- HARDWARE & PERIPHERALS -->
-            <div class="domain-card">
-                <h3>⚙️ Hardware & Peripherals (Core 1)</h3>
+            <div class="domain-card" id="domain-hardware">
+                <h3>⚙️ Hardware & Peripherals (Core 1) <span class="domain-count">6 games</span></h3>
                 <p><strong>Exam Coverage:</strong> Motherboards, CPUs, RAM, storage, RAID, cables, PSUs, cooling, printers</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Understand hardware components, connectors, and specifications. These games build hands-on recognition skills.</p>
-                
+
                 <div class="game-list">
                     <div class="game-item difficulty-medium">
                         <a href="games/build-a-pc.html">🖥️ Build-a-PC</a>
@@ -229,6 +252,24 @@
                         <div class="game-desc">Identify 25 cable types and connector specs. Master USB, SATA, Ethernet, power connectors.</div>
                     </div>
                     <div class="game-item difficulty-medium">
+                        <a href="games/board-id-blitz.html">🔧 Board ID Blitz</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">60-second quiz using a real labeled motherboard photo — name the CPU socket, headers, and rear-panel ports before time runs out.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/spec-sprint.html">⚡ Spec Sprint</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">45-second arcade quiz on RAM and PSU specs — DDR3/4/5 speeds &amp; voltage, PSU connectors, wattage, 80 PLUS ratings.</div>
+                    </div>
+                    <div class="game-item difficulty-easy">
+                        <a href="games/post-detective.html">🕵️ POST Detective</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Calm, untimed puzzle — match hardware failure symptoms to the real cause: PSU, RAM, GPU, storage, CPU, or motherboard.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
                         <a href="members.html">📦 Cable Match</a>
                         <span class="badge badge-members">MEMBERS</span>
                         <span class="difficulty">Medium</span>
@@ -238,8 +279,8 @@
             </div>
 
             <!-- VIRTUALIZATION, CLOUD & IOT -->
-            <div class="domain-card">
-                <h3>☁️ Virtualization, Cloud & IoT (Core 1)</h3>
+            <div class="domain-card" id="domain-virtualization">
+                <h3>☁️ Virtualization, Cloud & IoT (Core 1) <span class="domain-count">3 games</span></h3>
                 <p><strong>Exam Coverage:</strong> Hypervisors, VM resource allocation, snapshots/clones, cloud service &amp; deployment models, IoT security</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">A commonly under-studied domain — these games cover it from calm concept review to arcade drilling.</p>
 
@@ -266,8 +307,8 @@
             </div>
 
             <!-- OPERATING SYSTEMS -->
-            <div class="domain-card">
-                <h3>🖥️ Operating Systems (Core 2)</h3>
+            <div class="domain-card" id="domain-os">
+                <h3>🖥️ Operating Systems (Core 2) <span class="domain-count">3 games</span></h3>
                 <p><strong>Exam Coverage:</strong> Windows tools, Linux commands, macOS utilities, file systems, cross-platform tools</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Learn which tools and file systems belong to which OS — a common source of exam-trap confusion.</p>
 
@@ -278,12 +319,24 @@
                         <span class="difficulty">Medium</span>
                         <div class="game-desc">Bubble-shooter arcade action! Match Windows, macOS, Linux, cross-platform, and file-system terms while chasing the bonus target category.</div>
                     </div>
+                    <div class="game-item difficulty-easy">
+                        <a href="games/os-sorter.html">🗂️ OS Sorter</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Easy</span>
+                        <div class="game-desc">Calm, untimed puzzle — sort 40 tools, commands, and file systems into Windows, macOS, Linux, cross-platform, or file-system buckets.</div>
+                    </div>
+                    <div class="game-item difficulty-medium">
+                        <a href="games/command-line-blitz.html">⌨️ Command Line Blitz</a>
+                        <span class="badge badge-free">FREE</span>
+                        <span class="difficulty">Medium</span>
+                        <div class="game-desc">45-second arcade quiz — match real-world tasks to the correct Windows, macOS, or Linux CLI command before time runs out.</div>
+                    </div>
                 </div>
             </div>
 
             <!-- SECURITY -->
-            <div class="domain-card">
-                <h3>🔐 Security (Core 2)</h3>
+            <div class="domain-card" id="domain-security">
+                <h3>🔐 Security (Core 2) <span class="domain-count">3 games</span></h3>
                 <p><strong>Exam Coverage:</strong> Threats, authentication, wireless security, malware types, compliance, incident response</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Learn threat identification, mitigation strategies, and security best practices tested on Core 2.</p>
                 
@@ -310,8 +363,8 @@
             </div>
 
             <!-- TROUBLESHOOTING & OPERATIONS -->
-            <div class="domain-card">
-                <h3>🔧 Troubleshooting & Operations (Core 2)</h3>
+            <div class="domain-card" id="domain-troubleshooting">
+                <h3>🔧 Troubleshooting & Operations (Core 2) <span class="domain-count">4 games</span></h3>
                 <p><strong>Exam Coverage:</strong> 6-step methodology, communication, documentation, CLI troubleshooting, professional practices</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Master the systematic troubleshooting approach tested across both exams. Critical for PBQ success.</p>
 
@@ -344,8 +397,8 @@
             </div>
 
             <!-- GENERAL STUDY -->
-            <div class="domain-card">
-                <h3>📚 General Study (Core 1 & Core 2)</h3>
+            <div class="domain-card" id="domain-general">
+                <h3>📚 General Study (Core 1 & Core 2) <span class="domain-count">7 games</span></h3>
                 <p><strong>Exam Coverage:</strong> Terminology, acronyms, concepts from all 10 exam domains</p>
                 <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Reinforce vocabulary and concepts across all domains. Great for warm-up or continued reinforcement.</p>
                 
@@ -403,12 +456,12 @@
                 <div class="difficulty-item">
                     <strong style="color: var(--emerald);">🟢 Easy Games</strong>
                     <p>Start here if new to CompTIA. Focus on concepts and basic recall. Great for foundations.</p>
-                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> OSI Climb, Port Match, Tech Wordle, Memory Match</p>
+                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> OSI Climb, Port Match, Tech Wordle, Memory Match, OS Sorter, POST Detective</p>
                 </div>
                 <div class="difficulty-item">
                     <strong style="color: var(--amber);">🟡 Medium Games</strong>
                     <p>Applied knowledge and timed challenges. Good for building speed and accuracy.</p>
-                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> Speed Match, Port Blaster, Build-a-PC, Cable Match, IPv6 Crunch, Troubleshooting Tower</p>
+                    <p style="margin-top: 8px; font-size: 0.75rem; color: #888;"><strong>Examples:</strong> Speed Match, Port Blaster, Build-a-PC, Cable Match, IPv6 Crunch, Troubleshooting Tower, Board ID Blitz, Spec Sprint</p>
                 </div>
                 <div class="difficulty-item">
                     <strong style="color: var(--red);">🔴 Hard Games</strong>

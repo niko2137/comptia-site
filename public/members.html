@@ -82,6 +82,14 @@
         .badge-free { display: inline-block; padding: 2px 7px; background: rgba(39,174,96,0.15); color: #27ae60; border-radius: 10px; font-size: 0.65rem; font-weight: 700; margin-left: 5px; }
         .badge-members { display: inline-block; padding: 2px 7px; background: rgba(245,158,11,0.15); color: #f59e0b; border-radius: 10px; font-size: 0.65rem; font-weight: 700; margin-left: 5px; }
 
+        /* DOMAIN FILTER */
+        .domain-strip { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 28px; }
+        .domain-pill { background: #1c3a63; border: 1px solid #2d4d7a; border-radius: 20px; padding: 7px 16px; font-size: 0.82rem; font-weight: 600; color: #e2e8f0; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .domain-pill:hover { border-color: var(--blue-light); color: var(--blue-light); transform: translateY(-1px); }
+        .domain-pill.active { background: var(--blue-light); border-color: var(--blue-light); color: #0d1b2a; }
+        .filter-empty { text-align: center; color: #94a3b8; font-size: 0.9rem; padding: 20px; display: none; }
+        .m-card.filtered-out { display: none; }
+
         /* TOOLS — 3 equal columns top row */
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
         .tool-card { background: #1c3a63; border: 1px solid #2d4d7a; border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
@@ -146,8 +154,7 @@
             <div class="nav-items" id="navItems">
                 <a href="#study-tools">Study Tools</a>
                 <a href="#resources">Study Content</a>
-                <a href="#arcade">Games</a>
-                <a href="#puzzles">Puzzles</a>
+                <a href="#games-puzzles">Games &amp; Puzzles</a>
                 <a href="#pbqs">PBQs</a>
                 <a href="#reference-sheets">Reference</a>
                 <a href="games-guide.html">Games Guide</a>
@@ -227,188 +234,235 @@
                 </div>
             </div>
 
-            <!-- GAMES (fast-paced, timed, action) -->
-            <div class="section" id="arcade">
-                <h3>&#127918; Games</h3>
-                <p class="section-desc">Fast-paced, timed, and highly interactive.</p>
-                <div class="grid">
-                    <div class="m-card">
+            <!-- DOMAIN FILTER (spans Games + Puzzles below) -->
+            <div class="domain-strip" id="domainFilterAll">
+                <button class="domain-pill active" data-filter="all">All Games</button>
+                <button class="domain-pill" data-filter="networking">🔗 Networking</button>
+                <button class="domain-pill" data-filter="hardware">⚙️ Hardware</button>
+                <button class="domain-pill" data-filter="virtualization">☁️ Virtualization &amp; Cloud</button>
+                <button class="domain-pill" data-filter="os">🖥️ Operating Systems</button>
+                <button class="domain-pill" data-filter="security">🔐 Security</button>
+                <button class="domain-pill" data-filter="troubleshooting">🔧 Troubleshooting</button>
+                <button class="domain-pill" data-filter="general">📚 General Study</button>
+            </div>
+            <p class="filter-empty" id="filterEmptyAll">No games or puzzles in this domain yet.</p>
+
+            <!-- GAMES & PUZZLES (arcade action + relaxed, untimed puzzles) -->
+            <div class="section" id="games-puzzles">
+                <h3>&#127918; Games &amp; Puzzles</h3>
+                <p class="section-desc">Fast-paced arcade action and relaxed, untimed puzzles — filter by domain above.</p>
+                <div class="grid" id="gamesGrid">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#128163;</div>
                         <h4>Speed Match <span class="badge-free">FREE</span></h4>
                         <p>Match ports to protocols against the clock</p>
                         <a href="games/speed-match.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#128126;</div>
                         <h4>Port Blaster <span class="badge-free">FREE</span></h4>
                         <p>Space shooter — blast port numbers, dodge decoys</p>
                         <a href="games/port-blaster.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="general">
                         <div class="icon">&#128640;</div>
                         <h4>Neon Circuit Dash <span class="badge-members">MEMBERS</span></h4>
                         <p>Dodge obstacles, answer questions, survive 8 levels</p>
                         <a href="games/neon-circuit-dash.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="security">
                         <div class="icon">&#128737;</div>
                         <h4>Threat Matrix <span class="badge-members">MEMBERS</span></h4>
                         <p>Neutralize threats with correct countermeasures</p>
                         <a href="games/threat-matrix.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="hardware">
                         <div class="icon">&#128268;</div>
                         <h4>Cable Match <span class="badge-members">MEMBERS</span></h4>
                         <p>Sort falling cables into speed categories</p>
                         <a href="games/cable-match.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="troubleshooting">
                         <div class="icon">&#127959;</div>
                         <h4>Troubleshooting Tower <span class="badge-members">MEMBERS</span></h4>
                         <p>Stack troubleshooting steps in correct order</p>
                         <a href="games/troubleshoot-tower.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="security">
                         <div class="icon">&#128126;</div>
                         <h4>Maze Runner <span class="badge-members">MEMBERS</span></h4>
                         <p>Pac-Man style maze with IT threats and questions</p>
                         <a href="games/maze-runner.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="security">
                         <div class="icon">&#128737;</div>
                         <h4>Terminal Takedown <span class="badge-members">MEMBERS</span></h4>
                         <p>Tetris defense — clear threat blocks &amp; answer IT questions</p>
                         <a href="games/terminal-takedown.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#9968;</div>
                         <h4>OSI Layer Climb <span class="badge-free">FREE</span></h4>
                         <p>Climb the mountain with OSI knowledge</p>
                         <a href="games/osi-climb.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="security">
                         <div class="icon">&#127907;</div>
                         <h4>Phish or Ship <span class="badge-free">FREE</span></h4>
                         <p>Catch legit messages, report phishing scams</p>
                         <a href="games/phish-or-ship.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="troubleshooting">
                         <div class="icon">&#128014;</div>
                         <h4>Ticket Triage <span class="badge-free">FREE</span></h4>
                         <p>Oregon-Trail-style IETEVD troubleshooting</p>
                         <a href="games/ticket-triage.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="troubleshooting">
                         <div class="icon">&#128269;</div>
                         <h4>Root Cause Muncher <span class="badge-free">FREE</span></h4>
                         <p>Word-Muncher-style chomp on change management terms</p>
                         <a href="games/root-cause-muncher.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="virtualization">
                         <div class="icon">&#9729;&#65039;</div>
                         <h4>Cloud Muncher <span class="badge-free">FREE</span></h4>
                         <p>Arcade chomp on cloud service &amp; deployment models</p>
                         <a href="games/cloud-muncher.html" class="m-link">Play</a>
                     </div>
-                </div>
-            </div>
-
-            <!-- PUZZLES (relaxed, untimed, methodical) -->
-            <div class="section" id="puzzles">
-                <h3>&#129513; Puzzles</h3>
-                <p class="section-desc">Relaxed, untimed, and methodical.</p>
-                <div class="grid">
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#127183;</div>
                         <h4>Port Match <span class="badge-free">FREE</span></h4>
                         <p>Draw connections between ports and protocols</p>
                         <a href="games/port-match.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="general">
                         <div class="icon">&#129513;</div>
                         <h4>Tech Wordle <span class="badge-free">FREE</span></h4>
                         <p>Guess the IT term letter by letter</p>
                         <a href="games/wordle-tech.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="general">
                         <div class="icon">&#127942;</div>
                         <h4>CompTIA Jeopardy <span class="badge-free">FREE</span></h4>
                         <p>Quiz game with 5 categories and Daily Doubles</p>
                         <a href="games/jeopardy.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#127183;</div>
                         <h4>Memory Match <span class="badge-members">MEMBERS</span></h4>
                         <p>Flip cards to find matching pairs</p>
                         <a href="games/match-game.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="general">
                         <div class="icon">&#128260;</div>
                         <h4>Tech Scramble <span class="badge-members">MEMBERS</span></h4>
                         <p>Fill in blanks from jumbled letters</p>
                         <a href="games/scramble.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="general">
                         <div class="icon">&#128221;</div>
                         <h4>Tech Tile Time <span class="badge-members">MEMBERS</span></h4>
                         <p>10-clue crossword puzzle</p>
                         <a href="games/crossword.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="general">
                         <div class="icon">&#128221;</div>
                         <h4>Acronym Decoder <span class="badge-free">FREE</span></h4>
                         <p>75 IT acronyms, select the correct meaning</p>
                         <a href="games/acronym-decoder.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#129513;</div>
                         <h4>OSI Layer Sort <span class="badge-free">FREE</span></h4>
                         <p>Sort 35 items into correct OSI layers</p>
                         <a href="games/osi-layer-sort.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#128290;</div>
                         <h4>IPv6 Crunch <span class="badge-free">FREE</span></h4>
                         <p>Compress and expand IPv6 addresses</p>
                         <a href="games/ipv6-crunch.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
+                        <div class="icon">&#128225;</div>
+                        <h4>Protocol Cluster <span class="badge-free">FREE</span></h4>
+                        <p>Sync the grid — connect compatible packets</p>
+                        <a href="games/protocol-cluster.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="hardware">
                         <div class="icon">&#128268;</div>
                         <h4>Cable Connector Match <span class="badge-free">FREE</span></h4>
                         <p>Match 25 cables to their specs</p>
                         <a href="games/cable-connector-match.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="hardware">
+                        <div class="icon">&#128421;</div>
+                        <h4>Build-a-PC <span class="badge-free">FREE</span></h4>
+                        <p>Drag real components onto the motherboard</p>
+                        <a href="games/build-a-pc.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="hardware">
+                        <div class="icon">&#128295;</div>
+                        <h4>Board ID Blitz <span class="badge-free">FREE</span></h4>
+                        <p>60s quiz on a real labeled motherboard photo</p>
+                        <a href="games/board-id-blitz.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="hardware">
+                        <div class="icon">&#9889;</div>
+                        <h4>Spec Sprint <span class="badge-free">FREE</span></h4>
+                        <p>45s arcade quiz on RAM &amp; PSU specs</p>
+                        <a href="games/spec-sprint.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="hardware">
+                        <div class="icon">&#128373;&#65039;</div>
+                        <h4>POST Detective <span class="badge-free">FREE</span></h4>
+                        <p>Untimed puzzle — match symptoms to hardware cause</p>
+                        <a href="games/post-detective.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="os">
                         <div class="icon">&#128421;</div>
                         <h4>OS Pop <span class="badge-free">FREE</span></h4>
                         <p>Bubble-shoot Windows, macOS &amp; Linux terms</p>
                         <a href="games/os-pop.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="os">
+                        <div class="icon">&#128193;</div>
+                        <h4>OS Sorter <span class="badge-free">FREE</span></h4>
+                        <p>Calm puzzle sorting OS tools &amp; file systems</p>
+                        <a href="games/os-sorter.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="os">
+                        <div class="icon">&#9000;&#65039;</div>
+                        <h4>Command Line Blitz <span class="badge-free">FREE</span></h4>
+                        <p>45s arcade quiz on real CLI commands</p>
+                        <a href="games/command-line-blitz.html" class="m-link">Play</a>
+                    </div>
+                    <div class="m-card" data-domain="security">
                         <div class="icon">&#128737;</div>
                         <h4>Security Threat ID <span class="badge-members">MEMBERS</span></h4>
                         <p>Identify 25 security threats from scenarios</p>
                         <a href="games/security-threat-id.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="networking">
                         <div class="icon">&#127760;</div>
                         <h4>IP Address Calculator <span class="badge-members">MEMBERS</span></h4>
                         <p>Subnet calculations and IP addressing</p>
                         <a href="games/ip-calculator.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="troubleshooting">
                         <div class="icon">&#127911;</div>
                         <h4>Support Desk Rush <span class="badge-free">FREE</span></h4>
                         <p>Untimed — order the 8-step ticket lifecycle</p>
                         <a href="games/support-desk-rush.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="virtualization">
                         <div class="icon">&#9749;</div>
                         <h4>Hypervisor Tycoon <span class="badge-free">FREE</span></h4>
                         <p>Untimed — match scenarios to Type 1/Type 2 hypervisors</p>
                         <a href="games/hypervisor-tycoon.html" class="m-link">Play</a>
                     </div>
-                    <div class="m-card">
+                    <div class="m-card" data-domain="virtualization">
                         <div class="icon">&#128248;</div>
                         <h4>Snapshot Rewind <span class="badge-free">FREE</span></h4>
                         <p>Untimed memory-match — VM snapshots &amp; IoT security</p>
@@ -595,6 +649,30 @@
 
     // Auto-restore from localStorage (remembered login)
     if (localStorage.getItem('comptia_member') === '1') { unlock(); }
+
+    // Domain-pill filter — filters the merged Games & Puzzles grid
+    (function(){
+        const strip = document.getElementById('domainFilterAll');
+        const grid = document.getElementById('gamesGrid');
+        const emptyEl = document.getElementById('filterEmptyAll');
+        if(!strip || !grid) return;
+        const pills = strip.querySelectorAll('.domain-pill');
+        const cards = grid.querySelectorAll('.m-card');
+        pills.forEach(pill=>{
+            pill.addEventListener('click', ()=>{
+                pills.forEach(p=>p.classList.remove('active'));
+                pill.classList.add('active');
+                const filter = pill.dataset.filter;
+                let visibleCount = 0;
+                cards.forEach(card=>{
+                    const show = filter === 'all' || card.dataset.domain === filter;
+                    card.classList.toggle('filtered-out', !show);
+                    if(show) visibleCount++;
+                });
+                if(emptyEl) emptyEl.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+        });
+    })();
     </script>
 
     <footer style="background:#0a0f1a;padding:20px 24px;text-align:center;border-top:1px solid #1c3a63;">

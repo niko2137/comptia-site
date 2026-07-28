@@ -15,6 +15,8 @@ html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier Ne
 .h-item b{color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.5)}
 .h-item.title{font-size:13px;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 8px rgba(0,243,255,0.4)}
 #targetBanner{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700;letter-spacing:0.5px;transition:all .3s}
+.h-lives .heart{font-size:1em}
+.h-lives .heart.lost{opacity:0.2}
 #game{flex:1;display:block;width:100%;cursor:crosshair}
 #foot{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-top:1px solid rgba(0,243,255,0.15);flex-shrink:0;gap:10px}
 .next-bubble{width:30px;height:30px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
@@ -33,6 +35,19 @@ html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier Ne
 .over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
 .over-card button{background:var(--cyan);color:#0a0a1a;border:none;padding:12px 30px;border-radius:8px;font-weight:800;font-size:1em;cursor:pointer;margin-top:14px;font-family:'Courier New',monospace}
 .over-card button:hover{background:#7ff}
+#triviaOverlay{position:fixed;inset:0;background:rgba(10,10,26,0.95);z-index:520;display:none;align-items:center;justify-content:center;padding:20px}
+#triviaOverlay.show{display:flex}
+.trivia-card{background:#0f1628;border:2px solid var(--gold);border-radius:16px;padding:26px;max-width:440px;width:100%;text-align:center;box-shadow:0 0 60px rgba(255,215,0,0.2)}
+.trivia-label{font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px}
+.trivia-q{font-size:1.05em;color:#fff;font-weight:700;margin-bottom:18px;line-height:1.4}
+.trivia-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.trivia-opt{background:#141c30;border:2px solid #2a3a55;color:#e0e6f0;font-family:'Courier New',monospace;font-size:0.85em;font-weight:700;padding:12px 8px;border-radius:8px;cursor:pointer;transition:all .15s}
+.trivia-opt:hover{border-color:var(--gold)}
+.trivia-opt.correct{border-color:#00e676;background:rgba(0,230,118,0.15)}
+.trivia-opt.wrong{border-color:#ff1744;background:rgba(255,23,68,0.15)}
+.trivia-opt.disabled{pointer-events:none;opacity:.6}
+.trivia-result{font-size:0.85em;margin-top:14px;font-weight:700;min-height:1.2em}
+@media(max-width:480px){ .trivia-opts{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -41,13 +56,14 @@ html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier Ne
         <span class="h-item">SCORE: <b id="sVal">0</b></span>
         <span class="h-item title">OS POP</span>
         <span id="targetBanner">🎯 TARGET: —</span>
+        <span class="h-item h-lives" id="hudLives"></span>
         <span class="h-item">LEVEL: <b id="lVal">1</b></span>
     </header>
     <div class="legend" id="legend"></div>
     <canvas id="game"></canvas>
     <footer id="foot">
         <div class="next-bubble" id="nextBubble"></div>
-        <div id="termTicker">Tap/drag to aim, tap to shoot • Match 3+ same category</div>
+        <div id="termTicker">Tap/drag to aim, tap to shoot • Match 3+ same category • Answer bonus trivia after every pop!</div>
         <button id="muteBtn" title="Toggle Sound">🔊</button>
         <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
     </footer>
@@ -59,6 +75,15 @@ html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier Ne
         <div class="final" id="finalScoreEl">0</div>
         <div id="hsPanelEl"></div>
         <button onclick="restartGame()">🔄 Play Again</button>
+    </div>
+</div>
+
+<div id="triviaOverlay">
+    <div class="trivia-card">
+        <div class="trivia-label">⭐ BONUS ROUND — +50 IF CORRECT</div>
+        <div class="trivia-q" id="triviaQ">—</div>
+        <div class="trivia-opts" id="triviaOpts"></div>
+        <div class="trivia-result" id="triviaResult"></div>
     </div>
 </div>
 
@@ -96,7 +121,31 @@ let aimX = null, aimY = null;
 let musicPlayer = null, musicStarted = false, muted = false;
 let popsSinceTargetChange = 0;
 let targetCat = 0;
+let shooterY = 0;
+let maxStartRows = 5;
+let lives = 3, paused = false;
+const MAX_LIVES = 3;
 const SPEED = 12;
+
+// Quick bonus trivia shown after every successful pop — Windows/macOS/Linux/
+// cross-platform tools and file systems, mirrors the categories above.
+const TRIVIA = [
+    {q:"Which tool lets you view and manage installed hardware drivers on Windows?", a:"Device Manager", opts:["Device Manager","Disk Utility","Activity Monitor","systemd"]},
+    {q:"What is the macOS equivalent of Windows Task Manager?", a:"Activity Monitor", opts:["Activity Monitor","Finder","Keychain","top"]},
+    {q:"Which Linux command shows a live-updating list of running processes?", a:"top", opts:["top","ls","chmod","grep"]},
+    {q:"Which file system is the default on modern macOS?", a:"APFS", opts:["APFS","NTFS","ext4","FAT32"]},
+    {q:"Which macOS feature provides full-disk encryption?", a:"FileVault", opts:["FileVault","BitLocker","Keychain","Spotlight"]},
+    {q:"Which command temporarily elevates privileges for one command on Linux?", a:"sudo", opts:["sudo","chown","chmod","ps"]},
+    {q:"Which Windows tool centrally applies settings across domain-joined PCs?", a:"Group Policy", opts:["Group Policy","Task Scheduler","PowerShell","Disk Management"]},
+    {q:"Which file system has a 4GB single-file size limit?", a:"FAT32", opts:["FAT32","NTFS","exFAT","ext4"]},
+    {q:"Which of these is a cross-platform version control system?", a:"Git", opts:["Git","PowerShell","Finder","Disk Utility"]},
+    {q:"Which macOS feature is its built-in system-wide search?", a:"Spotlight", opts:["Spotlight","Keychain","Time Machine","Terminal.app"]},
+    {q:"Which Linux file system has snapshotting built in?", a:"Btrfs", opts:["Btrfs","ext4","exFAT","HFS+"]},
+    {q:"Which Windows command scans and repairs protected system files?", a:"sfc /scannow", opts:["sfc /scannow","chkdsk","ipconfig","gpupdate"]},
+    {q:"Which is macOS's built-in automatic backup utility?", a:"Time Machine", opts:["Time Machine","Disk Utility","FileVault","Finder"]},
+    {q:"Which command changes a file's owner on Linux?", a:"chown", opts:["chown","chmod","sudo","ps"]},
+    {q:"Which container platform runs natively on Windows, macOS, and Linux?", a:"Docker", opts:["Docker","VS Code","Zoom","VLC"]}
+];
 
 // Categories mirror the site's Operating Systems study content (see study-plan.html Week 5)
 const CATEGORIES = [
@@ -120,9 +169,17 @@ function buildLegend(){
 function resize(){
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    RADIUS = Math.floor(canvas.width / (COLS * 2 + 1));
+    const widthRadius = Math.floor(canvas.width / (COLS * 2 + 1));
+    // On short/wide canvases a width-only radius leaves no room for the stack to
+    // grow before hitting the shooter, so also cap it by how tall the canvas is —
+    // targeting enough vertical room for ~7 rows plus a shooter margin.
+    const heightRadius = Math.floor((canvas.height - 90) / (2 + 1.74 * 6));
+    RADIUS = Math.max(10, Math.min(widthRadius, heightRadius));
     DIAMETER = RADIUS * 2;
     offsetX = (canvas.width - COLS * DIAMETER) / 2;
+    shooterY = canvas.height - RADIUS - 12;
+    const safeBottom = shooterY - RADIUS - 20;
+    maxStartRows = Math.max(2, Math.floor((safeBottom - DIAMETER) / (DIAMETER * 0.87)) + 1);
 }
 
 function randomCell(){
@@ -135,7 +192,7 @@ function randomCell(){
 // --- GRID LOGIC ---
 function initGrid(){
     rows = [];
-    const startRows = 4 + Math.min(level, 4);
+    const startRows = Math.max(2, Math.min(4 + Math.min(level, 4), maxStartRows));
     for(let r=0; r<startRows; r++){
         const row = [];
         const cols = (r % 2 === 0) ? COLS : COLS - 1;
@@ -170,17 +227,17 @@ function draw(){
         drawBubble(sx, sy, shootBubble);
     }
     if(!shooting && shootBubble !== null){
-        drawBubble(canvas.width/2, canvas.height - 40, shootBubble);
+        drawBubble(canvas.width/2, shooterY, shootBubble);
         drawAimLine();
     }
 }
 
 function drawAimLine(){
     if(aimX === null) return;
-    const startX = canvas.width/2, startY = canvas.height-40;
-    let angle = Math.atan2(aimY - startY, aimX - startX);
-    if(angle > -0.15 && angle <= 0) angle = -0.15;
-    if(angle >= 0) return;
+    const startX = canvas.width/2, startY = shooterY;
+    const angle = Math.atan2(aimY - startY, aimX - startX);
+    if(angle > -0.15 && angle < 0.15) return;
+    if(angle > 0) return;
     c.save();
     c.setLineDash([6,6]);
     c.strokeStyle = 'rgba(0,243,255,0.5)';
@@ -250,9 +307,9 @@ function rotateTarget(){
 
 // --- SHOOTING ---
 function shoot(targetX, targetY){
-    if(shooting || shootBubble === null) return;
+    if(shooting || paused || shootBubble === null) return;
     const startX = canvas.width / 2;
-    const startY = canvas.height - 40;
+    const startY = shooterY;
     const angle = Math.atan2(targetY - startY, targetX - startX);
     if(angle > -0.15 && angle < 0.15) return;
     if(angle > 0) return;
@@ -307,14 +364,30 @@ function snap(){
     if(bestCol >= rows[bestRow].length) bestCol = rows[bestRow].length-1;
     rows[bestRow][bestCol] = shootBubble;
 
-    checkMatches(bestRow, bestCol);
+    const matched = checkMatches(bestRow, bestCol);
 
     const maxY = rows.length * (DIAMETER * 0.87) + RADIUS;
-    if(maxY > canvas.height - 80){
-        endGame();
+    if(maxY > shooterY - RADIUS - 10){
+        loseLife();
         return;
     }
 
+    if(matched){
+        showTrivia(()=>{ prepareShot(); draw(); });
+    } else {
+        prepareShot();
+        draw();
+    }
+}
+
+function loseLife(){
+    lives--;
+    renderLives();
+    GameSounds.wrong();
+    if(lives <= 0){ endGame(); return; }
+    // Clear the top rows to give breathing room and keep the run going.
+    rows.splice(0, Math.min(2, rows.length));
+    tickerEl.innerHTML = `💔 Stack too high! <b>${lives}</b> ${lives===1?'life':'lives'} left — cleared the top rows.`;
     prepareShot();
     draw();
 }
@@ -370,7 +443,9 @@ function checkMatches(row, col){
             level = Math.floor(score/150)+1;
             updateHUD();
         }
+        return true;
     }
+    return false;
 }
 
 function showTerm(term, cat, isBonus){
@@ -408,6 +483,56 @@ function removeFloating(){
 }
 
 function updateHUD(){ scoreEl.textContent=score; levelEl.textContent=level; }
+function renderLives(){
+    document.getElementById('hudLives').innerHTML = Array.from({length:MAX_LIVES},(_, i)=>
+        `<span class="heart${i<lives?'':' lost'}">&#x2764;&#xFE0F;</span>`).join('');
+}
+
+// --- TRIVIA BONUS ---
+let usedTrivia = [];
+function showTrivia(onDone){
+    paused = true;
+    let pool = TRIVIA.filter(t=>!usedTrivia.includes(t));
+    if(pool.length === 0){ usedTrivia = []; pool = TRIVIA; }
+    const item = pool[Math.floor(Math.random()*pool.length)];
+    usedTrivia.push(item);
+    const opts = [...item.opts].sort(()=>Math.random()-0.5);
+    document.getElementById('triviaQ').textContent = item.q;
+    document.getElementById('triviaResult').textContent = '';
+    const optsEl = document.getElementById('triviaOpts');
+    optsEl.innerHTML = '';
+    opts.forEach(opt=>{
+        const btn = document.createElement('button');
+        btn.className = 'trivia-opt';
+        btn.textContent = opt;
+        btn.addEventListener('click', ()=>{
+            const buttons = optsEl.querySelectorAll('.trivia-opt');
+            buttons.forEach(b=>b.classList.add('disabled'));
+            const resultEl = document.getElementById('triviaResult');
+            if(opt === item.a){
+                btn.classList.add('correct');
+                score += 50;
+                updateHUD();
+                GameSounds.correct();
+                resultEl.style.color = '#00e676';
+                resultEl.textContent = '✅ Correct! +50 bonus';
+            } else {
+                btn.classList.add('wrong');
+                buttons.forEach(b=>{ if(b.textContent===item.a) b.classList.add('correct'); });
+                GameSounds.wrong();
+                resultEl.style.color = '#ff1744';
+                resultEl.textContent = `❌ Correct answer: ${item.a}`;
+            }
+            setTimeout(()=>{
+                document.getElementById('triviaOverlay').classList.remove('show');
+                paused = false;
+                onDone();
+            }, 1300);
+        });
+        optsEl.appendChild(btn);
+    });
+    document.getElementById('triviaOverlay').classList.add('show');
+}
 
 // --- AUDIO ---
 function playPopSound(isBonus){
@@ -444,10 +569,11 @@ function endGame(){
 }
 window.restartGame = function(){
     document.getElementById('overlay').classList.remove('show');
-    score=0; level=1;
+    score=0; level=1; lives=MAX_LIVES; paused=false;
     initGrid();
     rotateTarget();
     updateHUD();
+    renderLives();
     nextCell = randomCell();
     prepareShot();
     draw();
@@ -496,6 +622,7 @@ buildLegend();
 resize();
 initGrid();
 rotateTarget();
+renderLives();
 nextCell = randomCell();
 prepareShot();
 draw();

@@ -25,7 +25,7 @@ html,body{
 <div id="app">
     <!-- TOP BAR -->
     <header id="topBar">
-        <div class="prompt" id="prompt">SYNC INITIATED. SELECT COMPATIBLE PACKETS.</div>
+        <div class="prompt" id="prompt">DRAG ADJACENT PACKETS THAT ACTUALLY PAIR (e.g. 22 ↔ SSH)</div>
         <div class="top-stats">
             <span class="stat-chip">SCORE: <b id="scoreVal">0</b></span>
             <span class="stat-chip">LEVEL: <b id="levelVal">1</b></span>
@@ -76,6 +76,22 @@ html,body{
         </aside>
     </div>
 </div>
+
+<div id="introOverlay">
+    <div class="intro-card">
+        <h2>📡 Protocol Cluster</h2>
+        <p>Drag through <b>2–3 touching packets</b> that form a real CompTIA pair — like port <b>22</b> next to <b>SSH</b>, or <b>DDR4</b> next to <b>288-pin</b>.</p>
+        <div class="intro-example">
+            <span class="ex-node node cat-net">22</span><span class="ex-arrow">—</span><span class="ex-node node cat-net">SSH</span>
+            <span class="ex-check">✓ valid sync</span>
+        </div>
+        <p class="intro-warn">⚠️ The color just marks the domain (Networking, Hardware, Security, Troubleshooting) — two same-colored packets that aren't an actual pair will <b>not</b> sync.</p>
+        <p class="intro-small">Wrong syncs cost System Health. Longer chains and combos score more.</p>
+        <button id="introStartBtn">Start Syncing</button>
+        <button id="introHelpClose" style="display:none">Got it</button>
+    </div>
+</div>
+<button id="helpBtn" title="How to play">?</button>
 
 <style>
 /* === LAYOUT === */
@@ -226,6 +242,26 @@ html,body{
 .toast.fail{background:rgba(30,0,30,0.95);border:2px solid var(--purple);color:var(--purple);text-shadow:0 0 8px var(--purple)}
 .toast.combo{background:rgba(30,20,0,0.95);border:2px solid var(--yellow);color:var(--yellow);text-shadow:0 0 8px var(--yellow)}
 
+/* === INTRO / HELP OVERLAY === */
+#introOverlay{position:fixed;inset:0;background:rgba(5,5,16,0.94);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px}
+#introOverlay.hidden{display:none}
+.intro-card{background:#0a0a1a;border:2px solid var(--cyan);border-radius:14px;padding:28px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 50px rgba(0,243,255,0.2)}
+.intro-card h2{color:var(--cyan);font-size:1.4em;margin-bottom:12px;text-shadow:0 0 8px rgba(0,243,255,0.4)}
+.intro-card p{color:#c0c0c0;font-size:13px;line-height:1.6;margin-bottom:14px}
+.intro-card p b{color:var(--cyan)}
+.intro-warn{color:var(--yellow) !important;font-size:12px !important}
+.intro-warn b{color:var(--yellow) !important}
+.intro-small{color:#777 !important;font-size:11px !important}
+.intro-example{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap}
+.ex-node{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;font-size:11px;font-weight:700;border:2px solid}
+.ex-arrow{color:#555;font-size:16px}
+.ex-check{color:var(--green);font-size:11px;font-weight:700;margin-left:6px}
+.intro-card button{width:100%;padding:12px;background:var(--cyan);color:#050510;border:none;border-radius:8px;font-weight:800;font-size:14px;cursor:pointer;margin-top:8px;font-family:inherit}
+.intro-card button:hover{background:#7ff}
+#helpBtn{position:fixed;bottom:16px;right:16px;width:36px;height:36px;border-radius:50%;background:#0a0a1a;border:1px solid #333;color:#888;font-weight:800;font-size:15px;cursor:pointer;z-index:150}
+#helpBtn:hover{border-color:var(--cyan);color:var(--cyan)}
+@media(max-width:580px){ #helpBtn{bottom:12px;right:12px} }
+
 /* === RESPONSIVE === */
 @media(max-width:580px){
     #sidePanel{display:none}
@@ -350,19 +386,57 @@ function fillGrid(){
     renderGrid();
 }
 
+function getNeighborIndices(i){
+    const x=i%GS, y=Math.floor(i/GS);
+    const out=[];
+    for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
+        if(dx===0&&dy===0) continue;
+        const nx=x+dx, ny=y+dy;
+        if(nx>=0&&nx<GS&&ny>=0&&ny<GS) out.push(ny*GS+nx);
+    }
+    return out;
+}
+
+// Walk a connected chain of `len` free adjacent cells starting at `start`,
+// so every seeded cluster is actually reachable by a single drag.
+function tryWalk(start,len,used){
+    const path=[start];
+    const localUsed=new Set(used);localUsed.add(start);
+    for(let step=1;step<len;step++){
+        const last=path[path.length-1];
+        const neighbors=getNeighborIndices(last).filter(n=>!localUsed.has(n));
+        if(neighbors.length===0)return null;
+        const next=neighbors[rand(0,neighbors.length-1)];
+        path.push(next);localUsed.add(next);
+    }
+    return path;
+}
+
+function findAdjacentPath(len,used){
+    const starts=shuffle([...Array(TOTAL).keys()]);
+    for(const start of starts){
+        if(used.has(start))continue;
+        const path=tryWalk(start,len,used);
+        if(path)return path;
+    }
+    return null;
+}
+
 function seedMatches(){
-    const count = Math.min(4 + level, 10);
-    const picks = shuffle(CLUSTERS).slice(0, count);
-    const positions = shuffle([...Array(TOTAL).keys()]);
-    let pi = 0;
-    picks.forEach(cl=>{
-        cl.items.forEach((item,ii)=>{
-            if(pi<TOTAL){
-                grid[positions[pi]]={text:item,cat:cl.cats[ii],cluster:cl};
-                pi++;
-            }
+    const count = Math.min(4 + level, 8);
+    const picks = shuffle(CLUSTERS);
+    const used = new Set();
+    let seeded = 0;
+    for(const cl of picks){
+        if(seeded>=count) break;
+        const path = findAdjacentPath(cl.items.length, used);
+        if(!path) continue;
+        path.forEach((pos,ii)=>{
+            grid[pos]={text:cl.items[ii],cat:cl.cats[ii],cluster:cl};
+            used.add(pos);
         });
-    });
+        seeded++;
+    }
 }
 
 function renderGrid(){
@@ -418,7 +492,7 @@ function moveDraw(x,y){
     const i=nodeAt(x,y);if(i<0)return;
     // Backtrack
     const prev=selectedPath.indexOf(i);
-    if(prev===selectedPath.length-2){selectedPath.pop();highlight();return;}
+    if(prev!==-1&&prev===selectedPath.length-2){selectedPath.pop();highlight();return;}
     if(selectedPath.includes(i))return;
     if(!adjacent(selectedPath[selectedPath.length-1],i))return;
     selectedPath.push(i);highlight();
@@ -530,7 +604,11 @@ function refill(indices){
         }
         for(let row=wr;row>=0;row--){grid[row*GS+col]=makeCell();}
     }
-    if(Math.random()<0.5)seedMatches();
+    // Reshuffle the whole board's positions after every match — not just the
+    // matched column gaps — so the grid actually feels fresh each time, then
+    // always reseed guaranteed-adjacent clusters so a sync is always findable.
+    grid=shuffle(grid);
+    seedMatches();
     renderGrid();
 }
 
@@ -608,9 +686,26 @@ document.addEventListener('mouseup',()=>{if(isDrawing)endDraw();});
 muteBtn.addEventListener('click',()=>{muted=!muted;muteBtn.textContent=muted?'🔇 MUTED':'🔊 AUDIO';});
 window.addEventListener('resize',resizeCanvas);
 
+// --- INTRO / HELP OVERLAY ---
+const introOverlay=document.getElementById('introOverlay');
+const introStartBtn=document.getElementById('introStartBtn');
+const introHelpClose=document.getElementById('introHelpClose');
+const helpBtn=document.getElementById('helpBtn');
+let gameStarted=false;
+
+introStartBtn.addEventListener('click',()=>{
+    introOverlay.classList.add('hidden');
+    if(!gameStarted){gameStarted=true;updateHUD();fillGrid();}
+});
+introHelpClose.addEventListener('click',()=>{introOverlay.classList.add('hidden');});
+helpBtn.addEventListener('click',()=>{
+    introStartBtn.style.display=gameStarted?'none':'';
+    introHelpClose.style.display=gameStarted?'':'none';
+    introOverlay.classList.remove('hidden');
+});
+
 // --- INIT ---
-updateHUD();
-fillGrid();
+// Game engine waits for the player to dismiss the intro/tutorial card above.
 </script>
 </body>
 </html>

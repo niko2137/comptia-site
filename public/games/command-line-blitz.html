@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>Command Line Blitz — CompTIA A+ Study Hub</title>
+<meta name="description" content="Command Line Blitz: a fast-paced arcade quiz matching real-world tasks to the correct Windows, macOS, and Linux CLI commands for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#0a0a1a;font-family:'Courier New',monospace;color:#e2e8f0;touch-action:none;-webkit-user-select:none;user-select:none}
+:root{--cyan:#00f3ff;--gold:#ffd700}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hud{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-bottom:1px solid rgba(0,243,255,0.15);flex-shrink:0;gap:10px;flex-wrap:wrap}
+.h-item{font-size:11px;color:#778}
+.h-item b{color:var(--cyan);text-shadow:0 0 4px rgba(0,243,255,0.5)}
+.h-item.title{font-size:13px;letter-spacing:3px;color:var(--cyan);text-shadow:0 0 8px rgba(0,243,255,0.4)}
+.h-item.streak b{color:var(--gold)}
+#timerWrap{padding:0 16px;flex-shrink:0}
+#timerBar{height:6px;border-radius:3px;background:#1a2444;overflow:hidden}
+#timerFill{height:100%;width:100%;background:linear-gradient(90deg,#00e676,#00e5ff);transition:width .3s linear,background .5s}
+#timerFill.warn{background:linear-gradient(90deg,#ffeb3b,#ff9100)}
+#timerFill.danger{background:linear-gradient(90deg,#ff1744,#ff6d00)}
+#main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:24px;overflow:hidden}
+#taskCard{background:#0f1628;border:2px solid rgba(0,243,255,0.3);border-radius:14px;padding:22px 28px;text-align:center;max-width:520px;width:100%;box-shadow:0 0 40px rgba(0,243,255,0.08)}
+#taskLabel{font-size:10px;letter-spacing:2px;color:#5c6b80;text-transform:uppercase;margin-bottom:8px}
+#taskText{font-size:1.15em;color:#fff;font-weight:700;line-height:1.4}
+#answersGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;width:100%}
+.answer-btn{background:#141c30;border:2px solid #2a3a55;color:#e0e6f0;font-family:'Courier New',monospace;font-size:1.05em;font-weight:700;padding:16px 10px;border-radius:10px;cursor:pointer;transition:all .15s;min-height:54px}
+.answer-btn:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,243,255,0.2)}
+.answer-btn.correct{border-color:#00e676;background:rgba(0,230,118,0.15);box-shadow:0 0 25px rgba(0,230,118,0.4)}
+.answer-btn.wrong{border-color:#ff1744;background:rgba(255,23,68,0.15);box-shadow:0 0 25px rgba(255,23,68,0.4)}
+.answer-btn.reveal{border-color:#00e676;background:rgba(0,230,118,0.25)}
+.answer-btn.disabled{pointer-events:none;opacity:.55}
+#foot{display:flex;align-items:center;justify-content:center;gap:16px;padding:8px 16px;background:#0f1628;border-top:1px solid rgba(0,243,255,0.15);flex-shrink:0}
+#muteBtn,.fbtn{width:32px;height:32px;border-radius:50%;border:1px solid #444;background:none;color:#888;font-size:14px;cursor:pointer}
+#muteBtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.fbtn:hover{border-color:#ff4444;color:#ff4444}
+#overlay{position:fixed;inset:0;background:rgba(10,10,26,0.95);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.over-card{background:#0f1628;border:2px solid var(--cyan);border-radius:16px;padding:30px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 60px rgba(0,243,255,0.2)}
+.over-card h2{color:var(--cyan);font-size:1.6em;margin-bottom:10px;text-shadow:0 0 10px rgba(0,243,255,0.4)}
+.over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
+.over-card button{background:var(--cyan);color:#0a0a1a;border:none;padding:12px 30px;border-radius:8px;font-weight:800;font-size:1em;cursor:pointer;margin-top:14px;font-family:'Courier New',monospace}
+.over-card button:hover{background:#7ff}
+#startScreen{position:fixed;inset:0;background:#0a0a1a;z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
+.start-card{text-align:center;max-width:460px}
+.start-card h1{color:var(--cyan);font-size:1.8em;letter-spacing:2px;margin-bottom:14px;text-shadow:0 0 12px rgba(0,243,255,0.4)}
+.start-card p{color:#94a3b8;font-size:.95em;line-height:1.6;margin-bottom:20px}
+.start-card button{background:var(--cyan);color:#0a0a1a;border:none;padding:14px 40px;border-radius:10px;font-weight:800;font-size:1.1em;cursor:pointer;font-family:'Courier New',monospace}
+.start-card button:hover{background:#7ff}
+@media(max-width:560px){ #answersGrid{grid-template-columns:1fr} #taskText{font-size:1em} }
+</style>
+</head>
+<body>
+<div id="app">
+    <header id="hud">
+        <span class="h-item">SCORE: <b id="sVal">0</b></span>
+        <span class="h-item title">CMD BLITZ</span>
+        <span class="h-item streak">STREAK: <b id="stVal">0</b> 🔥</span>
+        <span class="h-item">TIME: <b id="tVal">45</b>s</span>
+    </header>
+    <div id="timerWrap"><div id="timerBar"><div id="timerFill"></div></div></div>
+    <div id="main">
+        <div id="taskCard">
+            <div id="taskLabel">Which command does this?</div>
+            <div id="taskText">—</div>
+        </div>
+        <div id="answersGrid"></div>
+    </div>
+    <footer id="foot">
+        <button id="muteBtn" title="Toggle Sound">🔊</button>
+        <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
+    </footer>
+</div>
+
+<div id="startScreen">
+    <div class="start-card">
+        <h1>⌨️ COMMAND LINE BLITZ</h1>
+        <p>A real-world task appears — pick the correct CLI command before the clock runs out. Covers Windows, macOS, and Linux commands from your book's Operating Systems module. 45 seconds, streak bonuses, no lives lost — just speed and accuracy.</p>
+        <button onclick="startGame()">START</button>
+    </div>
+</div>
+
+<div id="overlay">
+    <div class="over-card">
+        <h2>⏱️ TIME'S UP</h2>
+        <div class="final" id="finalScoreEl">0</div>
+        <div id="hsPanelEl"></div>
+        <button onclick="restartGame()">🔄 Play Again</button>
+    </div>
+</div>
+
+<script src="../audio/games/Neon-Circuit-Dash-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'command-line-blitz';
+const PIP_SCORE = 850;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+// Content from book.md Operating Systems module — Windows CLI, macOS Terminal, Linux shell
+const POOL = [
+    {task:'View or renew IP configuration (Windows)', cmd:'ipconfig'},
+    {task:'View network interface configuration (Linux/macOS)', cmd:'ifconfig'},
+    {task:'Scan and repair protected Windows system files', cmd:'sfc /scannow'},
+    {task:'Find and repair file system errors on a Windows volume', cmd:'chkdsk'},
+    {task:'Force an immediate Group Policy update (Windows)', cmd:'gpupdate /force'},
+    {task:'Flush the DNS resolver cache (Windows)', cmd:'ipconfig /flushdns'},
+    {task:'List files and folders in the current directory (Linux/macOS)', cmd:'ls'},
+    {task:'Run a single command with elevated privileges (Linux)', cmd:'sudo'},
+    {task:'Change file or folder permissions (Linux)', cmd:'chmod'},
+    {task:'Change the owner of a file or folder (Linux)', cmd:'chown'},
+    {task:'Show a live-updating list of running processes (Linux)', cmd:'top'},
+    {task:'Show a point-in-time snapshot of running processes (Linux)', cmd:'ps'},
+    {task:'Search inside files for a text pattern (Linux)', cmd:'grep'},
+    {task:'Test connectivity to a remote host', cmd:'ping'},
+    {task:'Trace the network path to a destination (Windows)', cmd:'tracert'},
+    {task:'Trace the network path to a destination (Linux/macOS)', cmd:'traceroute'},
+    {task:'View active network connections and listening ports', cmd:'netstat'},
+    {task:'Create, delete, or format partitions from the CLI (Windows)', cmd:'diskpart'},
+    {task:'Kill a running process by name (Windows CLI)', cmd:'taskkill'},
+    {task:'Kill a running process by ID (Linux)', cmd:'kill'},
+    {task:'Show free and used disk space (Linux)', cmd:'df'},
+    {task:'Show the size of a directory’s contents (Linux)', cmd:'du'},
+    {task:'Copy files or directories (Linux)', cmd:'cp'},
+    {task:'Display or change the current directory (Windows)', cmd:'cd'},
+    {task:'List running processes with full detail (Windows CLI)', cmd:'tasklist'},
+    {task:'Manage and query Windows services from the CLI', cmd:'sc'},
+    {task:'Check and repair a macOS disk from the CLI', cmd:'diskutil'},
+    {task:'Display and manage the ARP cache', cmd:'arp'}
+];
+const ALL_CMDS = [...new Set(POOL.map(p=>p.cmd))];
+
+let score = 0, streak = 0, bestStreak = 0, timeLeft = 45, answering = false;
+let timerInterval = null, currentAnswer = '';
+let muted = false, musicPlayer = null, musicStarted = false;
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function updateHUD(){
+    document.getElementById('sVal').textContent = score;
+    document.getElementById('stVal').textContent = streak;
+    document.getElementById('tVal').textContent = timeLeft;
+    const fill = document.getElementById('timerFill');
+    const pct = (timeLeft/45)*100;
+    fill.style.width = pct+'%';
+    fill.className = pct<=20?'danger':pct<=45?'warn':'';
+}
+
+function nextQuestion(){
+    const item = POOL[Math.floor(Math.random()*POOL.length)];
+    currentAnswer = item.cmd;
+    document.getElementById('taskText').textContent = item.task;
+    let wrongs = ALL_CMDS.filter(c=>c!==item.cmd);
+    shuffle(wrongs); wrongs = wrongs.slice(0,3);
+    const options = shuffle([item.cmd, ...wrongs]);
+    const grid = document.getElementById('answersGrid');
+    grid.innerHTML = '';
+    options.forEach(opt=>{
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', ()=>checkAnswer(btn));
+        grid.appendChild(btn);
+    });
+    answering = false;
+}
+
+function checkAnswer(btn){
+    if(answering) return;
+    answering = true;
+    const buttons = document.querySelectorAll('.answer-btn');
+    if(btn.textContent === currentAnswer){
+        streak++; if(streak>bestStreak) bestStreak = streak;
+        const bonus = streak>1 ? streak*3 : 0;
+        score += 10 + bonus;
+        btn.classList.add('correct');
+        GameSounds.correct();
+        updateHUD();
+        setTimeout(nextQuestion, 350);
+    } else {
+        streak = 0;
+        score = Math.max(0, score-5);
+        btn.classList.add('wrong');
+        buttons.forEach(b=>{ b.classList.add('disabled'); if(b.textContent===currentAnswer) b.classList.add('reveal'); });
+        GameSounds.wrong();
+        updateHUD();
+        setTimeout(nextQuestion, 700);
+    }
+}
+
+function startTimer(){
+    if(timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(()=>{
+        timeLeft--;
+        if(timeLeft<=5 && timeLeft>0) GameSounds.tick();
+        updateHUD();
+        if(timeLeft<=0){ clearInterval(timerInterval); endGame(); }
+    }, 1000);
+}
+
+function startGame(){
+    document.getElementById('startScreen').style.display = 'none';
+    score=0; streak=0; bestStreak=0; timeLeft=45;
+    updateHUD();
+    nextQuestion();
+    startTimer();
+    startMusic();
+}
+
+function endGame(){
+    GameSounds.wrong();
+    setTimeout(()=>GameSounds.complete(), 300);
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{bestStreak}});
+    document.getElementById('finalScoreEl').textContent = score;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Top Blitzers'});
+    document.getElementById('overlay').classList.add('show');
+    stopMusic();
+}
+window.restartGame = function(){
+    document.getElementById('overlay').classList.remove('show');
+    startGame();
+};
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{
+        musicPlayer = new NeonCircuitMusic();
+        musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); });
+        musicStarted = true;
+    }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); }
+    else{ startMusic(); GameSounds.unmute(); }
+});
+</script>
+</body>
+</html>

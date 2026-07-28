@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>POST Detective - CompTIA A+ Study Game</title>
+<meta name="description" content="POST Detective: a calm, untimed puzzle matching hardware failure symptoms to their likely cause — PSU, RAM, GPU, storage, CPU, or motherboard — for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#152d4f;font-family:system-ui,-apple-system,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
+a{color:#5b9bd5;text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+.top-bar{background:#1c3a63;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2d4d7a;position:sticky;top:0;z-index:100;}
+.top-bar a{font-size:14px;font-weight:500;}
+.top-bar .title{font-size:16px;font-weight:700;color:#5b9bd5;}
+.top-bar .progress{font-size:13px;color:#94a3b8;}
+
+.game-container{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px;max-width:800px;width:100%;margin:0 auto;gap:14px;}
+
+.item-card{background:#1c3a63;border:2px solid #5b9bd5;border-radius:12px;padding:20px 28px;text-align:center;width:100%;max-width:460px;box-shadow:0 4px 24px rgba(91,155,213,0.15);transition:all 0.3s ease;}
+.item-card.correct{border-color:#27ae60;box-shadow:0 4px 24px rgba(39,174,96,0.3);}
+.item-card.incorrect{border-color:#e74c3c;box-shadow:0 4px 24px rgba(231,76,60,0.3);animation:shake 0.4s ease;}
+.item-card .item-name{font-size:19px;font-weight:700;color:#fff;margin-bottom:6px;}
+.item-card .item-instruction{font-size:12px;color:#64748b;margin-top:10px;}
+
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+.score-bar{display:flex;gap:20px;font-size:14px;color:#94a3b8;align-items:center;}
+.score-bar span{font-weight:600;color:#5b9bd5;}
+
+.layers-container{width:100%;display:flex;flex-direction:column;gap:8px;}
+.layer-bucket{border-radius:8px;padding:12px 16px;cursor:pointer;transition:all 0.15s ease;border:2px solid transparent;min-height:52px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.layer-bucket:hover{transform:scale(1.01);border-color:rgba(255,255,255,0.3);filter:brightness(1.2);}
+.layer-bucket:active{transform:scale(0.99);}
+.layer-bucket .layer-label{font-size:14px;font-weight:700;white-space:nowrap;min-width:170px;line-height:26px;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+.layer-bucket .placed-items{display:flex;flex-wrap:wrap;gap:4px;}
+.layer-bucket .placed-item{background:rgba(0,0,0,0.3);padding:3px 8px;border-radius:4px;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,0.2);}
+
+.feedback{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1c3a63;border-radius:16px;padding:28px 32px;text-align:center;max-width:420px;width:90%;z-index:200;box-shadow:0 8px 40px rgba(0,0,0,0.6);animation:fadeIn 0.2s ease;}
+.feedback.correct-fb{border:2px solid #27ae60;}
+.feedback.incorrect-fb{border:2px solid #e74c3c;}
+.feedback h3{font-size:18px;margin-bottom:10px;}
+.feedback p{font-size:14px;color:#cbd5e1;line-height:1.5;margin-bottom:8px;}
+.feedback .study-ref{font-size:12px;color:#94a3b8;margin-top:10px;}
+.feedback button{margin-top:14px;padding:10px 24px;background:#5b9bd5;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+.feedback button:hover{background:#4a8bc4;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-50%) scale(0.95);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+
+.results{background:#1c3a63;border-radius:16px;padding:30px;width:100%;max-width:600px;margin:20px auto;text-align:center;}
+.results h2{font-size:26px;color:#5b9bd5;margin-bottom:6px;}
+.results .big-score{font-size:48px;font-weight:800;color:#27ae60;margin:10px 0;}
+.results .mnemonic{background:#152d4f;border-radius:8px;padding:14px;margin:16px 0;font-size:13px;color:#94a3b8;line-height:1.6;}
+.results .mnemonic strong{color:#5b9bd5;}
+.results .layer-breakdown{text-align:left;margin:16px 0;}
+.results .layer-breakdown .row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:4px;margin-bottom:4px;font-size:13px;}
+.results .mistakes{text-align:left;margin:16px 0;max-height:200px;overflow-y:auto;}
+.results .mistake-item{background:#152d4f;border-radius:6px;padding:10px;margin-bottom:6px;font-size:12px;color:#cbd5e1;border-left:3px solid #e74c3c;}
+.results button{margin-top:16px;padding:12px 32px;background:#5b9bd5;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;}
+.results button:hover{background:#4a8bc4;}
+
+.mute-btn{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#1c3a63;border:2px solid #2d4d7a;color:#fff;font-size:20px;cursor:pointer;z-index:300;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.mute-btn:hover{border-color:#5b9bd5;background:#2d3a4f;}
+
+.start-screen{text-align:center;padding:40px 20px;}
+.start-screen h1{font-size:28px;color:#5b9bd5;margin-bottom:12px;}
+.start-screen p{color:#94a3b8;font-size:15px;line-height:1.6;max-width:500px;margin:0 auto 24px;}
+.start-screen button{padding:14px 40px;background:#5b9bd5;color:#fff;border:none;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer;}
+.start-screen button:hover{background:#4a8bc4;}
+
+@media(max-width:600px){
+  .layer-bucket .layer-label{min-width:130px;font-size:12px;}
+  .item-card .item-name{font-size:16px;}
+  .item-card{padding:16px 20px;}
+  .game-container{padding:10px;}
+  .layers-container{gap:5px;}
+  .layer-bucket{padding:9px 12px;min-height:44px;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Back to Study Hub</a>
+  <span class="title">POST Detective</span>
+  <span class="progress" id="progress-text"></span>
+</div>
+
+<div class="game-container" id="game-container">
+  <div class="start-screen" id="start-screen">
+    <h1>🕵️ POST Detective</h1>
+    <p>A symptom shows up on a dead or misbehaving PC. No clock, no pressure — figure out which subsystem is really at fault. 22 real-world cases from your book's hardware troubleshooting module.</p>
+    <p style="font-size:13px;color:#64748b;">Tap the correct cause bucket for each symptom.</p>
+    <button onclick="startGame()">Start Case File</button>
+  </div>
+</div>
+
+<button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Toggle sound">🔊</button>
+
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script>
+// ===== GAME DATA — from book.md "Common Hardware Symptoms" + "Warning Signs of Hardware Failure" =====
+const CATS = [
+  {key:'power', name:'Power Supply (PSU)', color:'#ff6b6b'},
+  {key:'ram', name:'RAM / Memory', color:'#4488ff'},
+  {key:'gpu', name:'GPU / Display', color:'#cc44ff'},
+  {key:'storage', name:'Storage', color:'#00ff88'},
+  {key:'cpu', name:'CPU / Cooling', color:'#ffcc00'},
+  {key:'mobo', name:'Motherboard / BIOS', color:'#00c8ff'}
+];
+
+const ITEMS = [
+  {name:'No fans, no lights, no beeps at all', cat:'power', explain:'A totally dead system points to PSU failure, a bad power cable, or a motherboard short — test with a known-good PSU first.'},
+  {name:'Burning smell from the case', cat:'power', explain:'A burning smell most often means PSU or motherboard failure — power down immediately and inspect.'},
+  {name:'PSU fan not spinning, intermittent shutdowns', cat:'power', explain:'A PSU fan that won\'t spin is a hardware failure — power supplies get replaced, not repaired internally.'},
+  {name:'Random shutdowns only under heavy load', cat:'power', explain:'Shutdowns that appear only under load usually mean the PSU wattage can\'t keep up with CPU + GPU demand.'},
+  {name:'Random reboots and blue screens', cat:'ram', explain:'Random reboots, BSODs, and app crashes are classic RAM failure symptoms — test sticks individually and run Windows Memory Diagnostic.'},
+  {name:'System fails to POST right after a RAM upgrade', cat:'ram', explain:'A no-POST immediately after adding memory usually means a stick isn\'t fully seated or isn\'t compatible — reseat and test one stick at a time.'},
+  {name:'Frequent BSODs with no clear pattern', cat:'ram', explain:'Frequent, inconsistent BSODs point to RAM or storage as the most likely root cause.'},
+  {name:'Diagnostic Q-LED lights up at the DRAM stage', cat:'ram', explain:'Diagnostic Q-LEDs show exactly which POST stage failed — a DRAM-stage light means a memory problem.'},
+  {name:'Fans spin, lights are on, but zero video output', cat:'gpu', explain:'Power is present but video never initializes — check the cable, reseat the GPU and RAM, and consider clearing CMOS.'},
+  {name:'Artifacting or visual glitches on screen', cat:'gpu', explain:'Screen artifacting is a hallmark sign of GPU overheating or a failing graphics card.'},
+  {name:'Diagnostic Q-LED lights up at the VGA stage', cat:'gpu', explain:'A VGA-stage Q-LED failure points straight at the graphics card or its connection.'},
+  {name:'Clicking sounds coming from the drive', cat:'storage', explain:'Clicking noises from a mechanical drive are the classic sign of an HDD head crash — back up immediately.'},
+  {name:'"Boot device not found" error', cat:'storage', explain:'A missing boot device error points to a failing drive, a loose SATA/power cable, or the wrong boot order.'},
+  {name:'Sluggish performance despite normal MB/s speed', cat:'storage', explain:'Normal throughput but poor real-world performance under many small requests is a low-IOPS symptom — the drive can\'t keep up with simultaneous read/write demand.'},
+  {name:'Diagnostic Q-LED lights up at the BOOT stage', cat:'storage', explain:'A BOOT-stage Q-LED failure means the system couldn\'t find a valid boot device or boot loader.'},
+  {name:'Sudden shutdowns paired with loud, high-speed fans', cat:'cpu', explain:'Sudden shutdowns with screaming fans is classic overheating — check for dust buildup and dried-out thermal paste.'},
+  {name:'Performance drops sharply under sustained load', cat:'cpu', explain:'That\'s thermal throttling — the CPU protects itself by slowing down once it runs too hot, usually a cooling problem, not a CPU defect.'},
+  {name:'System refuses to boot unless a CPU fan is connected', cat:'cpu', explain:'Most boards refuse to POST without a detected CPU fan, as a safety measure against instant overheating.'},
+  {name:'Diagnostic Q-LED lights up at the CPU stage', cat:'cpu', explain:'A CPU-stage Q-LED failure points to the processor itself or its power delivery (VRM/EPS connector).'},
+  {name:'System clock resets and BIOS settings vanish every reboot', cat:'mobo', explain:'A dead CMOS battery can\'t hold the clock or saved settings between boots — replace the CR2032 coin cell.'},
+  {name:'No display, suspected BIOS corruption', cat:'mobo', explain:'Clearing CMOS (removing the coin-cell battery for 10-15 seconds) resets BIOS/UEFI to defaults and can resolve corruption-related no-display issues.'},
+  {name:'Bulging or leaking capacitors visible on the board', cat:'mobo', explain:'Bulging or leaking capacitors indicate motherboard or PSU failure — time to replace the board.'}
+];
+
+// ===== GAME STATE =====
+let shuffledItems = [];
+let currentIndex = 0;
+let score = 0;
+let results = [];
+let placedInCats = {};
+let gameActive = false;
+let feedbackVisible = false;
+
+// ===== AUDIO =====
+let music = null;
+let muted = false;
+let musicLooping = false;
+
+function initMusic() {
+  music = new LofiChillMusic();
+  loopMusic();
+}
+function loopMusic() {
+  if (muted || !gameActive) { musicLooping = false; return; }
+  musicLooping = true;
+  music.start(() => { if (!muted && gameActive) loopMusic(); else musicLooping = false; });
+}
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+  if (muted) { if (music) music.stop(); musicLooping = false; }
+  else if (gameActive && !musicLooping) loopMusic();
+}
+function playSFX(type) {
+  if (muted) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if (type === 'correct') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start(); osc.stop(ctx.currentTime + 0.4);
+    } else {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.start(); osc.stop(ctx.currentTime + 0.35);
+    }
+    setTimeout(() => ctx.close(), 500);
+  } catch(e) {}
+}
+
+// ===== GAME LOGIC =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function startGame() {
+  shuffledItems = shuffle(ITEMS);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  placedInCats = {}; CATS.forEach(c => placedInCats[c.key] = []);
+  gameActive = true;
+  feedbackVisible = false;
+  initMusic();
+  renderGame();
+}
+
+function renderGame() {
+  const container = document.getElementById('game-container');
+  container.innerHTML = '';
+
+  const scoreBar = document.createElement('div');
+  scoreBar.className = 'score-bar';
+  scoreBar.innerHTML = `Score: <span id="score-display">${score}/${shuffledItems.length}</span>`;
+  container.appendChild(scoreBar);
+
+  const card = document.createElement('div');
+  card.className = 'item-card';
+  card.id = 'item-card';
+  if (currentIndex < shuffledItems.length) {
+    const item = shuffledItems[currentIndex];
+    card.innerHTML = `<div class="item-name">${item.name}</div><div class="item-instruction">👆 Tap the likely cause below</div>`;
+  }
+  container.appendChild(card);
+
+  const catsDiv = document.createElement('div');
+  catsDiv.className = 'layers-container';
+  CATS.forEach(cat => {
+    const bucket = document.createElement('div');
+    bucket.className = 'layer-bucket';
+    bucket.style.background = cat.color + '22';
+    bucket.style.borderColor = cat.color + '44';
+    bucket.onclick = () => handleCatClick(cat.key);
+
+    let placedHTML = '';
+    if (placedInCats[cat.key].length > 0) {
+      placedHTML = `<div class="placed-items">${placedInCats[cat.key].map(n => `<span class="placed-item">${n}</span>`).join('')}</div>`;
+    }
+
+    bucket.innerHTML = `<div class="layer-label" style="color:${cat.color}">${cat.name}</div>${placedHTML}`;
+    catsDiv.appendChild(bucket);
+  });
+  container.appendChild(catsDiv);
+
+  updateProgress();
+}
+
+function updateProgress() {
+  document.getElementById('progress-text').textContent = currentIndex < shuffledItems.length ? `Case ${currentIndex + 1} of ${shuffledItems.length}` : 'Complete!';
+}
+
+function handleCatClick(chosenCat) {
+  if (!gameActive || feedbackVisible || currentIndex >= shuffledItems.length) return;
+
+  const item = shuffledItems[currentIndex];
+  const correct = item.cat === chosenCat;
+
+  if (correct) {
+    score++;
+    playSFX('correct');
+    placedInCats[item.cat].push(item.name);
+    results.push({item: item.name, correct: true, chosen: chosenCat, actual: item.cat});
+    showCorrectFeedback(item);
+  } else {
+    playSFX('wrong');
+    placedInCats[item.cat].push(item.name);
+    results.push({item: item.name, correct: false, chosen: chosenCat, actual: item.cat});
+    showIncorrectFeedback(item, chosenCat);
+  }
+}
+
+function showCorrectFeedback(item) {
+  feedbackVisible = true;
+  const card = document.getElementById('item-card');
+  card.classList.add('correct');
+
+  const catInfo = CATS.find(c => c.key === item.cat);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'fb-overlay';
+  document.body.appendChild(overlay);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback correct-fb';
+  fb.id = 'fb-box';
+  fb.innerHTML = `<h3 style="color:#27ae60">✅ Case Closed!</h3><p><strong>${item.name}</strong> → ${catInfo.name}</p><p style="font-size:13px;color:#94a3b8;">${item.explain}</p><button onclick="nextItem()">Continue</button>`;
+  document.body.appendChild(fb);
+}
+
+function showIncorrectFeedback(item, chosenCat) {
+  feedbackVisible = true;
+  const card = document.getElementById('item-card');
+  card.classList.add('incorrect');
+
+  const correctCat = CATS.find(c => c.key === item.cat);
+  const chosenCatInfo = CATS.find(c => c.key === chosenCat);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'fb-overlay';
+  document.body.appendChild(overlay);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback incorrect-fb';
+  fb.id = 'fb-box';
+  fb.innerHTML = `<h3 style="color:#e74c3c">❌ Wrong Lead</h3><p><strong>${item.name}</strong> is really a <span style="color:${correctCat.color}">${correctCat.name}</span> case, not ${chosenCatInfo.name}</p><p style="font-size:13px;color:#cbd5e1;">${item.explain}</p><p class="study-ref">📖 Study: Hardware & Peripherals → Troubleshooting</p><button onclick="nextItem()">Continue</button>`;
+  document.body.appendChild(fb);
+}
+
+function nextItem() {
+  feedbackVisible = false;
+  const overlay = document.getElementById('fb-overlay');
+  const fb = document.getElementById('fb-box');
+  if (overlay) overlay.remove();
+  if (fb) fb.remove();
+
+  currentIndex++;
+  if (currentIndex >= shuffledItems.length) {
+    showResults();
+  } else {
+    renderGame();
+  }
+}
+
+function showResults() {
+  gameActive = false;
+  if (music) music.stop();
+  musicLooping = false;
+
+  const container = document.getElementById('game-container');
+  document.getElementById('progress-text').textContent = 'Complete!';
+
+  let catStats = {};
+  CATS.forEach(c => { catStats[c.key] = {total: 0, correct: 0}; });
+  results.forEach(r => {
+    catStats[r.actual].total++;
+    if (r.correct) catStats[r.actual].correct++;
+  });
+
+  const mistakes = results.filter(r => !r.correct);
+  const pct = Math.round((score / shuffledItems.length) * 100);
+
+  let breakdownHTML = '';
+  CATS.forEach(c => {
+    const s = catStats[c.key];
+    const cpct = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+    const barColor = cpct === 100 ? '#27ae60' : cpct >= 50 ? '#f59e0b' : '#e74c3c';
+    breakdownHTML += `<div class="row" style="background:${c.color}15"><span style="color:${c.color}">${c.name}</span><span style="color:${barColor}">${s.correct}/${s.total} (${cpct}%)</span></div>`;
+  });
+
+  let mistakesHTML = '';
+  if (mistakes.length > 0) {
+    mistakesHTML = '<h4 style="color:#e74c3c;margin:12px 0 8px;font-size:14px;">Missed Cases:</h4><div class="mistakes">';
+    mistakes.forEach(m => {
+      const correctC = CATS.find(c => c.key === m.actual);
+      const chosenC = CATS.find(c => c.key === m.chosen);
+      mistakesHTML += `<div class="mistake-item"><strong>${m.item}</strong> — You picked ${chosenC.name}, correct is <span style="color:${correctC.color}">${correctC.name}</span></div>`;
+    });
+    mistakesHTML += '</div>';
+  }
+
+  container.innerHTML = `
+    <div class="results">
+      <h2>🕵️ Case File Closed</h2>
+      <div class="big-score">${score}/${shuffledItems.length}</div>
+      <p style="color:#94a3b8;font-size:15px;">${pct}% Accuracy</p>
+      <div class="mnemonic">
+        <strong>Exam trap to remember:</strong><br>
+        A no-POST doesn't always mean the motherboard is dead — Q-LEDs narrow it down to CPU, DRAM, VGA, or BOOT before you start swapping parts.
+      </div>
+      <div class="layer-breakdown">
+        <h4 style="color:#5b9bd5;margin-bottom:8px;font-size:14px;">Per-Category Breakdown:</h4>
+        ${breakdownHTML}
+      </div>
+      ${mistakesHTML}
+      <button onclick="startGame()">🔄 Play Again</button>
+    </div>`;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!gameActive || feedbackVisible) {
+    if (feedbackVisible && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); nextItem(); }
+    return;
+  }
+  const num = parseInt(e.key);
+  if (num >= 1 && num <= 6) handleCatClick(CATS[num-1].key);
+});
+</script>
+</body>
+</html>

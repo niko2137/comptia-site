@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>OS Sorter - CompTIA A+ Study Game</title>
+<meta name="description" content="OS Sorter: a calm, untimed puzzle sorting Windows, macOS, Linux, cross-platform, and file-system items into the correct category for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#152d4f;font-family:system-ui,-apple-system,sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
+a{color:#5b9bd5;text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+.top-bar{background:#1c3a63;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2d4d7a;position:sticky;top:0;z-index:100;}
+.top-bar a{font-size:14px;font-weight:500;}
+.top-bar .title{font-size:16px;font-weight:700;color:#5b9bd5;}
+.top-bar .progress{font-size:13px;color:#94a3b8;}
+
+.game-container{flex:1;display:flex;flex-direction:column;align-items:center;padding:16px;max-width:800px;width:100%;margin:0 auto;gap:14px;}
+
+.item-card{background:#1c3a63;border:2px solid #5b9bd5;border-radius:12px;padding:20px 28px;text-align:center;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(91,155,213,0.15);transition:all 0.3s ease;}
+.item-card.correct{border-color:#27ae60;box-shadow:0 4px 24px rgba(39,174,96,0.3);}
+.item-card.incorrect{border-color:#e74c3c;box-shadow:0 4px 24px rgba(231,76,60,0.3);animation:shake 0.4s ease;}
+.item-card .item-name{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;}
+.item-card .item-hint{font-size:14px;color:#94a3b8;font-style:italic;}
+.item-card .item-instruction{font-size:12px;color:#64748b;margin-top:10px;}
+
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+.score-bar{display:flex;gap:20px;font-size:14px;color:#94a3b8;align-items:center;}
+.score-bar span{font-weight:600;color:#5b9bd5;}
+
+.layers-container{width:100%;display:flex;flex-direction:column;gap:8px;}
+.layer-bucket{border-radius:8px;padding:12px 16px;cursor:pointer;transition:all 0.15s ease;border:2px solid transparent;min-height:52px;display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.layer-bucket:hover{transform:scale(1.01);border-color:rgba(255,255,255,0.3);filter:brightness(1.2);}
+.layer-bucket:active{transform:scale(0.99);}
+.layer-bucket .layer-label{font-size:14px;font-weight:700;white-space:nowrap;min-width:170px;line-height:26px;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+.layer-bucket .placed-items{display:flex;flex-wrap:wrap;gap:4px;}
+.layer-bucket .placed-item{background:rgba(0,0,0,0.3);padding:3px 8px;border-radius:4px;font-size:11px;color:#fff;border:1px solid rgba(255,255,255,0.2);}
+
+.feedback{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1c3a63;border-radius:16px;padding:28px 32px;text-align:center;max-width:400px;width:90%;z-index:200;box-shadow:0 8px 40px rgba(0,0,0,0.6);animation:fadeIn 0.2s ease;}
+.feedback.correct-fb{border:2px solid #27ae60;}
+.feedback.incorrect-fb{border:2px solid #e74c3c;}
+.feedback h3{font-size:18px;margin-bottom:10px;}
+.feedback p{font-size:14px;color:#cbd5e1;line-height:1.5;margin-bottom:8px;}
+.feedback .study-ref{font-size:12px;color:#94a3b8;margin-top:10px;}
+.feedback button{margin-top:14px;padding:10px 24px;background:#5b9bd5;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+.feedback button:hover{background:#4a8bc4;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-50%) scale(0.95);}to{opacity:1;transform:translate(-50%,-50%) scale(1);}}
+
+.results{background:#1c3a63;border-radius:16px;padding:30px;width:100%;max-width:600px;margin:20px auto;text-align:center;}
+.results h2{font-size:26px;color:#5b9bd5;margin-bottom:6px;}
+.results .big-score{font-size:48px;font-weight:800;color:#27ae60;margin:10px 0;}
+.results .mnemonic{background:#152d4f;border-radius:8px;padding:14px;margin:16px 0;font-size:13px;color:#94a3b8;line-height:1.6;}
+.results .mnemonic strong{color:#5b9bd5;}
+.results .layer-breakdown{text-align:left;margin:16px 0;}
+.results .layer-breakdown .row{display:flex;justify-content:space-between;padding:6px 8px;border-radius:4px;margin-bottom:4px;font-size:13px;}
+.results .mistakes{text-align:left;margin:16px 0;max-height:200px;overflow-y:auto;}
+.results .mistake-item{background:#152d4f;border-radius:6px;padding:10px;margin-bottom:6px;font-size:12px;color:#cbd5e1;border-left:3px solid #e74c3c;}
+.results button{margin-top:16px;padding:12px 32px;background:#5b9bd5;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;}
+.results button:hover{background:#4a8bc4;}
+
+.mute-btn{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#1c3a63;border:2px solid #2d4d7a;color:#fff;font-size:20px;cursor:pointer;z-index:300;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.mute-btn:hover{border-color:#5b9bd5;background:#2d3a4f;}
+
+.start-screen{text-align:center;padding:40px 20px;}
+.start-screen h1{font-size:28px;color:#5b9bd5;margin-bottom:12px;}
+.start-screen p{color:#94a3b8;font-size:15px;line-height:1.6;max-width:500px;margin:0 auto 24px;}
+.start-screen button{padding:14px 40px;background:#5b9bd5;color:#fff;border:none;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer;}
+.start-screen button:hover{background:#4a8bc4;}
+
+@media(max-width:600px){
+  .layer-bucket .layer-label{min-width:130px;font-size:12px;}
+  .item-card .item-name{font-size:18px;}
+  .item-card{padding:16px 20px;}
+  .game-container{padding:10px;}
+  .layers-container{gap:5px;}
+  .layer-bucket{padding:9px 12px;min-height:44px;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="#" onclick="window.location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Back to Study Hub</a>
+  <span class="title">OS Sorter</span>
+  <span class="progress" id="progress-text"></span>
+</div>
+
+<div class="game-container" id="game-container">
+  <div class="start-screen" id="start-screen">
+    <h1>🗂️ OS Sorter</h1>
+    <p>Sort tools, commands, and file systems into the OS they belong to. 40 items to place — take your time, no clock, no pressure.</p>
+    <p style="font-size:13px;color:#64748b;">Tap the correct category bucket for each item.</p>
+    <button onclick="startGame()">Start Puzzle</button>
+  </div>
+</div>
+
+<button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Toggle sound">🔊</button>
+
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script>
+// ===== GAME DATA — mirrors OS Pop's categories for site-wide consistency =====
+const CATS = [
+  {key:'win', name:'Windows', color:'#4488ff'},
+  {key:'mac', name:'macOS', color:'#00c8ff'},
+  {key:'linux', name:'Linux', color:'#ff9500'},
+  {key:'cross', name:'Cross-Platform', color:'#00ff88'},
+  {key:'fs', name:'File Systems', color:'#cc44ff'}
+];
+
+const ITEMS = [
+  {name:'Device Manager', hint:'View/manage hardware and drivers', cat:'win', explain:'Device Manager is a Windows-only utility for viewing and managing installed hardware and drivers.'},
+  {name:'Disk Management', hint:'GUI tool for partitions and volumes', cat:'win', explain:'Disk Management is the Windows GUI snap-in for creating, resizing, and formatting partitions.'},
+  {name:'Group Policy', hint:'Centralized settings for domain PCs', cat:'win', explain:'Group Policy (gpedit.msc / gpupdate) enforces centralized settings on Windows domain machines.'},
+  {name:'Task Scheduler', hint:'Automates recurring tasks', cat:'win', explain:'Task Scheduler is the Windows tool for running programs or scripts on a defined schedule.'},
+  {name:'PowerShell', hint:'Advanced Windows scripting shell', cat:'win', explain:'PowerShell is Microsoft\'s object-oriented scripting shell, built into modern Windows.'},
+  {name:'ipconfig', hint:'View/release/renew IP configuration', cat:'win', explain:'ipconfig is the Windows CLI command for viewing and managing IP configuration (the Linux/macOS equivalent is ifconfig or ip addr).'},
+  {name:'systeminfo', hint:'CLI system summary', cat:'win', explain:'systeminfo is a Windows CLI command that dumps a full OS/hardware configuration summary.'},
+  {name:'chkdsk', hint:'Finds and repairs disk errors', cat:'win', explain:'chkdsk is the Windows utility that scans a volume for file system errors and bad sectors.'},
+  {name:'Finder', hint:'File browser', cat:'mac', explain:'Finder is macOS\'s built-in file management application — its Windows equivalent is File Explorer.'},
+  {name:'Terminal.app', hint:'Command-line access', cat:'mac', explain:'Terminal.app is macOS\'s built-in terminal emulator running a Unix-based shell.'},
+  {name:'Activity Monitor', hint:'View running processes/resource use', cat:'mac', explain:'Activity Monitor is macOS\'s equivalent of Windows Task Manager for viewing processes and resource usage.'},
+  {name:'Disk Utility', hint:'Format, partition, and repair disks', cat:'mac', explain:'Disk Utility is macOS\'s built-in tool for formatting, partitioning, and repairing disks.'},
+  {name:'Time Machine', hint:'Built-in backup system', cat:'mac', explain:'Time Machine is macOS\'s native, automatic backup utility.'},
+  {name:'Keychain', hint:'Stores saved passwords/certificates', cat:'mac', explain:'Keychain (Keychain Access) is macOS\'s secure store for passwords, keys, and certificates.'},
+  {name:'Spotlight', hint:'System-wide search', cat:'mac', explain:'Spotlight is macOS\'s built-in system-wide search feature (Cmd+Space).'},
+  {name:'FileVault', hint:'Full-disk encryption', cat:'mac', explain:'FileVault is macOS\'s full-disk encryption feature — the Windows equivalent is BitLocker.'},
+  {name:'ls', hint:'List directory contents', cat:'linux', explain:'ls lists directory contents in Linux/Unix shells — the Windows CMD equivalent is dir.'},
+  {name:'sudo', hint:'Run a command as superuser', cat:'linux', explain:'sudo temporarily elevates privileges to run a single command as root/superuser on Linux.'},
+  {name:'chmod', hint:'Change file/folder permissions', cat:'linux', explain:'chmod changes read/write/execute permissions on Linux files and directories.'},
+  {name:'chown', hint:'Change file/folder owner', cat:'linux', explain:'chown changes the owner (and optionally group) of a file or directory on Linux.'},
+  {name:'ps', hint:'Snapshot of running processes', cat:'linux', explain:'ps lists a point-in-time snapshot of running processes on Linux.'},
+  {name:'top', hint:'Live-updating process monitor', cat:'linux', explain:'top shows a live, auto-refreshing view of running processes and resource usage on Linux.'},
+  {name:'systemd', hint:'Init system and service manager', cat:'linux', explain:'systemd is the modern Linux init system that starts, stops, and manages services.'},
+  {name:'grep', hint:'Search text using patterns', cat:'linux', explain:'grep searches file contents for lines matching a text pattern on Linux/Unix.'},
+  {name:'SSH', hint:'Encrypted remote CLI access', cat:'cross', explain:'SSH clients/servers run on Windows, macOS, and Linux alike for encrypted remote access.'},
+  {name:'Docker', hint:'Container platform', cat:'cross', explain:'Docker runs application containers on Windows, macOS, and Linux hosts.'},
+  {name:'Python', hint:'Scripting/programming language', cat:'cross', explain:'Python runs on every major OS, making it a go-to cross-platform automation language.'},
+  {name:'Git', hint:'Version control system', cat:'cross', explain:'Git is a cross-platform version control system used on every major OS.'},
+  {name:'Chrome', hint:'Web browser', cat:'cross', explain:'Chrome ships for Windows, macOS, and Linux alike.'},
+  {name:'VS Code', hint:'Code editor', cat:'cross', explain:'Visual Studio Code is a free, cross-platform code editor.'},
+  {name:'Zoom', hint:'Video conferencing app', cat:'cross', explain:'Zoom has native clients for Windows, macOS, and Linux.'},
+  {name:'VLC', hint:'Media player', cat:'cross', explain:'VLC media player is free and cross-platform, running on Windows, macOS, and Linux.'},
+  {name:'NTFS', hint:'Default modern Windows file system', cat:'fs', explain:'NTFS is the default file system for modern Windows installs, supporting permissions and encryption.'},
+  {name:'FAT32', hint:'Older, universally compatible FS', cat:'fs', explain:'FAT32 is an older file system with a 4GB single-file size limit, but is readable by nearly every OS.'},
+  {name:'ext4', hint:'Common modern Linux file system', cat:'fs', explain:'ext4 is the most common default file system on modern Linux distributions.'},
+  {name:'APFS', hint:'Modern Apple file system', cat:'fs', explain:'APFS (Apple File System) is the default file system on modern macOS and iOS.'},
+  {name:'exFAT', hint:'Flash-drive-friendly, no 4GB limit', cat:'fs', explain:'exFAT is designed for flash drives — no 4GB file-size limit, and readable across Windows/macOS/Linux.'},
+  {name:'ReFS', hint:'Resilient File System (Windows Server)', cat:'fs', explain:'ReFS (Resilient File System) is Microsoft\'s newer file system focused on resiliency, mainly used on Windows Server.'},
+  {name:'HFS+', hint:'Older Apple file system', cat:'fs', explain:'HFS+ was Apple\'s file system before being replaced by APFS.'},
+  {name:'Btrfs', hint:'Linux FS with snapshots built in', cat:'fs', explain:'Btrfs is a Linux file system with built-in snapshotting and pooling features.'}
+];
+
+// ===== GAME STATE =====
+let shuffledItems = [];
+let currentIndex = 0;
+let score = 0;
+let results = [];
+let placedInCats = {};
+let gameActive = false;
+let feedbackVisible = false;
+
+// ===== AUDIO =====
+let music = null;
+let muted = false;
+let musicLooping = false;
+
+function initMusic() {
+  music = new LofiChillMusic();
+  loopMusic();
+}
+function loopMusic() {
+  if (muted || !gameActive) { musicLooping = false; return; }
+  musicLooping = true;
+  music.start(() => { if (!muted && gameActive) loopMusic(); else musicLooping = false; });
+}
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+  if (muted) { if (music) music.stop(); musicLooping = false; }
+  else if (gameActive && !musicLooping) loopMusic();
+}
+function playSFX(type) {
+  if (muted) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if (type === 'correct') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(523, ctx.currentTime);
+      osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start(); osc.stop(ctx.currentTime + 0.4);
+    } else {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.start(); osc.stop(ctx.currentTime + 0.35);
+    }
+    setTimeout(() => ctx.close(), 500);
+  } catch(e) {}
+}
+
+// ===== GAME LOGIC =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function startGame() {
+  shuffledItems = shuffle(ITEMS);
+  currentIndex = 0;
+  score = 0;
+  results = [];
+  placedInCats = {}; CATS.forEach(c => placedInCats[c.key] = []);
+  gameActive = true;
+  feedbackVisible = false;
+  initMusic();
+  renderGame();
+}
+
+function renderGame() {
+  const container = document.getElementById('game-container');
+  container.innerHTML = '';
+
+  const scoreBar = document.createElement('div');
+  scoreBar.className = 'score-bar';
+  scoreBar.innerHTML = `Score: <span id="score-display">${score}/${shuffledItems.length}</span>`;
+  container.appendChild(scoreBar);
+
+  const card = document.createElement('div');
+  card.className = 'item-card';
+  card.id = 'item-card';
+  if (currentIndex < shuffledItems.length) {
+    const item = shuffledItems[currentIndex];
+    card.innerHTML = `<div class="item-name">${item.name}</div><div class="item-hint">"${item.hint}"</div><div class="item-instruction">👆 Tap the correct category below</div>`;
+  }
+  container.appendChild(card);
+
+  const catsDiv = document.createElement('div');
+  catsDiv.className = 'layers-container';
+  CATS.forEach(cat => {
+    const bucket = document.createElement('div');
+    bucket.className = 'layer-bucket';
+    bucket.style.background = cat.color + '22';
+    bucket.style.borderColor = cat.color + '44';
+    bucket.onclick = () => handleCatClick(cat.key);
+
+    let placedHTML = '';
+    if (placedInCats[cat.key].length > 0) {
+      placedHTML = `<div class="placed-items">${placedInCats[cat.key].map(n => `<span class="placed-item">${n}</span>`).join('')}</div>`;
+    }
+
+    bucket.innerHTML = `<div class="layer-label" style="color:${cat.color}">${cat.name}</div>${placedHTML}`;
+    catsDiv.appendChild(bucket);
+  });
+  container.appendChild(catsDiv);
+
+  updateProgress();
+}
+
+function updateProgress() {
+  document.getElementById('progress-text').textContent = currentIndex < shuffledItems.length ? `Item ${currentIndex + 1} of ${shuffledItems.length}` : 'Complete!';
+}
+
+function handleCatClick(chosenCat) {
+  if (!gameActive || feedbackVisible || currentIndex >= shuffledItems.length) return;
+
+  const item = shuffledItems[currentIndex];
+  const correct = item.cat === chosenCat;
+
+  if (correct) {
+    score++;
+    playSFX('correct');
+    placedInCats[item.cat].push(item.name);
+    results.push({item: item.name, correct: true, chosen: chosenCat, actual: item.cat});
+    showCorrectFeedback(item);
+  } else {
+    playSFX('wrong');
+    placedInCats[item.cat].push(item.name);
+    results.push({item: item.name, correct: false, chosen: chosenCat, actual: item.cat});
+    showIncorrectFeedback(item, chosenCat);
+  }
+}
+
+function showCorrectFeedback(item) {
+  feedbackVisible = true;
+  const card = document.getElementById('item-card');
+  card.classList.add('correct');
+
+  const catInfo = CATS.find(c => c.key === item.cat);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'fb-overlay';
+  document.body.appendChild(overlay);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback correct-fb';
+  fb.id = 'fb-box';
+  fb.innerHTML = `<h3 style="color:#27ae60">✅ Correct!</h3><p><strong>${item.name}</strong> → ${catInfo.name}</p><p style="font-size:13px;color:#94a3b8;">${item.explain}</p><button onclick="nextItem()">Continue</button>`;
+  document.body.appendChild(fb);
+}
+
+function showIncorrectFeedback(item, chosenCat) {
+  feedbackVisible = true;
+  const card = document.getElementById('item-card');
+  card.classList.add('incorrect');
+
+  const correctCat = CATS.find(c => c.key === item.cat);
+  const chosenCatInfo = CATS.find(c => c.key === chosenCat);
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'fb-overlay';
+  document.body.appendChild(overlay);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback incorrect-fb';
+  fb.id = 'fb-box';
+  fb.innerHTML = `<h3 style="color:#e74c3c">❌ Not Quite</h3><p><strong>${item.name}</strong> belongs under <span style="color:${correctCat.color}">${correctCat.name}</span>, not ${chosenCatInfo.name}</p><p style="font-size:13px;color:#cbd5e1;">${item.explain}</p><p class="study-ref">📖 Study: Operating Systems → OS Tools &amp; File Systems</p><button onclick="nextItem()">Continue</button>`;
+  document.body.appendChild(fb);
+}
+
+function nextItem() {
+  feedbackVisible = false;
+  const overlay = document.getElementById('fb-overlay');
+  const fb = document.getElementById('fb-box');
+  if (overlay) overlay.remove();
+  if (fb) fb.remove();
+
+  currentIndex++;
+  if (currentIndex >= shuffledItems.length) {
+    showResults();
+  } else {
+    renderGame();
+  }
+}
+
+function showResults() {
+  gameActive = false;
+  if (music) music.stop();
+  musicLooping = false;
+
+  const container = document.getElementById('game-container');
+  document.getElementById('progress-text').textContent = 'Complete!';
+
+  let catStats = {};
+  CATS.forEach(c => { catStats[c.key] = {total: 0, correct: 0}; });
+  results.forEach(r => {
+    catStats[r.actual].total++;
+    if (r.correct) catStats[r.actual].correct++;
+  });
+
+  const mistakes = results.filter(r => !r.correct);
+  const pct = Math.round((score / shuffledItems.length) * 100);
+
+  let breakdownHTML = '';
+  CATS.forEach(c => {
+    const s = catStats[c.key];
+    const cpct = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+    const barColor = cpct === 100 ? '#27ae60' : cpct >= 50 ? '#f59e0b' : '#e74c3c';
+    breakdownHTML += `<div class="row" style="background:${c.color}15"><span style="color:${c.color}">${c.name}</span><span style="color:${barColor}">${s.correct}/${s.total} (${cpct}%)</span></div>`;
+  });
+
+  let mistakesHTML = '';
+  if (mistakes.length > 0) {
+    mistakesHTML = '<h4 style="color:#e74c3c;margin:12px 0 8px;font-size:14px;">Incorrect Placements:</h4><div class="mistakes">';
+    mistakes.forEach(m => {
+      const correctC = CATS.find(c => c.key === m.actual);
+      const chosenC = CATS.find(c => c.key === m.chosen);
+      mistakesHTML += `<div class="mistake-item"><strong>${m.item}</strong> — You chose ${chosenC.name}, correct is <span style="color:${correctC.color}">${correctC.name}</span></div>`;
+    });
+    mistakesHTML += '</div>';
+  }
+
+  container.innerHTML = `
+    <div class="results">
+      <h2>🎉 Puzzle Complete!</h2>
+      <div class="big-score">${score}/${shuffledItems.length}</div>
+      <p style="color:#94a3b8;font-size:15px;">${pct}% Accuracy</p>
+      <div class="mnemonic">
+        <strong>Exam trap to remember:</strong><br>
+        FileVault (macOS) and BitLocker (Windows) do the same job — full-disk encryption — but are never interchangeable answers on the exam.
+      </div>
+      <div class="layer-breakdown">
+        <h4 style="color:#5b9bd5;margin-bottom:8px;font-size:14px;">Per-Category Breakdown:</h4>
+        ${breakdownHTML}
+      </div>
+      ${mistakesHTML}
+      <button onclick="startGame()">🔄 Play Again</button>
+    </div>`;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!gameActive || feedbackVisible) {
+    if (feedbackVisible && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); nextItem(); }
+    return;
+  }
+  const num = parseInt(e.key);
+  if (num >= 1 && num <= 5) handleCatClick(CATS[num-1].key);
+});
+</script>
+</body>
+</html>

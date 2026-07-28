@@ -35,7 +35,24 @@ html,body{height:100%;overflow:hidden;background:#080c18;font-family:'Courier Ne
 .over-card h2{color:#00e5ff;font-size:1.5em;margin-bottom:10px}
 .over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
 .over-card button{background:#00e5ff;color:#080c18;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;margin-top:14px}
-@media(min-width:601px){ .dpad{display:none} }
+#grid .cell{cursor:pointer}
+@media(hover:hover) and (pointer:fine){ .dpad{display:none} }
+#introOverlay{position:fixed;inset:0;background:rgba(8,12,24,0.96);z-index:520;display:flex;align-items:center;justify-content:center;padding:20px}
+#introOverlay.hidden{display:none}
+.intro-card{background:#141c30;border:2px solid #00e5ff;border-radius:16px;padding:26px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 50px rgba(0,229,255,0.15)}
+.intro-card h2{color:#00e5ff;font-size:1.3em;margin-bottom:12px}
+.intro-card p{color:#c8d8e8;font-size:13px;line-height:1.6;margin-bottom:12px}
+.intro-card p b{color:#00e5ff}
+.intro-example{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0}
+.ex-cell{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:6px;font-size:1.3em;border:1px solid #2a3a55}
+.ex-you{background:#00e5ff;color:#080c18}
+.ex-bug{background:#ff1744;color:#fff}
+.intro-warn{color:#ffab00 !important;font-size:12px !important}
+.intro-warn b{color:#ffab00 !important}
+.intro-card button{width:100%;padding:12px;background:#00e5ff;color:#080c18;border:none;border-radius:8px;font-weight:800;font-size:14px;cursor:pointer;margin-top:6px;font-family:inherit}
+.intro-card button:hover{background:#4dd8ff}
+#helpBtn{background:none;border:1px solid #2a3a55;color:#888;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px;font-weight:800}
+#helpBtn:hover{border-color:#00e5ff;color:#00e5ff}
 </style>
 </head>
 <body>
@@ -55,12 +72,29 @@ html,body{height:100%;overflow:hidden;background:#080c18;font-family:'Courier Ne
         </div>
     </div>
     <footer id="foot">
+        <button id="helpBtn" title="How to play">?</button>
         <button id="muteBtn">🔊</button>
         <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
     </footer>
 </div>
 <div id="overlay">
     <div class="over-card" id="overCard"></div>
+</div>
+
+<div id="introOverlay">
+    <div class="intro-card">
+        <h2>🔎 Root Cause Muncher</h2>
+        <p>The definition at the top is your clue. Move <b>🔎 you</b> onto the grid cell showing the matching <b>term</b>.</p>
+        <div class="intro-example">
+            <span class="ex-cell ex-you">🔎</span>
+            <span style="color:#555">→</span>
+            <span class="ex-cell" style="background:#141c30;color:#00e676;font-size:.55em;font-weight:700;padding:4px">Ticket Closure</span>
+        </div>
+        <p>Move with <b>arrow keys / WASD</b>, the on-screen <b>D-pad</b>, or just <b>tap any cell</b> to step toward it.</p>
+        <p class="intro-warn">⚠️ Avoid the <b>🐛 bugs</b> patrolling the grid — touching one costs a life.</p>
+        <button id="introStartBtn">Start Munching</button>
+        <button id="introHelpClose" style="display:none">Got it</button>
+    </div>
 </div>
 
 <script src="../audio/games/Terminal-Takedown-Music.js"></script>
@@ -140,6 +174,7 @@ function renderGrid(flashCell, flashClass){
             else if(bug) div.classList.add('bug');
             if(flashCell && flashCell.r===r && flashCell.c===c) div.classList.add(flashClass);
             div.textContent = isMuncher ? '🔎' : (bug ? '🐛' : grid[r][c].term);
+            div.dataset.r = r; div.dataset.c = c;
             el.appendChild(div);
         }
     }
@@ -151,8 +186,13 @@ function renderLives(){
 }
 function updateHUD(){ document.getElementById('sVal').textContent = score; document.getElementById('rVal').textContent = Math.min(round+1, TOTAL_ROUNDS); }
 
+let lastMoveAt = 0;
+const MOVE_COOLDOWN = 140;
 function move(dir){
     if(invuln) return;
+    const now = Date.now();
+    if(now - lastMoveAt < MOVE_COOLDOWN) return;
+    lastMoveAt = now;
     let {r,c} = muncherPos;
     if(dir==='up') r = Math.max(0, r-1);
     if(dir==='down') r = Math.min(ROWS-1, r+1);
@@ -252,9 +292,29 @@ function startGame(){
 }
 
 document.querySelectorAll('.dpad button').forEach(btn=>{
-    btn.addEventListener('click', ()=> move(btn.dataset.d));
+    let repeatTimer = null;
+    const go = ()=> move(btn.dataset.d);
+    const start = e=>{ e.preventDefault(); go(); clearInterval(repeatTimer); repeatTimer = setInterval(go, 60); };
+    const stop = ()=>{ clearInterval(repeatTimer); repeatTimer = null; };
+    btn.addEventListener('mousedown', start);
+    btn.addEventListener('touchstart', start, {passive:false});
+    btn.addEventListener('mouseup', stop);
+    btn.addEventListener('mouseleave', stop);
+    btn.addEventListener('touchend', stop);
+    btn.addEventListener('touchcancel', stop);
+});
+document.getElementById('grid').addEventListener('click', e=>{
+    const cell = e.target.closest('.cell');
+    if(!cell) return;
+    const r = parseInt(cell.dataset.r), c = parseInt(cell.dataset.c);
+    const dr = r - muncherPos.r, dc = c - muncherPos.c;
+    if(dr === 0 && dc === 0) return;
+    if(Math.abs(dr) >= Math.abs(dc)) move(dr > 0 ? 'down' : 'up');
+    else move(dc > 0 ? 'right' : 'left');
 });
 document.addEventListener('keydown', e=>{
+    const keys = ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d'];
+    if(keys.includes(e.key)) e.preventDefault();
     if(e.key==='ArrowUp'||e.key==='w') move('up');
     if(e.key==='ArrowDown'||e.key==='s') move('down');
     if(e.key==='ArrowLeft'||e.key==='a') move('left');
@@ -274,7 +334,23 @@ document.getElementById('muteBtn').addEventListener('click', ()=>{
 document.addEventListener('click', function once(){ startMusic(); }, {once:true});
 document.addEventListener('touchstart', function onceT(){ startMusic(); }, {once:true});
 
-startGame();
+// --- INTRO / HELP OVERLAY ---
+const introOverlay = document.getElementById('introOverlay');
+const introStartBtn = document.getElementById('introStartBtn');
+const introHelpClose = document.getElementById('introHelpClose');
+const helpBtn = document.getElementById('helpBtn');
+let gameStarted = false;
+
+introStartBtn.addEventListener('click', ()=>{
+    introOverlay.classList.add('hidden');
+    if(!gameStarted){ gameStarted = true; startGame(); }
+});
+introHelpClose.addEventListener('click', ()=>{ introOverlay.classList.add('hidden'); });
+helpBtn.addEventListener('click', ()=>{
+    introStartBtn.style.display = gameStarted ? 'none' : '';
+    introHelpClose.style.display = gameStarted ? '' : 'none';
+    introOverlay.classList.remove('hidden');
+});
 </script>
 </body>
 </html>
