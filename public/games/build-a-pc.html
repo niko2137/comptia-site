@@ -58,7 +58,6 @@ body {
     color: #5b9bd5;
     font-weight: 600;
 }
-</style>
 .slot {
     background: #152d4f;
     border: 2px dashed #475569;
@@ -219,9 +218,14 @@ body {
 <div id="completion-screen" class="completion-hidden"></div>
 <button id="mute-btn" title="Toggle Sound">🔊</button>
 <script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
 <script>
 (function() {
 "use strict";
+const GAME_ID = "build-a-pc";
+const PIP_SCORE = 1300;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
 
 // Pixel art SVG icons — all self-contained, no external files needed
 const PIXEL_ART = {
@@ -277,6 +281,7 @@ let score = 0, firstTryCorrect = 0;
 let attemptedSlots = new Set(), filledSlots = new Set();
 let muted = false, music = null, draggedItem = null;
 let touchDragEl = null, touchOffsetX = 0, touchOffsetY = 0;
+let startTime = 0;
 
 function buildCase() {
     const caseEl = document.getElementById("pc-case");
@@ -450,6 +455,14 @@ function showToast(isCorrect, title, body) {
 }
 
 function showCompletion() {
+    const elapsedSec = Math.round((Date.now() - startTime) / 1000);
+    const mins = Math.floor(elapsedSec / 60), secs = elapsedSec % 60;
+    const timeStr = `${mins}:${secs.toString().padStart(2,"0")}`;
+    const timeBonus = Math.max(0, 900 - elapsedSec * 3);
+    const finalScore = firstTryCorrect * 100 + timeBonus;
+    HighScores.submitScore(GAME_ID, finalScore, {label: "You", extra: {time: timeStr, accuracy: firstTryCorrect}});
+    GameSounds.complete();
+
     const screen = document.getElementById("completion-screen");
     screen.className = "completion-screen";
     screen.innerHTML = `
@@ -466,7 +479,8 @@ function showCompletion() {
                 • PSU: Properly cabled (24-pin + 8-pin EPS)<br>
                 • Extras: 120mm fan, front panel I/O, CMOS battery
             </div>
-            <div class="score-line">First-Try Accuracy: ${firstTryCorrect}/12</div>
+            <div class="score-line">First-Try Accuracy: ${firstTryCorrect}/12 &nbsp;•&nbsp; Time: ${timeStr} &nbsp;•&nbsp; Score: ${finalScore}</div>
+            <div style="margin:16px 0;">${HighScores.renderPanel(GAME_ID, {title:"🏆 Top Builders"})}</div>
             <button onclick="resetGame()">🔄 Build Again</button>
         </div>`;
 }
@@ -474,6 +488,7 @@ function showCompletion() {
 window.resetGame = function() {
     score = 0; firstTryCorrect = 0;
     attemptedSlots.clear(); filledSlots.clear();
+    startTime = Date.now();
     document.getElementById("completion-screen").className = "completion-hidden";
     updateScore(); buildCase(); buildBank();
 };
@@ -487,35 +502,15 @@ function initMusic() {
 
 function playSFX(type) {
     if (muted) return;
-    try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        if (type === "correct") {
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(523, ctx.currentTime);
-            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
-            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
-            gain.gain.setValueAtTime(0.15, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
-        } else {
-            osc.type = "sawtooth";
-            osc.frequency.setValueAtTime(200, ctx.currentTime);
-            osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
-            gain.gain.setValueAtTime(0.1, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-            osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.3);
-        }
-    } catch(e) {}
+    if (type === "correct") GameSounds.correct();
+    else GameSounds.wrong();
 }
 
 document.getElementById("mute-btn").addEventListener("click", () => {
     muted = !muted;
     document.getElementById("mute-btn").textContent = muted ? "🔇" : "🔊";
-    if (muted && music) { music.stop(); }
-    else if (!muted) { initMusic(); }
+    if (muted) { if (music) music.stop(); GameSounds.mute(); }
+    else { initMusic(); GameSounds.unmute(); }
 });
 
 let musicStarted = false;
@@ -526,6 +521,7 @@ document.addEventListener("touchstart", function startOnceTouch() {
     if (!musicStarted && !muted) { initMusic(); musicStarted = true; }
 }, { once: true });
 
+startTime = Date.now();
 buildCase();
 buildBank();
 })();

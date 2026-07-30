@@ -96,6 +96,22 @@ a{text-decoration:none;color:inherit}
 .fmt-card:not(.featured) .btn-fmt{background:var(--navy);color:#fff}
 .fmt-card:not(.featured) .btn-fmt:hover{background:var(--navy2)}
 .badge-best{display:inline-block;background:var(--amber);color:#78350f;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:8px;text-transform:uppercase}
+/* AUTHOR CRED STRIP */
+.author-strip{background:var(--light);padding:40px 24px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.author-strip-inner{max-width:800px;margin:0 auto;display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;text-align:left}
+.author-strip .avatar{width:64px;height:64px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;flex-shrink:0}
+.author-strip p{color:var(--muted);font-size:.92rem;max-width:600px;margin:0}
+.author-strip p strong{color:var(--navy)}
+.author-strip a{color:var(--blue);font-weight:600;white-space:nowrap}
+.author-strip a:hover{text-decoration:underline}
+/* FAQ */
+.faq{padding:64px 24px}
+.faq-inner{max-width:760px;margin:0 auto}
+.faq-inner h2{font-size:1.9rem;font-weight:800;color:var(--navy);margin-bottom:10px;text-align:center}
+.faq-inner .sub{color:var(--muted);text-align:center;margin-bottom:36px}
+.faq-item{border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:12px;background:var(--white)}
+.faq-item h4{font-size:1.02rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+.faq-item p{color:var(--muted);font-size:.92rem}
 /* BONUS */
 .bonus{padding:64px 24px}
 .bonus-inner{max-width:900px;margin:0 auto;text-align:center}
@@ -169,7 +185,7 @@ a{text-decoration:none;color:inherit}
   <div class="section-inner">
     <div class="book-split">
       <div class="book-cover-wrap">
-        <img src="reference/book/bookcover.jpg" alt="CompTIA A+ 220-1200 Series Complete Study Guide cover">
+        <img src="reference/book/BookCover-Final.jpg" alt="CompTIA A+ 220-1200 Series Complete Study Guide cover">
         <div class="formats-below">
           <a href="https://www.amazon.com/dp/B0H8PV5RKQ" class="btn-buy-sm kindle" target="_blank" rel="noopener">📱 Digital (Kindle)</a>
           <a href="https://www.amazon.com/dp/B0H8PV5RKQ" class="btn-buy-sm paper" target="_blank" rel="noopener">📖 Paperback</a>
@@ -235,6 +251,14 @@ a{text-decoration:none;color:inherit}
   </div>
 </section>
 
+<!-- AUTHOR CRED STRIP -->
+<div class="author-strip">
+  <div class="author-strip-inner">
+    <div class="avatar">NW</div>
+    <p><strong>Written by Niko Williams</strong> — CompTIA A+ (220-1201 &amp; 220-1202) certified, with real-world networking and endpoint/network security experience. No filler, no rambling stories about dial-up modems — just what you need to pass. <a href="about.html">Read more about the author →</a></p>
+  </div>
+</div>
+
 <!-- FORMAT COMPARISON -->
 <section class="formats">
   <div class="formats-inner">
@@ -263,6 +287,34 @@ a{text-decoration:none;color:inherit}
         <div class="fmt-note">Best for long-term reference</div>
         <a href="https://www.amazon.com/dp/B0H8PV5RKQ" class="btn-fmt" target="_blank" rel="noopener">Buy on Amazon →</a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-inner">
+    <h2>Frequently Asked Questions</h2>
+    <p class="sub">Common questions before you buy.</p>
+    <div class="faq-item">
+      <h4>Does this cover both Core 1 and Core 2, or do I need to buy two books?</h4>
+      <p>One book, both exams. Every format covers Core 1 (220-1201) and Core 2 (220-1202) completely — you don't need a second purchase.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Digital, paperback, or hardback — which should I get?</h4>
+      <p>All three cover identical content and include the same free Members Portal access code. Digital is best for studying on the go; paperback is great for highlighting and margin notes; hardback is built to last if you want a durable reference copy.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Is the Members Portal really free?</h4>
+      <p>Yes. Every format ships with a one-time access code on the last page of the book — no subscription, no upsell. It unlocks 500+ flashcards, a searchable glossary, arcade study games, and the full PBQ set.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Is this enough on its own, or do I need other study resources too?</h4>
+      <p>The book plus the free Members Portal is designed to be a complete study path — structured modules, Exam Tips/Traps, practice questions, and the 8-week study plan on this site. Many students supplement with hands-on practice (a home lab, old hardware to take apart), which the book also walks you through.</p>
+    </div>
+    <div class="faq-item">
+      <h4>How is this different from the big-name CompTIA A+ guides?</h4>
+      <p>Most competing guides run 800-900+ pages with a lot of narrative filler. This guide is written to be direct — Module Objectives tell you exactly what's tested, with Exam Tips/Traps/Pro Tips called out throughout, plus a free interactive study portal that most competing books don't include at all.</p>
     </div>
   </div>
 </section>

@@ -59,13 +59,18 @@ a{text-decoration:none;color:inherit}
 .contact-card h4{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:4px}
 .contact-card p{font-size:.82rem;color:var(--muted);margin:0}
 .contact-card a{color:var(--blue);font-size:.82rem;font-weight:600}
-/* EMBED FORM AREA */
-.form-embed-box{background:var(--light);border:2px dashed var(--border);border-radius:12px;padding:36px;text-align:center;color:var(--muted)}
-.form-embed-box .fi{font-size:2.5rem;margin-bottom:12px}
-.form-embed-box h3{font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
-.form-embed-box p{font-size:.88rem;line-height:1.6;max-width:480px;margin:0 auto 16px}
-.form-embed-box .platforms{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
-.form-embed-box .plat-badge{background:#fff;border:1px solid var(--border);border-radius:6px;padding:5px 14px;font-size:.78rem;font-weight:600;color:var(--muted)}
+/* CONTACT FORM */
+.contact-form-box{background:var(--light);border:1px solid var(--border);border-radius:12px;padding:32px;max-width:640px}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cf-field{margin-bottom:16px;display:flex;flex-direction:column;gap:6px}
+.cf-field label{font-size:.85rem;font-weight:600;color:var(--navy)}
+.cf-field input,.cf-field select,.cf-field textarea{font-family:inherit;font-size:.92rem;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--text);resize:vertical}
+.cf-field input:focus,.cf-field select:focus,.cf-field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(91,155,213,.15)}
+.cf-submit{background:var(--navy);color:#fff;border:none;padding:12px 28px;border-radius:8px;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s}
+.cf-submit:hover{background:var(--blue)}
+.cf-submit:disabled{opacity:.6;cursor:default}
+.cf-status{margin-top:12px;font-size:.88rem;min-height:1.2em}
+@media(max-width:560px){.cf-row{grid-template-columns:1fr}}
 /* FOOTER */
 .footer{background:var(--navy);padding:28px 24px;text-align:center;border-top:1px solid rgba(255,255,255,.08)}
 .footer p{color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:4px}
@@ -170,22 +175,67 @@ a{text-decoration:none;color:inherit}
       </div>
     </div>
 
-    <!-- EMBED FORM PLACEHOLDER -->
-    <div class="form-embed-box">
-      <div class="fi">📬</div>
-      <h3>Contact Form Coming Soon</h3>
-      <p>A contact form will be embedded here. If you use an external platform like Google Forms, Typeform, Formspree, or Netlify Forms, paste the embed code in place of this block. All of these work with a static site hosted on Cloudflare Pages.</p>
-      <p><strong>To embed:</strong> Replace this entire <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:.82rem;">&lt;div class="form-embed-box"&gt;</code> block with your platform's embed code.</p>
-      <div class="platforms">
-        <span class="plat-badge">Google Forms</span>
-        <span class="plat-badge">Typeform</span>
-        <span class="plat-badge">Formspree</span>
-        <span class="plat-badge">Netlify Forms</span>
-        <span class="plat-badge">JotForm</span>
-        <span class="plat-badge">Tally.so</span>
-      </div>
+    <!-- CONTACT FORM (Formspree) -->
+    <div class="contact-form-box">
+      <form id="contactForm" action="https://formspree.io/f/mzdnodbl" method="POST">
+        <div class="cf-row">
+          <div class="cf-field">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" required>
+          </div>
+          <div class="cf-field">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="_replyto" required>
+          </div>
+        </div>
+        <div class="cf-field">
+          <label for="cf-topic">What's this about?</label>
+          <select id="cf-topic" name="topic">
+            <option>Bug Report</option>
+            <option>Feature Suggestion</option>
+            <option>Book / Access Code Question</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="cf-field">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="5" required></textarea>
+        </div>
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="_subject" value="CompTIA A+ Study Hub — Contact Form">
+        <button type="submit" class="cf-submit">Send Message</button>
+        <p class="cf-status" id="cfStatus"></p>
+      </form>
     </div>
   </section>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const status = document.getElementById('cfStatus');
+      const btn = form.querySelector('.cf-submit');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          form.reset();
+          status.textContent = "Thanks — message sent! I'll get back to you soon.";
+          status.style.color = '#27ae60';
+        } else {
+          throw new Error('Submit failed');
+        }
+      } catch (err) {
+        status.textContent = "Something went wrong. Please try again or email directly.";
+        status.style.color = '#e74c3c';
+      }
+      btn.disabled = false; btn.textContent = 'Send Message';
+    });
+  </script>
 
 </div><!-- /.container -->
 

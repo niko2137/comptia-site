@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>Cloud Muncher — CompTIA A+ Study Hub</title>
+<meta name="description" content="Cloud Muncher: a Word-Muncher-style arcade game for learning cloud service models, deployment models, and VM concepts for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#080c18;font-family:'Courier New',monospace;color:#e2e8f0;touch-action:none;-webkit-user-select:none;user-select:none}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hud{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#0f1628;border-bottom:1px solid rgba(0,255,136,0.15);flex-shrink:0;flex-wrap:wrap;gap:8px}
+.h-item{font-size:11px;color:#7a8a9e}
+.h-item b{color:#00ff88}
+.h-lives .heart{font-size:1em}
+.h-lives .heart.lost{opacity:0.2}
+#prompt{background:#0a1424;padding:10px 16px;text-align:center;font-size:0.88em;color:#c8d8e8;border-bottom:1px solid rgba(0,255,136,0.1);flex-shrink:0;min-height:2.6em;display:flex;align-items:center;justify-content:center}
+#prompt b{color:#00ff88}
+#gridWrap{flex:1;display:flex;align-items:center;justify-content:center;padding:8px;overflow:hidden}
+#grid{display:grid;gap:3px;width:100%;max-width:640px;aspect-ratio:6/5}
+.cell{background:#141c30;border:1px solid #2a3a55;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.62em;text-align:center;padding:2px;position:relative;color:#c8d8e8;line-height:1.15;overflow:hidden}
+.cell.muncher{background:#00ff88;color:#080c18;font-weight:900;box-shadow:0 0 16px rgba(0,255,136,0.6)}
+.cell.bug{background:#ff9500;color:#080c18;font-weight:900;box-shadow:0 0 16px rgba(255,149,0,0.5)}
+.cell.correct-flash{background:#00e676;color:#080c18}
+.cell.wrong-flash{background:#ff1744;color:#fff}
+#controls{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;background:#0f1628;flex-shrink:0}
+.dpad{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px);gap:4px}
+.dpad button{background:#141c30;border:1px solid #2a3a55;color:#00ff88;border-radius:8px;font-size:1.2em;cursor:pointer}
+.dpad button:active{background:#1e3a5f}
+#foot{display:flex;justify-content:center;gap:16px;padding:6px;background:#0f1628}
+#muteBtn,.fbtn{background:none;border:1px solid #2a3a55;color:#888;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px}
+#overlay{position:fixed;inset:0;background:rgba(8,12,24,0.96);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.over-card{background:#141c30;border:2px solid #00ff88;border-radius:16px;padding:30px;max-width:420px;width:100%;text-align:center}
+.over-card h2{color:#00ff88;font-size:1.5em;margin-bottom:10px}
+.over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
+.over-card button{background:#00ff88;color:#080c18;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;margin-top:14px}
+#grid .cell{cursor:pointer}
+@media(hover:hover) and (pointer:fine){ .dpad{display:none} }
+#introOverlay{position:fixed;inset:0;background:rgba(8,12,24,0.96);z-index:520;display:flex;align-items:center;justify-content:center;padding:20px}
+#introOverlay.hidden{display:none}
+.intro-card{background:#141c30;border:2px solid #00ff88;border-radius:16px;padding:26px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 50px rgba(0,255,136,0.15)}
+.intro-card h2{color:#00ff88;font-size:1.3em;margin-bottom:12px}
+.intro-card p{color:#c8d8e8;font-size:13px;line-height:1.6;margin-bottom:12px}
+.intro-card p b{color:#00ff88}
+.intro-example{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0}
+.ex-cell{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:6px;font-size:1.3em;border:1px solid #2a3a55}
+.ex-you{background:#00ff88;color:#080c18}
+.ex-bug{background:#ff9500;color:#080c18}
+.intro-warn{color:#ffab00 !important;font-size:12px !important}
+.intro-warn b{color:#ffab00 !important}
+.intro-card button{width:100%;padding:12px;background:#00ff88;color:#080c18;border:none;border-radius:8px;font-weight:800;font-size:14px;cursor:pointer;margin-top:6px;font-family:inherit}
+.intro-card button:hover{background:#4dffb0}
+#helpBtn{background:none;border:1px solid #2a3a55;color:#888;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px;font-weight:800}
+#helpBtn:hover{border-color:#00ff88;color:#00ff88}
+</style>
+</head>
+<body>
+<div id="app">
+    <header id="hud">
+        <span class="h-item">SCORE: <b id="sVal">0</b></span>
+        <span class="h-item">ROUND: <b id="rVal">1</b>/<b>15</b></span>
+        <span class="h-item h-lives" id="hudLives"></span>
+    </header>
+    <div id="prompt"></div>
+    <div id="gridWrap"><div id="grid"></div></div>
+    <div id="controls">
+        <div class="dpad">
+            <div></div><button data-d="up">▲</button><div></div>
+            <button data-d="left">◀</button><div></div><button data-d="right">▶</button>
+            <div></div><button data-d="down">▼</button><div></div>
+        </div>
+    </div>
+    <footer id="foot">
+        <button id="helpBtn" title="How to play">?</button>
+        <button id="muteBtn">🔊</button>
+        <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
+    </footer>
+</div>
+<div id="overlay">
+    <div class="over-card" id="overCard"></div>
+</div>
+
+<div id="introOverlay">
+    <div class="intro-card">
+        <h2>☁️ Cloud Muncher</h2>
+        <p>The definition at the top is your clue. Move <b>☁️ you</b> onto the grid cell showing the matching <b>term</b>.</p>
+        <div class="intro-example">
+            <span class="ex-cell ex-you">☁️</span>
+            <span style="color:#555">→</span>
+            <span class="ex-cell" style="background:#141c30;color:#00e676;font-size:.55em;font-weight:700;padding:4px">Elasticity</span>
+        </div>
+        <p>Move with <b>arrow keys / WASD</b>, the on-screen <b>D-pad</b>, or just <b>tap any cell</b> to step toward it.</p>
+        <p class="intro-warn">⚠️ Avoid the <b>🔥 outage flares</b> patrolling the grid — touching one costs a life.</p>
+        <button id="introStartBtn">Start Munching</button>
+        <button id="introHelpClose" style="display:none">Got it</button>
+    </div>
+</div>
+
+<script src="../audio/games/Jeopardy-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'cloud-muncher';
+const PIP_SCORE = 1600;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+// Content from book.md "Module: Virtualization & Cloud Computing"
+const POOL = [
+    {term:'SaaS', def:"Software delivered fully online — e.g., Microsoft 365, Gmail, Salesforce"},
+    {term:'PaaS', def:"A platform for building applications — e.g., Azure App Service, Google App Engine"},
+    {term:'IaaS', def:"Virtual machines and storage delivered as a service — e.g., AWS EC2, Azure VMs"},
+    {term:'Public Cloud', def:"Shared infrastructure managed by providers like AWS, Azure, or GCP"},
+    {term:'Private Cloud', def:"Organization-owned cloud infrastructure"},
+    {term:'Hybrid Cloud', def:"A mix of public and private cloud"},
+    {term:'Community Cloud', def:"Shared by similar organizations, e.g., government agencies"},
+    {term:'Elasticity', def:"Automatic, on-demand scaling of resources up or down in response to demand"},
+    {term:'Scalability', def:"The ability to grow capacity — unlike elasticity, this CAN be manual"},
+    {term:'High Availability', def:"A system designed to remain operational with minimal downtime through redundancy"},
+    {term:'Customer', def:"In every service model — IaaS, PaaS, or SaaS — this party always owns the data"},
+    {term:'Snapshot', def:"Captures a VM's exact state (disk, RAM, settings) at a point in time"},
+    {term:'Clone', def:"Creates a complete, independent copy of an entire VM"},
+    {term:'Backup', def:"What a snapshot is NOT — it lives on the same disk as the VM and isn't a substitute for this"},
+    {term:'NAT', def:"Virtual networking mode where a VM shares the host's IP via translation"},
+    {term:'Bridged', def:"Virtual networking mode where a VM receives its own IP from the network"},
+    {term:'Host-only', def:"Virtual networking mode where a VM communicates ONLY with the host"},
+    {term:'vCPU', def:"A virtual CPU core assigned to a VM — should never exceed the host's physical core count"},
+    {term:'Dual-Channel', def:"RAM configuration installing matched pairs in the correct slots for double bandwidth"},
+    {term:'Guest Additions', def:"VirtualBox drivers that improve display resolution, clipboard sharing, and drag-and-drop"}
+];
+
+const COLS = 6, ROWS = 5;
+let grid = [];
+let muncherPos = {r:2, c:2};
+let bugs = [];
+let score = 0, lives = 3, round = 0;
+const TOTAL_ROUNDS = 15;
+let currentTarget = null;
+let muted = false, musicPlayer = null, musicStarted = false;
+let invuln = false;
+let bugInterval = null;
+
+function buildGrid(){
+    grid = [];
+    for(let r=0;r<ROWS;r++){
+        const row=[];
+        for(let c=0;c<COLS;c++) row.push(POOL[Math.floor(Math.random()*POOL.length)]);
+        grid.push(row);
+    }
+}
+
+function pickTarget(){
+    currentTarget = POOL[Math.floor(Math.random()*POOL.length)];
+    const r = Math.floor(Math.random()*ROWS), c = Math.floor(Math.random()*COLS);
+    grid[r][c] = currentTarget;
+    document.getElementById('prompt').innerHTML = `Find: <b>${currentTarget.def}</b>`;
+}
+
+function renderGrid(flashCell, flashClass){
+    const el = document.getElementById('grid');
+    el.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+    el.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
+    el.innerHTML = '';
+    for(let r=0;r<ROWS;r++){
+        for(let c=0;c<COLS;c++){
+            const div = document.createElement('div');
+            div.className = 'cell';
+            const isMuncher = muncherPos.r===r && muncherPos.c===c;
+            const bug = bugs.find(b=>b.r===r && b.c===c);
+            if(isMuncher) div.classList.add('muncher');
+            else if(bug) div.classList.add('bug');
+            if(flashCell && flashCell.r===r && flashCell.c===c) div.classList.add(flashClass);
+            div.textContent = isMuncher ? '☁️' : (bug ? '🔥' : grid[r][c].term);
+            div.dataset.r = r; div.dataset.c = c;
+            el.appendChild(div);
+        }
+    }
+}
+
+function renderLives(){
+    document.getElementById('hudLives').innerHTML = Array.from({length:3},(_, i)=>
+        `<span class="heart${i<lives?'':' lost'}">&#x2764;&#xFE0F;</span>`).join('');
+}
+function updateHUD(){ document.getElementById('sVal').textContent = score; document.getElementById('rVal').textContent = Math.min(round+1, TOTAL_ROUNDS); }
+
+let lastMoveAt = 0;
+const MOVE_COOLDOWN = 140;
+function move(dir){
+    if(invuln) return;
+    const now = Date.now();
+    if(now - lastMoveAt < MOVE_COOLDOWN) return;
+    lastMoveAt = now;
+    let {r,c} = muncherPos;
+    if(dir==='up') r = Math.max(0, r-1);
+    if(dir==='down') r = Math.min(ROWS-1, r+1);
+    if(dir==='left') c = Math.max(0, c-1);
+    if(dir==='right') c = Math.min(COLS-1, c+1);
+    muncherPos = {r,c};
+    checkMunch();
+    checkBugCollision();
+    renderGrid();
+}
+
+function checkMunch(){
+    const cell = grid[muncherPos.r][muncherPos.c];
+    if(!cell) return;
+    if(cell.term === currentTarget.term){
+        score += 100;
+        GameSounds.correct();
+        round++;
+        updateHUD();
+        renderGrid({r:muncherPos.r,c:muncherPos.c}, 'correct-flash');
+        if(round >= TOTAL_ROUNDS){ setTimeout(winGame, 400); return; }
+        setTimeout(()=>{
+            grid[muncherPos.r][muncherPos.c] = POOL[Math.floor(Math.random()*POOL.length)];
+            pickTarget();
+            renderGrid();
+        }, 350);
+    } else {
+        score = Math.max(0, score-10);
+        GameSounds.wrong();
+        renderGrid({r:muncherPos.r,c:muncherPos.c}, 'wrong-flash');
+        updateHUD();
+        setTimeout(renderGrid, 300);
+    }
+}
+
+function checkBugCollision(){
+    if(bugs.some(b=>b.r===muncherPos.r && b.c===muncherPos.c)) loseLife();
+}
+
+function loseLife(){
+    if(invuln) return;
+    lives--;
+    GameSounds.wrong();
+    renderLives();
+    invuln = true;
+    setTimeout(()=>{invuln=false;}, 1200);
+    if(lives <= 0) setTimeout(loseGame, 400);
+}
+
+function moveBugs(){
+    bugs.forEach(b=>{
+        const dirs = [[0,1],[0,-1],[1,0],[-1,0]];
+        const [dr,dc] = dirs[Math.floor(Math.random()*dirs.length)];
+        b.r = Math.min(ROWS-1, Math.max(0, b.r+dr));
+        b.c = Math.min(COLS-1, Math.max(0, b.c+dc));
+    });
+    checkBugCollision();
+    renderGrid();
+}
+
+function winGame(){
+    clearInterval(bugInterval);
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{result:'win'}});
+    showEnd('☁️ Cloud Fully Deployed!', true);
+}
+function loseGame(){
+    clearInterval(bugInterval);
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{result:'lose'}});
+    showEnd('🔥 Outage — Out of Lives!', false);
+}
+function showEnd(title, win){
+    document.getElementById('overCard').innerHTML = `
+        <h2>${title}</h2>
+        <p style="color:#94a3b8;">Rounds cleared: ${round}/${TOTAL_ROUNDS}</p>
+        <div class="final">${score}</div>
+        <div id="hsPanelEl"></div>
+        <button onclick="location.reload()">🔄 Play Again</button>`;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Top Munchers'});
+    document.getElementById('overlay').classList.add('show');
+}
+
+function startGame(){
+    buildGrid();
+    muncherPos = {r:2,c:2};
+    bugs = [{r:0,c:0},{r:ROWS-1,c:COLS-1}];
+    score=0; lives=3; round=0; invuln=false;
+    renderLives(); updateHUD();
+    pickTarget();
+    renderGrid();
+    if(bugInterval) clearInterval(bugInterval);
+    bugInterval = setInterval(moveBugs, 900);
+}
+
+document.querySelectorAll('.dpad button').forEach(btn=>{
+    let repeatTimer = null;
+    const go = ()=> move(btn.dataset.d);
+    const start = e=>{ e.preventDefault(); go(); clearInterval(repeatTimer); repeatTimer = setInterval(go, 60); };
+    const stop = ()=>{ clearInterval(repeatTimer); repeatTimer = null; };
+    btn.addEventListener('mousedown', start);
+    btn.addEventListener('touchstart', start, {passive:false});
+    btn.addEventListener('mouseup', stop);
+    btn.addEventListener('mouseleave', stop);
+    btn.addEventListener('touchend', stop);
+    btn.addEventListener('touchcancel', stop);
+});
+document.getElementById('grid').addEventListener('click', e=>{
+    const cell = e.target.closest('.cell');
+    if(!cell) return;
+    const r = parseInt(cell.dataset.r), c = parseInt(cell.dataset.c);
+    const dr = r - muncherPos.r, dc = c - muncherPos.c;
+    if(dr === 0 && dc === 0) return;
+    if(Math.abs(dr) >= Math.abs(dc)) move(dr > 0 ? 'down' : 'up');
+    else move(dc > 0 ? 'right' : 'left');
+});
+document.addEventListener('keydown', e=>{
+    const keys = ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d'];
+    if(keys.includes(e.key)) e.preventDefault();
+    if(e.key==='ArrowUp'||e.key==='w') move('up');
+    if(e.key==='ArrowDown'||e.key==='s') move('down');
+    if(e.key==='ArrowLeft'||e.key==='a') move('left');
+    if(e.key==='ArrowRight'||e.key==='d') move('right');
+});
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{ musicPlayer = new JeopardyTheme(); musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); }); musicStarted = true; }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); } else { startMusic(); GameSounds.unmute(); }
+});
+document.addEventListener('click', function once(){ startMusic(); }, {once:true});
+document.addEventListener('touchstart', function onceT(){ startMusic(); }, {once:true});
+
+// --- INTRO / HELP OVERLAY ---
+const introOverlay = document.getElementById('introOverlay');
+const introStartBtn = document.getElementById('introStartBtn');
+const introHelpClose = document.getElementById('introHelpClose');
+const helpBtn = document.getElementById('helpBtn');
+let gameStarted = false;
+
+introStartBtn.addEventListener('click', ()=>{
+    introOverlay.classList.add('hidden');
+    if(!gameStarted){ gameStarted = true; startGame(); }
+});
+introHelpClose.addEventListener('click', ()=>{ introOverlay.classList.add('hidden'); });
+helpBtn.addEventListener('click', ()=>{
+    introStartBtn.style.display = gameStarted ? 'none' : '';
+    introHelpClose.style.display = gameStarted ? '' : 'none';
+    introOverlay.classList.remove('hidden');
+});
+</script>
+</body>
+</html>

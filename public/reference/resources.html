@@ -6,8 +6,8 @@
 <title>Resource Center — CompTIA A+ Study Hub</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#152d4f;--navy-light:#1c3a63;--white:#152d4f;--red:#e74c3c;--red-hover:#c0392b;--gray-light:#1c3a63;--gray-border:#2d4d7a;--text:#f1f5f9;--text-muted:#94a3b8;--green:#27ae60;--shadow:0 2px 12px rgba(0,0,0,0.3);--shadow-hover:0 4px 20px rgba(0,0,0,0.4);--radius:8px}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#152d4f;color:var(--text);line-height:1.6}
+:root{--navy:#152d4f;--white:#ffffff;--red:#e74c3c;--red-hover:#c0392b;--surface:#eaeff5;--gray-border:#e2e8f0;--text:#1a2744;--text-muted:#64748b;--green:#27ae60;--shadow:0 2px 12px rgba(31,73,125,0.08);--shadow-hover:0 4px 20px rgba(31,73,125,0.15);--radius:8px}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:var(--text);line-height:1.6}
 .nav{position:sticky;top:0;z-index:100;background:#152d4f;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.4);border-bottom:1px solid #2d4d7a}
 .nav-brand{color:var(--white);font-weight:700;font-size:1.15rem;letter-spacing:-.5px}
 .nav-links{display:flex;align-items:center;gap:1rem}
@@ -18,25 +18,23 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .hero{background:linear-gradient(135deg,#152d4f 0%,#1F497D 100%);color:#fff;padding:3rem 1.5rem;text-align:center;border-bottom:1px solid #2d4d7a}
 .hero h1{font-size:2.2rem;margin-bottom:.5rem;font-weight:800}
 .hero p{opacity:.85;font-size:1.1rem;max-width:600px;margin:0 auto}
-.hero .badge-members{display:inline-block;background:var(--red);color:var(--white);font-size:.75rem;font-weight:700;padding:.25rem .75rem;border-radius:20px;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.5px}
 .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
 .category{margin-bottom:3rem}
-.category-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:2px solid #2d4d7a}
-.category-header h2{font-size:1.35rem;color:#5b9bd5;font-weight:700}
+.category-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:2px solid var(--gray-border)}
+.category-header h2{font-size:1.35rem;color:#1F497D;font-weight:700}
 .category-num{background:#1F497D;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.card{background:#1c3a63;border:1px solid #2d4d7a;border-radius:var(--radius);padding:1.25rem;transition:all .2s;position:relative}
+.card{background:var(--white);border:1px solid var(--gray-border);border-radius:var(--radius);padding:1.25rem;transition:all .2s;position:relative;box-shadow:var(--shadow);cursor:pointer}
 .card:hover{box-shadow:var(--shadow-hover);border-color:#5b9bd5;transform:translateY(-2px)}
 .card-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
-.card-title a{color:#5b9bd5;font-weight:600;font-size:.95rem;text-decoration:none;transition:color .2s}
+.card-title a{color:#1F497D;font-weight:600;font-size:.95rem;text-decoration:none;transition:color .2s}
 .card-title a:hover{color:var(--red)}
 .badge-free{background:rgba(39,174,96,0.15);color:#27ae60;font-size:.7rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
 .card-desc{color:var(--text-muted);font-size:.85rem;line-height:1.5}
-.card-desc{color:var(--text-muted);font-size:.85rem;line-height:1.5}
-.notes{background:#1c3a63;border:1px solid #2d4d7a;border-radius:var(--radius);padding:1.5rem 2rem;margin-top:2rem}
+.notes{background:var(--surface);border:1px solid var(--gray-border);border-radius:var(--radius);padding:1.5rem 2rem;margin-top:2rem}
 .notes p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
 .notes p:last-child{margin-bottom:0}
-.footer{text-align:center;padding:2rem;color:var(--text-muted);font-size:.85rem;border-top:1px solid #2d4d7a;margin-top:2rem}
+.footer{text-align:center;padding:2rem;color:var(--text-muted);font-size:.85rem;border-top:1px solid var(--gray-border);margin-top:2rem}
 @media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.hero h1{font-size:1.6rem}.nav{flex-wrap:wrap;gap:.5rem}.nav-links{gap:.5rem}}
 @media print{.nav{display:none}.hero{padding:1.5rem;background:none;color:var(--navy)}.card{break-inside:avoid;border:1px solid #ccc}.badge-free{border:1px solid var(--green)}}
@@ -53,7 +51,6 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 </nav>
 
 <header class="hero">
-<span class="badge-members">Members Only</span>
 <h1>Resource Center</h1>
 <p>40+ verified free tools, learning platforms, and utilities curated for CompTIA A+ students and IT professionals.</p>
 </header>
@@ -171,8 +168,16 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <p class="card-desc">Open-source system cleaner. Removes junk files safely without privacy concerns.</p>
 </div>
 <div class="card">
+<div class="card-title"><a href="https://www.dropitproject.com/" target="_blank" rel="noopener">DropIt</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free, open-source, portable file organizer. Auto-sorts messy folders (like Downloads) by type, name, or rule — a solid alternative to paid folder-cleanup tools.</p>
+</div>
+<div class="card">
 <div class="card-title"><a href="https://www.revouninstaller.com/revo-uninstaller-free-download/" target="_blank" rel="noopener">Revo Uninstaller (Free)</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Complete uninstaller that removes leftover registry entries and files.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://ninite.com/" target="_blank" rel="noopener">Ninite</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Batch-installs common free tools (7-Zip, VS Code, and more) silently, with no bundled toolbars or offers.</p>
 </div>
 </div>
 </section>
@@ -204,6 +209,10 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <div class="card-title"><a href="https://www.advanced-ip-scanner.com/" target="_blank" rel="noopener">Advanced IP Scanner</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Network scanner for Windows. Find devices, shared folders, and remote control.</p>
 </div>
+<div class="card">
+<div class="card-title"><a href="https://www.speedtest.net/" target="_blank" rel="noopener">Speedtest by Ookla</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Quick, well-known bandwidth test. Useful for diagnosing WAN/ISP throughput issues.</p>
+</div>
 </div>
 </section>
 
@@ -227,6 +236,10 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <p class="card-desc">S.M.A.R.T. monitoring for HDDs and SSDs. Predict drive failures.</p>
 </div>
 <div class="card">
+<div class="card-title"><a href="https://www.easeus.com/download/tbf-download.html" target="_blank" rel="noopener">EaseUS Todo Backup Free</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free disk/partition imaging and backup software. Great for practicing full, incremental, and differential backup concepts.</p>
+</div>
+<div class="card">
 <div class="card-title"><a href="https://www.memtest86.com/" target="_blank" rel="noopener">MemTest86</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Industry-standard RAM testing tool. Boot from USB to test memory.</p>
 </div>
@@ -237,6 +250,18 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <div class="card">
 <div class="card-title"><a href="https://www.ventoy.net/" target="_blank" rel="noopener">Ventoy</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Boot multiple ISOs from one USB drive. No need to reformat for each ISO.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.elby.ch/products/vcd.html" target="_blank" rel="noopener">Virtual CloneDrive</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Mount ISO, BIN, and other disc images as a virtual CD/DVD/Blu-ray drive — no burning required.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://gparted.org/" target="_blank" rel="noopener">GParted</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free, bootable partition editor. Resize, create, and format partitions — pairs well with Rufus/Ventoy.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.ccleaner.com/recuva/download" target="_blank" rel="noopener">Recuva</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free deleted-file recovery tool. Note: the installer may offer bundled add-ons — watch for opt-out checkboxes during setup.</p>
 </div>
 </div>
 </section>
@@ -317,6 +342,14 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <p class="card-desc">Free source code editor. Essential for config file editing.</p>
 </div>
 <div class="card">
+<div class="card-title"><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free, extensible code editor. Great for scripting practice and reviewing config/log files.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://handbrake.fr/" target="_blank" rel="noopener">HandBrake</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Open-source video transcoder. Useful for compressing screen recordings and study videos.</p>
+</div>
+<div class="card">
 <div class="card-title"><a href="https://www.voidtools.com/" target="_blank" rel="noopener">Everything (Search)</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Instant file search for Windows. Finds any file in milliseconds.</p>
 </div>
@@ -325,8 +358,32 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <p class="card-desc">Screenshot and screen recording tool. Auto-upload capabilities.</p>
 </div>
 <div class="card">
+<div class="card-title"><a href="https://obsproject.com/" target="_blank" rel="noopener">OBS Studio</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free, open-source screen recording and streaming software. Great for documenting troubleshooting steps or creating study videos.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.audacityteam.org/" target="_blank" rel="noopener">Audacity</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free, open-source audio editor. Clean up narration and audio for your OBS recordings before compressing with HandBrake.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.pdfgear.com/" target="_blank" rel="noopener">PDFgear</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free PDF editor, converter, and merger. Handy for annotating study PDFs and editing forms.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.codecguide.com/" target="_blank" rel="noopener">K-Lite Codec Pack</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Trusted codec collection for Windows Media Player and other players. Fixes "won't play" media file issues.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.xnview.com/en/xnviewmp/" target="_blank" rel="noopener">XnView MP</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free image viewer and batch converter. Supports 500+ image formats.</p>
+</div>
+<div class="card">
 <div class="card-title"><a href="https://spacejock.com/yWriter7.html" target="_blank" rel="noopener">yWriter</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Free writing software. Chapter-based organization — great for documentation projects.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://www.diagrams.net/" target="_blank" rel="noopener">draw.io (diagrams.net)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free network/topology diagramming tool. Great for SOHO network diagrams and IT documentation practice.</p>
 </div>
 </div>
 </section>
@@ -341,6 +398,10 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <div class="card">
 <div class="card-title"><a href="https://www.virtualbox.org/" target="_blank" rel="noopener">VirtualBox</a><span class="badge-free">Free</span></div>
 <p class="card-desc">Free Type 2 hypervisor. Create VMs for practice labs.</p>
+</div>
+<div class="card">
+<div class="card-title"><a href="https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hype.html" target="_blank" rel="noopener">VMware Workstation Pro (Free)</a><span class="badge-free">Free</span></div>
+<p class="card-desc">Free for personal use since late 2024. The book names VMware Workstation as a Type 2 hypervisor example. Requires a free Broadcom account to download.</p>
 </div>
 <div class="card">
 <div class="card-title"><a href="https://tryhackme.com/" target="_blank" rel="noopener">TryHackMe (Free Tier)</a><span class="badge-free">Free</span></div>
@@ -371,5 +432,17 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 <a href="../about.html#contact" style="color:inherit;font-size:.8rem;">Contact</a>
 </div>
 </footer>
+
+<script>
+// Make the entire card clickable, not just the title link
+document.querySelectorAll('.card').forEach(card => {
+    const link = card.querySelector('.card-title a');
+    if (!link) return;
+    card.addEventListener('click', e => {
+        if (e.target.closest('a')) return; // let the native link handle its own click
+        window.open(link.href, link.target || '_self');
+    });
+});
+</script>
 </body>
 </html>

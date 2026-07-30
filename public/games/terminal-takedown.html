@@ -386,11 +386,20 @@ function togglePause(){if(!questionActive&&!bsodActive)paused=!paused;}
 function toggleMute(){muted=!muted;if(muted){stopMusic();}else if(!gameOver){startMusic();}}
 
 // High scores
-function getHighScores(){return JSON.parse(localStorage.getItem('terminalTakedownScores')||'[]');}
+function getHighScores(){
+    let scores=JSON.parse(localStorage.getItem('terminalTakedownScores')||'[]');
+    if(!scores.some(s=>s.name==='Pip')){
+        scores.push({name:'Pip',score:1100,level:4,date:new Date().toLocaleDateString()});
+        scores.sort((a,b)=>b.score-a.score);
+        scores=scores.slice(0,10);
+        localStorage.setItem('terminalTakedownScores',JSON.stringify(scores));
+    }
+    return scores;
+}
 function saveHighScore(s){let scores=getHighScores();scores.push({score:s,level:level,date:new Date().toLocaleDateString()});scores.sort((a,b)=>b.score-a.score);scores=scores.slice(0,10);localStorage.setItem('terminalTakedownScores',JSON.stringify(scores));}
 function showHighScores(){
 let scores=getHighScores();
-let html='';scores.forEach((s,i)=>{html+=`<li style="color:${i===0?'#ffaa00':i<3?'#4488ff':'#ccc'}">${s.score} pts - Lv${s.level} (${s.date})</li>`;});
+let html='';scores.forEach((s,i)=>{html+=`<li style="color:${i===0?'#ffaa00':i<3?'#4488ff':'#ccc'}">${s.name?s.name+' — ':''}${s.score} pts - Lv${s.level} (${s.date})</li>`;});
 if(!html)html='<li style="color:#888">No scores yet</li>';
 document.getElementById('scoreList').innerHTML=html;
 document.getElementById('highScoreModal').style.display='flex';

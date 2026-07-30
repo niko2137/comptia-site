@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Support Desk Rush — CompTIA A+ Study Hub</title>
+<meta name="description" content="Support Desk Rush: a calm, untimed sequencing puzzle for mastering the CompTIA A+ 8-step help desk ticket lifecycle.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#101b2e;color:#dbe4f0;min-height:100vh;font-family:'Segoe UI',-apple-system,sans-serif;line-height:1.5}
+.top-bar{position:sticky;top:0;background:#152238;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:50;border-bottom:1px solid #223350}
+.top-bar a{color:#7ec4e8;text-decoration:none;font-size:13px}
+#muteBtn{background:none;border:1px solid #2a3f5f;color:#8899aa;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px}
+.wrap{max-width:640px;margin:0 auto;padding:30px 20px 60px;text-align:center}
+h1{font-size:1.6em;color:#9fd8ff;margin-bottom:8px;font-weight:700}
+.subtitle{color:#8fa3bc;font-size:0.92em;margin-bottom:28px;line-height:1.6}
+.ticket-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.ticket-card{background:#182b47;border:2px solid #2a3f5f;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;text-align:left;transition:all .25s;cursor:grab}
+.ticket-card.dragging{opacity:0.4}
+.ticket-card.correct{border-color:#4dcf9e;background:#152e28}
+.ticket-card.incorrect{border-color:#e8896a;background:#301c18}
+.pos-num{width:28px;height:28px;border-radius:50%;background:#223350;color:#9fd8ff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85em;flex-shrink:0}
+.ticket-text{flex:1;font-size:0.9em}
+.ticket-text b{color:#fff;display:block;margin-bottom:2px}
+.ticket-text span{color:#8fa3bc;font-size:0.85em}
+.move-btns{display:flex;flex-direction:column;gap:2px}
+.move-btns button{background:#223350;border:none;color:#7ec4e8;width:26px;height:22px;border-radius:5px;cursor:pointer;font-size:0.75em}
+.move-btns button:hover{background:#2d4468}
+.move-btns button:disabled{opacity:0.25;cursor:default}
+#checkBtn{background:linear-gradient(135deg,#4dcf9e,#7ec4e8);border:none;color:#0a1420;padding:14px 40px;border-radius:30px;font-weight:800;font-size:1em;cursor:pointer;margin-top:6px}
+#checkBtn:hover{transform:translateY(-2px)}
+#feedback{margin-top:16px;font-size:0.9em;color:#8fa3bc;min-height:1.4em}
+.win-card{background:#182b47;border:2px solid #4dcf9e;border-radius:16px;padding:28px;margin-top:20px}
+.win-card h2{color:#4dcf9e;font-size:1.4em;margin-bottom:10px}
+.win-card button{background:#4dcf9e;color:#0a1420;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;margin-top:14px}
+@media(max-width:500px){ .ticket-text{font-size:0.82em} }
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="#" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Return</a>
+<button id="muteBtn">🔊</button>
+</div>
+<div class="wrap">
+    <h1>🎧 Support Desk Rush</h1>
+    <p class="subtitle">No timer, no pressure — just drag or use the arrows to put the 8-step help desk ticket lifecycle in the correct order. Take your time.</p>
+    <div class="ticket-list" id="ticketList"></div>
+    <div id="feedback"></div>
+    <button id="checkBtn">✓ Check My Order</button>
+    <div id="winArea"></div>
+</div>
+
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'support-desk-rush';
+const PIP_SCORE = 80;
+
+// The 8-step Ticket Lifecycle (book.md "Module: Customer Service & Ticket Lifecycle")
+const CORRECT_ORDER = [
+    {id:1, title:"Ticket Creation (Intake)", detail:"Username, contact info, device/asset ID, problem description, date/time."},
+    {id:2, title:"Categorization & Prioritization", detail:"Assign P1 Critical, P2 High, P3 Medium, or P4 Low."},
+    {id:3, title:"Troubleshooting & Documentation", detail:"User Q&A, testing, logs. Document steps taken and findings."},
+    {id:4, title:"Escalation (If Needed)", detail:"When the issue exceeds your permissions or specialized knowledge is required."},
+    {id:5, title:"Resolution & Implementation", detail:"Apply the fix, install updates, restore service."},
+    {id:6, title:"Verification of Functionality", detail:"Confirm the issue is fully resolved — user confirmation required."},
+    {id:7, title:"User Education (If Applicable)", detail:"Explain how to avoid the issue in the future."},
+    {id:8, title:"Ticket Closure", detail:"Closed only after user confirms and all documentation is entered."}
+];
+
+let order = [];
+let attempts = 0;
+let solved = false;
+let muted = false, musicPlayer = null, musicStarted = false;
+let draggedIdx = null;
+
+function shuffle(arr){
+    let a = [...arr];
+    do { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+    while(a.every((item,i)=>item.id===CORRECT_ORDER[i].id));
+    return a;
+}
+
+function render(){
+    const el = document.getElementById('ticketList');
+    el.innerHTML = order.map((step, i)=>`
+        <div class="ticket-card" draggable="true" data-idx="${i}">
+            <div class="pos-num">${i+1}</div>
+            <div class="ticket-text"><b>${step.title}</b><span>${step.detail}</span></div>
+            <div class="move-btns">
+                <button data-dir="up" data-idx="${i}" ${i===0?'disabled':''}>▲</button>
+                <button data-dir="down" data-idx="${i}" ${i===order.length-1?'disabled':''}>▼</button>
+            </div>
+        </div>`).join('');
+    attachEvents();
+}
+
+function attachEvents(){
+    document.querySelectorAll('.move-btns button').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const i = parseInt(btn.dataset.idx);
+            const dir = btn.dataset.dir;
+            const j = dir==='up' ? i-1 : i+1;
+            if(j<0 || j>=order.length) return;
+            [order[i], order[j]] = [order[j], order[i]];
+            GameSounds.click();
+            render();
+        });
+    });
+    document.querySelectorAll('.ticket-card').forEach(card=>{
+        card.addEventListener('dragstart', e=>{ draggedIdx = parseInt(card.dataset.idx); card.classList.add('dragging'); });
+        card.addEventListener('dragend', e=>{ card.classList.remove('dragging'); });
+        card.addEventListener('dragover', e=> e.preventDefault());
+        card.addEventListener('drop', e=>{
+            e.preventDefault();
+            const dropIdx = parseInt(card.dataset.idx);
+            if(draggedIdx === null || draggedIdx === dropIdx) return;
+            const [moved] = order.splice(draggedIdx, 1);
+            order.splice(dropIdx, 0, moved);
+            GameSounds.click();
+            render();
+        });
+    });
+}
+
+function checkOrder(){
+    if(solved) return;
+    attempts++;
+    let allCorrect = true;
+    document.querySelectorAll('.ticket-card').forEach((card, i)=>{
+        const isCorrect = order[i].id === CORRECT_ORDER[i].id;
+        card.classList.remove('correct','incorrect');
+        card.classList.add(isCorrect ? 'correct' : 'incorrect');
+        if(!isCorrect) allCorrect = false;
+    });
+    const fb = document.getElementById('feedback');
+    if(allCorrect){
+        solved = true;
+        GameSounds.complete();
+        const score = Math.max(20, PIP_SCORE - (attempts-1)*10);
+        HighScores.ensureSeeded(GAME_ID, PIP_SCORE, {lowerIsBetter:false});
+        HighScores.submitScore(GAME_ID, score, {label:'You', extra:{attempts}});
+        fb.textContent = '';
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('winArea').innerHTML = `
+            <div class="win-card">
+                <h2>✅ Perfect Sequence!</h2>
+                <p style="color:#8fa3bc;">Solved in ${attempts} attempt${attempts===1?'':'s'}.</p>
+                <div id="hsPanelEl" style="margin-top:14px;"></div>
+                <button onclick="location.reload()">🔄 Try Again</button>
+            </div>`;
+        document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Fewest Attempts', unit:' pts'});
+    } else {
+        GameSounds.wrong();
+        fb.textContent = 'Not quite — the highlighted steps are out of place. Rearrange and try again whenever you\'re ready.';
+    }
+}
+
+document.getElementById('checkBtn').addEventListener('click', checkOrder);
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{ musicPlayer = new LofiChillMusic(); musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); }); musicStarted = true; }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); } else { startMusic(); GameSounds.unmute(); }
+});
+document.addEventListener('click', function once(){ startMusic(); }, {once:true});
+
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+order = shuffle(CORRECT_ORDER);
+render();
+</script>
+</body>
+</html>

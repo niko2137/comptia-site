@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ticket Triage — CompTIA A+ Study Hub</title>
+<meta name="description" content="Ticket Triage: an Oregon-Trail-style branching scenario game for mastering the CompTIA A+ 6-step (IETEVD) troubleshooting methodology.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e1a;color:#e0e6f0;min-height:100vh;overflow-x:hidden;font-family:'Segoe UI',-apple-system,sans-serif}
+.game-container{max-width:700px;margin:0 auto;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.top-bar{position:fixed;top:0;left:0;right:0;background:#0f1628;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;z-index:50;border-bottom:1px solid #1a2444}
+.top-bar a{color:#5b9bd5;text-decoration:none;font-size:13px}
+#muteBtn{background:none;border:1px solid #2a3a55;color:#888;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:13px}
+
+.trail-map{display:flex;gap:6px;margin:60px 0 24px;flex-wrap:wrap;justify-content:center}
+.trail-stop{width:22px;height:22px;border-radius:50%;background:#1a2444;border:2px solid #2a3a55;display:flex;align-items:center;justify-content:center;font-size:11px}
+.trail-stop.done{background:#0d5c3a;border-color:#27ae60}
+.trail-stop.current{background:#1a4a6a;border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,0.5)}
+.trail-stop.setback{background:#5c1010;border-color:#ff4444}
+
+.scenario-card{background:#141c30;border:2px solid #2a3a55;border-radius:16px;padding:26px;width:100%;text-align:left}
+.step-badge{display:inline-block;padding:4px 12px;border-radius:20px;background:rgba(0,229,255,0.12);color:#00e5ff;font-size:0.75em;font-weight:700;letter-spacing:1px;margin-bottom:14px;text-transform:uppercase}
+.scenario-narrative{font-size:0.85em;color:#7a8a9e;font-style:italic;margin-bottom:12px;line-height:1.5}
+.scenario-text{font-size:1.05em;color:#fff;margin-bottom:20px;line-height:1.5}
+.timer-bar-wrap{width:100%;height:6px;background:#1a2444;border-radius:3px;overflow:hidden;margin-bottom:18px}
+.timer-bar{height:100%;background:linear-gradient(90deg,#00e676,#00e5ff);width:100%;transition:width 1s linear}
+.timer-bar.danger{background:linear-gradient(90deg,#ff1744,#ff6d00)}
+.options{display:flex;flex-direction:column;gap:10px}
+.opt-btn{background:#0f1628;border:2px solid #2a3a55;color:#e0e6f0;padding:14px 16px;border-radius:10px;text-align:left;cursor:pointer;font-size:0.92em;transition:all .15s;line-height:1.4}
+.opt-btn:hover{border-color:#00e5ff;background:#182236}
+.opt-btn.correct{border-color:#00e676;background:rgba(0,230,118,0.12)}
+.opt-btn.wrong{border-color:#ff1744;background:rgba(255,23,68,0.12)}
+.opt-btn:disabled{pointer-events:none}
+.outcome-box{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:0.88em;line-height:1.5}
+.outcome-box.good{background:rgba(0,230,118,0.08);border-left:4px solid #00e676;color:#c8e8d8}
+.outcome-box.bad{background:rgba(255,23,68,0.08);border-left:4px solid #ff1744;color:#e8c8c8}
+.hud-row{display:flex;justify-content:space-between;width:100%;margin-bottom:6px;font-size:0.8em;color:#7a8a9e}
+.hud-row b{color:#fff}
+.next-btn{margin-top:16px;background:linear-gradient(135deg,#00e5ff,#b300ff);border:none;color:#fff;padding:12px 30px;border-radius:30px;font-weight:700;cursor:pointer;align-self:center}
+.end-card{background:#141c30;border:2px solid #2a3a55;border-radius:16px;padding:30px;text-align:center;width:100%}
+.end-card h2{font-size:1.8em;margin-bottom:10px}
+.end-card .final{font-size:2.6em;font-weight:900;background:linear-gradient(135deg,#00e5ff,#b300ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:10px 0}
+.end-card button{background:linear-gradient(135deg,#00e5ff,#b300ff);border:none;color:#fff;padding:14px 40px;border-radius:30px;font-weight:800;font-size:1em;cursor:pointer;margin-top:14px}
+@media(max-width:600px){ .scenario-card{padding:18px} }
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="#" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Return</a>
+<button id="muteBtn">🔊</button>
+</div>
+<div class="game-container" id="gameContainer"></div>
+
+<script src="../audio/games/Neon-Circuit-Dash-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'ticket-triage';
+const PIP_SCORE = 1400;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+// The 6-step IETEVD methodology (book.md "The 6-Step CompTIA Troubleshooting Process: IETEVD")
+const STEPS = [
+    {code:'I', name:'Identify the Problem', detail:'Gather information, question the user, identify recent changes, check documentation.'},
+    {code:'E1', name:'Establish a Theory of Probable Cause', detail:'Question the obvious, consider multiple approaches, research based on symptoms.'},
+    {code:'T', name:'Test the Theory', detail:'Confirm your theory and verify the root cause. If incorrect, loop back and re-establish a new theory.'},
+    {code:'E2', name:'Establish a Plan of Action', detail:'Plan the fix, notify affected users, consider impacts, implement the solution.'},
+    {code:'V', name:'Verify Full System Functionality', detail:'Confirm the resolution works and implement preventive measures.'},
+    {code:'D', name:'Document Findings', detail:'Record symptoms, root cause, steps taken, resolution, and preventive measures.'}
+];
+
+const SCENARIOS = [
+    { narrative:"Day 1 on the help desk. A ticket rolls in.", stepIdx:0,
+      text:"A user reports 'the internet is broken.' What's your very first move?",
+      options:[
+        {text:"Ask clarifying questions: what exactly is broken, when did it start, what changed recently?", correct:true, out:"Good instinct! Identifying the problem means gathering real information before assuming anything."},
+        {text:"Immediately reboot their router without asking anything.", correct:false, out:"Setback: you skipped Identify entirely. The 'fix' doesn't stick because you never found the actual symptom — the user calls back an hour later."},
+        {text:"Tell them it's probably their ISP and hang up.", correct:false, out:"Setback: that's a guess, not a diagnosis. You've jumped straight past gathering information."}
+      ]},
+    { narrative:"You've gathered the details: only one app won't connect, everything else works fine.", stepIdx:1,
+      text:"With that symptom in hand, what's the correct next step?",
+      options:[
+        {text:"Establish a theory of probable cause — maybe it's a firewall rule or DNS issue specific to that app.", correct:true, out:"Correct! You form a theory based on the actual symptom pattern, not the whole 'internet is down' framing."},
+        {text:"Immediately reinstall the entire OS.", correct:false, out:"Setback: that's a massive overcorrection with no theory behind it — hours wasted for a one-app problem."},
+        {text:"Escalate to a senior tech without doing any diagnosis yourself.", correct:false, out:"Setback: premature escalation. You haven't even formed a theory yet — that's normally your job first."}
+      ]},
+    { narrative:"Your theory: a firewall rule is blocking that specific app's port.", stepIdx:2,
+      text:"What should you do with that theory?",
+      options:[
+        {text:"Test the theory — temporarily open the port or check the firewall log to confirm it's actually blocking traffic.", correct:true, out:"Right! Testing confirms (or disproves) your theory before you commit to a fix."},
+        {text:"Assume you're right and tell the user it's fixed.", correct:false, out:"Setback: you never verified the theory. The app still doesn't work — turns out it was a expired certificate, not the firewall."},
+        {text:"Skip straight to documenting the ticket as resolved.", correct:false, out:"Setback: nothing was actually fixed yet — documenting an unresolved issue as closed will bite you later."}
+      ]},
+    { narrative:"The firewall log confirms it: that port really is being blocked.", stepIdx:3,
+      text:"Theory confirmed. What now?",
+      options:[
+        {text:"Establish a plan of action — schedule the firewall change, notify the user of the fix window, then implement it.", correct:true, out:"Exactly right — plan, notify, then implement the fix in a controlled way."},
+        {text:"Change the firewall rule immediately with zero communication to anyone.", correct:false, out:"Setback: an undocumented, unannounced change like this can violate your org's change management policy and confuses other techs."},
+        {text:"Go back and re-test the same theory again.", correct:false, out:"You already confirmed it — re-testing wastes time. Move forward to planning the fix."}
+      ]},
+    { narrative:"You've implemented the firewall change and the app connects now.", stepIdx:4,
+      text:"The fix seems to work. What's the correct next step?",
+      options:[
+        {text:"Verify full system functionality — have the user actually confirm the app works, and check nothing else broke.", correct:true, out:"Correct! Verification means the USER confirms it, not just you assuming success."},
+        {text:"Close the ticket immediately without asking the user to confirm.", correct:false, out:"Setback: the user calls back the next day — the fix only worked for you, not for their actual workflow."},
+        {text:"Move on to the next ticket without checking anything else.", correct:false, out:"Setback: you skipped verification entirely. Never assume a fix worked without confirmation."}
+      ]},
+    { narrative:"The user confirms everything is working perfectly now.", stepIdx:5,
+      text:"Last step before this ticket is truly finished — what is it?",
+      options:[
+        {text:"Document findings: the symptom, root cause, steps taken, and the fix — for the knowledge base.", correct:true, out:"Perfect! Documentation closes the loop and helps the next technician who sees this issue."},
+        {text:"Just close the ticket with no notes — you'll remember the details later.", correct:false, out:"Setback: three months later, the same issue recurs and nobody — including you — remembers how it was fixed."},
+        {text:"Tell the user to document it themselves.", correct:false, out:"Setback: documentation is the technician's responsibility, not the end user's."}
+      ]},
+    { narrative:"New ticket, new day. A printer is jammed constantly.", stepIdx:2,
+      text:"You've already identified the symptom and theorized a worn roller. Your test shows the roller looks fine, but the paper tray guides are bent. What now?",
+      options:[
+        {text:"Loop back and re-establish a new theory based on what testing actually revealed (the bent guides).", correct:true, out:"Exactly — when a test disproves your theory, you loop back to Establish a Theory with the new evidence, not push forward blindly."},
+        {text:"Replace the roller anyway since you already have it in hand.", correct:false, out:"Setback: replacing a part that wasn't actually the problem wastes money and the printer still jams."},
+        {text:"Escalate without mentioning what you found during testing.", correct:false, out:"Setback: you have useful new information — use it to refine your theory instead of escalating blind."}
+      ]},
+    { narrative:"A user says their PC randomly shuts down under heavy load.", stepIdx:0,
+      text:"What's the single most important thing to establish before theorizing?",
+      options:[
+        {text:"Ask about recent changes — new hardware, a recent cleaning, moved location — as part of identifying the problem.", correct:true, out:"Right — recent changes are one of the most common root causes and part of the Identify step."},
+        {text:"Immediately assume it's the power supply and order a replacement.", correct:false, out:"Setback: that's a theory without identification first — it might be dust buildup, thermal paste, or something else entirely."},
+        {text:"Tell them to just avoid heavy workloads from now on.", correct:false, out:"Setback: that's not troubleshooting, that's avoiding the actual problem."}
+      ]},
+    { narrative:"You implemented a fix for a network outage affecting 40 users.", stepIdx:3,
+      text:"Before implementing changes on a system this many people depend on, what must you also do as part of planning?",
+      options:[
+        {text:"Notify affected users of the change window and consider the business impact before implementing.", correct:true, out:"Correct — Establish a Plan of Action explicitly includes notifying affected users and considering impacts, not just the technical fix."},
+        {text:"Just implement it silently at your convenience.", correct:false, out:"Setback: 40 users lose access unexpectedly mid-task with zero warning — a totally avoidable complaint storm."},
+        {text:"Ask the CEO for permission on every single ticket.", correct:false, out:"That's excessive for most changes — notification should be proportional to the impact and risk level."}
+      ]},
+    { narrative:"Final stop on the trail: a recurring issue keeps reopening the same ticket every month.", stepIdx:5,
+      text:"What's most likely missing from how this ticket has been handled?",
+      options:[
+        {text:"Proper documentation of root cause and preventive measures from previous occurrences.", correct:true, out:"Exactly — without solid documentation of root cause and prevention, the same fix gets rediscovered from scratch every time."},
+        {text:"A bigger budget for new hardware.", correct:false, out:"Maybe, but that's not what the methodology points to here — it's a process gap, not a budget gap."},
+        {text:"Firing the technician who keeps handling it.", correct:false, out:"That's not a methodology step — the real gap is almost always in documentation and preventive measures."}
+      ]}
+];
+
+let idx = 0, score = 0, correctCount = 0, timeLeft = 20, timerInterval = null;
+let musicPlayer = null, musicStarted = false, muted = false;
+const container = document.getElementById('gameContainer');
+
+function renderTrail(results){
+    return `<div class="trail-map">${SCENARIOS.map((_,i)=>{
+        let cls = 'trail-stop';
+        if(i < results.length) cls += results[i] ? ' done' : ' setback';
+        else if(i === results.length) cls += ' current';
+        return `<div class="${cls}">${i+1}</div>`;
+    }).join('')}</div>`;
+}
+
+let results = [];
+
+function renderScenario(){
+    clearInterval(timerInterval);
+    timeLeft = 20;
+    const sc = SCENARIOS[idx];
+    const step = STEPS[sc.stepIdx];
+    container.innerHTML = `
+        <div class="hud-row"><span>Score: <b>${score}</b></span><span>Ticket ${idx+1} / ${SCENARIOS.length}</span></div>
+        ${renderTrail(results)}
+        <div class="scenario-card">
+            <div class="step-badge">Step: ${step.code} — ${step.name}</div>
+            <div class="scenario-narrative">${sc.narrative}</div>
+            <div class="scenario-text">${sc.text}</div>
+            <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar"></div></div>
+            <div class="options" id="optionsWrap">
+                ${sc.options.map((o,i)=>`<button class="opt-btn" data-i="${i}">${o.text}</button>`).join('')}
+            </div>
+        </div>`;
+    document.querySelectorAll('.opt-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=> chooseOption(parseInt(btn.dataset.i)));
+    });
+    timerInterval = setInterval(()=>{
+        timeLeft--;
+        const bar = document.getElementById('timerBar');
+        if(bar){ bar.style.width = (timeLeft/20*100)+'%'; if(timeLeft<=6) bar.classList.add('danger'); }
+        if(timeLeft <= 0){ clearInterval(timerInterval); chooseOption(-1); }
+    },1000);
+}
+
+function chooseOption(choiceIdx){
+    clearInterval(timerInterval);
+    const sc = SCENARIOS[idx];
+    const buttons = document.querySelectorAll('.opt-btn');
+    buttons.forEach(b=>b.disabled = true);
+    const chosen = choiceIdx >= 0 ? sc.options[choiceIdx] : null;
+    const isCorrect = !!(chosen && chosen.correct);
+    const correctIdx = sc.options.findIndex(o=>o.correct);
+
+    if(choiceIdx >= 0) buttons[choiceIdx].classList.add(isCorrect ? 'correct' : 'wrong');
+    buttons[correctIdx].classList.add('correct');
+
+    if(isCorrect){ score += Math.max(50, timeLeft*10); correctCount++; GameSounds.correct(); }
+    else{ GameSounds.wrong(); }
+    results.push(isCorrect);
+
+    const box = document.createElement('div');
+    box.className = 'outcome-box ' + (isCorrect ? 'good' : 'bad');
+    box.textContent = chosen ? chosen.out : "Time's up! The ticket sat too long and the user escalated on their own out of frustration.";
+    document.querySelector('.scenario-card').appendChild(box);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'next-btn';
+    nextBtn.textContent = idx < SCENARIOS.length-1 ? 'Continue the Trail →' : 'See Final Results';
+    nextBtn.onclick = ()=>{ idx++; if(idx < SCENARIOS.length) renderScenario(); else endGame(); };
+    document.querySelector('.scenario-card').appendChild(nextBtn);
+}
+
+function endGame(){
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{correct:correctCount}});
+    container.innerHTML = `
+        <div class="end-card">
+            <h2>🏁 Trail Complete!</h2>
+            <p style="color:#94a3b8;">You handled ${correctCount}/${SCENARIOS.length} tickets correctly.</p>
+            <div class="final">${score}</div>
+            <div id="hsPanelEl"></div>
+            <button onclick="location.reload()">🔄 Ride Again</button>
+        </div>`;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Top Triagers'});
+}
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{ musicPlayer = new NeonCircuitMusic(); musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); }); musicStarted = true; }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); } else { startMusic(); GameSounds.unmute(); }
+});
+document.addEventListener('click', function once(){ startMusic(); }, {once:true});
+
+renderScenario();
+</script>
+</body>
+</html>

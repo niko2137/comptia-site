@@ -2,6 +2,9 @@
 .wrangler/
 node_modules/
 
+# Local dev tooling (not part of the deployed site)
+public/.claude/launch.json
+
 # OS files
 .DS_Store
 Thumbs.db

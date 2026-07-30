@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Hypervisor Tycoon — CompTIA A+ Study Hub</title>
+<meta name="description" content="Hypervisor Tycoon: a calm, untimed puzzle for learning Type 1 vs Type 2 hypervisors and VM resource allocation for the CompTIA A+ exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#101b2e;color:#dbe4f0;min-height:100vh;font-family:'Segoe UI',-apple-system,sans-serif;line-height:1.5}
+.top-bar{position:sticky;top:0;background:#152238;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;z-index:50;border-bottom:1px solid #223350}
+.top-bar a{color:#7ec4e8;text-decoration:none;font-size:13px}
+#muteBtn{background:none;border:1px solid #2a3f5f;color:#8899aa;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:13px}
+.wrap{max-width:600px;margin:0 auto;padding:30px 20px 60px;text-align:center}
+h1{font-size:1.6em;color:#9fd8ff;margin-bottom:8px;font-weight:700}
+.subtitle{color:#8fa3bc;font-size:0.92em;margin-bottom:20px;line-height:1.6}
+.progress-dots{display:flex;justify-content:center;gap:6px;margin-bottom:24px}
+.dot{width:10px;height:10px;border-radius:50%;background:#223350}
+.dot.done{background:#4dcf9e}
+.dot.current{background:#7ec4e8;box-shadow:0 0 8px rgba(126,196,232,0.6)}
+.card{background:#182b47;border:2px solid #2a3f5f;border-radius:16px;padding:28px 24px;margin-bottom:18px}
+.card .scenario{font-size:1.05em;color:#fff;margin-bottom:22px;line-height:1.6}
+.choice-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.choice-btn{flex:1;min-width:160px;background:#1e3654;border:2px solid #2a3f5f;color:#dbe4f0;padding:18px 14px;border-radius:12px;cursor:pointer;font-size:0.95em;transition:all .2s}
+.choice-btn:hover{border-color:#7ec4e8;transform:translateY(-2px)}
+.choice-btn .icon{font-size:1.6em;display:block;margin-bottom:6px}
+.choice-btn.correct{border-color:#4dcf9e;background:#152e28}
+.choice-btn.wrong{border-color:#e8896a;background:#301c18}
+.choice-btn:disabled{pointer-events:none}
+.explain-box{margin-top:18px;padding:14px 16px;border-radius:10px;font-size:0.86em;line-height:1.5;text-align:left}
+.explain-box.good{background:rgba(77,207,158,0.08);border-left:4px solid #4dcf9e;color:#c8e8d8}
+.explain-box.bad{background:rgba(232,137,106,0.08);border-left:4px solid #e8896a;color:#e8ccc4}
+.next-btn{background:linear-gradient(135deg,#4dcf9e,#7ec4e8);border:none;color:#0a1420;padding:12px 34px;border-radius:30px;font-weight:800;cursor:pointer;margin-top:16px}
+.win-card{background:#182b47;border:2px solid #4dcf9e;border-radius:16px;padding:28px}
+.win-card h2{color:#4dcf9e;font-size:1.4em;margin-bottom:10px}
+.win-card button{background:#4dcf9e;color:#0a1420;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;margin-top:14px}
+.tip-box{background:#1a2b45;border-radius:10px;padding:14px 16px;text-align:left;font-size:0.85em;color:#a8bcd0;margin-top:16px}
+.tip-box b{color:#9fd8ff}
+</style>
+</head>
+<body>
+<div class="top-bar">
+<a href="#" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html';return false;">← Return</a>
+<button id="muteBtn">🔊</button>
+</div>
+<div class="wrap">
+    <h1>🖥️ Hypervisor Tycoon</h1>
+    <p class="subtitle">No timer here — read each scenario and decide which hypervisor type fits best. Take it at your own pace.</p>
+    <div class="progress-dots" id="dots"></div>
+    <div id="gameArea"></div>
+</div>
+
+<script src="../audio/games/Lofi-Chill-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'hypervisor-tycoon';
+const PIP_SCORE = 90;
+
+// Content from book.md "Module: Virtualization & Cloud Computing" — Hypervisor Types table
+const SCENARIOS = [
+    {text:"A data center running dozens of production VMs where maximum performance is critical.", answer:1, tip:"Type 1 (bare metal) runs directly on hardware with no host OS in the way — the most efficient option for enterprise/server workloads."},
+    {text:"A student trying out different Linux distributions on their personal laptop.", answer:2, tip:"Type 2 (hosted) runs on top of a host OS. It's easier to install, making it ideal for students and lab environments."},
+    {text:"VMware ESXi installed directly on server hardware, with no underlying operating system.", answer:1, tip:"VMware ESXi is a classic Type 1 example — it IS the operating system layer on bare metal."},
+    {text:"Using VirtualBox on a Windows desktop to try out a new OS for the afternoon.", answer:2, tip:"VirtualBox runs on top of Windows (the host OS) — a textbook Type 2 hypervisor."},
+    {text:"An enterprise Virtual Desktop Infrastructure (VDI) deployment serving thousands of thin clients.", answer:1, tip:"Large-scale VDI needs the efficiency and performance of a Type 1 bare-metal hypervisor."},
+    {text:"Parallels Desktop running Windows apps side-by-side with macOS on a MacBook.", answer:2, tip:"Parallels Desktop runs on top of macOS — Type 2, hosted."},
+    {text:"Microsoft Hyper-V Server installed directly on bare-metal hardware in a server room.", answer:1, tip:"Hyper-V Server (the standalone edition) runs directly on hardware — Type 1."},
+    {text:"VMware Workstation running a test VM alongside your normal desktop apps.", answer:2, tip:"VMware Workstation is a hosted, Type 2 hypervisor — it runs inside your existing OS."},
+    {text:"A KVM-based server virtualizing dozens of enterprise Linux workloads.", answer:1, tip:"KVM turns the Linux kernel itself into a Type 1 hypervisor — bare metal, no separate host OS layer."},
+    {text:"A developer spinning up a quick sandbox VM inside their existing laptop OS for a demo.", answer:2, tip:"Quick, convenient, on top of an existing OS — that's Type 2 territory."}
+];
+
+let idx = 0, correctCount = 0, wrongAttempts = 0;
+const gameArea = document.getElementById('gameArea');
+let muted = false, musicPlayer = null, musicStarted = false;
+
+function renderDots(){
+    document.getElementById('dots').innerHTML = SCENARIOS.map((_,i)=>{
+        let cls = 'dot';
+        if(i < idx) cls += ' done';
+        else if(i === idx) cls += ' current';
+        return `<div class="${cls}"></div>`;
+    }).join('');
+}
+
+function renderScenario(){
+    renderDots();
+    const sc = SCENARIOS[idx];
+    gameArea.innerHTML = `
+        <div class="card">
+            <div class="scenario">${sc.text}</div>
+            <div class="choice-row">
+                <button class="choice-btn" data-choice="1"><span class="icon">🏢</span>Type 1<br><small style="color:#8fa3bc;">Bare Metal</small></button>
+                <button class="choice-btn" data-choice="2"><span class="icon">💻</span>Type 2<br><small style="color:#8fa3bc;">Hosted</small></button>
+            </div>
+        </div>`;
+    document.querySelectorAll('.choice-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=> choose(parseInt(btn.dataset.choice)));
+    });
+}
+
+function choose(choice){
+    const sc = SCENARIOS[idx];
+    const buttons = document.querySelectorAll('.choice-btn');
+    buttons.forEach(b=>b.disabled = true);
+    const isCorrect = choice === sc.answer;
+    buttons[choice-1].classList.add(isCorrect ? 'correct' : 'wrong');
+    buttons[sc.answer-1].classList.add('correct');
+
+    if(isCorrect){ correctCount++; GameSounds.correct(); }
+    else{ wrongAttempts++; GameSounds.wrong(); }
+
+    const box = document.createElement('div');
+    box.className = 'explain-box ' + (isCorrect ? 'good' : 'bad');
+    box.textContent = sc.tip;
+    document.querySelector('.card').appendChild(box);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'next-btn';
+    nextBtn.textContent = idx < SCENARIOS.length-1 ? 'Next Scenario →' : 'Finish';
+    nextBtn.onclick = ()=>{ idx++; if(idx < SCENARIOS.length) renderScenario(); else finish(); };
+    document.querySelector('.card').appendChild(nextBtn);
+}
+
+function finish(){
+    const score = Math.max(10, correctCount*10 - wrongAttempts*3);
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{correct:correctCount}});
+    document.getElementById('dots').style.display='none';
+    gameArea.innerHTML = `
+        <div class="win-card">
+            <h2>☁️ Deployment Complete!</h2>
+            <p style="color:#94a3b8;">${correctCount}/${SCENARIOS.length} correctly matched.</p>
+            <div id="hsPanelEl"></div>
+            <div class="tip-box"><b>Remember:</b> VM resource allocation best practices — never allocate more vCPUs than the host has physical cores, keep RAM usage under ~75% of the host, and always name VMs descriptively. Snapshots are NOT backups!</div>
+            <button onclick="location.reload()">🔄 Run It Again</button>
+        </div>`;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Best Runs', unit:' pts'});
+}
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{ musicPlayer = new LofiChillMusic(); musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); }); musicStarted = true; }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); } else { startMusic(); GameSounds.unmute(); }
+});
+document.addEventListener('click', function once(){ startMusic(); }, {once:true});
+
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+renderScenario();
+</script>
+</body>
+</html>

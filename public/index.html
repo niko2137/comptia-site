@@ -54,31 +54,22 @@
         /* HERO */
         .hero { position: relative; background: linear-gradient(135deg, var(--navy-deepest) 0%, var(--navy) 50%, var(--blue) 100%); padding: 5rem 1.5rem 4rem; text-align: center; overflow: hidden; }
         .hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 80%, rgba(91,155,213,0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(91,155,213,0.06) 0%, transparent 50%); }
-        .hero-content { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: #fff; margin-bottom: 1rem; }
+        .hero-content { position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; display: flex; align-items: center; gap: 3rem; text-align: left; }
+        .hero-text { flex: 1; min-width: 280px; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 800; color: #fff; margin-bottom: 1rem; }
+        .hero-eyebrow { font-size: 0.85rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 0.5rem; }
         .hero .subtitle { font-size: clamp(1rem, 2.5vw, 1.15rem); color: rgba(255,255,255,0.8); margin-bottom: 2rem; line-height: 1.7; }
-        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .hero .subtitle strong { color: #fff; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: flex-start; flex-wrap: wrap; margin-bottom: 1.5rem; }
         .btn-hero-primary { padding: 0.85rem 1.75rem; background: var(--red); color: #fff; border-radius: 8px; font-weight: 600; font-size: 1rem; border: 2px solid var(--red); transition: all 0.2s; }
         .btn-hero-primary:hover { background: var(--red-dark); border-color: var(--red-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(231,76,60,0.4); }
         .btn-hero-outline { padding: 0.85rem 1.75rem; border: 2px solid rgba(255,255,255,0.4); color: #fff; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: all 0.2s; }
         .btn-hero-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
-        .hero-checks { font-size: 0.85rem; color: rgba(255,255,255,0.6); display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; }
+        .hero-checks { font-size: 0.85rem; color: rgba(255,255,255,0.6); display: flex; gap: 1.25rem; justify-content: flex-start; flex-wrap: wrap; }
         .hero-checks span { display: inline-flex; align-items: center; gap: 0.3rem; }
-
-        /* BOOK PROMO */
-        .book-promo { background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%); border-bottom: 3px solid var(--amber); padding: 2.5rem 1.5rem; }
-        .book-promo-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; justify-content: center; }
-        .book-cover-img { width: 200px; height: auto; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s; }
-        .book-cover-img:hover { transform: scale(1.03) rotate(-1deg); }
-        .book-promo-text { max-width: 600px; }
-        .book-promo-text h2 { font-size: 1.5rem; color: var(--navy); margin-bottom: 0.5rem; }
-        .book-promo-text p { color: #92400e; font-size: 0.95rem; margin-bottom: 1rem; }
-        .book-promo-text ul { margin-bottom: 1.25rem; }
-        .book-promo-text li { padding: 0.25rem 0; font-size: 0.9rem; color: #78350f; padding-left: 1.5rem; position: relative; }
-        .book-promo-text li::before { content: '\2713'; position: absolute; left: 0; color: var(--emerald); font-weight: 700; }
-               .book-formats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-        .btn-amazon { padding: 0.7rem 1.5rem; background: var(--amber); color: #78350f; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: all 0.2s; }
-        .btn-amazon:hover { background: #d97706; color: #fff; transform: translateY(-1px); }
+        .hero-book-cover { flex-shrink: 0; display: block; }
+        .hero-book-cover img { width: 200px; height: auto; border-radius: 6px; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.12); transition: transform 0.3s; }
+        .hero-book-cover img:hover { transform: translateY(-4px) scale(1.02); }
 
         /* SECTIONS */
         .section { padding: 4rem 1.5rem; }
@@ -89,6 +80,17 @@
         .section--dark { background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%); }
         .section--dark .section-title { color: #fff; }
         .section--dark .section-subtitle { color: rgba(255,255,255,0.6); }
+
+        /* DOMAIN STRIP (compact curriculum overview + filter) */
+        .domain-strip { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 1.5rem; }
+        .domain-pill { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 0.35rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: var(--text); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .domain-pill:hover { border-color: var(--blue-light); color: var(--blue); transform: translateY(-1px); }
+        .domain-pill.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+        .domain-strip-link { font-size: 0.85rem; font-weight: 600; color: var(--blue); margin-left: 0.5rem; }
+        .domain-strip-link:hover { text-decoration: underline; }
+        .filter-empty { text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 1.5rem; }
+        .filter-empty a { color: var(--blue); font-weight: 600; }
+        .card.filtered-out { display: none; }
 
         /* CARD GRID */
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
@@ -114,7 +116,7 @@
         .flashcard-controls button:hover { background: rgba(255,255,255,0.2); }
         .flashcard-counter { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
         .flashcard-hint { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 0.5rem; }
-        .flashcard-cta { text-align: center; margin-top: 1.5rem; }
+        .flashcard-cta { text-align: center; margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
         .flashcard-cta a { color: rgba(255,255,255,0.7); font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 1.2rem; border-radius: 6px; transition: all 0.2s; }
         .flashcard-cta a:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.1); }
 
@@ -142,9 +144,10 @@
             .hero { padding: 3rem 1.25rem 2.5rem; }
             .section { padding: 3rem 1.25rem; }
             .card-grid { grid-template-columns: 1fr; }
-            .book-promo-inner { flex-direction: column; text-align: center; }
-            .book-promo-text ul { text-align: left; }
             .hero-checks { flex-direction: column; gap: 0.4rem; }
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-buttons, .hero-checks { justify-content: center; }
+            .hero-book-cover img { width: 150px; }
             .footer-inner { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
@@ -159,6 +162,7 @@
                 <a href="#games">Free Games</a>
                 <a href="games-guide.html">Games Guide</a>
                 <a href="#reference">Reference</a>
+                <a href="reference/resources.html">Resource Center</a>
                 <a href="study-plan.html">Study Plan</a>
                 <a href="#flashcards">Flash Cards</a>
                 <a href="book.html">Get the Book</a>
@@ -172,6 +176,7 @@
             <a href="#games" onclick="this.parentElement.classList.remove('open')">Free Games</a>
             <a href="games-guide.html" onclick="this.parentElement.classList.remove('open')">Games Guide</a>
             <a href="#reference" onclick="this.parentElement.classList.remove('open')">Reference</a>
+            <a href="reference/resources.html" onclick="this.parentElement.classList.remove('open')">Resource Center</a>
             <a href="study-plan.html" onclick="this.parentElement.classList.remove('open')">Study Plan</a>
             <a href="#flashcards" onclick="this.parentElement.classList.remove('open')">Flash Cards</a>
             <a href="book.html" onclick="this.parentElement.classList.remove('open')">Get the Book</a>
@@ -182,110 +187,169 @@
     <!-- HERO -->
     <header class="hero">
         <div class="hero-content">
-            <h1>Pass Your CompTIA A+ Exam — First Try</h1>
-            <p class="subtitle">Complete study guide covering all Core 1 (220-1201) & Core 2 (220-1202) exam domains with interactive games, PBQs, reference guides, and study tools. Created by Niko Williams, author of the CompTIA A+ Study Guide.</p>
-            <div class="hero-buttons">
-                <a href="#games" class="btn-hero-primary">Play Free Games</a>
-                <a href="book.html" class="btn-hero-outline">Get the Book</a>
-            </div>
-            <div class="hero-checks">
-                <span>✓ 10 core domains across both exams</span>
-                <span>✓ 500+ study materials & flashcards</span>
-                <span>✓ Exam tips, mnemonics & practice tests</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- BOOK PROMO BANNER -->
-    <section class="book-promo" id="book">
-        <div class="book-promo-inner">
-            <img src="reference/book/BookCover-Final.jpg" alt="CompTIA A+ 220-1200 Series Complete Study Guide by Niko Williams - book cover" class="book-cover-img">
-            <div class="book-promo-text">
-                <h2>📖 Get the Book!</h2>
-                <p>The complete CompTIA A+ study guide covering every objective from Core 1 (220-1201) & Core 2 (220-1202). Includes original diagrams, troubleshooting mnemonics, exam traps, and performance-based question scenarios.</p>
-                <ul>
-                    <li>10 core exam domains with 25+ structured study modules</li>
-                    <li>Original diagrams, flowcharts, and troubleshooting mnemonics</li>
-                    <li>Exam Tips, Exam Traps, and Pro Tips throughout</li>
-                    <li><b>Access code to Exclusive Members-Only Portal</b></li>
-                    <li>500+ flashcards, interactive PBQs, arcade games &amp; searchable glossary</li>
-                    <li>8-week study plan &amp; full practice exams included</li>
-                </ul>
-                <p style="margin-bottom: 1.25rem; font-weight:bold;">
-                    Available in Digital (Kindle), Paperback, and Hardcover
-                </p>
-                <div class="book-formats">
-                    <a href="book.html" class="btn-amazon">Learn More About the Book</a>
+            <div class="hero-text">
+                <p class="hero-eyebrow">Welcome to the</p>
+                <h1>CompTIA A+ Study Hub</h1>
+                <p class="subtitle">A free companion site to the book <strong>CompTIA A+ 220-1200 Series Complete Study Guide</strong>, available on Amazon — interactive games, PBQs, flash cards, and reference tools covering every Core 1 (220-1201) &amp; Core 2 (220-1202) exam objective.</p>
+                <div class="hero-buttons">
+                    <a href="book.html" class="btn-hero-primary">📖 Get the Book</a>
+                    <a href="#games" class="btn-hero-outline">Play Free Games</a>
+                </div>
+                <div class="hero-checks">
+                    <span>✓ 10 core domains across both exams</span>
+                    <span>✓ 500+ study materials & flashcards</span>
+                    <span>✓ Exam tips, mnemonics & practice tests</span>
                 </div>
             </div>
+            <a href="book.html" class="hero-book-cover">
+                <img src="reference/book/BookCover-Final.jpg" alt="CompTIA A+ 220-1200 Series Complete Study Guide book cover">
+            </a>
         </div>
-    </section>
+    </header>
 
     <!-- FREE GAMES -->
     <section class="section section--alt" id="games">
         <div class="section-inner">
             <h2 class="section-title">&#127918; Free Study Games</h2>
-            <p class="section-subtitle">Learn while you play — no account needed • <a href="games-guide.html" style="color: var(--blue); text-decoration: none; font-weight: 500;">View Complete Games Guide by Domain</a></p>
-            <div class="card-grid">
-                <div class="card">
+            <p class="section-subtitle">Learn while you play — no account needed</p>
+            <div class="domain-strip" id="domainFilter">
+                <button class="domain-pill active" data-filter="all">All Games</button>
+                <button class="domain-pill" data-filter="networking">🔗 Networking</button>
+                <button class="domain-pill" data-filter="hardware">⚙️ Hardware</button>
+                <button class="domain-pill" data-filter="virtualization">☁️ Virtualization &amp; Cloud</button>
+                <button class="domain-pill" data-filter="os">🖥️ Operating Systems</button>
+                <button class="domain-pill" data-filter="security">🔐 Security</button>
+                <button class="domain-pill" data-filter="troubleshooting">🔧 Troubleshooting</button>
+                <button class="domain-pill" data-filter="general">📚 General Study</button>
+                <a href="games-guide.html" class="domain-strip-link">View Complete Games Guide by Domain →</a>
+            </div>
+            <p class="filter-empty" id="filterEmpty" style="display:none;">No free games in this domain yet — check the <a href="games-guide.html">Complete Games Guide</a> for members-only picks.</p>
+            <div class="card-grid" id="gameGrid">
+                <div class="card" data-domain="networking">
                     <div class="card-icon">&#128163;</div>
                     <h3>Speed Match <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 • Networking Fundamentals:</strong> Match 22 critical ports to their protocols against the clock. Learn SSH (22), DNS (53), DHCP (67/68), HTTP/HTTPS (80/443), LDAP (389/636), and more from your book.</p>
                     <a href="games/speed-match.html" class="btn-card">Play Now</a>
                 </div>
-                <div class="card">
+                <div class="card" data-domain="networking">
                     <div class="card-icon">&#128126;</div>
                     <h3>Port Blaster Shooter <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 • Networking Fundamentals:</strong> Space shooter! Lock in critical port numbers while dodging decoys. Reinforce port memorization through high-energy arcade gameplay.</p>
                     <a href="games/port-blaster.html" class="btn-card">Play Now</a>
                 </div>
-                <div class="card">
+                <div class="card" data-domain="general">
                     <div class="card-icon">&#127942;</div>
                     <h3>CompTIA Jeopardy <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 & Core 2 • All Domains:</strong> Quiz game covering all 10 exam domains. Answer in Jeopardy format with Daily Doubles. Master terminology, concepts, and procedures across both exams.</p>
                     <a href="games/jeopardy.html" class="btn-card">Play Now</a>
                 </div>
-                <div class="card">
+                <div class="card" data-domain="networking">
                     <div class="card-icon">&#9968;</div>
                     <h3>OSI Layer Climb <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 • Networking Fundamentals:</strong> Climb the mountain by answering targeted OSI model questions at each layer. Master layer functions, protocols, and devices covered in your book.</p>
                     <a href="games/osi-climb.html" class="btn-card">Play Now</a>
                 </div>
-                <div class="card">
+                <div class="card" data-domain="general">
                     <div class="card-icon">&#129513;</div>
                     <h3>Tech Wordle <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 & Core 2 • General Study:</strong> Guess the hidden CompTIA term letter by letter. 30 essential terms across 5 categories from your comprehensive glossary. 6 guesses per term.</p>
                     <a href="games/wordle-tech.html" class="btn-card">Play Now</a>
                 </div>
-                <div class="card">
-                    <div class="card-icon">&#127183;</div>
-                    <h3>Port Match <span class="badge-free">FREE</span></h3>
-                    <p><strong>Core 1 • Networking Fundamentals:</strong> Draw connections between critical port numbers and their protocols. Master port-to-service mapping essential for exam success.</p>
-                    <a href="games/port-match.html" class="btn-card">Play Now</a>
-                </div>
-                <div class="card">
+                <div class="card" data-domain="general">
                     <div class="card-icon">&#128221;</div>
                     <h3>Acronym Decoder <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 & Core 2 • General Study:</strong> Master 75 essential IT acronyms from CompTIA A+ vocabulary. Select the correct meaning for each acronym tested on both exams.</p>
                     <a href="games/acronym-decoder.html" class="btn-card">Play Now</a>
                 </div>
-                <div class="card">
-                    <div class="card-icon">&#129513;</div>
-                    <h3>OSI Layer Sort <span class="badge-free">FREE</span></h3>
-                    <p><strong>Core 1 • Networking Fundamentals:</strong> Sort 35+ networking items into correct OSI layers. Reinforce understanding of layer functions, protocols, and devices from your study guide.</p>
-                    <a href="games/osi-layer-sort.html" class="btn-card">Play Now</a>
-                </div>
-                <div class="card">
-                    <div class="card-icon">&#128290;</div>
-                    <h3>IPv6 Crunch <span class="badge-free">FREE</span></h3>
-                    <p><strong>Core 1 • Networking Fundamentals:</strong> Compress and expand IPv6 addresses against the clock. Master leading-zero omission, the :: rule, and the tie-break exam traps.</p>
-                    <a href="games/ipv6-crunch.html" class="btn-card">Play Now</a>
-                </div>
-                <div class="card">
+                <div class="card" data-domain="hardware">
                     <div class="card-icon">&#128268;</div>
                     <h3>Cable Connector Match <span class="badge-free">FREE</span></h3>
                     <p><strong>Core 1 • Hardware & Peripherals:</strong> Identify and match 25 cable types to their specifications, speeds, and connector types. Master cables covered in your book's hardware module.</p>
                     <a href="games/cable-connector-match.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="hardware">
+                    <div class="card-icon">&#128421;</div>
+                    <h3>Build-a-PC <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Hardware & Peripherals:</strong> Drag real components onto the motherboard. Learn CPU sockets, RAM slots, connectors, and proper placement order.</p>
+                    <a href="games/build-a-pc.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="hardware">
+                    <div class="card-icon">&#128295;</div>
+                    <h3>Board ID Blitz <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Hardware & Peripherals:</strong> 60-second quiz using a real labeled motherboard photo — name the CPU socket, headers, and every rear-panel port before time runs out.</p>
+                    <a href="games/board-id-blitz.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="hardware">
+                    <div class="card-icon">&#128373;&#65039;</div>
+                    <h3>POST Detective <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Hardware & Peripherals:</strong> Calm, untimed puzzle — match hardware failure symptoms to the real cause: PSU, RAM, GPU, storage, CPU, or motherboard.</p>
+                    <a href="games/post-detective.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="os">
+                    <div class="card-icon">&#128421;</div>
+                    <h3>OS Pop <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Operating Systems:</strong> Bubble-shooter arcade action! Match Windows, macOS, Linux, cross-platform, and file-system terms while chasing the bonus target category.</p>
+                    <a href="games/os-pop.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="os">
+                    <div class="card-icon">&#128193;</div>
+                    <h3>OS Sorter <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Operating Systems:</strong> Calm, untimed puzzle — sort 40 tools, commands, and file systems into Windows, macOS, Linux, cross-platform, or file-system buckets.</p>
+                    <a href="games/os-sorter.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="os">
+                    <div class="card-icon">&#9000;&#65039;</div>
+                    <h3>Command Line Blitz <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Operating Systems:</strong> 45-second arcade quiz — match real-world tasks to the correct Windows, macOS, or Linux CLI command before time runs out.</p>
+                    <a href="games/command-line-blitz.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="security">
+                    <div class="card-icon">&#127907;</div>
+                    <h3>Phish or Ship <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Security:</strong> Fishing-themed arcade action! Catch legitimate messages and report phishing, vishing, smishing, and social-engineering scams.</p>
+                    <a href="games/phish-or-ship.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="troubleshooting">
+                    <div class="card-icon">&#128014;</div>
+                    <h3>Ticket Triage <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Troubleshooting & Operations:</strong> Oregon-Trail-style branching scenarios! Choose the correct next step through the 6-step IETEVD methodology under light time pressure.</p>
+                    <a href="games/ticket-triage.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="troubleshooting">
+                    <div class="card-icon">&#128269;</div>
+                    <h3>Root Cause Muncher <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Troubleshooting & Operations:</strong> Word-Muncher-style arcade chomp on change management, ticket lifecycle, and prioritization terms — dodge the bugs!</p>
+                    <a href="games/root-cause-muncher.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="troubleshooting">
+                    <div class="card-icon">&#127911;</div>
+                    <h3>Support Desk Rush <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 2 • Troubleshooting & Operations:</strong> Soothing, untimed puzzle — put the 8-step help desk ticket lifecycle in the correct order at your own pace.</p>
+                    <a href="games/support-desk-rush.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="virtualization">
+                    <div class="card-icon">&#9749;</div>
+                    <h3>Hypervisor Tycoon <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Virtualization & Cloud:</strong> Calm, untimed puzzle — match scenarios to Type 1 (bare metal) vs. Type 2 (hosted) hypervisors.</p>
+                    <a href="games/hypervisor-tycoon.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="virtualization">
+                    <div class="card-icon">&#9729;&#65039;</div>
+                    <h3>Cloud Muncher <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Virtualization & Cloud:</strong> Word-Muncher-style arcade chomp on IaaS/PaaS/SaaS, elasticity, shared responsibility, and VM snapshots.</p>
+                    <a href="games/cloud-muncher.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="virtualization">
+                    <div class="card-icon">&#128248;</div>
+                    <h3>Snapshot Rewind <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Virtualization & Cloud:</strong> Soothing, untimed memory-match puzzle on VM snapshots/clones and IoT security basics.</p>
+                    <a href="games/snapshot-rewind.html" class="btn-card">Play Now</a>
+                </div>
+                <div class="card" data-domain="networking">
+                    <div class="card-icon">&#128225;</div>
+                    <h3>Protocol Cluster <span class="badge-free">FREE</span></h3>
+                    <p><strong>Core 1 • Networking Fundamentals:</strong> Sync the grid! Connect compatible network packets on a live grid for score, combos, and level progression.</p>
+                    <a href="games/protocol-cluster.html" class="btn-card">Play Now</a>
                 </div>
             </div>
         </div>
@@ -296,62 +360,73 @@
         <div class="section-inner">
             <h2 class="section-title">&#128274; Members-Only Games & Puzzles</h2>
             <p class="section-subtitle">Unlock these with your book purchase — enter code in Members Area</p>
-            <div class="card-grid">
-                <div class="card" style="opacity:0.85;">
+            <div class="domain-strip" id="domainFilterMembers">
+                <button class="domain-pill active" data-filter="all">All Games</button>
+                <button class="domain-pill" data-filter="networking">🔗 Networking</button>
+                <button class="domain-pill" data-filter="hardware">⚙️ Hardware</button>
+                <button class="domain-pill" data-filter="virtualization">☁️ Virtualization &amp; Cloud</button>
+                <button class="domain-pill" data-filter="os">🖥️ Operating Systems</button>
+                <button class="domain-pill" data-filter="security">🔐 Security</button>
+                <button class="domain-pill" data-filter="troubleshooting">🔧 Troubleshooting</button>
+                <button class="domain-pill" data-filter="general">📚 General Study</button>
+            </div>
+            <p class="filter-empty" id="filterEmptyMembers" style="display:none;">No members-only games in this domain yet — check the free games above or the <a href="games-guide.html">Complete Games Guide</a>.</p>
+            <div class="card-grid" id="memberGameGrid">
+                <div class="card" style="opacity:0.85;" data-domain="general">
                     <div class="card-icon">&#128640;</div>
                     <h3>Neon Circuit Dash <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 & Core 2 • All Domains:</strong> Retro arcade challenge! Dodge obstacles and answer questions covering all 10 exam domains. Survive 8 levels with energetic gameplay.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="hardware">
                     <div class="card-icon">&#128268;</div>
                     <h3>Cable Match <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 • Hardware & Peripherals:</strong> Categorize falling cables by speed (USB, SATA, Ethernet standards). Master cable specifications and speed classes under time pressure.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="troubleshooting">
                     <div class="card-icon">&#127959;</div>
                     <h3>Troubleshooting Tower <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 2 • Troubleshooting & Operations:</strong> Stack troubleshooting steps in correct order. Master the 6-step methodology: Identify → Establish Theory → Test → Establish Plan → Implement → Verify → Document.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="security">
                     <div class="card-icon">&#128126;</div>
                     <h3>Maze Runner <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 & Core 2 • Security & Networking:</strong> Pac-Man style maze! Navigate threats and answer CompTIA questions on security concepts and network protocols.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="security">
                     <div class="card-icon">&#128737;</div>
                     <h3>Terminal Takedown <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 2 • Security Threats:</strong> Tetris-style defense! Clear threat blocks while answering questions on malware types, virus vs. worm vs. Trojan, and security incident response.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="networking">
                     <div class="card-icon">&#127183;</div>
                     <h3>Memory Match <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 • Networking Fundamentals:</strong> Flip cards to match all critical ports with their protocols and services. Perfect for memory-based learning of port numbers.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="general">
                     <div class="card-icon">&#128260;</div>
                     <h3>Tech Scramble <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 & Core 2 • General Study:</strong> Unscramble 50+ CompTIA terms from all 10 exam domains. Fill in blanks from jumbled letter tiles to strengthen vocabulary.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="general">
                     <div class="card-icon">&#128221;</div>
                     <h3>Tech Tile Time <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 & Core 2 • General Study:</strong> 10-clue crossword puzzle with essential CompTIA A+ terminology. Reinforce vocabulary across all exam domains.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="security">
                     <div class="card-icon">&#128737;</div>
                     <h3>Security Threat ID <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 2 • Security:</strong> Identify 25 security threats from real-world scenarios. Learn threat types, indicators of compromise, and appropriate mitigation strategies from your book.</p>
                     <a href="members.html" class="btn-card">Unlock</a>
                 </div>
-                <div class="card" style="opacity:0.85;">
+                <div class="card" style="opacity:0.85;" data-domain="networking">
                     <div class="card-icon">&#127760;</div>
                     <h3>IP Address Calculator <span class="badge-members">MEMBERS</span></h3>
                     <p><strong>Core 1 • Networking Fundamentals:</strong> Master subnet calculations, IP addressing, CIDR notation, and IPv4/IPv6 concepts. Perform subnetting calculations tested on the exam.</p>
@@ -361,11 +436,11 @@
         </div>
     </section>
 
-    <!-- FREE PBQs -->
+    <!-- PBQs (free + members) -->
     <section class="section" id="pbqs">
         <div class="section-inner">
             <h2 class="section-title">&#128203; Practice PBQs</h2>
-            <p class="section-subtitle">Exam-style Performance-Based Questions — interactive drag-and-drop</p>
+            <p class="section-subtitle">Exam-style Performance-Based Questions — interactive drag-and-drop. Free ones below, more unlock with the book.</p>
             <div class="card-grid">
                 <div class="card">
                     <div class="card-icon">&#128187;</div>
@@ -403,16 +478,6 @@
                     <p>Drag 19 port numbers to their protocols. 25-question interactive challenge.</p>
                     <a href="pbqs/network-ports.html" class="btn-card">Start PBQ</a>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MEMBERS-ONLY PBQs (Preview) -->
-    <section class="section section--alt" id="members-pbqs">
-        <div class="section-inner">
-            <h2 class="section-title">&#128274; Members-Only PBQs</h2>
-            <p class="section-subtitle">Advanced exam-prep PBQs — included with book purchase</p>
-            <div class="card-grid">
                 <div class="card" style="opacity:0.85;">
                     <div class="card-icon">&#128424;</div>
                     <h3>Laser Printer <span class="badge-members">MEMBERS</span></h3>
@@ -453,52 +518,6 @@
         </div>
     </section>
 
-    <!-- EXAM DOMAINS & CURRICULUM ALIGNMENT -->
-    <section class="section" id="curriculum">
-        <div class="section-inner">
-            <h2 class="section-title">🎓 Exam Domains & Curriculum Alignment</h2>
-            <p class="section-subtitle">All games and activities map to CompTIA A+ exam objectives from both Core 1 (220-1201) and Core 2 (220-1202)</p>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
-                    <h3 style="color: var(--blue); margin-bottom: 12px; font-size: 16px;">🔗 Networking Fundamentals (Core 1)</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;"><strong>Learn:</strong> OSI model, TCP/IP, ports, protocols, IP addressing, SOHO networks</p>
-                    <p style="color: var(--text-muted); font-size: 13px;"><strong>Games:</strong> OSI Climb • OSI Layer Sort • Speed Match • Port Blaster • Port Match • Memory Match • IP Calculator • IPv6 Crunch</p>
-                </div>
-
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
-                    <h3 style="color: var(--blue); margin-bottom: 12px; font-size: 16px;">⚙️ Hardware & Peripherals (Core 1)</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;"><strong>Learn:</strong> Motherboards, CPU, RAM, storage, RAID, cables, power supplies, cooling</p>
-                    <p style="color: var(--text-muted); font-size: 13px;"><strong>Games:</strong> Build-a-PC • Cable Connector Match • Cable Match</p>
-                </div>
-                
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
-                    <h3 style="color: var(--blue); margin-bottom: 12px; font-size: 16px;">🔐 Security (Core 2)</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;"><strong>Learn:</strong> Threats, authentication, wireless security, malware, compliance</p>
-                    <p style="color: var(--text-muted); font-size: 13px;"><strong>Games:</strong> Security Threat ID • Terminal Takedown • Maze Runner</p>
-                </div>
-                
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
-                    <h3 style="color: var(--blue); margin-bottom: 12px; font-size: 16px;">🔧 Troubleshooting & Operations (Core 2)</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;"><strong>Learn:</strong> 6-step methodology, communication, documentation, CLI troubleshooting</p>
-                    <p style="color: var(--text-muted); font-size: 13px;"><strong>Games:</strong> Troubleshooting Tower • Troubleshooting PBQ</p>
-                </div>
-                
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
-                    <h3 style="color: var(--blue); margin-bottom: 12px; font-size: 16px;">📚 General Study (Core 1 & 2)</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;"><strong>Learn:</strong> Terminology, acronyms, concepts from all 10 exam domains</p>
-                    <p style="color: var(--text-muted); font-size: 13px;"><strong>Games:</strong> CompTIA Jeopardy • Tech Wordle • Acronym Decoder • Tech Scramble • Tech Tile Time • Neon Circuit Dash</p>
-                </div>
-                
-                <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px;">
-                    <h3 style="color: var(--blue); margin-bottom: 12px; font-size: 16px;">💡 Study Tips</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 10px;"><strong>Start with:</strong> Free games to build foundational knowledge</p>
-                    <p style="color: var(--text-muted); font-size: 13px;"><strong>Then:</strong> Unlock members games for deeper learning • Use PBQs to practice exam scenarios • Review 8-week <a href="study-plan.html" style="color: var(--blue); text-decoration: none; font-weight: 500;">Study Plan</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- REFERENCE GUIDES -->
     <section class="section section--alt" id="reference">
         <div class="section-inner">
@@ -529,6 +548,12 @@
                     <p>Boot order, secure boot, TPM, and virtualization settings.</p>
                     <a href="reference/bios.html" class="btn-card">View Guide</a>
                 </div>
+                <div class="card">
+                    <div class="card-icon">&#129521;</div>
+                    <h3>Resource Center</h3>
+                    <p>Free tools worth having on the bench — imaging, diagnostics, backup, and more, all verified free.</p>
+                    <a href="reference/resources.html" class="btn-card">Browse Tools</a>
+                </div>
             </div>
         </div>
     </section>
@@ -551,6 +576,7 @@
             </div>
             <p class="flashcard-hint">Click card to flip &middot; Use arrows to navigate</p>
             <div class="flashcard-cta">
+                <a href="flashcards.html">Browse all 50 free preview cards →</a>
                 <a href="members.html">Want all 567 terms? Join Members Area →</a>
             </div>
         </div>
@@ -572,6 +598,7 @@
                 <a href="#games">Study Games</a>
                 <a href="#flashcards">Flash Cards (50)</a>
                 <a href="#reference">Reference Guides</a>
+                <a href="reference/resources.html">Resource Center</a>
                 <a href="#pbqs">Practice PBQs</a>
             </div>
             <div>
@@ -605,6 +632,32 @@
 
     <!-- JAVASCRIPT -->
     <script>
+    // Domain-pill filters — clicking a pill shows only cards whose data-domain matches
+    function initDomainFilter(stripId, gridId, emptyId){
+        const strip = document.getElementById(stripId);
+        const grid = document.getElementById(gridId);
+        const emptyEl = emptyId ? document.getElementById(emptyId) : null;
+        if(!strip || !grid) return;
+        const pills = strip.querySelectorAll('.domain-pill');
+        const cards = grid.querySelectorAll('.card');
+        pills.forEach(pill=>{
+            pill.addEventListener('click', ()=>{
+                pills.forEach(p=>p.classList.remove('active'));
+                pill.classList.add('active');
+                const filter = pill.dataset.filter;
+                let visibleCount = 0;
+                cards.forEach(card=>{
+                    const show = filter === 'all' || card.dataset.domain === filter;
+                    card.classList.toggle('filtered-out', !show);
+                    if(show) visibleCount++;
+                });
+                if(emptyEl) emptyEl.style.display = visibleCount === 0 ? '' : 'none';
+            });
+        });
+    }
+    initDomainFilter('domainFilter', 'gameGrid', 'filterEmpty');
+    initDomainFilter('domainFilterMembers', 'memberGameGrid', 'filterEmptyMembers');
+
     // Page hit counter (localStorage)
     (function(){
         const key='comptia_home_hits';

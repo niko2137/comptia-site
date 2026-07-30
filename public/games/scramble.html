@@ -573,9 +573,17 @@ function saveScore(diff, score, words, accuracy) {
   localStorage.setItem(key, JSON.stringify(scores));
 }
 
+const PIP_SCRAMBLE_SCORES = { easy: 400, medium: 600, hard: 850 };
 function getScores(diff) {
   const key = 'scrambleScores';
   let scores = JSON.parse(localStorage.getItem(key) || '{}');
+  if (!scores[diff]) scores[diff] = [];
+  if (!scores[diff].some(s => s.name === 'Pip')) {
+    scores[diff].push({ name: 'Pip', score: PIP_SCRAMBLE_SCORES[diff] || 500, words: 8, accuracy: 90, date: new Date().toLocaleDateString() });
+    scores[diff].sort((a,b) => b.score - a.score);
+    scores[diff] = scores[diff].slice(0, 5);
+    localStorage.setItem(key, JSON.stringify(scores));
+  }
   return scores[diff] || [];
 }
 
@@ -597,7 +605,7 @@ function renderHighScores() {
       html += '<div class="hs-entry">No scores yet</div>';
     } else {
       scores.forEach((s,i) => {
-        html += `<div class="hs-entry">${i+1}. ${s.score} pts — ${s.words} words — ${s.accuracy}%</div>`;
+        html += `<div class="hs-entry">${i+1}. ${s.name ? s.name + ' — ' : ''}${s.score} pts — ${s.words} words — ${s.accuracy}%</div>`;
       });
     }
     html += '</div>';

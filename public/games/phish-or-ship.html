@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+<title>Phish or Ship — CompTIA A+ Study Hub</title>
+<meta name="description" content="Phish or Ship: a fishing-themed arcade game for spotting phishing, vishing, smishing, and social engineering red flags for the CompTIA A+ Security exam.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#040a14;font-family:'Segoe UI',-apple-system,sans-serif;color:#e0e6f0;touch-action:none;-webkit-user-select:none;user-select:none}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#hud{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#0a1424;border-bottom:1px solid rgba(0,229,255,0.15);flex-shrink:0;gap:10px;flex-wrap:wrap}
+.h-item{font-size:11px;color:#7a8a9e}
+.h-item b{color:#00e5ff;text-shadow:0 0 4px rgba(0,229,255,0.5)}
+.h-item.title{font-size:14px;letter-spacing:2px;color:#00e5ff;text-shadow:0 0 8px rgba(0,229,255,0.4);font-weight:800}
+.hud-lives .heart{font-size:1.1em}
+.hud-lives .heart.lost{opacity:0.2}
+#pond{flex:1;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 30%,#0d1f3a 0%,#040a14 70%)}
+#pond canvas{position:absolute;inset:0;width:100%;height:100%}
+.fish{position:absolute;background:rgba(10,20,40,0.92);border:2px solid #2a5a7a;border-radius:14px;padding:10px 14px;max-width:260px;cursor:pointer;transition:transform .15s;box-shadow:0 0 20px rgba(0,229,255,0.08)}
+.fish:hover{transform:scale(1.05);border-color:#00e5ff}
+.fish .fish-icon{font-size:1.1em;margin-right:6px}
+.fish .fish-text{font-size:0.78em;line-height:1.4;color:#c8d8e8;display:inline}
+.fish.caught{pointer-events:none}
+#decisionOverlay{position:fixed;inset:0;background:rgba(4,10,20,0.9);z-index:400;display:none;align-items:center;justify-content:center;padding:20px}
+#decisionOverlay.show{display:flex}
+.decision-card{background:#0a1424;border:2px solid #00e5ff;border-radius:16px;padding:24px;max-width:420px;width:100%;box-shadow:0 0 50px rgba(0,229,255,0.25)}
+.decision-card .msg-preview{background:#040a14;border-radius:10px;padding:14px;margin-bottom:18px;font-size:0.85em;line-height:1.5;color:#c8d8e8;border:1px solid #1a3a55}
+.decision-btns{display:flex;gap:10px}
+.decision-btns button{flex:1;padding:16px 10px;border-radius:10px;border:none;font-weight:800;font-size:0.95em;cursor:pointer;transition:all .15s}
+.btn-keep{background:#0d5c3a;color:#4dffb0}
+.btn-keep:hover{background:#0f7048;transform:translateY(-2px)}
+.btn-report{background:#5c1010;color:#ff6666}
+.btn-report:hover{background:#701414;transform:translateY(-2px)}
+#feedbackOverlay{position:fixed;inset:0;background:rgba(4,10,20,0.92);z-index:410;display:none;align-items:center;justify-content:center;padding:20px}
+#feedbackOverlay.show{display:flex}
+.feedback-card{background:#0a1424;border-radius:16px;padding:26px;max-width:440px;width:100%;text-align:center}
+.feedback-card.correct{border:2px solid #27ae60;box-shadow:0 0 50px rgba(39,174,96,0.25)}
+.feedback-card.wrong{border:2px solid #ff4444;box-shadow:0 0 50px rgba(255,68,68,0.25)}
+.feedback-card h3{font-size:1.3em;margin-bottom:10px}
+.feedback-card.correct h3{color:#27ae60}
+.feedback-card.wrong h3{color:#ff4444}
+.feedback-card .attack-type{display:inline-block;padding:4px 12px;border-radius:20px;background:rgba(255,68,68,0.15);color:#ff8888;font-size:0.78em;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.feedback-card p{font-size:0.88em;color:#b0bec5;line-height:1.5}
+#foot{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 16px;background:#0a1424;border-top:1px solid rgba(0,229,255,0.15);flex-shrink:0}
+.fbtn,#muteBtn{width:34px;height:34px;border-radius:50%;border:1px solid #2a3a55;background:none;color:#888;font-size:14px;cursor:pointer}
+.fbtn:hover{border-color:#ff4444;color:#ff4444}
+#muteBtn:hover{border-color:#00e5ff;color:#00e5ff}
+#overlay{position:fixed;inset:0;background:rgba(4,10,20,0.96);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.over-card{background:#0a1424;border:2px solid #00e5ff;border-radius:16px;padding:30px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 60px rgba(0,229,255,0.2)}
+.over-card h2{color:#00e5ff;font-size:1.6em;margin-bottom:10px}
+.over-card .final{font-size:2.4em;font-weight:900;color:#fff;margin:10px 0}
+.over-card button{background:#00e5ff;color:#040a14;border:none;padding:12px 30px;border-radius:8px;font-weight:800;font-size:1em;cursor:pointer;margin-top:14px}
+.over-card button:hover{background:#7ff}
+.start-card{background:#0a1424;border:2px solid #00e5ff;border-radius:16px;padding:30px;max-width:440px;width:100%;text-align:center;box-shadow:0 0 60px rgba(0,229,255,0.2)}
+.start-card h1{color:#00e5ff;font-size:1.7em;margin-bottom:10px}
+.start-card p{color:#b0bec5;font-size:0.9em;line-height:1.6;margin-bottom:18px}
+.start-card button{background:#00e5ff;color:#040a14;border:none;padding:14px 40px;border-radius:10px;font-weight:800;font-size:1.05em;cursor:pointer}
+.start-card button:hover{background:#7ff}
+@media(max-width:600px){ .fish{max-width:200px;padding:8px 10px} .fish .fish-text{font-size:0.72em} .h-item.title{font-size:12px} }
+</style>
+</head>
+<body>
+<div id="app">
+    <header id="hud">
+        <span class="h-item">SCORE: <b id="sVal">0</b></span>
+        <span class="h-item title">PHISH OR SHIP</span>
+        <span class="h-item hud-lives" id="hudLives"></span>
+    </header>
+    <div id="pond"></div>
+    <footer id="foot">
+        <span style="font-size:10px;color:#667;">Tap a message to catch it, then Keep or Report</span>
+        <button id="muteBtn" title="Toggle Sound">🔊</button>
+        <button class="fbtn" onclick="location.href=localStorage.getItem('comptia_member')?'../members.html':'../index.html'">✕</button>
+    </footer>
+</div>
+
+<div id="overlay">
+    <div class="start-card" id="startCard">
+        <h1>🎣 Phish or Ship</h1>
+        <p>Messages drift across the pond. Tap one to reel it in, then decide: <strong style="color:#4dffb0">KEEP</strong> if it's legitimate, or <strong style="color:#ff6666">REPORT</strong> if it's a phishing/social-engineering attempt. Catch scams for bonus points — but don't report the real ones!</p>
+        <button onclick="startGame()">START FISHING</button>
+    </div>
+</div>
+
+<div id="decisionOverlay">
+    <div class="decision-card">
+        <div class="msg-preview" id="decisionPreview"></div>
+        <div class="decision-btns">
+            <button class="btn-keep" onclick="decide(true)">✅ KEEP<br><span style="font-size:0.75em;font-weight:400;">It's legitimate</span></button>
+            <button class="btn-report" onclick="decide(false)">🚩 REPORT<br><span style="font-size:0.75em;font-weight:400;">It's a scam</span></button>
+        </div>
+    </div>
+</div>
+
+<div id="feedbackOverlay">
+    <div class="feedback-card" id="feedbackCard">
+        <h3 id="feedbackTitle"></h3>
+        <div id="feedbackType"></div>
+        <p id="feedbackBody"></p>
+    </div>
+</div>
+
+<script src="../audio/games/Neon-Circuit-Dash-Music.js"></script>
+<script src="../js/sounds.js"></script>
+<script src="../js/highscores.js"></script>
+<script>
+const GAME_ID = 'phish-or-ship';
+const PIP_SCORE = 1800;
+HighScores.ensureSeeded(GAME_ID, PIP_SCORE);
+
+// Content sourced from book.md's Social Engineering Attack Types table
+const MESSAGES = [
+    // --- LEGITIMATE (12) ---
+    {legit:true, icon:'📧', text:"Your Amazon order #4471 has shipped. Track it at amazon.com/orders.", why:"Matches the real retailer's known domain and order format — no urgency pressure or credential request."},
+    {legit:true, icon:'📱', text:"Reminder: Your dentist appointment is tomorrow at 2 PM.", why:"An expected, routine reminder with no request for sensitive info."},
+    {legit:true, icon:'📧', text:"IT Department: Scheduled maintenance tonight 11 PM–1 AM. No action needed.", why:"Purely informational — doesn't ask you to click, verify, or provide anything."},
+    {legit:true, icon:'📧', text:"Your Netflix payment was successful. Next billing date: the 15th.", why:"A routine receipt with no link to click or urgency to act."},
+    {legit:true, icon:'📱', text:"Team meeting moved to 3 PM in Conference Room B.", why:"Internal, benign scheduling notice."},
+    {legit:true, icon:'📧', text:"Your package will arrive between 1–5 PM today. — USPS", why:"Standard delivery tracking notice, no payment or login requested."},
+    {legit:true, icon:'💬', text:"Welcome back! You have 3 unread messages in your company Slack.", why:"Routine app notification, not requesting any action outside the app."},
+    {legit:true, icon:'📱', text:"Your prescription refill is ready for pickup at Walgreens.", why:"Expected notification tied to an action you actually took."},
+    {legit:true, icon:'📧', text:"GitHub: A new SSH key was added to your account (recognized device and location).", why:"Security notice that matches an action you actually performed."},
+    {legit:true, icon:'📧', text:"HR: Open enrollment for benefits starts Monday. Details on the intranet.", why:"Points to an internal resource, not an external link demanding credentials."},
+    {legit:true, icon:'📱', text:"Your flight AA1234 is on time, departing Gate 22 at 6:45 PM.", why:"Standard airline status update."},
+    {legit:true, icon:'💬', text:"Zoom: Your meeting 'Weekly Sync' starts in 15 minutes.", why:"Expected calendar-linked notification."},
+    // --- SCAMS (12) ---
+    {legit:false, type:'Phishing', icon:'📧', text:"URGENT: Your bank account has been suspended. Verify your identity now: bank-secure-verify.xyz", why:"Classic phishing: manufactured urgency plus a lookalike domain that isn't your real bank's site — designed to harvest login credentials."},
+    {legit:false, type:'Spear-Phishing', icon:'📧', text:"Hi [Your Name], this is your CEO. Purchase $500 in gift cards for a client right now — don't tell anyone.", why:"Spear-phishing targets a specific individual by name; the secrecy request and unusual gift-card payment method are major red flags."},
+    {legit:false, type:'Whaling', icon:'📧', text:"Board of Directors: Please review and wire-approve the attached acquisition contract by EOD.", why:"Whaling specifically targets executives with high-value, time-pressured financial requests and a suspicious attachment."},
+    {legit:false, type:'Quishing', icon:'📱', text:"Scan this QR code to claim your free parking validation!", why:"Quishing uses a QR code to hide a malicious destination URL that you can't preview before scanning."},
+    {legit:false, type:'Vishing', icon:'☎️', text:"[Phone Call] This is Microsoft Support. We detected a virus — please give us remote access now.", why:"Vishing uses an unsolicited phone call impersonating tech support to gain remote access; legitimate vendors don't cold-call like this."},
+    {legit:false, type:'Smishing', icon:'📱', text:"Text: Your package is on hold. Pay a $1.99 redelivery fee: usps-redelivery.info", why:"Smishing (SMS phishing) combines urgency, a small payment request, and a non-official domain — real carriers don't text payment links like this."},
+    {legit:false, type:'Impersonation', icon:'💬', text:"Hey it's Dave from IT, I need your password to fix your email real quick.", why:"Impersonating a trusted coworker/IT staff to directly request a password — legitimate IT never needs your actual password."},
+    {legit:false, type:'Tailgating', icon:'🚪', text:"A person in scrubs asks you to hold the secure server-room door because their badge isn't working.", why:"Tailgating/piggybacking bypasses badge access controls by exploiting politeness — always verify credentials, don't hold secure doors."},
+    {legit:false, type:'Pretexting', icon:'☎️', text:"Hi, this is Sarah from Payroll — I just need to confirm your SSN and bank details for direct deposit.", why:"Pretexting fabricates a plausible scenario (payroll) to extract sensitive PII and financial details."},
+    {legit:false, type:'Phishing', icon:'📧', text:"Your Apple ID has been locked due to suspicious activity. Verify now: apple-id-check.net", why:"Another phishing pattern: fake urgency plus a domain that only resembles the real one — designed to harvest your Apple ID credentials."},
+    {legit:false, type:'Smishing', icon:'📱', text:"Congrats! You've won a $1000 gift card. Claim now: bit.ly/claim-prize", why:"A too-good-to-be-true prize plus a shortened link hiding the real (malicious) destination — classic smishing bait."},
+    {legit:false, type:'Vishing', icon:'☎️', text:"[Robocall] This is the IRS. You owe back taxes — pay immediately via gift card or face arrest.", why:"Vishing scare tactic — real government agencies never demand gift-card payment or threaten immediate arrest by phone."}
+];
+
+const TOTAL_CATCHES = 16;
+let score = 0, lives = 3, streak = 0, caught = 0, activeFish = [];
+let queue = [], running = false, muted = false;
+let musicPlayer = null, musicStarted = false;
+let currentCatch = null;
+let spawnTimer = null;
+
+const pond = document.getElementById('pond');
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+function renderLives(){
+    document.getElementById('hudLives').innerHTML = Array.from({length:3},(_, i)=>
+        `<span class="heart${i<lives?'':' lost'}">&#x2764;&#xFE0F;</span>`).join('');
+}
+function updateScore(){ document.getElementById('sVal').textContent = score; }
+
+function spawnFish(){
+    if(!running || queue.length === 0) return;
+    const data = queue.shift();
+    const el = document.createElement('div');
+    el.className = 'fish';
+    el.innerHTML = `<span class="fish-icon">${data.icon}</span><span class="fish-text">${data.text}</span>`;
+    const y = 40 + Math.random() * (pond.clientHeight - 120);
+    const fromRight = Math.random() < 0.5;
+    el.style.top = y + 'px';
+    el.style.left = (fromRight ? pond.clientWidth + 20 : -320) + 'px';
+    pond.appendChild(el);
+    const speed = (0.4 + Math.random()*0.3) * (fromRight ? -1 : 1);
+    const fish = { el, data, x: parseFloat(el.style.left), y, speed, caught:false };
+    activeFish.push(fish);
+    el.addEventListener('click', ()=> catchFish(fish));
+    el.addEventListener('touchend', (e)=>{ e.preventDefault(); catchFish(fish); }, {passive:false});
+}
+
+function moveFish(){
+    if(!running) return;
+    activeFish.forEach(fish=>{
+        if(fish.caught) return;
+        fish.x += fish.speed;
+        fish.el.style.left = fish.x + 'px';
+        const bob = Math.sin(Date.now()/600 + fish.y) * 4;
+        fish.el.style.transform = `translateY(${bob}px)`;
+        // Off-screen check
+        if(fish.x < -340 || fish.x > pond.clientWidth + 40){
+            if(!fish.data.legit) score = Math.max(0, score - 20); // scam got away
+            fish.el.remove();
+            activeFish = activeFish.filter(f=>f!==fish);
+            updateScore();
+        }
+    });
+    requestAnimationFrame(moveFish);
+}
+
+function catchFish(fish){
+    if(!running || fish.caught || currentCatch) return;
+    fish.caught = true;
+    currentCatch = fish;
+    fish.el.classList.add('caught');
+    document.getElementById('decisionPreview').innerHTML = `<span style="font-size:1.1em;">${fish.data.icon}</span> ${fish.data.text}`;
+    document.getElementById('decisionOverlay').classList.add('show');
+}
+
+function decide(chooseKeep){
+    if(!currentCatch) return;
+    const fish = currentCatch;
+    currentCatch = null;
+    document.getElementById('decisionOverlay').classList.remove('show');
+    const isCorrect = chooseKeep === fish.data.legit;
+    const card = document.getElementById('feedbackCard');
+    const title = document.getElementById('feedbackTitle');
+    const typeEl = document.getElementById('feedbackType');
+    const body = document.getElementById('feedbackBody');
+
+    if(isCorrect){
+        streak++;
+        const pts = fish.data.legit ? 100 : (150 + streak*10);
+        score += pts;
+        card.className = 'feedback-card correct';
+        title.textContent = fish.data.legit ? '✅ Correctly Kept!' : '🎣 Scam Caught!';
+        typeEl.innerHTML = fish.data.legit ? '' : `<div class="attack-type">${fish.data.type}</div>`;
+        body.textContent = fish.data.why;
+        GameSounds.correct();
+    } else {
+        streak = 0; lives--;
+        renderLives();
+        card.className = 'feedback-card wrong';
+        title.textContent = fish.data.legit ? '❌ That Was Legitimate!' : '❌ You Missed a Scam!';
+        typeEl.innerHTML = fish.data.legit ? '' : `<div class="attack-type">${fish.data.type}</div>`;
+        body.textContent = fish.data.why;
+        GameSounds.wrong();
+    }
+    updateScore();
+    fish.el.remove();
+    activeFish = activeFish.filter(f=>f!==fish);
+    caught++;
+
+    document.getElementById('feedbackOverlay').classList.add('show');
+    setTimeout(()=>{
+        document.getElementById('feedbackOverlay').classList.remove('show');
+        if(lives <= 0 || caught >= TOTAL_CATCHES) endGame();
+    }, isCorrect ? 1800 : 2600);
+}
+
+function startGame(){
+    document.getElementById('overlay').classList.remove('show');
+    score = 0; lives = 3; streak = 0; caught = 0; currentCatch = null;
+    activeFish.forEach(f=>f.el.remove());
+    activeFish = [];
+    queue = shuffle([...MESSAGES]);
+    renderLives(); updateScore();
+    running = true;
+    startMusic();
+    if(spawnTimer) clearInterval(spawnTimer);
+    spawnFish();
+    spawnTimer = setInterval(spawnFish, 2600);
+    moveFish();
+}
+
+function endGame(){
+    running = false;
+    if(spawnTimer) clearInterval(spawnTimer);
+    activeFish.forEach(f=>f.el.remove());
+    activeFish = [];
+    GameSounds.complete();
+    HighScores.submitScore(GAME_ID, score, {label:'You', extra:{caught}});
+    const overlay = document.getElementById('overlay');
+    document.getElementById('startCard').outerHTML = `
+        <div class="over-card" id="startCard2">
+            <h2>🎣 Session Complete!</h2>
+            <div class="final">${score}</div>
+            <div id="hsPanelEl"></div>
+            <button onclick="location.reload()">🔄 Fish Again</button>
+        </div>`;
+    document.getElementById('hsPanelEl').innerHTML = HighScores.renderPanel(GAME_ID, {title:'🏆 Top Anglers'});
+    overlay.classList.add('show');
+}
+
+function startMusic(){
+    if(muted || musicStarted) return;
+    try{
+        musicPlayer = new NeonCircuitMusic();
+        musicPlayer.start(()=>{ if(!muted && musicPlayer) musicPlayer.start(); });
+        musicStarted = true;
+    }catch(e){}
+}
+function stopMusic(){ if(musicPlayer){ musicPlayer.stop(); musicStarted=false; } }
+
+document.getElementById('muteBtn').addEventListener('click', ()=>{
+    muted = !muted;
+    document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+    if(muted){ stopMusic(); GameSounds.mute(); }
+    else{ startMusic(); GameSounds.unmute(); }
+});
+
+document.getElementById('overlay').classList.add('show');
+window.addEventListener('resize', ()=>{});
+</script>
+</body>
+</html>
